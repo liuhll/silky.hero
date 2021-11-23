@@ -13,6 +13,6 @@ namespace Silky.LogHost
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureSilkyWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureSilkyGeneralHostDefaults();
     }
 }

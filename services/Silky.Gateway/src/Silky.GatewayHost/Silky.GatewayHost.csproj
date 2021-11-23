@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\common.props" />
+    <Import Project="..\..\..\common.props" />
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
@@ -14,6 +14,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Silky.Account\src\Silky.Account.Application.Contracts\Silky.Account.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.BasicData\src\Silky.BasicData.Application.Contracts\Silky.BasicData.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Log\src\Silky.Log.Application.Contracts\Silky.Log.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Tenant\src\Silky.Tenant.Application.Contracts\Silky.Tenant.Application.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>
