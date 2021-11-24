@@ -10,5 +10,7 @@ namespace Silky.Position.EntityFrameworkCore.DbContexts
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
         }
+
+        public DbSet<Domain.Positions.Position> Positions { get; set; }
     }
 }

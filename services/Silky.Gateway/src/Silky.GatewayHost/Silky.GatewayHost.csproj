@@ -21,6 +21,7 @@
       <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\..\Silky.Log\src\Silky.Log.Application.Contracts\Silky.Log.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\..\Silky.Tenant\src\Silky.Tenant.Application.Contracts\Silky.Tenant.Application.Contracts.csproj" />
     </ItemGroup>
 

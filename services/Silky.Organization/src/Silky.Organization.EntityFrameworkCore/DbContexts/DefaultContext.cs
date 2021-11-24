@@ -10,5 +10,7 @@ namespace Silky.Organization.EntityFrameworkCore.DbContexts
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
         }
+
+        public DbSet<Domain.Organizations.Organization> Organizations { get; set; }
     }
 }

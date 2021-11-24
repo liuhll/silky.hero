@@ -103,6 +103,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Account.EntityFramewo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Account.Domain.Shared", "Silky.Account\src\Silky.Account.Domain.Shared\Silky.Account.Domain.Shared.csproj", "{23A0AA25-CA51-43CF-BE7A-1CDFD07A870D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6D6CEDAD-D0A2-40CF-AF09-1E1CA7F599AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Hero.Common", "Common\Silky.Hero.Common\Silky.Hero.Common.csproj", "{68CBE153-6515-4D32-8055-24374FF9599B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Position", "Position", "{95784761-E9BD-4718-94B3-C7D6AB6EB1CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.PositionHost", "Silky.Position\src\Silky.PositionHost\Silky.PositionHost.csproj", "{B01C62F1-E274-44D6-9670-6790105B0C6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.EntityFrameworkCore", "Silky.Position\src\Silky.Position.EntityFrameworkCore\Silky.Position.EntityFrameworkCore.csproj", "{E4309B23-6827-47B7-9F9F-1EF0F838E7D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.Application", "Silky.Position\src\Silky.Position.Application\Silky.Position.Application.csproj", "{238B6C85-8103-4204-A9A2-4BCB751ECC78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.Application.Contracts", "Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj", "{EE530C7E-56F2-45D4-87D0-E527F1D042A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.Database.Migrations", "Silky.Position\src\Silky.Position.Database.Migrations\Silky.Position.Database.Migrations.csproj", "{40168293-6A02-4B42-8098-1D05D499943A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.Domain.Shared", "Silky.Position\src\Silky.Position.Domain.Shared\Silky.Position.Domain.Shared.csproj", "{BE06E593-F694-41D5-9CA5-00F599A64CC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Position.Domain", "Silky.Position\src\Silky.Position.Domain\Silky.Position.Domain.csproj", "{1A03DE70-2D95-4743-8405-30D6F8F36916}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +301,38 @@ Global
 		{23A0AA25-CA51-43CF-BE7A-1CDFD07A870D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23A0AA25-CA51-43CF-BE7A-1CDFD07A870D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23A0AA25-CA51-43CF-BE7A-1CDFD07A870D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CBE153-6515-4D32-8055-24374FF9599B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CBE153-6515-4D32-8055-24374FF9599B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CBE153-6515-4D32-8055-24374FF9599B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CBE153-6515-4D32-8055-24374FF9599B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B01C62F1-E274-44D6-9670-6790105B0C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B01C62F1-E274-44D6-9670-6790105B0C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B01C62F1-E274-44D6-9670-6790105B0C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B01C62F1-E274-44D6-9670-6790105B0C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4309B23-6827-47B7-9F9F-1EF0F838E7D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4309B23-6827-47B7-9F9F-1EF0F838E7D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4309B23-6827-47B7-9F9F-1EF0F838E7D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4309B23-6827-47B7-9F9F-1EF0F838E7D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238B6C85-8103-4204-A9A2-4BCB751ECC78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238B6C85-8103-4204-A9A2-4BCB751ECC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238B6C85-8103-4204-A9A2-4BCB751ECC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238B6C85-8103-4204-A9A2-4BCB751ECC78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE530C7E-56F2-45D4-87D0-E527F1D042A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE530C7E-56F2-45D4-87D0-E527F1D042A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE530C7E-56F2-45D4-87D0-E527F1D042A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE530C7E-56F2-45D4-87D0-E527F1D042A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40168293-6A02-4B42-8098-1D05D499943A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40168293-6A02-4B42-8098-1D05D499943A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40168293-6A02-4B42-8098-1D05D499943A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40168293-6A02-4B42-8098-1D05D499943A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE06E593-F694-41D5-9CA5-00F599A64CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE06E593-F694-41D5-9CA5-00F599A64CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE06E593-F694-41D5-9CA5-00F599A64CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE06E593-F694-41D5-9CA5-00F599A64CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A03DE70-2D95-4743-8405-30D6F8F36916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A03DE70-2D95-4743-8405-30D6F8F36916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A03DE70-2D95-4743-8405-30D6F8F36916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A03DE70-2D95-4743-8405-30D6F8F36916}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -329,6 +381,14 @@ Global
 		{8A5C378E-5416-4835-9882-04CC5D8865CC} = {3B64DB6F-B21E-4CAC-B22A-90DD8B0D6B6E}
 		{335D0FE9-0EB2-4160-ACE9-EE10D8FFF0E5} = {3B64DB6F-B21E-4CAC-B22A-90DD8B0D6B6E}
 		{23A0AA25-CA51-43CF-BE7A-1CDFD07A870D} = {3B64DB6F-B21E-4CAC-B22A-90DD8B0D6B6E}
+		{68CBE153-6515-4D32-8055-24374FF9599B} = {6D6CEDAD-D0A2-40CF-AF09-1E1CA7F599AA}
+		{B01C62F1-E274-44D6-9670-6790105B0C6C} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{E4309B23-6827-47B7-9F9F-1EF0F838E7D2} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{238B6C85-8103-4204-A9A2-4BCB751ECC78} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{EE530C7E-56F2-45D4-87D0-E527F1D042A3} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{40168293-6A02-4B42-8098-1D05D499943A} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{BE06E593-F694-41D5-9CA5-00F599A64CC9} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
+		{1A03DE70-2D95-4743-8405-30D6F8F36916} = {95784761-E9BD-4718-94B3-C7D6AB6EB1CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {330D8F6F-958F-4241-86FD-BD376EBC6B31}
