@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Silky.Account.Domain.Shared.Users;
 using Silky.Hero.Common.Entities;
@@ -18,7 +19,7 @@ public class User : FullAuditedEntity
 
     public string NickName { get; set; }
 
-    public string BirthDay { get; set; }
+    public DateTime BirthDay { get; set; }
 
     public Sex? Sex { get; set; }
 
