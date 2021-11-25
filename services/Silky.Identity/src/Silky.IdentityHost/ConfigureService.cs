@@ -11,6 +11,8 @@ namespace Silky.IdentityHost
             services.AddSilkyCaching()
                 .AddSilkySkyApm()
                 .AddMessagePackCodec();
+
+            services.AddHeroIdentity();
             
             services.AddDatabaseAccessor(
                 options => { options.AddDbPool<DefaultContext>(); },

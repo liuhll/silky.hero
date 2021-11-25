@@ -8,7 +8,7 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUserManager : UserManager<IdentityUser>
 {
-    public IdentityUserManager(IUserStore<IdentityUser> store, 
+    public IdentityUserManager(IdentityUserStore store, 
         IOptions<IdentityOptions> optionsAccessor,
         IPasswordHasher<IdentityUser> passwordHasher,
         IEnumerable<IUserValidator<IdentityUser>> userValidators,

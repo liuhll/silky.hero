@@ -9,4 +9,8 @@
         <PackageReference Include="Silky.Transaction.Tcc" Version="$(SilkyVersion)" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Silky.Identity.Domain.Shared\Silky.Identity.Domain.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

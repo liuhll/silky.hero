@@ -50,7 +50,10 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public int AccessFailedCount { get; protected internal set; }
 
     public string ConcurrencyStamp { get; set; }
+    
+    public bool EmailConfirmed { get; set; }
 
+    public bool PhoneNumberConfirmed { get; set; }
 
     public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; set; }
 
@@ -61,8 +64,10 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public virtual ICollection<IdentityUserLogin> Logins { get; protected set; }
 
     public virtual ICollection<IdentityUserToken> Tokens { get; protected set; }
+   
 
-    protected IdentityUser()
+
+    public IdentityUser()
     {
     }
 
@@ -155,6 +160,16 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         {
             userClaim.SetClaim(newClaim);
         }
+    }
+    
+    public void SetPhoneNumberConfirmed(bool confirmed)
+    {
+        PhoneNumberConfirmed = confirmed;
+    }
+    
+    public void SetEmailConfirmed(bool confirmed)
+    {
+        EmailConfirmed = confirmed;
     }
 
     public virtual void RemoveClaims([NotNull] IEnumerable<Claim> claims)
@@ -260,4 +275,5 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     {
         return $"{base.ToString()}, UserName = {UserName}";
     }
+    
 }

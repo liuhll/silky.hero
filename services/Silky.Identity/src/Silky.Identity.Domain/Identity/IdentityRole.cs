@@ -26,7 +26,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
     public string ConcurrencyStamp { get; set; }
 
-    protected IdentityRole()
+    public IdentityRole()
     {
     }
 
