@@ -3,5 +3,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <SilkyVersion>3.0.4-bate1</SilkyVersion>
+	<MicrosoftPackageVersion>6.0.0</MicrosoftPackageVersion>
   </PropertyGroup>
 </Project>

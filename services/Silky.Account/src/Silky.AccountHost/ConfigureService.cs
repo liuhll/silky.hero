@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Silky.Account.EntityFrameworkCore.DbContexts;
 
 namespace Silky.AccountHost
 {
@@ -11,10 +10,6 @@ namespace Silky.AccountHost
             services.AddSilkyCaching()
                 .AddSilkySkyApm()
                 .AddMessagePackCodec();
-            
-            services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultContext>(); },
-                "Silky.Account.Database.Migrations");
         }
     }
 }
