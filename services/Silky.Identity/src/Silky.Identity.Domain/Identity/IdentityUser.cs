@@ -51,11 +51,13 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public string ConcurrencyStamp { get; set; }
     
-    public bool EmailConfirmed { get; set; }
+    public bool EmailConfirmed { get; protected internal set;}
 
-    public bool PhoneNumberConfirmed { get; set; }
+    public bool PhoneNumberConfirmed { get; protected internal set; }
+    
+    public DateTimeOffset? LockoutEnd { get; protected internal set; }
 
-    public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; set; }
+    public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; protected set; }
 
     public virtual ICollection<IdentityUserRole> Roles { get; protected set; }
 
@@ -64,8 +66,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public virtual ICollection<IdentityUserLogin> Logins { get; protected set; }
 
     public virtual ICollection<IdentityUserToken> Tokens { get; protected set; }
-   
-
+    
 
     public IdentityUser()
     {

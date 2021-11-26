@@ -20,6 +20,7 @@ public class IdentityUserStore :
     IUserSecurityStampStore<IdentityUser>,
     IUserEmailStore<IdentityUser>,
     IUserPhoneNumberStore<IdentityUser>,
+    IUserLockoutStore<IdentityUser>,
     IUserAuthenticationTokenStore<IdentityUser>,
     IUserAuthenticatorKeyStore<IdentityUser>
 {
@@ -954,8 +955,122 @@ public class IdentityUserStore :
         return SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
     }
 
+    
+    public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
 
+        Check.NotNull(user, nameof(user));
+
+        return Task.FromResult(user.LockoutEnd);
+    }
+
+    /// <summary>
+    /// Locks out a user until the specified end date has passed. Setting a end date in the past immediately unlocks a user.
+    /// </summary>
+    /// <param name="user">The user whose lockout date should be set.</param>
+    /// <param name="lockoutEnd">The <see cref="DateTimeOffset"/> after which the <paramref name="user"/>'s lockout should end.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public virtual Task SetLockoutEndDateAsync([NotNull] IdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        user.LockoutEnd = lockoutEnd;
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Records that a failed access has occurred, incrementing the failed access count.
+    /// </summary>
+    /// <param name="user">The user whose cancellation count should be incremented.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the incremented failed access count.</returns>
+    public virtual Task<int> IncrementAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        user.AccessFailedCount++;
+
+        return Task.FromResult(user.AccessFailedCount);
+    }
+
+    /// <summary>
+    /// Resets a user's failed access count.
+    /// </summary>
+    /// <param name="user">The user whose failed access count should be reset.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    /// <remarks>This is typically called after the account is successfully accessed.</remarks>
+    public virtual Task ResetAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        user.AccessFailedCount = 0;
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Retrieves the current failed access count for the specified <paramref name="user"/>..
+    /// </summary>
+    /// <param name="user">The user whose failed access count should be retrieved.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the failed access count.</returns>
+    public virtual Task<int> GetAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        return Task.FromResult(user.AccessFailedCount);
+    }
+
+    /// <summary>
+    /// Retrieves a flag indicating whether user lockout can enabled for the specified user.
+    /// </summary>
+    /// <param name="user">The user whose ability to be locked out should be returned.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation, true if a user can be locked out, otherwise false.
+    /// </returns>
+    public virtual Task<bool> GetLockoutEnabledAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        return Task.FromResult(user.LockoutEnabled);
+    }
+
+    /// <summary>
+    /// Set the flag indicating if the specified <paramref name="user"/> can be locked out..
+    /// </summary>
+    /// <param name="user">The user whose ability to be locked out should be set.</param>
+    /// <param name="enabled">A flag indicating if lock out can be enabled for the specified <paramref name="user"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public virtual Task SetLockoutEnabledAsync([NotNull] IdentityUser user, bool enabled, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        user.LockoutEnabled = enabled;
+
+        return Task.CompletedTask;
+    }
+    
     public virtual void Dispose()
     {
     }
+
+
 }

@@ -36,6 +36,12 @@ public static class DbContextModelBuilderExtensions
             b.Property(u => u.AccessFailedCount)
                 .HasDefaultValue(0)
                 .HasColumnName(nameof(IdentityUser.AccessFailedCount));
+            
+            b.Property(u => u.EmailConfirmed).HasDefaultValue(false).HasColumnName(nameof(IdentityUser.EmailConfirmed));
+            b.Property(u => u.PhoneNumberConfirmed).HasDefaultValue(false).HasColumnName(nameof(IdentityUser.PhoneNumberConfirmed));
+            
+            b.Property(u => u.LockoutEnabled).HasDefaultValue(false)
+                .HasColumnName(nameof(IdentityUser.LockoutEnabled));
 
             b.HasMany(u => u.Claims).WithOne().HasForeignKey(uc => uc.UserId).IsRequired();
             b.HasMany(u => u.Logins).WithOne().HasForeignKey(ul => ul.UserId).IsRequired();
@@ -148,7 +154,7 @@ public static class DbContextModelBuilderExtensions
 
         builder.Entity<UserSubsidiary>(b =>
         {
-            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "OrganizationUnits", HeroIdentityDbProperties.DbSchema);
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserSubsidiaries", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
         });
