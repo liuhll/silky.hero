@@ -22,10 +22,6 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
         CancellationToken cancellationToken = default
     );
 
-    Task<List<string>> GetRoleNamesInOrganizationUnitAsync(
-        long id,
-        CancellationToken cancellationToken = default);
-
     Task<IdentityUser> FindByLoginAsync(
         [NotNull] string loginProvider,
         [NotNull] string providerKey,

@@ -396,11 +396,8 @@ public class IdentityUserStore :
 
         var userRoles = await UserRepository
             .GetRoleNamesAsync(user.Id, cancellationToken: cancellationToken);
-
-        var userOrganizationUnitRoles = await UserRepository
-            .GetRoleNamesInOrganizationUnitAsync(user.Id, cancellationToken: cancellationToken);
-
-        return userRoles.Union(userOrganizationUnitRoles).ToList();
+        
+        return userRoles;
     }
 
     /// <summary>
