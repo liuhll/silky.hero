@@ -68,20 +68,21 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
-    
+
     Task<List<IdentityUser>> GetUsersInOrganizationUnitAsync(
         Guid organizationUnitId,
         CancellationToken cancellationToken = default
-        );
+    );
+
     Task<List<IdentityUser>> GetUsersInOrganizationsListAsync(
         List<Guid> organizationUnitIds,
         CancellationToken cancellationToken = default
-        );
+    );
 
     Task<List<IdentityUser>> GetUsersInOrganizationUnitWithChildrenAsync(
         string code,
         CancellationToken cancellationToken = default
-        );
+    );
 
     Task<long> GetCountAsync(
         string filter = null,
@@ -94,9 +95,13 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
         bool? notActive = null,
         CancellationToken cancellationToken = default
     );
+
     Task EnsureCollectionLoadedAsync<TProperty>(
         IdentityUser entity,
         Expression<Func<IdentityUser, IEnumerable<TProperty>>> propertyExpression,
         CancellationToken cancellationToken = default)
         where TProperty : class;
+
+    Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, bool includeDetails,
+        CancellationToken cancellationToken);
 }

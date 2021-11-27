@@ -14,7 +14,7 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 {
-    [NotNull] public string UserName { get; protected internal set; }
+    [NotNull] public string UserName { get; set; }
 
     [NotNull] public string NormalizedUserName { get; protected internal set; }
 
@@ -28,13 +28,13 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public Sex? Sex { get; set; }
 
-    [NotNull] public string Email { get; set; }
+    [NotNull] public string Email { get; protected internal set; }
 
-    [NotNull] public string NormalizedEmail { get; set; }
+    [NotNull] public string NormalizedEmail { get; protected internal set; }
 
     public string TelPhone { get; set; }
 
-    [NotNull] public string MobilePhone { get; set; }
+    [NotNull] public string MobilePhone { get; protected internal set; }
 
     public long OrganizationId { get; set; }
 
@@ -50,11 +50,11 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public int AccessFailedCount { get; protected internal set; }
 
     public string ConcurrencyStamp { get; set; }
-    
-    public bool EmailConfirmed { get; protected internal set;}
+
+    public bool EmailConfirmed { get; protected internal set; }
 
     public bool PhoneNumberConfirmed { get; protected internal set; }
-    
+
     public DateTimeOffset? LockoutEnd { get; protected internal set; }
 
     public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; protected set; }
@@ -66,7 +66,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public virtual ICollection<IdentityUserLogin> Logins { get; protected set; }
 
     public virtual ICollection<IdentityUserToken> Tokens { get; protected set; }
-    
+
 
     public IdentityUser()
     {
@@ -75,16 +75,19 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public IdentityUser(
         [NotNull] string userName,
         [NotNull] string email,
+        [NotNull] string mobilePhone,
         Guid? tenantId = null)
     {
         Check.NotNull(userName, nameof(userName));
         Check.NotNull(email, nameof(email));
+        Check.NotNull(mobilePhone, nameof(mobilePhone));
 
         TenantId = tenantId;
         UserName = userName;
         NormalizedUserName = userName.ToUpperInvariant();
         Email = email;
         NormalizedEmail = email.ToUpperInvariant();
+        MobilePhone = mobilePhone;
         ConcurrencyStamp = Guid.NewGuid().ToString();
         SecurityStamp = Guid.NewGuid().ToString();
         IsActive = true;
@@ -162,12 +165,12 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
             userClaim.SetClaim(newClaim);
         }
     }
-    
+
     public void SetPhoneNumberConfirmed(bool confirmed)
     {
         PhoneNumberConfirmed = confirmed;
     }
-    
+
     public void SetEmailConfirmed(bool confirmed)
     {
         EmailConfirmed = confirmed;
@@ -276,5 +279,4 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     {
         return $"{base.ToString()}, UserName = {UserName}";
     }
-    
 }

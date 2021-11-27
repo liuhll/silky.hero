@@ -13,11 +13,11 @@ public class UserSubsidiary : AuditedEntity
 
     // public virtual IdentityUser User { get; set; }
 
-    protected UserSubsidiary()
+    public UserSubsidiary()
     {
     }
 
-    protected internal UserSubsidiary(long userId, long organizationId, long positionId, Guid? tenantId)
+    public UserSubsidiary(long userId, long organizationId, long positionId, Guid? tenantId)
     {
         UserId = userId;
         OrganizationId = organizationId;

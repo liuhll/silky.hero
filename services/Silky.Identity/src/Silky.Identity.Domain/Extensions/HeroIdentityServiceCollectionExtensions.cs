@@ -31,6 +31,9 @@ public static class HeroIdentityServiceCollectionExtensions
         //RoleStore
         services.TryAddScoped<IdentityRoleStore>();
         services.TryAddScoped(typeof(IRoleStore<IdentityRole>), provider => provider.GetService(typeof(IdentityRoleStore)));
+        
+        services.TryAddScoped<IdentityUserValidator>();
+        services.TryAddScoped(typeof(IUserValidator<IdentityUser>), provider => provider.GetService(typeof(IdentityUserValidator)));
 
         return services
             .AddIdentityCore<IdentityUser>(setupAction)

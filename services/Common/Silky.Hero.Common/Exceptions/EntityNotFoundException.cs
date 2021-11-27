@@ -7,12 +7,7 @@ public class EntityNotFoundException : SilkyException
     public object Id { get; set; }
 
     public Type EntityType { get; set; }
-
-
-    public EntityNotFoundException()
-    {
-    }
-
+    
     public EntityNotFoundException(Type entityType)
         : this(entityType, null, null)
     {

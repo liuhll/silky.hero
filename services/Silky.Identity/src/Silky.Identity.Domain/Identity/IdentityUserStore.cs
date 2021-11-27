@@ -25,9 +25,9 @@ public class IdentityUserStore :
     IUserAuthenticatorKeyStore<IdentityUser>
 {
     private const string InternalLoginProvider = "[AspNetUserStore]";
-    
+
     private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
-    
+
     private const string RecoveryCodeTokenName = "RecoveryCodes";
 
     protected IIdentityUserRepository UserRepository { get; }
@@ -35,12 +35,11 @@ public class IdentityUserStore :
     protected IIdentityRoleRepository RoleRepository { get; }
 
     protected ILogger<IdentityRoleStore> Logger { get; }
-    
+
     protected ILookupNormalizer LookupNormalizer { get; }
 
     public IdentityErrorDescriber ErrorDescriber { get; set; }
 
-    public bool AutoSaveChanges { get; set; } = true;
 
     public IdentityUserStore(
         IIdentityUserRepository userRepository,
@@ -53,7 +52,7 @@ public class IdentityUserStore :
         RoleRepository = roleRepository;
         Logger = logger;
         LookupNormalizer = lookupNormalizer;
-        
+
         ErrorDescriber = describer ?? new IdentityErrorDescriber();
     }
 
@@ -157,13 +156,9 @@ public class IdentityUserStore :
 
         Check.NotNull(user, nameof(user));
 
-        if (AutoSaveChanges)
+        if (user.Id == default)
         {
             await UserRepository.InsertNowAsync(user, cancellationToken: cancellationToken);
-        }
-        else
-        {
-            await UserRepository.InsertAsync(user, cancellationToken: cancellationToken);
         }
 
         return IdentityResult.Success;
@@ -184,14 +179,7 @@ public class IdentityUserStore :
 
         try
         {
-            if (AutoSaveChanges)
-            {
-                await UserRepository.UpdateNowAsync(user, cancellationToken: cancellationToken);
-            }
-            else
-            {
-                await UserRepository.UpdateAsync(user);
-            }
+            await UserRepository.UpdateNowAsync(user, cancellationToken: cancellationToken);
         }
         catch (Exception ex)
         {
@@ -217,14 +205,7 @@ public class IdentityUserStore :
 
         try
         {
-            if (AutoSaveChanges)
-            {
-                await UserRepository.DeleteNowAsync(user, cancellationToken: cancellationToken);
-            }
-            else
-            {
-                await UserRepository.DeleteAsync(user);
-            }
+            await UserRepository.DeleteNowAsync(user, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -396,7 +377,7 @@ public class IdentityUserStore :
 
         var userRoles = await UserRepository
             .GetRoleNamesAsync(user.Id, cancellationToken: cancellationToken);
-        
+
         return userRoles;
     }
 
@@ -620,7 +601,7 @@ public class IdentityUserStore :
         cancellationToken.ThrowIfCancellationRequested();
 
         Check.NotNull(user, nameof(user));
-        
+
         user.SetEmailConfirmed(confirmed);
 
         return Task.CompletedTask;
@@ -715,7 +696,7 @@ public class IdentityUserStore :
         return UserRepository.FindByNormalizedEmailAsync(normalizedEmail, includeDetails: false,
             cancellationToken: cancellationToken);
     }
-    
+
     /// <summary>
     /// Sets the telephone number for the specified <paramref name="user"/>.
     /// </summary>
@@ -952,8 +933,9 @@ public class IdentityUserStore :
         return SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
     }
 
-    
-    public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+
+    public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync([NotNull] IdentityUser user,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -969,7 +951,8 @@ public class IdentityUserStore :
     /// <param name="lockoutEnd">The <see cref="DateTimeOffset"/> after which the <paramref name="user"/>'s lockout should end.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-    public virtual Task SetLockoutEndDateAsync([NotNull] IdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default)
+    public virtual Task SetLockoutEndDateAsync([NotNull] IdentityUser user, DateTimeOffset? lockoutEnd,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -986,7 +969,8 @@ public class IdentityUserStore :
     /// <param name="user">The user whose cancellation count should be incremented.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the incremented failed access count.</returns>
-    public virtual Task<int> IncrementAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    public virtual Task<int> IncrementAccessFailedCountAsync([NotNull] IdentityUser user,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1004,7 +988,8 @@ public class IdentityUserStore :
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
     /// <remarks>This is typically called after the account is successfully accessed.</remarks>
-    public virtual Task ResetAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    public virtual Task ResetAccessFailedCountAsync([NotNull] IdentityUser user,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1021,7 +1006,8 @@ public class IdentityUserStore :
     /// <param name="user">The user whose failed access count should be retrieved.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the failed access count.</returns>
-    public virtual Task<int> GetAccessFailedCountAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    public virtual Task<int> GetAccessFailedCountAsync([NotNull] IdentityUser user,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1038,7 +1024,8 @@ public class IdentityUserStore :
     /// <returns>
     /// The <see cref="Task"/> that represents the asynchronous operation, true if a user can be locked out, otherwise false.
     /// </returns>
-    public virtual Task<bool> GetLockoutEnabledAsync([NotNull] IdentityUser user, CancellationToken cancellationToken = default)
+    public virtual Task<bool> GetLockoutEnabledAsync([NotNull] IdentityUser user,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1054,7 +1041,8 @@ public class IdentityUserStore :
     /// <param name="enabled">A flag indicating if lock out can be enabled for the specified <paramref name="user"/>.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-    public virtual Task SetLockoutEnabledAsync([NotNull] IdentityUser user, bool enabled, CancellationToken cancellationToken = default)
+    public virtual Task SetLockoutEnabledAsync([NotNull] IdentityUser user, bool enabled,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1064,10 +1052,18 @@ public class IdentityUserStore :
 
         return Task.CompletedTask;
     }
-    
+
+    public Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(phoneNumber, nameof(phoneNumber));
+
+        return UserRepository.FindByPhoneNumberAsync(phoneNumber, includeDetails: false,
+            cancellationToken: cancellationToken);
+    }
+
     public virtual void Dispose()
     {
     }
-
-
 }

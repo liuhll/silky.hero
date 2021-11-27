@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Silky.Identity.Domain.Shared;
 
@@ -8,11 +10,20 @@ public class CreateOrUpdateUserInput
 {
     public long? Id { get; set; }
 
-    [NotNull] public string UserName { get; set; }
+    [Required(ErrorMessage = "用户名不允许为空")]
+    [MaxLength(50, ErrorMessage = "用户名不允许超过50个字符")]
+    [NotNull]
+    public string UserName { get; set; }
 
-    [NotNull] public string RealName { get; set; }
+    [Required(ErrorMessage = "真实姓名不允许为空")]
+    [MaxLength(50, ErrorMessage = "真实姓名不允许超过50个字符")]
+    [NotNull]
+    public string RealName { get; set; }
 
-    [NotNull] public string Password { get; set; }
+    [Required(ErrorMessage = "密码不允许为空")]
+    [RegularExpression(RegularExpressionConsts.Password, ErrorMessage = "密码格式不正确")]
+    [NotNull]
+    public string Password { get; set; }
 
     public string Surname { get; set; }
 
@@ -20,11 +31,18 @@ public class CreateOrUpdateUserInput
 
     public Sex? Sex { get; set; }
 
-    [NotNull] public string Email { get; set; }
+    [Required(ErrorMessage = "电子邮箱不允许为空")]
+    [EmailAddress(ErrorMessage = "邮箱地址格式不正确")]
+    [NotNull]
+    public string Email { get; set; }
 
+    [RegularExpression(RegularExpressionConsts.TelPhone, ErrorMessage = "电话格式不正确")]
     public string TelPhone { get; set; }
 
-    [NotNull] public string MobilePhone { get; set; }
+    [Required(ErrorMessage = "手机号码不允许为空")]
+    [RegularExpression(RegularExpressionConsts.MobilePhone, ErrorMessage = "手机格式不正确")]
+    [NotNull]
+    public string MobilePhone { get; set; }
 
     public long OrganizationId { get; set; }
 
@@ -32,4 +50,8 @@ public class CreateOrUpdateUserInput
 
     public string JobNumber { get; set; }
 
+    public bool LockoutEnabled { get; set; }
+    
+    public ICollection<UserSubsidiaryDto> UserSubsidiaries { get; set; }
+  
 }

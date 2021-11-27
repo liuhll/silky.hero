@@ -101,6 +101,21 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
             .ToListAsync(cancellationToken);
     }
+    
+    public Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, bool includeDetails, CancellationToken cancellationToken)
+    {
+        if (includeDetails)
+        {
+            return Entities
+                .Include(p => p.Claims)
+                .Include(p => p.Logins)
+                .Include(p => p.Roles)
+                .Include(p => p.Tokens)
+                .Include(p => p.UserSubsidiaries)
+                .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber && !p.IsDeleted);
+        }
+        return FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
+    }
 
     public Task<List<IdentityUser>> GetListByNormalizedRoleNameAsync(string normalizedRoleName,
         bool includeDetails = false,

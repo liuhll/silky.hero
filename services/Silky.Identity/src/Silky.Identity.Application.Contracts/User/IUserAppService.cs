@@ -10,7 +10,7 @@ namespace Silky.Identity.Application.Contracts.User;
 public interface IUserAppService
 {
     [AllowAnonymous]
-    [HttpPost(" ")]
-    [HttpPut(" ")]
-    Task CreateOrUpdate(CreateOrUpdateUserInput input);
+    [HttpPost]
+    [HttpPut]
+    Task CreateOrUpdateAsync(CreateOrUpdateUserInput input);
 }

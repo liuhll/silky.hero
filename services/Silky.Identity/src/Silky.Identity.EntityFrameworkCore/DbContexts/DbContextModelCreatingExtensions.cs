@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.Identity.Domain;
+using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.EntityFrameworkCore.DbContexts;
 
