@@ -1,5 +1,8 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Entities;
@@ -12,6 +15,16 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
 {
     protected HeroContext(DbContextOptions<TDbContext> options) : base(options)
     {
+        // 启用实体数据更改监听
+        EnabledEntityChangedListener = true;
+
+        // 忽略空值更新
+        InsertOrUpdateIgnoreNullValues = true;
+    }
+
+    public object GetTenantId()
+    {
+        return NullSession.Instance.TenantId;
     }
 
     protected override void SavingChangesEvent(DbContextEventData eventData, InterceptionResult<int> result)
@@ -78,5 +91,59 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
                     break;
             }
         }
+    }
+
+    protected  void OnEntityCreating(ModelBuilder modelBuilder, EntityTypeBuilder entityBuilder, DbContext dbContext,
+        Type dbContextLocator)
+    {
+        // 配置租户Id以及假删除过滤器
+        LambdaExpression expression = TenantIdAndFakeDeleteQueryFilterExpression(entityBuilder, dbContext);
+        if (expression != null)
+            entityBuilder.HasQueryFilter(expression);
+    }
+
+    protected static LambdaExpression TenantIdAndFakeDeleteQueryFilterExpression(EntityTypeBuilder entityBuilder,
+        DbContext dbContext, string onTableTenantId = null, string isDeletedKey = null, object filterValue = null)
+    {
+        onTableTenantId ??= "TenantId";
+        isDeletedKey ??= "IsDeleted";
+        IMutableEntityType metadata = entityBuilder.Metadata;
+        if (metadata.FindProperty(onTableTenantId) == null || metadata.FindProperty(isDeletedKey) == null)
+        {
+            return null;
+        }
+
+        Expression finialExpression = Expression.Constant(true);
+        ParameterExpression parameterExpression = Expression.Parameter(metadata.ClrType, "u");
+
+        // 租户过滤器
+        if (entityBuilder.Metadata.ClrType.BaseType.Name == typeof(AuditedEntity).Name)
+        {
+            if (metadata.FindProperty(onTableTenantId) != null)
+            {
+                ConstantExpression constantExpression = Expression.Constant(onTableTenantId);
+                MethodCallExpression right = Expression.Call(Expression.Constant(dbContext),
+                    dbContext.GetType().GetMethod("GetTenantId"));
+                finialExpression = Expression.AndAlso(finialExpression, Expression.Equal(Expression.Call(typeof(EF),
+                    "Property", new Type[1]
+                    {
+                        typeof(object)
+                    }, parameterExpression, constantExpression), right));
+            }
+        }
+
+        // 假删除过滤器
+        if (metadata.FindProperty(isDeletedKey) != null)
+        {
+            ConstantExpression constantExpression = Expression.Constant(isDeletedKey);
+            ConstantExpression right = Expression.Constant(filterValue ?? false);
+            var fakeDeleteQueryExpression = Expression.Equal(Expression.Call(typeof(EF), "Property", new Type[1]
+            {
+                typeof(bool)
+            }, parameterExpression, constantExpression), right);
+            finialExpression = Expression.AndAlso(finialExpression, fakeDeleteQueryExpression);
+        }
+
+        return Expression.Lambda(finialExpression, parameterExpression);
     }
 }

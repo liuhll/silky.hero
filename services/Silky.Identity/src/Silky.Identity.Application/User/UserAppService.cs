@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core.DbContext.UnitOfWork;
+using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
@@ -45,6 +46,17 @@ public class UserAppService : IUserAppService
 
             (await UserManager.UpdateAsync(user)).CheckErrors();
         }
+    }
+
+    public async Task DeleteAsync(long userId)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        if (user == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{userId}的账号");
+        }
+
+        (await UserManager.DeleteAsync(user)).CheckErrors();
     }
 
     protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)

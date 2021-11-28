@@ -11,4 +11,7 @@ public interface IUserAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdateUserInput input);
+
+   // [HttpDelete]
+    Task DeleteAsync(long userId);
 }
