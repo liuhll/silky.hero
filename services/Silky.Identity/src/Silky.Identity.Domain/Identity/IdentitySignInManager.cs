@@ -80,8 +80,12 @@ public class IdentitySignInManager
             { ClaimTypes.Name, user.UserName },
             { ClaimTypes.Email, user.Email },
             { ClaimTypes.MobilePhone, user.MobilePhone },
-            { SilkyClaimTypes.TenantId, user.TenantId }
+            
         };
+        if (user.TenantId.HasValue)
+        {
+            payload[SilkyClaimTypes.TenantId] = user.TenantId;
+        }
 
         if (user.Claims != null && user.Claims.Any())
         {
