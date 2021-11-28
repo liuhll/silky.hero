@@ -7,5 +7,7 @@ public abstract class AuditedEntity: Entity<long>
     protected AuditedEntity()
     {
     }
-    
+    public long? CreatedBy { get; set; }
+
+    public long? UpdatedBy { get; set; }
 }

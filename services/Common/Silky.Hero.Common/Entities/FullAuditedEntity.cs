@@ -2,13 +2,9 @@
 
 namespace Silky.Hero.Common.Entities;
 
-public abstract class FullAuditedEntity : Entity<long>
+public abstract class FullAuditedEntity : AuditedEntity
 {
-
-    public long? CreatedBy { get; set; }
-
-    public long? UpdatedBy { get; set; }
-
+    
     public bool IsDeleted { get; set; }
 
     public long? DeletedBy { get; set; }
