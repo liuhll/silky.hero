@@ -18,22 +18,29 @@ public static class HeroIdentityServiceCollectionExtensions
     {
         //RoleManager
         services.TryAddScoped<IdentityRoleManager>();
-        services.TryAddScoped(typeof(RoleManager<IdentityRole>), provider => provider.GetService(typeof(IdentityRoleManager)));
+        services.TryAddScoped(typeof(RoleManager<IdentityRole>),
+            provider => provider.GetService(typeof(IdentityRoleManager)));
 
         //UserManager
         services.TryAddScoped<IdentityUserManager>();
-        services.TryAddScoped(typeof(UserManager<IdentityUser>), provider => provider.GetService(typeof(IdentityUserManager)));
+        services.TryAddScoped(typeof(UserManager<IdentityUser>),
+            provider => provider.GetService(typeof(IdentityUserManager)));
 
         //UserStore
         services.TryAddScoped<IdentityUserStore>();
-        services.TryAddScoped(typeof(IUserStore<IdentityUser>), provider => provider.GetService(typeof(IdentityUserStore)));
+        services.TryAddScoped(typeof(IUserStore<IdentityUser>),
+            provider => provider.GetService(typeof(IdentityUserStore)));
 
         //RoleStore
         services.TryAddScoped<IdentityRoleStore>();
-        services.TryAddScoped(typeof(IRoleStore<IdentityRole>), provider => provider.GetService(typeof(IdentityRoleStore)));
-        
+        services.TryAddScoped(typeof(IRoleStore<IdentityRole>),
+            provider => provider.GetService(typeof(IdentityRoleStore)));
+
         services.TryAddScoped<IdentityUserValidator>();
-        services.TryAddScoped(typeof(IUserValidator<IdentityUser>), provider => provider.GetService(typeof(IdentityUserValidator)));
+        services.TryAddScoped(typeof(IUserValidator<IdentityUser>),
+            provider => provider.GetService(typeof(IdentityUserValidator)));
+
+        services.TryAddScoped<IdentitySignInManager>();
 
         return services
             .AddIdentityCore<IdentityUser>(setupAction)

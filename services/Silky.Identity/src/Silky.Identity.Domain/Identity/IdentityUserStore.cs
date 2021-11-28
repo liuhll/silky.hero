@@ -1063,6 +1063,16 @@ public class IdentityUserStore :
             cancellationToken: cancellationToken);
     }
 
+    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(account, nameof(account));
+        return UserRepository.FindByAccountAsync(account, includeDetails,
+            cancellationToken: cancellationToken);
+    }
+
     public virtual void Dispose()
     {
     }

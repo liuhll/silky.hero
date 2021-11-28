@@ -26,20 +26,20 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName && !p.IsDeleted);
         }
+
         return FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName);
     }
 
     public async Task<List<string>> GetRoleNamesAsync(long id, CancellationToken cancellationToken = default)
     {
         var query = from userRole in Context.Set<IdentityUserRole>()
-            join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id 
+            join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id
             where userRole.UserId == id && !role.IsDeleted
             select role.Name;
 
         return await query.ToListAsync(cancellationToken);
-
     }
-    
+
 
     public Task<IdentityUser> FindByLoginAsync(string loginProvider, string providerKey, bool includeDetails = true,
         CancellationToken cancellationToken = default)
@@ -57,6 +57,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
+
         return Entities
             .Where(u => u.Logins.Any(login =>
                 login.LoginProvider == loginProvider && login.ProviderKey == providerKey) && !u.IsDeleted)
@@ -67,7 +68,6 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
     public Task<IdentityUser> FindByNormalizedEmailAsync(string normalizedEmail, bool includeDetails = true,
         CancellationToken cancellationToken = default)
     {
-        
         if (includeDetails)
         {
             return Entities
@@ -78,6 +78,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail && !p.IsDeleted);
         }
+
         return FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail);
     }
 
@@ -96,13 +97,15 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                     c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
                 .ToListAsync(cancellationToken);
         }
+
         return Entities
             .Where(u => u.Claims.Any(c =>
                 c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
             .ToListAsync(cancellationToken);
     }
-    
-    public Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, bool includeDetails, CancellationToken cancellationToken)
+
+    public Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, bool includeDetails,
+        CancellationToken cancellationToken)
     {
         if (includeDetails)
         {
@@ -114,7 +117,28 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber && !p.IsDeleted);
         }
+
         return FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
+    }
+
+    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails,
+        CancellationToken cancellationToken)
+    {
+        if (includeDetails)
+        {
+            return Entities
+                .Include(p => p.Claims)
+                .Include(p => p.Logins)
+                .Include(p => p.Roles)
+                .Include(p => p.Tokens)
+                .Include(p => p.UserSubsidiaries)
+                .FirstOrDefaultAsync(p =>
+                    (p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account) &&
+                    !p.IsDeleted);
+        }
+
+        return FirstOrDefaultAsync(p =>
+            p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account);
     }
 
     public Task<List<IdentityUser>> GetListByNormalizedRoleNameAsync(string normalizedRoleName,

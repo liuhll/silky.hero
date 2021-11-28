@@ -32,8 +32,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Database.Migrations\Silky.Identity.Database.Migrations.csproj" />
         <ProjectReference Include="..\Silky.Account.Application\Silky.Account.Application.csproj" />
-        <ProjectReference Include="..\Silky.Account.Database.Migrations\Silky.Account.Database.Migrations.csproj" />
     </ItemGroup>
 
 </Project>

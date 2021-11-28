@@ -76,13 +76,17 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         [NotNull] string userName,
         [NotNull] string email,
         [NotNull] string mobilePhone,
-        Guid? tenantId = null)
+        object tenantId = null)
     {
         Check.NotNull(userName, nameof(userName));
         Check.NotNull(email, nameof(email));
         Check.NotNull(mobilePhone, nameof(mobilePhone));
 
-        TenantId = tenantId;
+        if (tenantId != null)
+        {
+            TenantId = Guid.Parse(tenantId.ToString());
+        }
+
         UserName = userName;
         NormalizedUserName = userName.ToUpperInvariant();
         Email = email;

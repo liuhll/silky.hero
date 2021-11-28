@@ -7,6 +7,7 @@ using Silky.Core.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
+using Silky.Rpc.Runtime.Server;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
 namespace Silky.Identity.Application.User;
@@ -14,17 +15,19 @@ namespace Silky.Identity.Application.User;
 public class UserAppService : IUserAppService
 {
     protected IdentityUserManager UserManager { get; private set; }
+    private readonly ISession _session;
 
     public UserAppService(IdentityUserManager userManager)
     {
         UserManager = userManager;
+        _session = NullSession.Instance;
     }
 
     [UnitOfWork]
     public async Task CreateOrUpdateAsync(CreateOrUpdateUserInput input)
     {
         var user = !input.Id.HasValue
-            ? new IdentityUser(input.UserName, input.Email, input.MobilePhone)
+            ? new IdentityUser(input.UserName, input.Email, input.MobilePhone, _session.TenantId)
             : await UserManager.GetByIdAsync(input.Id.Value);
         await UpdateUserByInput(user, input);
 
@@ -42,7 +45,6 @@ public class UserAppService : IUserAppService
 
             (await UserManager.UpdateAsync(user)).CheckErrors();
         }
-        
     }
 
     protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)
@@ -68,7 +70,7 @@ public class UserAppService : IUserAppService
         user.TelPhone = input.TelPhone;
         user.OrganizationId = input.OrganizationId;
         user.PositionId = input.PositionId;
-        
+
         if (input.UserSubsidiaries != null)
         {
             var userSubsidiaries = input.UserSubsidiaries

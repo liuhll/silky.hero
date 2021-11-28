@@ -106,4 +106,16 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         return ((IdentityUserStore)Store).FindByPhoneNumberAsync(phoneNumber);
     }
+
+    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails = false)
+    {
+        ThrowIfDisposed();
+        if (account == null)
+        {
+            throw new ArgumentNullException(nameof(account));
+        }
+
+        account = NormalizeName(account);
+        return ((IdentityUserStore)Store).FindByAccountAsync(account, includeDetails);
+    }
 }

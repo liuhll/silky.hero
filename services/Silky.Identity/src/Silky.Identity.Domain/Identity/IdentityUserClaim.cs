@@ -8,11 +8,11 @@ public class IdentityUserClaim : IdentityClaim
 {
     public virtual long UserId { get; protected set; }
 
-    protected IdentityUserClaim()
+    public IdentityUserClaim()
     {
     }
 
-    protected internal IdentityUserClaim(
+    public IdentityUserClaim(
         long userId,
         [NotNull] Claim claim,
         Guid? tenantId)

@@ -11,5 +11,5 @@ distributedCache:
   redis:
     isEnabled: true
     configuration: 127.0.0.1:6379,defaultDatabase=0
-connectionStrings:
-  default: server=127.0.0.1;port=3306;database=Silky.Gateway;uid=root;pwd=qwe!P4ss;
+gateway:
+  jwtSecret: jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW
