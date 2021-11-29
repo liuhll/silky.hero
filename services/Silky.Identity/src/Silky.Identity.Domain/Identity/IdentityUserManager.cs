@@ -14,7 +14,9 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUserManager : UserManager<IdentityUser>
 {
-    private IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
+    protected IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
+
+    protected IIdentityUserRepository UserRepository { get; }
 
     public IdentityUserManager(IdentityUserStore store,
         IOptions<IdentityOptions> optionsAccessor,
@@ -25,7 +27,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IdentityErrorDescriber errors,
         IServiceProvider services,
         ILogger<IdentityUserManager> logger,
-        IRepository<UserSubsidiary> userSubsidiaryRepository)
+        IRepository<UserSubsidiary> userSubsidiaryRepository,
+        IIdentityUserRepository userRepository)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -37,6 +40,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             logger)
     {
         UserSubsidiaryRepository = userSubsidiaryRepository;
+        UserRepository = userRepository;
     }
 
     public async Task<IdentityUser> GetByIdAsync(long id)
@@ -49,6 +53,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         return user;
     }
+
 
     public async Task<IdentityResult> SetUserSubsidiaries(IdentityUser user,
         ICollection<UserSubsidiary> userSubsidiaries)
@@ -117,5 +122,21 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         account = NormalizeName(account);
         return ((IdentityUserStore)Store).FindByAccountAsync(account, includeDetails);
+    }
+
+
+    public async Task<IdentityUser> GetByIdAsync(long userId, bool includeDetails)
+    {
+        if (!includeDetails)
+        {
+            return await GetByIdAsync(userId);
+        }
+
+        return await UserRepository.Include(p => p.Claims)
+            .Include(p => p.Logins)
+            .Include(p => p.Roles)
+            .Include(p => p.Tokens)
+            .Include(p => p.UserSubsidiaries)
+            .FirstOrDefaultAsync(p => p.Id == userId);
     }
 }

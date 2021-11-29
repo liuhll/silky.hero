@@ -228,7 +228,7 @@ public class IdentityUserStore :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return UserRepository.FindOrDefaultAsync(long.Parse(userId),cancellationToken);
+        return UserRepository.FindOrDefaultAsync(long.Parse(userId), cancellationToken);
     }
 
     /// <summary>
@@ -1072,7 +1072,7 @@ public class IdentityUserStore :
         return UserRepository.FindByAccountAsync(account, includeDetails,
             cancellationToken: cancellationToken);
     }
-
+    
     public virtual void Dispose()
     {
     }

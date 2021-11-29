@@ -14,4 +14,7 @@ public interface IUserAppService
 
     [HttpDelete("{id:long}")]
     Task DeleteAsync(long id);
+
+    [HttpGet("{id:long}")]
+    Task<GetUserOutput> GetAsync(long id);
 }

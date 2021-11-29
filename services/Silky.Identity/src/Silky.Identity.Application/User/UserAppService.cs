@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
@@ -47,7 +48,7 @@ public class UserAppService : IUserAppService
             (await UserManager.UpdateAsync(user)).CheckErrors();
         }
     }
-    
+
     public async Task DeleteAsync(long id)
     {
         var user = await UserManager.GetByIdAsync(id);
@@ -57,6 +58,17 @@ public class UserAppService : IUserAppService
         }
 
         (await UserManager.DeleteAsync(user)).CheckErrors();
+    }
+
+    public async Task<GetUserOutput> GetAsync(long id)
+    {
+        var user = await UserManager.GetByIdAsync(id, true);
+        if (user == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的账号");
+        }
+
+        return user.Adapt<GetUserOutput>();
     }
 
     protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)
