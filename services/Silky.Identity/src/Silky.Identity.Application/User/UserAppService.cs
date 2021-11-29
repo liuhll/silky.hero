@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
+using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
@@ -18,10 +20,13 @@ public class UserAppService : IUserAppService
 {
     protected IdentityUserManager UserManager { get; private set; }
     private readonly ISession _session;
+    private readonly IDistributedCache _distributedCache;
 
-    public UserAppService(IdentityUserManager userManager)
+    public UserAppService(IdentityUserManager userManager,
+        IDistributedCache distributedCache)
     {
         UserManager = userManager;
+        _distributedCache = distributedCache;
         _session = NullSession.Instance;
     }
 
@@ -58,6 +63,8 @@ public class UserAppService : IUserAppService
         }
 
         (await UserManager.DeleteAsync(user)).CheckErrors();
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
+            string.Format(CacheKeyConsts.CurrentUserCacheKey, id));
     }
 
     public async Task<GetUserOutput> GetAsync(long id)
