@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Silky.Identity.Domain.Shared;
+using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Identity.Application.Contracts.User.Dtos;
 
 public class CreateOrUpdateUserInput
 {
+    [CacheKey(0)]
     public long? Id { get; set; }
 
     [Required(ErrorMessage = "用户名不允许为空")]
@@ -19,8 +21,7 @@ public class CreateOrUpdateUserInput
     [MaxLength(50, ErrorMessage = "真实姓名不允许超过50个字符")]
     [NotNull]
     public string RealName { get; set; }
-
-    [Required(ErrorMessage = "密码不允许为空")]
+    
     [RegularExpression(RegularExpressionConsts.Password, ErrorMessage = "密码格式不正确")]
     [NotNull]
     public string Password { get; set; }
