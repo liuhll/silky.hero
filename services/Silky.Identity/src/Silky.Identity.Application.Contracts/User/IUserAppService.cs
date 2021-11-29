@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Rpc.CachingInterceptor;
@@ -21,4 +22,6 @@ public interface IUserAppService
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
     Task<GetUserOutput> GetAsync([CacheKey(0)]long id);
+
+    Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
 }

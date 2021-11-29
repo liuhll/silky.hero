@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.User.Dtos;
 
-public class GetUserOutput
+public class GetUserPageOutput
 {
     public long Id { get; set; }
 
@@ -24,11 +23,7 @@ public class GetUserOutput
 
     public string MobilePhone { get; set; }
 
-    public long OrganizationId { get; set; }
-
-    public long PositionId { get; set; }
-
     public string JobNumber { get; set; }
     
-    public ICollection<UserSubsidiaryDto> UserSubsidiaries { get; set; }
+
 }

@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Silky.Core;
+using Silky.Core.Extensions;
+using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.Exceptions;
+using Silky.Identity.Application.Contracts.User.Dtos;
 
 namespace Silky.Identity.Domain;
 
@@ -138,5 +142,19 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Include(p => p.Tokens)
             .Include(p => p.UserSubsidiaries)
             .FirstOrDefaultAsync(p => p.Id == userId);
+    }
+
+    public async Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
+    {
+        var userPage = await UserRepository
+            .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
+            .Where(!input.Email.IsNullOrEmpty(), p => p.Email.Contains(input.Email))
+            .Where(!input.MobilePhone.IsNullOrEmpty(), p => p.MobilePhone.Contains(input.MobilePhone))
+            .Where(!input.TelPhone.IsNullOrEmpty(), p => p.TelPhone.Contains(input.TelPhone))
+            .Where(!input.JobNumber.IsNullOrEmpty(), p => p.JobNumber.Contains(input.JobNumber))
+            .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
+            .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
+        return userPage.Adapt<PagedList<GetUserPageOutput>>();
     }
 }

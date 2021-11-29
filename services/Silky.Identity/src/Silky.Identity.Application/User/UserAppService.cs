@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -76,6 +77,11 @@ public class UserAppService : IUserAppService
         }
 
         return user.Adapt<GetUserOutput>();
+    }
+
+    public Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
+    {
+        return UserManager.GetPageAsync(input);
     }
 
     protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)
