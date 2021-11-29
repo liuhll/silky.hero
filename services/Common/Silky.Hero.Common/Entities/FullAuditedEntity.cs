@@ -1,10 +1,7 @@
-﻿using Silky.EntityFrameworkCore.Entities;
+﻿namespace Silky.Hero.Common.Entities;
 
-namespace Silky.Hero.Common.Entities;
-
-public abstract class FullAuditedEntity : AuditedEntity
+public abstract class FullAuditedEntity : AuditedEntity, ISoftDeletedObject
 {
-    
     public bool IsDeleted { get; set; }
 
     public long? DeletedBy { get; set; }
@@ -14,5 +11,4 @@ public abstract class FullAuditedEntity : AuditedEntity
     protected FullAuditedEntity()
     {
     }
-    
 }

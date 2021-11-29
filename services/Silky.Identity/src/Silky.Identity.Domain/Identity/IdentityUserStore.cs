@@ -228,7 +228,7 @@ public class IdentityUserStore :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return UserRepository.FindAsync(long.Parse(userId), cancellationToken: cancellationToken);
+        return UserRepository.FindOrDefaultAsync(long.Parse(userId),cancellationToken);
     }
 
     /// <summary>

@@ -8,9 +8,5 @@
         <PackageReference Include="Silky.Rpc" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Transaction.Tcc" Version="$(SilkyVersion)" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Silky.Account.Domain.Shared\Silky.Account.Domain.Shared.csproj" />
-    </ItemGroup>
-
+    
 </Project>

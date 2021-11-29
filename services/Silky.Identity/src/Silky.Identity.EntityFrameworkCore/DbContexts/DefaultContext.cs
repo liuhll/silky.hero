@@ -1,15 +1,12 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
-using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.Hero.Common.EntityFrameworkCore.Contexts;
 using Silky.Identity.Domain;
 
 namespace Silky.Identity.EntityFrameworkCore.DbContexts
 {
     [AppDbContext(HeroIdentityDbProperties.ConnectionStringName, DbProvider.MySql)]
-    public class DefaultContext : HeroContext<DefaultContext>, IModelBuilderFilter
+    public class DefaultContext : HeroContext<DefaultContext>
     {
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
@@ -26,12 +23,6 @@ namespace Silky.Identity.EntityFrameworkCore.DbContexts
             base.OnModelCreating(builder);
 
             builder.ConfigureIdentity();
-        }
-
-        public void OnCreating(ModelBuilder modelBuilder, EntityTypeBuilder entityBuilder, DbContext dbContext,
-            Type dbContextLocator)
-        {
-            OnEntityCreating(modelBuilder, entityBuilder, dbContext, dbContextLocator);
         }
     }
 }

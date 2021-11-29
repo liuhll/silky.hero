@@ -47,13 +47,13 @@ public class UserAppService : IUserAppService
             (await UserManager.UpdateAsync(user)).CheckErrors();
         }
     }
-
-    public async Task DeleteAsync(long userId)
+    
+    public async Task DeleteAsync(long id)
     {
-        var user = await UserManager.GetByIdAsync(userId);
+        var user = await UserManager.GetByIdAsync(id);
         if (user == null)
         {
-            throw new UserFriendlyException($"不存在Id为{userId}的账号");
+            throw new UserFriendlyException($"不存在Id为{id}的账号");
         }
 
         (await UserManager.DeleteAsync(user)).CheckErrors();

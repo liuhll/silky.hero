@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Entities;
+using Silky.EntityFrameworkCore.Entities.Configures;
+using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
 using Silky.Hero.Common.Entities;
 using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Contexts;
 
-public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
+public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>, IModelBuilderFilter, IMultiTenantOnTable
     where TDbContext : DbContext
 {
     protected HeroContext(DbContextOptions<TDbContext> options) : base(options)
@@ -36,7 +38,7 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
             .Where(u => u.State == EntityState.Modified || u.State == EntityState.Deleted ||
                         u.State == EntityState.Added)
             .ToList();
-        if (entities == null || entities.Count < 1) return;
+        if (!entities.Any()) return;
 
         var session = NullSession.Instance;
         long? userId = session.UserId != null ? long.Parse(session.UserId.ToString()!) : null;
@@ -46,46 +48,46 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
             switch (entity.State)
             {
                 case EntityState.Added:
-                    if (entity.Entity.GetType().IsSubclassOf(typeof(AuditedEntity)))
+                    if (entity.Entity is IAuditedObject auditedObject)
                     {
-                        var obj = entity.Entity as AuditedEntity;
                         var currentTenantId = entity.Property(nameof(Entity.TenantId)).CurrentValue;
                         if (currentTenantId == null)
                             entity.Property(nameof(Entity.TenantId)).CurrentValue = tenantId;
 
-                        obj.CreatedTime = DateTimeOffset.Now;
-                        obj.CreatedBy = userId;
+                        auditedObject.CreatedTime = DateTimeOffset.Now;
+                        auditedObject.CreatedBy = userId;
                     }
 
-                    if (entity.Entity.GetType().IsSubclassOf(typeof(FullAuditedEntity)))
+                    if (entity.Entity is ISoftDeletedObject deletedObject1)
                     {
-                        var obj = entity.Entity as FullAuditedEntity;
-                        obj.IsDeleted = false;
+                        deletedObject1.IsDeleted = false;
                     }
 
                     break;
                 case EntityState.Deleted:
 
-                    if (entity.Entity.GetType().IsSubclassOf(typeof(FullAuditedEntity)))
+                    if (entity.Entity is ISoftDeletedObject deletedObject2)
                     {
-                        var obj = entity.Entity as FullAuditedEntity;
-                        obj.IsDeleted = true;
-                        obj.DeletedBy = userId;
-                        obj.DeletedTime = DateTimeOffset.Now;
+                        deletedObject2.IsDeleted = true;
+                        deletedObject2.DeletedBy = userId;
+                        deletedObject2.DeletedTime = DateTimeOffset.Now;
                         entity.State = EntityState.Modified;
                     }
 
                     break;
                 case EntityState.Modified:
-                    if (entity.Entity.GetType().IsSubclassOf(typeof(AuditedEntity)))
+                    if (entity.Entity is ICreatedObject)
                     {
                         // 排除创建人
                         entity.Property(nameof(AuditedEntity.CreatedBy)).IsModified = false;
                         // 排除创建日期
                         entity.Property(nameof(AuditedEntity.CreatedTime)).IsModified = false;
-                        var obj = entity.Entity as AuditedEntity;
-                        obj.UpdatedTime = DateTimeOffset.Now;
-                        obj.UpdatedBy = userId;
+                    }
+
+                    if (entity.Entity is IUpdatedObject updatedObject)
+                    {
+                        updatedObject.UpdatedTime = DateTimeOffset.Now;
+                        updatedObject.UpdatedBy = userId;
                     }
 
                     break;
@@ -93,7 +95,7 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
         }
     }
 
-    protected  void OnEntityCreating(ModelBuilder modelBuilder, EntityTypeBuilder entityBuilder, DbContext dbContext,
+    public void OnCreating(ModelBuilder modelBuilder, EntityTypeBuilder entityBuilder, DbContext dbContext,
         Type dbContextLocator)
     {
         // 配置租户Id以及假删除过滤器
@@ -108,7 +110,7 @@ public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>
         onTableTenantId ??= "TenantId";
         isDeletedKey ??= "IsDeleted";
         IMutableEntityType metadata = entityBuilder.Metadata;
-        if (metadata.FindProperty(onTableTenantId) == null || metadata.FindProperty(isDeletedKey) == null)
+        if (metadata.FindProperty(onTableTenantId) == null && metadata.FindProperty(isDeletedKey) == null)
         {
             return null;
         }
