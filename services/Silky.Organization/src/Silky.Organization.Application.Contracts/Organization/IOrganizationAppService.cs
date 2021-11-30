@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Rpc.Routing;
@@ -28,4 +29,11 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     Task DeleteAsync(long id);
+
+    /// <summary>
+    /// 获取组织机构树
+    /// </summary>
+    /// <param name="id">机构Id</param>
+    /// <returns></returns>
+    Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync(long id);
 }

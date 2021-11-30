@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -15,7 +16,8 @@ public class OrganizationDomainService : IOrganizationDomainService
 {
     private readonly IRepository<Organization> _organizationRepository;
     private readonly IUserAppService _userAppService;
-    public OrganizationDomainService(IRepository<Organization> organizationRepository, 
+
+    public OrganizationDomainService(IRepository<Organization> organizationRepository,
         IUserAppService userAppService)
     {
         _organizationRepository = organizationRepository;
@@ -107,6 +109,7 @@ public class OrganizationDomainService : IOrganizationDomainService
         {
             throw new UserFriendlyException($"请先删除下属机构");
         }
+
         var orgUsers = await _userAppService.GetOrganizationUsersAsync(id);
         if (orgUsers.Any())
         {
@@ -114,5 +117,14 @@ public class OrganizationDomainService : IOrganizationDomainService
         }
 
         await _organizationRepository.DeleteAsync(organization);
+    }
+
+    public async Task<ICollection<Organization>> GetTreeAsync(long id)
+    {
+        var organizations = _organizationRepository
+            .Include(p => p.Children)
+            .Where(id == default, p => p.ParentId == null)
+            .Where(id != default, p => p.Id == id);
+        return await organizations.ToListAsync();
     }
 }
