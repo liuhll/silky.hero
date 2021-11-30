@@ -20,4 +20,12 @@ public interface IOrganizationAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdateOrganizationInput input);
+
+    /// <summary>
+    /// 删除组织机构
+    /// </summary>
+    /// <param name="id">主键Id</param>
+    /// <returns></returns>
+    [HttpDelete("{id:long}")]
+    Task DeleteAsync(long id);
 }

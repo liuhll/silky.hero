@@ -157,4 +157,12 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return userPage.Adapt<PagedList<GetUserPageOutput>>();
     }
+
+    public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
+    {
+        var users = UserRepository.Include(p => p.UserSubsidiaries)
+            .Where(p => p.OrganizationId == organizationId ||
+                        p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
+        return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
+    }
 }

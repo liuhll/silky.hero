@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Mapster;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain.Organizations;
@@ -22,5 +21,10 @@ public class OrganizationAppService : IOrganizationAppService
             return _organizationDomainService.CreateAsync(input);
         }
         return _organizationDomainService.UpdateAsync(input);
+    }
+
+    public Task DeleteAsync(long id)
+    {
+        return _organizationDomainService.DeleteAsync(id);
     }
 }

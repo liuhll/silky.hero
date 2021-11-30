@@ -106,7 +106,8 @@ namespace Silky.Organization.Database.Migrations.Migrations
                 {
                     b.HasOne("Silky.Organization.Domain.Organizations.Organization", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Parent");
                 });

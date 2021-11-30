@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Identity.Application.Contracts.User;
 
@@ -24,4 +25,7 @@ public interface IUserAppService
     Task<GetUserOutput> GetAsync([CacheKey(0)]long id);
 
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
+    
+    [Governance(ProhibitExtranet = true)]
+    Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);
 }

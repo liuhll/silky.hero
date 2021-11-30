@@ -8,4 +8,5 @@ public interface IOrganizationDomainService : IScopedDependency
 {
     Task CreateAsync(CreateOrUpdateOrganizationInput input);
     Task UpdateAsync(CreateOrUpdateOrganizationInput input);
+    Task DeleteAsync(long id);
 }

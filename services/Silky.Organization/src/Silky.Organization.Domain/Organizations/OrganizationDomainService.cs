@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Identity.Application.Contracts.User;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 
 namespace Silky.Organization.Domain.Organizations;
@@ -13,10 +14,12 @@ namespace Silky.Organization.Domain.Organizations;
 public class OrganizationDomainService : IOrganizationDomainService
 {
     private readonly IRepository<Organization> _organizationRepository;
-
-    public OrganizationDomainService(IRepository<Organization> organizationRepository)
+    private readonly IUserAppService _userAppService;
+    public OrganizationDomainService(IRepository<Organization> organizationRepository, 
+        IUserAppService userAppService)
     {
         _organizationRepository = organizationRepository;
+        _userAppService = userAppService;
     }
 
     public async Task CreateAsync(CreateOrUpdateOrganizationInput input)
@@ -90,5 +93,26 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         organization = input.Adapt(organization);
         await _organizationRepository.UpdateAsync(organization);
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var organization = await _organizationRepository.Include(p => p.Children).FirstOrDefaultAsync(p => p.Id == id);
+        if (organization == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的机构");
+        }
+
+        if (organization.Children.Any())
+        {
+            throw new UserFriendlyException($"请先删除下属机构");
+        }
+        var orgUsers = await _userAppService.GetOrganizationUsersAsync(id);
+        if (orgUsers.Any())
+        {
+            throw new UserFriendlyException($"该机构存在用户,无法删除");
+        }
+
+        await _organizationRepository.DeleteAsync(organization);
     }
 }

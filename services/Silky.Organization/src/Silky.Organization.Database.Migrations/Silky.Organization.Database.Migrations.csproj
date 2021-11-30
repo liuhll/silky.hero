@@ -8,4 +8,9 @@
     <ProjectReference Include="..\Silky.Organization.EntityFrameworkCore\Silky.Organization.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20211130065218_v1.3.cs" />
+    <Compile Remove="Migrations\20211130065218_v1.3.Designer.cs" />
+  </ItemGroup>
+
 </Project>
