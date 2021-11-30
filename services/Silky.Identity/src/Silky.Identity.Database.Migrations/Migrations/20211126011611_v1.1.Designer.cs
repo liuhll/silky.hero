@@ -8,7 +8,7 @@ using Silky.Identity.EntityFrameworkCore.DbContexts;
 
 namespace Silky.Identity.Database.Migrations.Migrations
 {
-    [DbContext(typeof(DefaultContext))]
+    [DbContext(typeof(DefaultDbContext))]
     [Migration("20211126011611_v1.1")]
     partial class v11
     {

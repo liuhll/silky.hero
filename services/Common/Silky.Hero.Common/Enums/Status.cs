@@ -2,7 +2,7 @@
 
 public enum Status
 {
-    Valid = 0,
+    Valid = 1,
 
-    Invalid = 1
+    Invalid = 0
 }

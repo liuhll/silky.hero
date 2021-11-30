@@ -12,10 +12,10 @@ using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Contexts;
 
-public abstract class HeroContext<TDbContext> : SilkyDbContext<TDbContext>, IModelBuilderFilter, IMultiTenantOnTable
+public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IModelBuilderFilter, IMultiTenantOnTable
     where TDbContext : DbContext
 {
-    protected HeroContext(DbContextOptions<TDbContext> options) : base(options)
+    protected HeroDbContext(DbContextOptions<TDbContext> options) : base(options)
     {
         // 启用实体数据更改监听
         EnabledEntityChangedListener = true;

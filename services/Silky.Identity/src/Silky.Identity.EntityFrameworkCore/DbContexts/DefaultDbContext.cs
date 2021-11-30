@@ -6,9 +6,9 @@ using Silky.Identity.Domain;
 namespace Silky.Identity.EntityFrameworkCore.DbContexts
 {
     [AppDbContext(HeroIdentityDbProperties.ConnectionStringName, DbProvider.MySql)]
-    public class DefaultContext : HeroContext<DefaultContext>
+    public class DefaultDbContext : HeroDbContext<DefaultDbContext>
     {
-        public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
+        public DefaultDbContext(DbContextOptions<DefaultDbContext> options) : base(options)
         {
         }
 

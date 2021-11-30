@@ -7,7 +7,7 @@ using Silky.Identity.EntityFrameworkCore.DbContexts;
 
 namespace Silky.Identity.Database.Migrations.Migrations
 {
-    [DbContext(typeof(DefaultContext))]
+    [DbContext(typeof(DefaultDbContext))]
     partial class DefaultContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

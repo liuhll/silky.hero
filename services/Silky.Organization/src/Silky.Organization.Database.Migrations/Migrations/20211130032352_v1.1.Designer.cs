@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Organization.EntityFrameworkCore.DbContexts;
 
 namespace Silky.Organization.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20211130032352_v1.1")]
+    partial class v11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,23 +99,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
-
                     b.ToTable("Organizations");
-                });
-
-            modelBuilder.Entity("Silky.Organization.Domain.Organizations.Organization", b =>
-                {
-                    b.HasOne("Silky.Organization.Domain.Organizations.Organization", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Silky.Organization.Domain.Organizations.Organization", b =>
-                {
-                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

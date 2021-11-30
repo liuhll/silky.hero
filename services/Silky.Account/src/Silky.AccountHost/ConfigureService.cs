@@ -22,7 +22,7 @@ namespace Silky.AccountHost
             });
             
             services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultContext>(); },
+                options => { options.AddDbPool<DefaultDbContext>(); },
                 "Silky.Identity.Database.Migrations");
 
         }

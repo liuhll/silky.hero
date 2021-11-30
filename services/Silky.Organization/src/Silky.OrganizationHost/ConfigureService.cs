@@ -13,7 +13,7 @@ namespace Silky.OrganizationHost
                 .AddMessagePackCodec();
             
             services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultContext>(); },
+                options => { options.AddDbPool<DefaultDbContext>(); },
                 "Silky.Organization.Database.Migrations");
         }
     }
