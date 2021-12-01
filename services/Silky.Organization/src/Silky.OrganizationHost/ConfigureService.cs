@@ -10,7 +10,8 @@ namespace Silky.OrganizationHost
         {
             services.AddSilkyCaching()
                 .AddSilkySkyApm()
-                .AddMessagePackCodec();
+                .AddMessagePackCodec()
+                .AddObjectMapper();
             
             services.AddDatabaseAccessor(
                 options => { options.AddDbPool<DefaultDbContext>(); },

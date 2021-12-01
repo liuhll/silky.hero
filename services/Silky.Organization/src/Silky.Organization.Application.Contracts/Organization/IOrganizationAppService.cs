@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Hero.Common.Entities;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Rpc.Routing;
 
@@ -35,5 +36,6 @@ public interface IOrganizationAppService
     /// </summary>
     /// <param name="id">机构Id</param>
     /// <returns></returns>
-    Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync(long id);
+    [HttpGet]
+    Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -82,15 +81,15 @@ public class OrganizationDomainService : IOrganizationDomainService
                 throw new UserFriendlyException($"不存在{input.ParentId}的机构");
             }
 
-            var children = await _organizationRepository
-                .Include(p => p.Children)
-                .Where(p => p.ParentId == input.Id).ToListAsync();
-            var allChildren = children
-                .SelectManyRecursive(p => p.Children);
-            if (allChildren.Any(p => p.Id == input.ParentId))
-            {
-                throw new UserFriendlyException("父节点不能为本节点的子节点，请重新选择父节点");
-            }
+            // var children = await _organizationRepository
+            //     .Include(p => p.Children)
+            //     .Where(p => p.ParentId == input.Id).ToListAsync();
+            // var allChildren = children
+            //     .SelectManyRecursive(p => p.Children);
+            // if (allChildren.Any(p => p.Id == input.ParentId))
+            // {
+            //     throw new UserFriendlyException("父节点不能为本节点的子节点，请重新选择父节点");
+            // }
         }
 
         organization = input.Adapt(organization);
@@ -119,12 +118,11 @@ public class OrganizationDomainService : IOrganizationDomainService
         await _organizationRepository.DeleteAsync(organization);
     }
 
-    public async Task<ICollection<Organization>> GetTreeAsync(long id)
+    public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
-        var organizations = _organizationRepository
-            .Include(p => p.Children)
-            .Where(id == default, p => p.ParentId == null)
-            .Where(id != default, p => p.Id == id);
-        return await organizations.ToListAsync();
+        var organizations = await _organizationRepository.AsQueryable()
+            .ProjectToType<GetOrganizationTreeOutput>().ToListAsync();
+        return organizations.BuildTree();
+       
     }
 }

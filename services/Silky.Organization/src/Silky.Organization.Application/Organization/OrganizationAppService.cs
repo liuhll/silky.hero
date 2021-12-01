@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mapster;
+using Silky.Hero.Common.Entities;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain.Organizations;
@@ -31,9 +32,9 @@ public class OrganizationAppService : IOrganizationAppService
         return _organizationDomainService.DeleteAsync(id);
     }
 
-    public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync(long id)
+    public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
-        var organizations = await _organizationDomainService.GetTreeAsync(id);
-        return organizations.Adapt<ICollection<GetOrganizationTreeOutput>>();
+        var organizations = await _organizationDomainService.GetTreeAsync();
+        return organizations;
     }
 }

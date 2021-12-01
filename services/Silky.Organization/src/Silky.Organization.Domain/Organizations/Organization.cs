@@ -27,8 +27,8 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
     public Status Status { get; set; }
 
     public string ConcurrencyStamp { get; set; }
-    
+
     public virtual Organization Parent { get; set; }
-    
-    public virtual ICollection<Organization> Children {get;set;}
+
+    public virtual ICollection<Organization> Children { get; set; }
 }
