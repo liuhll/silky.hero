@@ -22,7 +22,7 @@ public static class DbContextModelBuilderExtensions
                 .HasColumnName(nameof(Domain.Organizations.Organization.Name));
             b.Property(o => o.Code)
                 .IsRequired()
-                .HasMaxLength(OrganizationConsts.MaxNameLength)
+                .HasMaxLength(OrganizationConsts.MaxCodeLength)
                 .HasColumnName(nameof(Domain.Organizations.Organization.Code));
             b.Property(o => o.Sort)
                 .HasDefaultValue(0)
