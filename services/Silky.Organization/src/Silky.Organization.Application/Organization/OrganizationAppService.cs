@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Mapster;
 using Silky.Core.Exceptions;
+using Silky.EntityFrameworkCore.Extensions;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain.Organizations;
@@ -41,6 +44,17 @@ public class OrganizationAppService : IOrganizationAppService
         }
 
         return organization.Adapt<GetOrganizationOutput>();
+    }
+
+    public async Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input)
+    {
+        var organizations = await _organizationDomainService.OrganizationRepository
+            .Where(input.Id.HasValue, o => o.Id == input.Id || o.ParentId == input.Id)
+            .Where(!input.Name.IsNullOrEmpty(), o => o.Name.Contains(input.Name))
+            .Where(input.Status.HasValue, o => o.Status == input.Status)
+            .ProjectToType<GetOrganizationPageOutput>()
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
+        return organizations;
     }
 
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()

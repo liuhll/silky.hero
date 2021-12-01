@@ -43,6 +43,13 @@ public interface IOrganizationAppService
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
     Task<GetOrganizationOutput> GetAsync([CacheKey(0)]long id);
+    
+    /// <summary>
+    /// 分页获取组织机构信息
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input);
 
     /// <summary>
     /// 获取组织机构树
