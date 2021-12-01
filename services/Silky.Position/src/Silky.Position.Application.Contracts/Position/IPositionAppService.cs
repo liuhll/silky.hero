@@ -5,10 +5,27 @@ using Silky.Rpc.Routing;
 
 namespace Silky.Position.Application.Contracts.Position;
 
+/// <summary>
+/// 职位信息服务 
+/// </summary>
 [ServiceRoute]
 public interface IPositionAppService
 {
+    /// <summary>
+    /// 新增/更新职位信息
+    /// </summary>
+    /// <remarks>id为空时为新增</remarks>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdatePositionInput input);
+
+    /// <summary>
+    /// 通过id获取职位信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id:long}")]
+    Task<GetPositionOutput> GetAsync(long id);
 }

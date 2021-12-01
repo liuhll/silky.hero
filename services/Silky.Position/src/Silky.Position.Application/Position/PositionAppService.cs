@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using Mapster;
+using Silky.Core.Exceptions;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Position.Domain.Positions;
@@ -24,5 +26,16 @@ public class PositionAppService : IPositionAppService
         {
             return _positionDomainService.UpdateAsync(input);
         }
+    }
+
+    public async Task<GetPositionOutput> GetAsync(long id)
+    {
+        var position = await _positionDomainService.PositionRepository.FindOrDefaultAsync(id);
+        if (position == null)
+        {
+            throw new UserFriendlyException($"不存在id为{id}的职位信息");
+        }
+
+        return position.Adapt<GetPositionOutput>();
     }
 }
