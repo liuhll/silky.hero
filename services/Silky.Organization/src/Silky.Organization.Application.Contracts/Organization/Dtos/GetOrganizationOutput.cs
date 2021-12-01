@@ -1,16 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Silky.Hero.Common.Enums;
-using Silky.Rpc.CachingInterceptor;
+﻿using Silky.Hero.Common.Enums;
 
 namespace Silky.Organization.Application.Contracts.Organization.Dtos;
 
-public class CreateOrUpdateOrganizationInput
+public class GetOrganizationOutput
 {
     /// <summary>
     /// 主键Id
     /// </summary>
-    [CacheKey(0)]
-    public long? Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// 父机构Id
@@ -20,13 +17,11 @@ public class CreateOrUpdateOrganizationInput
     /// <summary>
     /// 机构名称
     /// </summary>
-    [Required(ErrorMessage = "组织机构名称不允许为空")]
     public string Name { get; set; }
 
     /// <summary>
     /// 机构唯一编码
     /// </summary>
-    [Required(ErrorMessage = "机构编码不允许为空")]
     public string Code { get; set; }
 
     /// <summary>

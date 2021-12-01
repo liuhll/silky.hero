@@ -13,38 +13,38 @@ namespace Silky.Organization.Domain.Organizations;
 
 public class OrganizationDomainService : IOrganizationDomainService
 {
-    private readonly IRepository<Organization> _organizationRepository;
+    public IRepository<Organization> OrganizationRepository { get; }
     private readonly IUserAppService _userAppService;
 
     public OrganizationDomainService(IRepository<Organization> organizationRepository,
         IUserAppService userAppService)
     {
-        _organizationRepository = organizationRepository;
+        OrganizationRepository = organizationRepository;
         _userAppService = userAppService;
     }
 
     public async Task CreateAsync(CreateOrUpdateOrganizationInput input)
     {
-        var exsitOrganization = await _organizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+        var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
         if (exsitOrganization != null)
         {
             throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
         }
 
-        exsitOrganization = await _organizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
+        exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
         if (exsitOrganization != null)
         {
             throw new UserFriendlyException($"已经存在Code为{input.Code}的机构");
         }
 
         var organization = input.Adapt<Organization>();
-        await _organizationRepository.InsertAsync(organization);
+        await OrganizationRepository.InsertAsync(organization);
     }
 
     public async Task UpdateAsync(CreateOrUpdateOrganizationInput input)
     {
         Check.NotNull(input.Id, nameof(input.Id));
-        var organization = await _organizationRepository.FindOrDefaultAsync(input.Id.Value);
+        var organization = await OrganizationRepository.FindOrDefaultAsync(input.Id.Value);
         if (organization == null)
         {
             throw new UserFriendlyException($"不存在Id为{input.Id}的机构");
@@ -52,7 +52,7 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         if (!input.Name.Equals(organization.Name))
         {
-            var exsitOrganization = await _organizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
             if (exsitOrganization != null)
             {
                 throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
@@ -61,7 +61,7 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         if (!input.Code.Equals(organization.Code))
         {
-            var exsitOrganization = await _organizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
+            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
             if (exsitOrganization != null)
             {
                 throw new UserFriendlyException($"已经存在Code为{input.Code}的机构");
@@ -75,7 +75,7 @@ public class OrganizationDomainService : IOrganizationDomainService
                 throw new UserFriendlyException($"父节点不允许为本节点");
             }
 
-            var parent = await _organizationRepository.FindOrDefaultAsync(input.ParentId.Value);
+            var parent = await OrganizationRepository.FindOrDefaultAsync(input.ParentId.Value);
             if (parent == null)
             {
                 throw new UserFriendlyException($"不存在{input.ParentId}的机构");
@@ -93,12 +93,12 @@ public class OrganizationDomainService : IOrganizationDomainService
         }
 
         organization = input.Adapt(organization);
-        await _organizationRepository.UpdateAsync(organization);
+        await OrganizationRepository.UpdateAsync(organization);
     }
 
     public async Task DeleteAsync(long id)
     {
-        var organization = await _organizationRepository.Include(p => p.Children).FirstOrDefaultAsync(p => p.Id == id);
+        var organization = await OrganizationRepository.Include(p => p.Children).FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
             throw new UserFriendlyException($"不存在Id为{id}的机构");
@@ -115,14 +115,13 @@ public class OrganizationDomainService : IOrganizationDomainService
             throw new UserFriendlyException($"该机构存在用户,无法删除");
         }
 
-        await _organizationRepository.DeleteAsync(organization);
+        await OrganizationRepository.DeleteAsync(organization);
     }
 
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
-        var organizations = await _organizationRepository.AsQueryable()
+        var organizations = await OrganizationRepository.AsQueryable()
             .ProjectToType<GetOrganizationTreeOutput>().ToListAsync();
         return organizations.BuildTree();
-       
     }
 }

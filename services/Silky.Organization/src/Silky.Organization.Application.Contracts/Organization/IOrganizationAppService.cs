@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Silky.Hero.Common.Entities;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.Organization.Application.Contracts.Organization;
@@ -21,6 +21,8 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
     Task CreateOrUpdateAsync(CreateOrUpdateOrganizationInput input);
 
     /// <summary>
@@ -29,13 +31,24 @@ public interface IOrganizationAppService
     /// <param name="id">主键Id</param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    Task DeleteAsync(long id);
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
+    Task DeleteAsync([CacheKey(0)]long id);
+
+    /// <summary>
+    /// 通过Id获取组织机构
+    /// </summary>
+    /// <param name="id">主键Id</param>
+    /// <returns></returns>
+    [HttpGet("{id:long}")]
+    [GetCachingIntercept("id:{0}")]
+    Task<GetOrganizationOutput> GetAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 获取组织机构树
     /// </summary>
-    /// <param name="id">机构Id</param>
     /// <returns></returns>
     [HttpGet]
+    [GetCachingIntercept("tree")]
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
 }
