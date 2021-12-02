@@ -109,8 +109,7 @@ public class OrganizationDomainService : IOrganizationDomainService
             throw new UserFriendlyException($"请先删除下属机构");
         }
 
-        var orgUsers = await _userAppService.GetOrganizationUsersAsync(id);
-        if (orgUsers.Any())
+        if (await _userAppService.HasOrganizationUsersAsync(id))
         {
             throw new UserFriendlyException($"该机构存在用户,无法删除");
         }
@@ -121,7 +120,7 @@ public class OrganizationDomainService : IOrganizationDomainService
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
         var organizations = await OrganizationRepository.AsQueryable()
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetOrganizationTreeOutput>().ToListAsync();
         return organizations.BuildTree();
     }

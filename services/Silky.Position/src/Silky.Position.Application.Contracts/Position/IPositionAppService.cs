@@ -28,4 +28,12 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     Task<GetPositionOutput> GetAsync(long id);
+    
+    /// <summary>
+    /// 通过Id删除职位信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id:long}")]
+    Task DeleteAsync(long id);
 }

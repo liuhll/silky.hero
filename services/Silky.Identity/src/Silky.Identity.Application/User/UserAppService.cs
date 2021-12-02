@@ -89,6 +89,16 @@ public class UserAppService : IUserAppService
         return UserManager.GetOrganizationUsersAsync(organizationId);
     }
 
+    public Task<bool> HasOrganizationUsersAsync(long organizationId)
+    {
+        return UserManager.HasOrganizationUsersAsync(organizationId);
+    }
+
+    public Task<bool> HasPositionUsersAsync(long positionId)
+    {
+        return UserManager.HasPositionUsersAsync(positionId);
+    }
+
     protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)
     {
         if (!string.Equals(user.Email, input.Email, StringComparison.InvariantCultureIgnoreCase))

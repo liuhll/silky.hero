@@ -165,4 +165,20 @@ public class IdentityUserManager : UserManager<IdentityUser>
                         p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
     }
+
+    public async Task<bool> HasOrganizationUsersAsync(long organizationId)
+    {
+        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+            .CountAsync(p => p.OrganizationId == organizationId ||
+                        p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
+        return userCount > 0;
+    }
+
+    public async Task<bool> HasPositionUsersAsync(long positionId)
+    {
+        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+            .CountAsync(p => p.PositionId == positionId ||
+                             p.UserSubsidiaries.Any(us => us.PositionId == positionId));
+        return userCount > 0;
+    }
 }

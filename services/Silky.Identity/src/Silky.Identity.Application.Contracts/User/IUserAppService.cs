@@ -28,4 +28,10 @@ public interface IUserAppService
     
     [Governance(ProhibitExtranet = true)]
     Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);
+    
+    [Governance(ProhibitExtranet = true)]
+    Task<bool> HasOrganizationUsersAsync(long organizationId);
+    
+    [Governance(ProhibitExtranet = true)]
+    Task<bool> HasPositionUsersAsync(long positionId);
 }

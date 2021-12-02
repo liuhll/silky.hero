@@ -10,4 +10,5 @@ public interface IPositionDomainService : IScopedDependency
     IRepository<Position> PositionRepository { get; }
     Task CreateAsync(CreateOrUpdatePositionInput input);
     Task UpdateAsync(CreateOrUpdatePositionInput input);
+    Task DeleteAsync(long id);
 }

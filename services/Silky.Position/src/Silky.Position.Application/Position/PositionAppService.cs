@@ -38,4 +38,9 @@ public class PositionAppService : IPositionAppService
 
         return position.Adapt<GetPositionOutput>();
     }
+
+    public Task DeleteAsync(long id)
+    {
+        return _positionDomainService.DeleteAsync(id);
+    }
 }
