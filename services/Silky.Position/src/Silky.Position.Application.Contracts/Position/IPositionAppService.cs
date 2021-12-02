@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Position.Application.Contracts.Position.Dtos;
@@ -36,4 +37,11 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     Task DeleteAsync(long id);
+
+    /// <summary>
+    /// 分页查询职位信息
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
 }

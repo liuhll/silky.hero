@@ -1,6 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
+using Silky.EntityFrameworkCore.Extensions;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Position.Domain.Positions;
@@ -42,5 +46,14 @@ public class PositionAppService : IPositionAppService
     public Task DeleteAsync(long id)
     {
         return _positionDomainService.DeleteAsync(id);
+    }
+
+    public Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input)
+    {
+        return _positionDomainService.PositionRepository
+            .Where(!input.Name.IsNullOrEmpty(), p => p.Name.Contains(input.Name))
+            .Where(input.Status.HasValue, p => p.Status == input.Status)
+            .ProjectToType<GetPositionPageOutput>()
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 }
