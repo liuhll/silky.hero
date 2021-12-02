@@ -7,7 +7,7 @@ using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Entities;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
-using Silky.Hero.Common.Entities;
+using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Contexts;

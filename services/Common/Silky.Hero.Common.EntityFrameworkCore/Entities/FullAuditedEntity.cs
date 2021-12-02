@@ -1,4 +1,4 @@
-﻿namespace Silky.Hero.Common.Entities;
+﻿namespace Silky.Hero.Common.EntityFrameworkCore.Entities;
 
 public abstract class FullAuditedEntity : AuditedEntity, ISoftDeletedObject
 {

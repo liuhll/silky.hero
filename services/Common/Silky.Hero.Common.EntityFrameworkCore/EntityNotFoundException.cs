@@ -1,6 +1,6 @@
 ﻿using Silky.Core.Exceptions;
 
-namespace Silky.Hero.Common.Exceptions;
+namespace Silky.Hero.Common.EntityFrameworkCore;
 
 public class EntityNotFoundException : SilkyException
 {

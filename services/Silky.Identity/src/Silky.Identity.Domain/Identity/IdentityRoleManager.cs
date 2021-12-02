@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Silky.Core.Exceptions;
-using Silky.Hero.Common.Exceptions;
+using Silky.Hero.Common.EntityFrameworkCore;
 
 namespace Silky.Identity.Domain;
 

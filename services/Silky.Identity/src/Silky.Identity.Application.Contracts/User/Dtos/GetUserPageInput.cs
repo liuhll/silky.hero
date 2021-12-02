@@ -1,13 +1,10 @@
+using Silky.Hero.Common.Dtos;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.User.Dtos;
 
-public class GetUserPageInput
+public class GetUserPageInput : PageDtoBase
 {
-    public int PageSize { get; set; } = 10;
-
-    public int PageIndex { get; set; } = 1;
-
     public string UserName { get; set; }
 
     public string RealName { get; set; }

@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core;
 using Silky.Core.Extensions.Collections.Generic;
-using Silky.Hero.Common.Entities;
+using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Domain;

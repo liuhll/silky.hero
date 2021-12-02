@@ -1,19 +1,10 @@
-﻿using Silky.Hero.Common.Enums;
+﻿using Silky.Hero.Common.Dtos;
+using Silky.Hero.Common.Enums;
 
 namespace Silky.Position.Application.Contracts.Position.Dtos;
 
-public class GetPositionPageInput
+public class GetPositionPageInput : PageDtoBase
 {
-    /// <summary>
-    /// 每页大小
-    /// </summary>
-    public int PageSize { get; set; } = 10;
-
-    /// <summary>
-    /// 第几页
-    /// </summary>
-    public int PageIndex { get; set; } = 1;
-    
     /// <summary>
     /// 职位名称
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿using Silky.EntityFrameworkCore.Entities;
 
-namespace Silky.Hero.Common.Entities;
+namespace Silky.Hero.Common.EntityFrameworkCore.Entities;
 
 public abstract class AuditedEntity : Entity<long>, IAuditedObject
 {

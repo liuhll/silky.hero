@@ -11,7 +11,7 @@ using Silky.Core;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
-using Silky.Hero.Common.Exceptions;
+using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
 
 namespace Silky.Identity.Domain;

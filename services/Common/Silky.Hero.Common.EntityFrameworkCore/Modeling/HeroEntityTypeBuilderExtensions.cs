@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Silky.Hero.Common.Entities;
+using Silky.Hero.Common.EntityFrameworkCore.Entities;
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Modeling;
 

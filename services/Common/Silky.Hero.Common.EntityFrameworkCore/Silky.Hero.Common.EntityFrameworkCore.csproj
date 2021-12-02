@@ -6,6 +6,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
     </ItemGroup>
 </Project>
