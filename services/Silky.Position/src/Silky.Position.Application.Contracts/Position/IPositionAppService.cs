@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Position.Application.Contracts.Position.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.Position.Application.Contracts.Position;
@@ -20,6 +21,7 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdatePositionInput input);
 
     /// <summary>
@@ -28,15 +30,17 @@ public interface IPositionAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    Task<GetPositionOutput> GetAsync(long id);
-    
+    [GetCachingIntercept("id:{0}")]
+    Task<GetPositionOutput> GetAsync([CacheKey(0)] long id);
+
     /// <summary>
     /// 通过Id删除职位信息
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    Task DeleteAsync(long id);
+    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
+    Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 分页查询职位信息
