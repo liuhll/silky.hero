@@ -2,6 +2,11 @@ rpc:
   host: 0.0.0.0
   port: 2200
   token: ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW
+appSettings:
+  services:
+    - appServiceInterfaceDirectory: C:\workspaces\silky.hero\services\Silky.Organization\src\Silky.OrganizationHost
+      appServiceInterfacePattern: Application.Contracts|Domain.Shared|Silky.Hero.Common
+  
 governance:
   timeoutMillSeconds: 0
 registrycenter:
