@@ -7,13 +7,13 @@ using Silky.Hero.Common.EntityFrameworkCore;
 
 namespace Silky.Identity.Domain;
 
-public class IdentityRoleManager: RoleManager<IdentityRole>
+public class IdentityRoleManager : RoleManager<IdentityRole>
 {
     public IdentityRoleManager(IdentityRoleStore store,
         IEnumerable<IRoleValidator<IdentityRole>> roleValidators,
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
-        ILogger<IdentityRoleManager> logger) 
+        ILogger<IdentityRoleManager> logger)
         : base(store,
             roleValidators,
             keyNormalizer,
@@ -21,7 +21,7 @@ public class IdentityRoleManager: RoleManager<IdentityRole>
             logger)
     {
     }
-    
+
     public virtual async Task<IdentityRole> GetByIdAsync(long id)
     {
         var role = await Store.FindByIdAsync(id.ToString(), CancellationToken);
@@ -37,10 +37,21 @@ public class IdentityRoleManager: RoleManager<IdentityRole>
     {
         if (role.IsStatic && role.Name != name)
         {
-            throw new BusinessException("静态角色名称不允许重命名");
+            throw new BusinessException("静态角色标识不允许重命名");
         }
 
         return await base.SetRoleNameAsync(role, name);
+    }
+
+    public async Task<IdentityResult> SetRoleRealNameAsync(IdentityRole role, string realName)
+    {
+        if (role.IsStatic && role.RealName != realName)
+        {
+            throw new BusinessException("静态角色名称不允许重命名");
+        }
+        
+        await ((IdentityRoleStore)Store).SetRoleRealNameAsync(role, realName, CancellationToken);
+        return IdentityResult.Success;
     }
 
     public async override Task<IdentityResult> DeleteAsync(IdentityRole role)

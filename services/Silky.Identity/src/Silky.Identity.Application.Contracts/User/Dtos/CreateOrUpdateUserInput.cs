@@ -44,11 +44,7 @@ public class CreateOrUpdateUserInput
     [RegularExpression(RegularExpressionConsts.MobilePhone, ErrorMessage = "手机格式不正确")]
     [NotNull]
     public string MobilePhone { get; set; }
-
-    public long OrganizationId { get; set; }
-
-    public long PositionId { get; set; }
-
+    
     public string JobNumber { get; set; }
 
     public bool LockoutEnabled { get; set; }

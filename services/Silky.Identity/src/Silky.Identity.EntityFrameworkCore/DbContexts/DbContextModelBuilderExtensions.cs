@@ -37,10 +37,11 @@ public static class DbContextModelBuilderExtensions
             b.Property(u => u.AccessFailedCount)
                 .HasDefaultValue(0)
                 .HasColumnName(nameof(IdentityUser.AccessFailedCount));
-            
+
             b.Property(u => u.EmailConfirmed).HasDefaultValue(false).HasColumnName(nameof(IdentityUser.EmailConfirmed));
-            b.Property(u => u.PhoneNumberConfirmed).HasDefaultValue(false).HasColumnName(nameof(IdentityUser.PhoneNumberConfirmed));
-            
+            b.Property(u => u.PhoneNumberConfirmed).HasDefaultValue(false)
+                .HasColumnName(nameof(IdentityUser.PhoneNumberConfirmed));
+
             b.Property(u => u.LockoutEnabled).HasDefaultValue(false)
                 .HasColumnName(nameof(IdentityUser.LockoutEnabled));
 
@@ -48,7 +49,7 @@ public static class DbContextModelBuilderExtensions
             b.HasMany(u => u.Logins).WithOne().HasForeignKey(ul => ul.UserId).IsRequired();
             b.HasMany(u => u.Roles).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
             b.HasMany(u => u.Tokens).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
-            b.HasMany(u => u.UserSubsidiaries).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
+            b.HasMany(u => u.UserOrganizations).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
 
             b.HasIndex(u => u.NormalizedUserName);
             b.HasIndex(u => u.NormalizedEmail);
@@ -87,7 +88,7 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserLogins", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-            
+
             b.Property(ul => ul.LoginProvider).HasMaxLength(IdentityUserLoginConsts.MaxLoginProviderLength)
                 .IsRequired();
             b.Property(ul => ul.ProviderKey).HasMaxLength(IdentityUserLoginConsts.MaxProviderKeyLength)
@@ -116,6 +117,7 @@ public static class DbContextModelBuilderExtensions
             b.ConfigureByConvention();
 
             b.Property(r => r.Name).IsRequired().HasMaxLength(IdentityRoleConsts.MaxNameLength);
+            b.Property(r => r.RealName).IsRequired().HasMaxLength(IdentityRoleConsts.MaxNameLength);
             b.Property(r => r.NormalizedName).IsRequired().HasMaxLength(IdentityRoleConsts.MaxNormalizedNameLength);
             b.Property(r => r.IsDefault).HasColumnName(nameof(IdentityRole.IsDefault));
             b.Property(r => r.IsStatic).HasColumnName(nameof(IdentityRole.IsStatic));
@@ -153,9 +155,9 @@ public static class DbContextModelBuilderExtensions
             b.Property(uc => uc.Description).HasMaxLength(IdentityClaimTypeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<UserSubsidiary>(b =>
+        builder.Entity<UserOrganization>(b =>
         {
-            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserSubsidiaries", HeroIdentityDbProperties.DbSchema);
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserOrganizations", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
         });

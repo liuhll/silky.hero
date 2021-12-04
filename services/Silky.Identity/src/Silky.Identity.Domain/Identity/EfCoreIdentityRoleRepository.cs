@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.DependencyInjection;
 using Silky.EntityFrameworkCore.Repositories;
 
@@ -12,29 +14,22 @@ public class EfCoreIdentityRoleRepository : EFCoreRepository<IdentityRole>, IIde
     public Task<IdentityRole> FindByNormalizedNameAsync(string normalizedRoleName, bool includeDetails = true,
         CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (includeDetails)
+        {
+            return Entities
+                .Include(p => p.Claims)
+                .FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName && !p.IsDeleted);
+        }
+
+        return FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName);
     }
 
-    public Task<List<IdentityRole>> GetListAsync(string sorting = null, int maxResultCount = Int32.MaxValue,
-        int skipCount = 0, string filter = null,
-        bool includeDetails = false, CancellationToken cancellationToken = default)
+    public async Task EnsureCollectionLoadedAsync<TProperty>(IdentityRole role,
+        Expression<Func<IdentityRole, IEnumerable<TProperty>>> propertyExpression,
+        CancellationToken cancellationToken = default) where TProperty : class
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityRole>> GetListAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityRole>> GetDefaultOnesAsync(bool includeDetails = false,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<long> GetCountAsync(string filter = null, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        role = await Entities.Include(propertyExpression)
+            .FirstAsync(p => p.Id == role.Id, cancellationToken: cancellationToken);
     }
 }

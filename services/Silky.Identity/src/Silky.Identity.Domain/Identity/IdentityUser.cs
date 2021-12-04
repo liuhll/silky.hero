@@ -35,11 +35,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     public string TelPhone { get; set; }
 
     [NotNull] public string MobilePhone { get; protected internal set; }
-
-    public long OrganizationId { get; set; }
-
-    public long PositionId { get; set; }
-
+    
     public string JobNumber { get; set; }
 
     public bool IsActive { get; protected internal set; }
@@ -57,7 +53,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public DateTimeOffset? LockoutEnd { get; protected internal set; }
 
-    public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; protected set; }
+    public virtual ICollection<UserOrganization> UserOrganizations { get; protected set; }
 
     public virtual ICollection<IdentityUserRole> Roles { get; protected set; }
 
@@ -100,7 +96,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         Claims = new Collection<IdentityUserClaim>();
         Logins = new Collection<IdentityUserLogin>();
         Tokens = new Collection<IdentityUserToken>();
-        UserSubsidiaries = new List<UserSubsidiary>();
+        UserOrganizations = new List<UserOrganization>();
     }
 
     public virtual void AddRole(long roleId)
@@ -237,15 +233,15 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
     }
 
-    public virtual void AddSubsidiaries(long organizationId, long positionId)
+    public virtual void AddOrganizations(long organizationId, long positionId)
     {
-        if (IsInSubsidiaries(organizationId, positionId))
+        if (IsInOrganizations(organizationId, positionId))
         {
             return;
         }
 
-        UserSubsidiaries.Add(
-            new UserSubsidiary(
+        UserOrganizations.Add(
+            new UserOrganization(
                 Id,
                 organizationId,
                 positionId,
@@ -256,19 +252,19 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public virtual void RemoveOrganizationUnit(long organizationId, long positionId)
     {
-        if (!IsInSubsidiaries(organizationId, positionId))
+        if (!IsInOrganizations(organizationId, positionId))
         {
             return;
         }
 
-        UserSubsidiaries.RemoveAll(
+        UserOrganizations.RemoveAll(
             us => us.OrganizationId == organizationId && us.PositionId == positionId
         );
     }
 
-    public virtual bool IsInSubsidiaries(long organizationId, long positionId)
+    public virtual bool IsInOrganizations(long organizationId, long positionId)
     {
-        return UserSubsidiaries.Any(
+        return UserOrganizations.Any(
             us => us.OrganizationId == organizationId
                   && us.PositionId == positionId
         );

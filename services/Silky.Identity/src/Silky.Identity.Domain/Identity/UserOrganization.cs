@@ -3,7 +3,7 @@ using Silky.Hero.Common.EntityFrameworkCore.Entities;
 
 namespace Silky.Identity.Domain;
 
-public class UserSubsidiary : AuditedEntity
+public class UserOrganization : AuditedEntity
 {
     public long OrganizationId { get; set; }
 
@@ -13,11 +13,11 @@ public class UserSubsidiary : AuditedEntity
 
     // public virtual IdentityUser User { get; set; }
 
-    public UserSubsidiary()
+    public UserOrganization()
     {
     }
 
-    public UserSubsidiary(long userId, long organizationId, long positionId, Guid? tenantId)
+    public UserOrganization(long userId, long organizationId, long positionId, Guid? tenantId)
     {
         UserId = userId;
         OrganizationId = organizationId;

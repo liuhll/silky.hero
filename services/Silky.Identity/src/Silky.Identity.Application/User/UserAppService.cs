@@ -118,16 +118,14 @@ public class UserAppService : IUserAppService
         user.RealName = input.RealName;
         user.JobNumber = input.JobNumber;
         user.Sex = input.Sex;
-        user.BirthDay = user.BirthDay;
+        user.BirthDay = input.BirthDay;
         user.TelPhone = input.TelPhone;
-        user.OrganizationId = input.OrganizationId;
-        user.PositionId = input.PositionId;
 
         if (input.UserSubsidiaries != null)
         {
             var userSubsidiaries = input.UserSubsidiaries
-                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
-            (await UserManager.SetUserSubsidiaries(user, userSubsidiaries)).CheckErrors();
+                .Select(us => new UserOrganization(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
+            (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
     }
 }

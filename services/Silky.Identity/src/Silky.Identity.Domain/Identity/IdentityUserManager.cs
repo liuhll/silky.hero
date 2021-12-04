@@ -18,7 +18,7 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUserManager : UserManager<IdentityUser>
 {
-    protected IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
+    protected IRepository<UserOrganization> UserOrganizationRepository { get; }
 
     protected IIdentityUserRepository UserRepository { get; }
 
@@ -31,7 +31,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IdentityErrorDescriber errors,
         IServiceProvider services,
         ILogger<IdentityUserManager> logger,
-        IRepository<UserSubsidiary> userSubsidiaryRepository,
+        IRepository<UserOrganization> userOrganizationRepository,
         IIdentityUserRepository userRepository)
         : base(store,
             optionsAccessor,
@@ -43,7 +43,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             services,
             logger)
     {
-        UserSubsidiaryRepository = userSubsidiaryRepository;
+        UserOrganizationRepository = userOrganizationRepository;
         UserRepository = userRepository;
     }
 
@@ -59,22 +59,22 @@ public class IdentityUserManager : UserManager<IdentityUser>
     }
 
 
-    public async Task<IdentityResult> SetUserSubsidiaries(IdentityUser user,
-        ICollection<UserSubsidiary> userSubsidiaries)
+    public async Task<IdentityResult> SetUserOrganizations(IdentityUser user,
+        ICollection<UserOrganization> userOrganizations)
     {
         Check.NotNull(user, nameof(user));
-        Check.NotNull(userSubsidiaries, nameof(userSubsidiaries));
+        Check.NotNull(userOrganizations, nameof(userOrganizations));
 
-        var currentUserSubsidiaries = await GetUserSubsidiariesAsync(user);
+        var currentUserSubsidiaries = await GetUserOrganizationsAsync(user);
 
         var result =
-            await RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
+            await RemoveFromUserOrganizationsAsync(user, currentUserSubsidiaries.Except(userOrganizations).Distinct());
         if (!result.Succeeded)
         {
             return result;
         }
 
-        result = await AddToUserSubsidiariesAsync(user, userSubsidiaries.Except(currentUserSubsidiaries).Distinct());
+        result = await AddToUserOrganizationsAsync(user, userOrganizations.Except(currentUserSubsidiaries).Distinct());
         if (!result.Succeeded)
         {
             return result;
@@ -83,29 +83,29 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
-    private async Task<IEnumerable<UserSubsidiary>> GetUserSubsidiariesAsync(IdentityUser user)
+    private async Task<IEnumerable<UserOrganization>> GetUserOrganizationsAsync(IdentityUser user)
     {
-        var userSubsidiaries = UserSubsidiaryRepository.Where(p => p.UserId == user.Id);
+        var userSubsidiaries = UserOrganizationRepository.Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
 
-    private async Task<IdentityResult> AddToUserSubsidiariesAsync(IdentityUser user,
-        IEnumerable<UserSubsidiary> userSubsidiaries)
+    private async Task<IdentityResult> AddToUserOrganizationsAsync(IdentityUser user,
+        IEnumerable<UserOrganization> userOrganizations)
     {
-        foreach (var userSubsidiary in userSubsidiaries)
+        foreach (var userSubsidiary in userOrganizations)
         {
-            await UserSubsidiaryRepository.InsertAsync(userSubsidiary);
+            await UserOrganizationRepository.InsertAsync(userSubsidiary);
         }
 
         return IdentityResult.Success;
     }
 
-    private async Task<IdentityResult> RemoveFromUserSubsidiariesAsync(IdentityUser user,
-        IEnumerable<UserSubsidiary> userSubsidiaries)
+    private async Task<IdentityResult> RemoveFromUserOrganizationsAsync(IdentityUser user,
+        IEnumerable<UserOrganization> userOrganizations)
     {
-        foreach (var userSubsidiary in userSubsidiaries)
+        foreach (var userSubsidiary in userOrganizations)
         {
-            await UserSubsidiaryRepository.DeleteAsync(userSubsidiary);
+            await UserOrganizationRepository.DeleteAsync(userSubsidiary);
         }
 
         return IdentityResult.Success;
@@ -140,7 +140,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Include(p => p.Logins)
             .Include(p => p.Roles)
             .Include(p => p.Tokens)
-            .Include(p => p.UserSubsidiaries)
+            .Include(p => p.UserOrganizations)
             .FirstOrDefaultAsync(p => p.Id == userId);
     }
 
@@ -160,25 +160,22 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
-        var users = UserRepository.Include(p => p.UserSubsidiaries)
-            .Where(p => p.OrganizationId == organizationId ||
-                        p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
+        var users = UserRepository.Include(p => p.UserOrganizations)
+            .Where(p => p.UserOrganizations.Any(us => us.OrganizationId == organizationId));
         return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
     }
 
     public async Task<bool> HasOrganizationUsersAsync(long organizationId)
     {
-        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
-            .CountAsync(p => p.OrganizationId == organizationId ||
-                        p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
+        var userCount = await UserRepository.Include(p => p.UserOrganizations)
+            .CountAsync(p => p.UserOrganizations.Any(us => us.OrganizationId == organizationId));
         return userCount > 0;
     }
 
     public async Task<bool> HasPositionUsersAsync(long positionId)
     {
-        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
-            .CountAsync(p => p.PositionId == positionId ||
-                             p.UserSubsidiaries.Any(us => us.PositionId == positionId));
+        var userCount = await UserRepository.Include(p => p.UserOrganizations)
+            .CountAsync(p => p.UserOrganizations.Any(us => us.PositionId == positionId));
         return userCount > 0;
     }
 }

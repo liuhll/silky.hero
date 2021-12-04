@@ -23,7 +23,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName && !p.IsDeleted);
         }
 
@@ -51,7 +51,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .Where(u => u.Logins.Any(login =>
                     login.LoginProvider == loginProvider && login.ProviderKey == providerKey) && !u.IsDeleted)
                 .OrderBy(x => x.Id)
@@ -75,7 +75,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail && !p.IsDeleted);
         }
 
@@ -92,7 +92,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .Where(u => u.Claims.Any(c =>
                     c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
                 .ToListAsync(cancellationToken);
@@ -114,7 +114,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber && !p.IsDeleted);
         }
 
@@ -131,7 +131,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
+                .Include(p => p.UserOrganizations)
                 .FirstOrDefaultAsync(p =>
                     (p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account) &&
                     !p.IsDeleted);
@@ -148,57 +148,12 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
         throw new NotImplementedException();
     }
 
-    public Task<List<IdentityUser>> GetListAsync(string sorting = null, int maxResultCount = Int32.MaxValue,
-        int skipCount = 0, string filter = null,
-        bool includeDetails = false, Guid? roleId = null, Guid? organizationUnitId = null, string userName = null,
-        string phoneNumber = null, string emailAddress = null, bool? isLockedOut = null, bool? notActive = null,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityRole>> GetRolesAsync(Guid id, bool includeDetails = false,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityUser>> GetUsersInOrganizationUnitAsync(Guid organizationUnitId,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityUser>> GetUsersInOrganizationsListAsync(List<Guid> organizationUnitIds,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<IdentityUser>> GetUsersInOrganizationUnitWithChildrenAsync(string code,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<long> GetCountAsync(string filter = null, Guid? roleId = null, Guid? organizationUnitId = null,
-        string userName = null,
-        string phoneNumber = null, string emailAddress = null, bool? isLockedOut = null, bool? notActive = null,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task EnsureCollectionLoadedAsync<TProperty>(IdentityUser entity,
+    public async Task EnsureCollectionLoadedAsync<TProperty>(IdentityUser entity,
         Expression<Func<IdentityUser, IEnumerable<TProperty>>> propertyExpression,
         CancellationToken cancellationToken = default) where TProperty : class
     {
-        throw new NotImplementedException();
-    }
-
-    public Task EnsureCollectionLoadedAsync(IdentityUser user, Func<object, object> func,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        entity = await Entities.Include(propertyExpression)
+            .FirstAsync(p => p.Id == entity.Id, cancellationToken: cancellationToken);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Silky.EntityFrameworkCore.Repositories;
@@ -14,26 +15,8 @@ public interface IIdentityRoleRepository : IRepository<IdentityRole>
         CancellationToken cancellationToken = default
     );
 
-    Task<List<IdentityRole>> GetListAsync(
-        string sorting = null,
-        int maxResultCount = int.MaxValue,
-        int skipCount = 0,
-        string filter = null,
-        bool includeDetails = false,
-        CancellationToken cancellationToken = default
-    );
-    Task<List<IdentityRole>> GetListAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default
-    );
-
-    Task<List<IdentityRole>> GetDefaultOnesAsync(
-        bool includeDetails = false,
-        CancellationToken cancellationToken = default
-    );
-
-    Task<long> GetCountAsync(
-        string filter = null,
-        CancellationToken cancellationToken = default
-    );
+    Task EnsureCollectionLoadedAsync<TProperty>(IdentityRole role,
+        Expression<Func<IdentityRole, IEnumerable<TProperty>>> propertyExpression,
+        CancellationToken cancellationToken = default)
+        where TProperty : class;
 }

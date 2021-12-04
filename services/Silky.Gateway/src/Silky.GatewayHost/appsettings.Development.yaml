@@ -2,11 +2,11 @@ rpc:
   host: 0.0.0.0
   port: 2200
   token: ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW
-appSettings:
-  services:
-    - appServiceInterfaceDirectory: /Users/hongliangliu/Desktop/open_source/silky.hero/services
-      appServiceInterfacePattern: Application.Contracts
-
+#appSettings:
+#  services:
+#    - appServiceInterfaceDirectory: /Users/hongliangliu/Desktop/open_source/silky.hero/services
+#      appServiceInterfacePattern: Application.Contracts
+  
 governance:
   timeoutMillSeconds: 0
 registrycenter:

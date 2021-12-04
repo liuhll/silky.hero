@@ -14,6 +14,8 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 {
     public virtual string Name { get; protected internal set; }
 
+    public string RealName { get;  protected internal set; }
+
     public virtual string NormalizedName { get; protected internal set; }
 
     public virtual ICollection<IdentityRoleClaim> Claims { get; protected set; }
@@ -26,18 +28,23 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
     public string ConcurrencyStamp { get; set; }
 
+    public int Sort { get; set; }
+
     public IdentityRole()
     {
     }
 
-    public IdentityRole(long id, [NotNull] string name, Guid? tenantId = null)
+    public IdentityRole([NotNull] string name, [NotNull] string realName, object tenantId = null)
     {
         Check.NotNull(name, nameof(name));
-
-        Id = id;
         Name = name;
-        TenantId = tenantId;
+        RealName = realName;
         NormalizedName = name.ToUpperInvariant();
+
+        if (tenantId != null)
+        {
+            TenantId = Guid.Parse(tenantId.ToString());
+        }
 
         Claims = new Collection<IdentityRoleClaim>();
     }
@@ -78,6 +85,13 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         Check.NotNullOrWhiteSpace(name, nameof(name));
 
         Name = name;
+    }
+
+    public void ChangeRealName(string realName)
+    {
+        Check.NotNullOrWhiteSpace(realName, nameof(realName));
+
+        RealName = realName;
     }
 
     public override string ToString()

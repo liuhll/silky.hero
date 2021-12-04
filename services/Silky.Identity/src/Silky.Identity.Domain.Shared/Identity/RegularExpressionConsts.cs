@@ -7,4 +7,6 @@ public class RegularExpressionConsts
     public const string TelPhone = "^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$";
 
     public const string Password = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+
+    public const string RoleName = "^\\w+$";
 }
