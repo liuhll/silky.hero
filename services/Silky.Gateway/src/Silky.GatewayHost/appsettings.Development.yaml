@@ -4,9 +4,9 @@ rpc:
   token: ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW
 appSettings:
   services:
-    - appServiceInterfaceDirectory: C:\workspaces\silky.hero\services\Silky.Organization\src\Silky.OrganizationHost
-      appServiceInterfacePattern: Application.Contracts|Domain.Shared|Silky.Hero.Common
-  
+    - appServiceInterfaceDirectory: /Users/hongliangliu/Desktop/open_source/silky.hero/services
+      appServiceInterfacePattern: Application.Contracts
+
 governance:
   timeoutMillSeconds: 0
 registrycenter:
