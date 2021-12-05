@@ -9,17 +9,21 @@ namespace Silky.Identity.Domain;
 
 public class IdentityRoleManager : RoleManager<IdentityRole>
 {
+    public IIdentityRoleRepository RoleRepository { get; }
+
     public IdentityRoleManager(IdentityRoleStore store,
         IEnumerable<IRoleValidator<IdentityRole>> roleValidators,
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
-        ILogger<IdentityRoleManager> logger)
+        ILogger<IdentityRoleManager> logger, 
+        IIdentityRoleRepository roleRepository)
         : base(store,
             roleValidators,
             keyNormalizer,
             errors,
             logger)
     {
+        RoleRepository = roleRepository;
     }
 
     public virtual async Task<IdentityRole> GetByIdAsync(long id)

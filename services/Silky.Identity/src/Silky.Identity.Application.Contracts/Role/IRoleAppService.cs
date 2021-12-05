@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.Role.Dtos;
@@ -35,4 +36,11 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     Task DeleteAsync(long id);
+
+    /// <summary>
+    /// 分页查询角色信息
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input);
 }
