@@ -44,6 +44,12 @@ public class RoleAppService : IRoleAppService
         return role.Adapt<GetRoleOutput>();
     }
 
+    public async Task DeleteAsync(long id)
+    {
+        var role = await _roleManager.GetByIdAsync(id);
+        (await _roleManager.DeleteAsync(role)).CheckErrors();
+    }
+
     private async Task UpdateRoleByInput(IdentityRole role, CreateOrUpdateRoleInput input)
     {
         role.IsDefault = input.IsDefault;

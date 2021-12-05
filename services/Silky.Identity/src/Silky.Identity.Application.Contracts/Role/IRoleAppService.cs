@@ -27,4 +27,12 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     Task<GetRoleOutput> GetAsync(long id);
+
+    /// <summary>
+    /// 根据Id删除角色信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id:long}")]
+    Task DeleteAsync(long id);
 }
