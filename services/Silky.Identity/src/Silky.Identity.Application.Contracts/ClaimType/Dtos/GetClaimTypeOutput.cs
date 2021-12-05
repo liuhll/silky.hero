@@ -7,7 +7,7 @@ public class GetClaimTypeOutput
     /// <summary>
     /// 主键Id
     /// </summary>
-    public long? Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// 声明名称

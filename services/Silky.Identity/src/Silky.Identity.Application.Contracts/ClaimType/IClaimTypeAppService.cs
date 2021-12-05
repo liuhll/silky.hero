@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.ClaimType.Dtos;
@@ -35,4 +36,11 @@ public interface IClaimTypeAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     Task DeleteAsync(long id);
+
+    /// <summary>
+    /// 分页查询声明类型
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PagedList<GetClaimTypePageOutput>> GetPageAsync(GetClaimTypePageInput input);
 }

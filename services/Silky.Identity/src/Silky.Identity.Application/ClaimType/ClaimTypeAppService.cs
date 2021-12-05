@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mapster;
 using Silky.Core.Exceptions;
+using Silky.EntityFrameworkCore.Extensions;
+using Silky.EntityFrameworkCore.LinqBuilder;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.ClaimType;
 using Silky.Identity.Application.Contracts.ClaimType.Dtos;
@@ -44,6 +47,15 @@ public class ClaimTypeAppService : IClaimTypeAppService
     {
         var claimType = await GetClaimTypeAsync(id);
         await _identityClaimTypeRepository.DeleteAsync(claimType);
+    }
+
+    public async Task<PagedList<GetClaimTypePageOutput>> GetPageAsync(GetClaimTypePageInput input)
+    {
+        var claimTypes = await _identityClaimTypeRepository
+            .Where(!input.Name.IsNullOrEmpty(), p => p.Name.Contains(input.Name))
+            .ProjectToType<GetClaimTypePageOutput>()
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
+        return claimTypes;
     }
 
     private async Task<IdentityClaimType> GetClaimTypeAsync(long id)
