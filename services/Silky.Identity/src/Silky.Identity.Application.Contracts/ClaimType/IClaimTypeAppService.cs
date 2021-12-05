@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.ClaimType.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.Identity.Application.Contracts.ClaimType;
@@ -19,6 +20,7 @@ public interface IClaimTypeAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdateClaimTypeInput input);
 
     /// <summary>
@@ -27,15 +29,17 @@ public interface IClaimTypeAppService
     /// <param name="id">声明类型Id</param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    Task<GetClaimTypeOutput> GetAsync(long id);
-    
+    [GetCachingIntercept("id:{0}")]
+    Task<GetClaimTypeOutput> GetAsync([CacheKey(0)] long id);
+
     /// <summary>
     /// 通过Id删除声明类型
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    Task DeleteAsync(long id);
+    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
+    Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 分页查询声明类型
