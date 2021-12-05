@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Silky.Core;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Domain;
 
@@ -20,13 +21,12 @@ public class IdentityClaimType : FullAuditedEntity
 
     public virtual IdentityClaimValueType ValueType { get; set; }
 
-    protected IdentityClaimType()
+    public IdentityClaimType()
     {
 
     }
 
     public IdentityClaimType(
-        long id,
         [NotNull] string name,
         bool required = false,
         bool isStatic = false,
@@ -35,7 +35,6 @@ public class IdentityClaimType : FullAuditedEntity
         [CanBeNull] string description = null,
         IdentityClaimValueType valueType = IdentityClaimValueType.String)
     {
-        Id = id;
         SetName(name);
         Required = required;
         IsStatic = isStatic;

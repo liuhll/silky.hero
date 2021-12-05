@@ -1,4 +1,4 @@
-﻿namespace Silky.Identity.Domain;
+﻿namespace Silky.Identity.Domain.Shared;
 
 public enum IdentityClaimValueType
 {
