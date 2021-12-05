@@ -52,7 +52,7 @@ public class OrganizationAppService : IOrganizationAppService
             .Where(input.Id.HasValue, o => o.Id == input.Id || o.ParentId == input.Id)
             .Where(!input.Name.IsNullOrEmpty(), o => o.Name.Contains(input.Name))
             .Where(input.Status.HasValue, o => o.Status == input.Status)
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetOrganizationPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return organizations;
@@ -62,5 +62,10 @@ public class OrganizationAppService : IOrganizationAppService
     {
         var organizations = await _organizationDomainService.GetTreeAsync();
         return organizations;
+    }
+
+    public async Task<bool> HasOrganizationAsync(long organizationId)
+    {
+        return await _organizationDomainService.OrganizationRepository.FindOrDefaultAsync(organizationId) != null;
     }
 }

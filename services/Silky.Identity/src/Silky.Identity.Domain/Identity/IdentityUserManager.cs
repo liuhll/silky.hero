@@ -13,6 +13,8 @@ using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Organization.Application.Contracts.Organization;
+using Silky.Position.Application.Contracts.Position;
 
 namespace Silky.Identity.Domain;
 
@@ -21,6 +23,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
     protected IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
 
     protected IIdentityUserRepository UserRepository { get; }
+
+    private readonly IOrganizationAppService _organizationAppService;
+    private readonly IPositionAppService _positionAppService;
 
     public IdentityUserManager(IdentityUserStore store,
         IOptions<IdentityOptions> optionsAccessor,
@@ -32,7 +37,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IServiceProvider services,
         ILogger<IdentityUserManager> logger,
         IRepository<UserSubsidiary> userSubsidiaryRepository,
-        IIdentityUserRepository userRepository)
+        IIdentityUserRepository userRepository,
+        IOrganizationAppService organizationAppService,
+        IPositionAppService positionAppService)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -45,6 +52,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         UserSubsidiaryRepository = userSubsidiaryRepository;
         UserRepository = userRepository;
+        _organizationAppService = organizationAppService;
+        _positionAppService = positionAppService;
     }
 
     public async Task<IdentityUser> GetByIdAsync(long id)
@@ -60,21 +69,42 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
 
     public async Task<IdentityResult> SetUserOrganizations(IdentityUser user,
-        ICollection<UserSubsidiary> userOrganizations)
+        ICollection<UserSubsidiary> userSubsidiaries)
     {
         Check.NotNull(user, nameof(user));
-        Check.NotNull(userOrganizations, nameof(userOrganizations));
+        Check.NotNull(userSubsidiaries, nameof(userSubsidiaries));
+
+        foreach (var userSubsidiary in userSubsidiaries)
+        {
+            if (!await _organizationAppService.HasOrganizationAsync(userSubsidiary.OrganizationId))
+            {
+                return IdentityResult.Failed(new IdentityError()
+                {
+                    Code = "NoOrganization",
+                    Description = $"不存在Id为{userSubsidiary.OrganizationId}的组织机构"
+                });
+            }
+
+            if (!await _positionAppService.HasPositionAsync(userSubsidiary.PositionId))
+            {
+                return IdentityResult.Failed(new IdentityError()
+                {
+                    Code = "NoPosition",
+                    Description = $"不存在Id为{userSubsidiary.PositionId}的职位信息"
+                });
+            }
+        }
 
         var currentUserSubsidiaries = await GetUserOrganizationsAsync(user);
 
         var result =
-            await RemoveFromUserOrganizationsAsync(user, currentUserSubsidiaries.Except(userOrganizations).Distinct());
+            await RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
         if (!result.Succeeded)
         {
             return result;
         }
 
-        result = await AddToUserOrganizationsAsync(user, userOrganizations.Except(currentUserSubsidiaries).Distinct());
+        result = await AddToUserSubsidiariesAsync(user, userSubsidiaries.Except(currentUserSubsidiaries).Distinct());
         if (!result.Succeeded)
         {
             return result;
@@ -83,16 +113,37 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
+    public async Task<IdentityResult> SetRolesAsync(IdentityUser user, ICollection<string> roleNames)
+    {
+        Check.NotNull(user, nameof(user));
+        Check.NotNull(roleNames, nameof(roleNames));
+        var currentRoleNames = await GetRolesAsync(user);
+        var result = await RemoveFromRolesAsync(user, currentRoleNames.Except(roleNames).Distinct());
+        if (!result.Succeeded)
+        {
+            return result;
+        }
+
+        result = await AddToRolesAsync(user, roleNames.Except(currentRoleNames).Distinct());
+        if (!result.Succeeded)
+        {
+            return result;
+        }
+
+        return IdentityResult.Success;
+    }
+
+
     private async Task<IEnumerable<UserSubsidiary>> GetUserOrganizationsAsync(IdentityUser user)
     {
         var userSubsidiaries = UserSubsidiaryRepository.Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
 
-    private async Task<IdentityResult> AddToUserOrganizationsAsync(IdentityUser user,
-        IEnumerable<UserSubsidiary> userOrganizations)
+    private async Task<IdentityResult> AddToUserSubsidiariesAsync(IdentityUser user,
+        IEnumerable<UserSubsidiary> userSubsidiaries)
     {
-        foreach (var userSubsidiary in userOrganizations)
+        foreach (var userSubsidiary in userSubsidiaries)
         {
             user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }
@@ -100,10 +151,10 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return IdentityResult.Success;
     }
 
-    private async Task<IdentityResult> RemoveFromUserOrganizationsAsync(IdentityUser user,
-        IEnumerable<UserSubsidiary> userOrganizations)
+    private async Task<IdentityResult> RemoveFromUserSubsidiariesAsync(IdentityUser user,
+        IEnumerable<UserSubsidiary> userSubsidiaries)
     {
-        foreach (var userSubsidiary in userOrganizations)
+        foreach (var userSubsidiary in userSubsidiaries)
         {
             user.RemoveUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }

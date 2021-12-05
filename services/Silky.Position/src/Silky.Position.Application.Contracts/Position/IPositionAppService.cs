@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Position.Application.Contracts.Position;
 
@@ -22,6 +23,7 @@ public interface IPositionAppService
     [HttpPost]
     [HttpPut]
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdatePositionInput input);
 
     /// <summary>
@@ -40,6 +42,7 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -48,4 +51,13 @@ public interface IPositionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
+    
+    /// <summary>
+    /// 判断是否存在职位
+    /// </summary>
+    /// <param name="positionId">职位Id</param>
+    /// <returns></returns>
+    [Governance(ProhibitExtranet = true)]
+    [GetCachingIntercept("HasPosition:{0}")]
+    Task<bool> HasPositionAsync([CacheKey(0)]long positionId);
 }

@@ -56,4 +56,9 @@ public class PositionAppService : IPositionAppService
             .ProjectToType<GetPositionPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
+
+    public async Task<bool> HasPositionAsync(long positionId)
+    {
+        return await _positionDomainService.PositionRepository.FindOrDefaultAsync(positionId) != null;
+    }
 }

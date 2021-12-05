@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Organization.Application.Contracts.Organization;
 
@@ -23,6 +24,7 @@ public interface IOrganizationAppService
     [HttpPut]
     [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
+    [RemoveCachingIntercept(typeof(bool),"HasOrganization:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdateOrganizationInput input);
 
     /// <summary>
@@ -33,6 +35,7 @@ public interface IOrganizationAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
+    [RemoveCachingIntercept(typeof(bool),"HasOrganization:{0}")]
     Task DeleteAsync([CacheKey(0)]long id);
 
     /// <summary>
@@ -58,4 +61,13 @@ public interface IOrganizationAppService
     [HttpGet]
     [GetCachingIntercept("tree")]
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
+
+    /// <summary>
+    /// 判断是否存在组织机构
+    /// </summary>
+    /// <param name="organizationId">组织机构id</param>
+    /// <returns></returns>
+    [Governance(ProhibitExtranet = true)]
+    [GetCachingIntercept("HasOrganization:{0}")]
+    Task<bool> HasOrganizationAsync([CacheKey(0)]long organizationId);
 }

@@ -12,6 +12,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
+        <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
+        <ProjectReference Include="..\..\..\Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Identity.Domain.Shared\Silky.Identity.Domain.Shared.csproj" />
     </ItemGroup>
