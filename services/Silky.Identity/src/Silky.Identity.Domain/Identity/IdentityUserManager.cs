@@ -94,7 +94,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         foreach (var userSubsidiary in userOrganizations)
         {
-            await UserSubsidiaryRepository.InsertAsync(userSubsidiary);
+            user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }
 
         return IdentityResult.Success;
@@ -105,7 +105,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         foreach (var userSubsidiary in userOrganizations)
         {
-            await UserSubsidiaryRepository.DeleteAsync(userSubsidiary);
+            user.RemoveUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }
 
         return IdentityResult.Success;

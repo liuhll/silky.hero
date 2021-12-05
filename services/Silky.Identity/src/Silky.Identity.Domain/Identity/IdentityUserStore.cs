@@ -158,7 +158,7 @@ public class IdentityUserStore :
 
         if (user.Id == default)
         {
-            await UserRepository.InsertNowAsync(user, cancellationToken: cancellationToken);
+            await UserRepository.InsertAsync(user, cancellationToken: cancellationToken);
         }
 
         return IdentityResult.Success;
@@ -1072,7 +1072,7 @@ public class IdentityUserStore :
         return UserRepository.FindByAccountAsync(account, includeDetails,
             cancellationToken: cancellationToken);
     }
-    
+
     public virtual void Dispose()
     {
     }
