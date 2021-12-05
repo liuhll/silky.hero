@@ -36,13 +36,25 @@ public class ClaimTypeAppService : IClaimTypeAppService
 
     public async Task<GetClaimTypeOutput> GetAsync(long id)
     {
+        var claimType = await GetClaimTypeAsync(id);
+        return claimType.Adapt<GetClaimTypeOutput>();
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var claimType = await GetClaimTypeAsync(id);
+        await _identityClaimTypeRepository.DeleteAsync(claimType);
+    }
+
+    private async Task<IdentityClaimType> GetClaimTypeAsync(long id)
+    {
         var claimType = await _identityClaimTypeRepository.FindOrDefaultAsync(id);
         if (claimType == null)
         {
             throw new UserFriendlyException($"不存在Id为{id}的声明类型");
         }
 
-        return claimType.Adapt<GetClaimTypeOutput>();
+        return claimType;
     }
 
     private async Task UpdateClaimTypeByInput(IdentityClaimType claimType, CreateOrUpdateClaimTypeInput input)

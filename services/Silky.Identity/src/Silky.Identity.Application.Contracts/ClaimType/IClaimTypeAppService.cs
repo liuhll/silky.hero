@@ -27,4 +27,12 @@ public interface IClaimTypeAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     Task<GetClaimTypeOutput> GetAsync(long id);
+    
+    /// <summary>
+    /// 通过Id删除声明类型
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id:long}")]
+    Task DeleteAsync(long id);
 }
