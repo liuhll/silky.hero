@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.Role.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.Identity.Application.Contracts.Role;
@@ -19,6 +20,7 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdateRoleInput input);
 
     /// <summary>
@@ -27,7 +29,8 @@ public interface IRoleAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    Task<GetRoleOutput> GetAsync(long id);
+    [GetCachingIntercept("id:{0}")]
+    Task<GetRoleOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 根据Id删除角色信息
@@ -35,7 +38,8 @@ public interface IRoleAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    Task DeleteAsync(long id);
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 分页查询角色信息

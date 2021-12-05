@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Silky.Identity.Domain.Shared;
+using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
 
@@ -11,6 +12,7 @@ public class CreateOrUpdateRoleInput
     /// <summary>
     /// 主键Id
     /// </summary>
+    [CacheKey(0)]
     public long? Id { get; set; }
 
     /// <summary>
