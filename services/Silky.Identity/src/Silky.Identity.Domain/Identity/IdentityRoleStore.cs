@@ -147,7 +147,7 @@ public class IdentityRoleStore :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return RoleRepository.FindAsync(long.Parse(roleId), cancellationToken: cancellationToken);
+        return RoleRepository.FindOrDefaultAsync(long.Parse(roleId), cancellationToken: cancellationToken);
     }
 
     public Task<IdentityRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken)

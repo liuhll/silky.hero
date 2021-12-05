@@ -19,4 +19,12 @@ public interface IRoleAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdateRoleInput input);
+
+    /// <summary>
+    /// 根据id获取角色信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id:long}")]
+    Task<GetRoleOutput> GetAsync(long id);
 }

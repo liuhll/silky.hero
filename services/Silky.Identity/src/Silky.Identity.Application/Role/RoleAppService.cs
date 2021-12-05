@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Mapster;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
@@ -35,6 +36,12 @@ public class RoleAppService : IRoleAppService
         {
             (await _roleManager.UpdateAsync(role)).CheckErrors();
         }
+    }
+
+    public async Task<GetRoleOutput> GetAsync(long id)
+    {
+        var role = await _roleManager.GetByIdAsync(id);
+        return role.Adapt<GetRoleOutput>();
     }
 
     private async Task UpdateRoleByInput(IdentityRole role, CreateOrUpdateRoleInput input)
