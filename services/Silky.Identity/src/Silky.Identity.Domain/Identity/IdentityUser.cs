@@ -53,7 +53,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public DateTimeOffset? LockoutEnd { get; protected internal set; }
 
-    public virtual ICollection<UserOrganization> UserOrganizations { get; protected set; }
+    public virtual ICollection<UserSubsidiary> UserSubsidiaries { get; protected set; }
 
     public virtual ICollection<IdentityUserRole> Roles { get; protected set; }
 
@@ -96,7 +96,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         Claims = new Collection<IdentityUserClaim>();
         Logins = new Collection<IdentityUserLogin>();
         Tokens = new Collection<IdentityUserToken>();
-        UserOrganizations = new List<UserOrganization>();
+        UserSubsidiaries = new List<UserSubsidiary>();
     }
 
     public virtual void AddRole(long roleId)
@@ -233,15 +233,15 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
     }
 
-    public virtual void AddOrganizations(long organizationId, long positionId)
+    public virtual void AddUserSubsidiaries(long organizationId, long positionId)
     {
-        if (IsInOrganizations(organizationId, positionId))
+        if (IsInUserSubsidiaries(organizationId, positionId))
         {
             return;
         }
 
-        UserOrganizations.Add(
-            new UserOrganization(
+        UserSubsidiaries.Add(
+            new UserSubsidiary(
                 Id,
                 organizationId,
                 positionId,
@@ -250,21 +250,21 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         );
     }
 
-    public virtual void RemoveOrganizationUnit(long organizationId, long positionId)
+    public virtual void RemoveUserSubsidiaries(long organizationId, long positionId)
     {
-        if (!IsInOrganizations(organizationId, positionId))
+        if (!IsInUserSubsidiaries(organizationId, positionId))
         {
             return;
         }
 
-        UserOrganizations.RemoveAll(
+        UserSubsidiaries.RemoveAll(
             us => us.OrganizationId == organizationId && us.PositionId == positionId
         );
     }
 
-    public virtual bool IsInOrganizations(long organizationId, long positionId)
+    public virtual bool IsInUserSubsidiaries(long organizationId, long positionId)
     {
-        return UserOrganizations.Any(
+        return UserSubsidiaries.Any(
             us => us.OrganizationId == organizationId
                   && us.PositionId == positionId
         );

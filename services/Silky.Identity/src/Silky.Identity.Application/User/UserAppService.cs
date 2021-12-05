@@ -124,7 +124,7 @@ public class UserAppService : IUserAppService
         if (input.UserSubsidiaries != null)
         {
             var userSubsidiaries = input.UserSubsidiaries
-                .Select(us => new UserOrganization(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
+                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
     }

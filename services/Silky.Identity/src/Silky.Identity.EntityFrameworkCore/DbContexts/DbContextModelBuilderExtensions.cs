@@ -49,7 +49,7 @@ public static class DbContextModelBuilderExtensions
             b.HasMany(u => u.Logins).WithOne().HasForeignKey(ul => ul.UserId).IsRequired();
             b.HasMany(u => u.Roles).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
             b.HasMany(u => u.Tokens).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
-            b.HasMany(u => u.UserOrganizations).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
+            b.HasMany(u => u.UserSubsidiaries).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
 
             b.HasIndex(u => u.NormalizedUserName);
             b.HasIndex(u => u.NormalizedEmail);
@@ -155,9 +155,9 @@ public static class DbContextModelBuilderExtensions
             b.Property(uc => uc.Description).HasMaxLength(IdentityClaimTypeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<UserOrganization>(b =>
+        builder.Entity<UserSubsidiary>(b =>
         {
-            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserOrganizations", HeroIdentityDbProperties.DbSchema);
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserSubsidiaries", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
         });

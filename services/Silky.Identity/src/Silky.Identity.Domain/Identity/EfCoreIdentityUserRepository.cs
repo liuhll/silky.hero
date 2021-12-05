@@ -23,7 +23,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName && !p.IsDeleted);
         }
 
@@ -51,7 +51,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .Where(u => u.Logins.Any(login =>
                     login.LoginProvider == loginProvider && login.ProviderKey == providerKey) && !u.IsDeleted)
                 .OrderBy(x => x.Id)
@@ -75,7 +75,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail && !p.IsDeleted);
         }
 
@@ -92,7 +92,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .Where(u => u.Claims.Any(c =>
                     c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
                 .ToListAsync(cancellationToken);
@@ -114,7 +114,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber && !p.IsDeleted);
         }
 
@@ -131,7 +131,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Logins)
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
-                .Include(p => p.UserOrganizations)
+                .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p =>
                     (p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account) &&
                     !p.IsDeleted);

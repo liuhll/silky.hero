@@ -18,7 +18,7 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUserManager : UserManager<IdentityUser>
 {
-    protected IRepository<UserOrganization> UserOrganizationRepository { get; }
+    protected IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
 
     protected IIdentityUserRepository UserRepository { get; }
 
@@ -31,7 +31,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IdentityErrorDescriber errors,
         IServiceProvider services,
         ILogger<IdentityUserManager> logger,
-        IRepository<UserOrganization> userOrganizationRepository,
+        IRepository<UserSubsidiary> userSubsidiaryRepository,
         IIdentityUserRepository userRepository)
         : base(store,
             optionsAccessor,
@@ -43,7 +43,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             services,
             logger)
     {
-        UserOrganizationRepository = userOrganizationRepository;
+        UserSubsidiaryRepository = userSubsidiaryRepository;
         UserRepository = userRepository;
     }
 
@@ -60,7 +60,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
 
     public async Task<IdentityResult> SetUserOrganizations(IdentityUser user,
-        ICollection<UserOrganization> userOrganizations)
+        ICollection<UserSubsidiary> userOrganizations)
     {
         Check.NotNull(user, nameof(user));
         Check.NotNull(userOrganizations, nameof(userOrganizations));
@@ -83,29 +83,29 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
-    private async Task<IEnumerable<UserOrganization>> GetUserOrganizationsAsync(IdentityUser user)
+    private async Task<IEnumerable<UserSubsidiary>> GetUserOrganizationsAsync(IdentityUser user)
     {
-        var userSubsidiaries = UserOrganizationRepository.Where(p => p.UserId == user.Id);
+        var userSubsidiaries = UserSubsidiaryRepository.Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
 
     private async Task<IdentityResult> AddToUserOrganizationsAsync(IdentityUser user,
-        IEnumerable<UserOrganization> userOrganizations)
+        IEnumerable<UserSubsidiary> userOrganizations)
     {
         foreach (var userSubsidiary in userOrganizations)
         {
-            await UserOrganizationRepository.InsertAsync(userSubsidiary);
+            await UserSubsidiaryRepository.InsertAsync(userSubsidiary);
         }
 
         return IdentityResult.Success;
     }
 
     private async Task<IdentityResult> RemoveFromUserOrganizationsAsync(IdentityUser user,
-        IEnumerable<UserOrganization> userOrganizations)
+        IEnumerable<UserSubsidiary> userOrganizations)
     {
         foreach (var userSubsidiary in userOrganizations)
         {
-            await UserOrganizationRepository.DeleteAsync(userSubsidiary);
+            await UserSubsidiaryRepository.DeleteAsync(userSubsidiary);
         }
 
         return IdentityResult.Success;
@@ -140,7 +140,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Include(p => p.Logins)
             .Include(p => p.Roles)
             .Include(p => p.Tokens)
-            .Include(p => p.UserOrganizations)
+            .Include(p => p.UserSubsidiaries)
             .FirstOrDefaultAsync(p => p.Id == userId);
     }
 
@@ -160,22 +160,22 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
-        var users = UserRepository.Include(p => p.UserOrganizations)
-            .Where(p => p.UserOrganizations.Any(us => us.OrganizationId == organizationId));
+        var users = UserRepository.Include(p => p.UserSubsidiaries)
+            .Where(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
     }
 
     public async Task<bool> HasOrganizationUsersAsync(long organizationId)
     {
-        var userCount = await UserRepository.Include(p => p.UserOrganizations)
-            .CountAsync(p => p.UserOrganizations.Any(us => us.OrganizationId == organizationId));
+        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+            .CountAsync(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return userCount > 0;
     }
 
     public async Task<bool> HasPositionUsersAsync(long positionId)
     {
-        var userCount = await UserRepository.Include(p => p.UserOrganizations)
-            .CountAsync(p => p.UserOrganizations.Any(us => us.PositionId == positionId));
+        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+            .CountAsync(p => p.UserSubsidiaries.Any(us => us.PositionId == positionId));
         return userCount > 0;
     }
 }
