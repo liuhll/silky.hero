@@ -19,4 +19,12 @@ public interface IClaimTypeAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdateClaimTypeInput input);
+
+    /// <summary>
+    /// 通过Id获取声明类型
+    /// </summary>
+    /// <param name="id">声明类型Id</param>
+    /// <returns></returns>
+    [HttpGet("{id:long}")]
+    Task<GetClaimTypeOutput> GetAsync(long id);
 }
