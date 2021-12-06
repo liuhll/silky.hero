@@ -21,6 +21,7 @@ public interface IClaimTypeAppService
     [HttpPost]
     [HttpPut]
     [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
     Task CreateOrUpdateAsync(CreateOrUpdateClaimTypeInput input);
 
     /// <summary>
@@ -39,6 +40,7 @@ public interface IClaimTypeAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -47,4 +49,11 @@ public interface IClaimTypeAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetClaimTypePageOutput>> GetPageAsync(GetClaimTypePageInput input);
+
+    /// <summary>
+    /// 获取所有的声明类型
+    /// </summary>
+    /// <returns>返回所有的声明类型</returns>
+    [GetCachingIntercept("all")]
+    Task<ICollection<GetClaimTypeOutput>> GetAllAsync();
 }

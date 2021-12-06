@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.LinqBuilder;
@@ -56,6 +57,11 @@ public class ClaimTypeAppService : IClaimTypeAppService
             .ProjectToType<GetClaimTypePageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return claimTypes;
+    }
+
+    public async Task<ICollection<GetClaimTypeOutput>> GetAllAsync()
+    {
+        return await _identityClaimTypeRepository.AsQueryable().ProjectToType<GetClaimTypeOutput>().ToListAsync();
     }
 
     private async Task<IdentityClaimType> GetClaimTypeAsync(long id)
