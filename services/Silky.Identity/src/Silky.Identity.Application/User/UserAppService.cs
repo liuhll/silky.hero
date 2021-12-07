@@ -84,6 +84,12 @@ public class UserAppService : IUserAppService
         return UserManager.GetPageAsync(input);
     }
 
+    [UnitOfWork]
+    public Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs)
+    {
+        return UserManager.UpdateClaimTypesAsync(userId, inputs);
+    }
+
     public Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
         return UserManager.GetOrganizationUsersAsync(organizationId);

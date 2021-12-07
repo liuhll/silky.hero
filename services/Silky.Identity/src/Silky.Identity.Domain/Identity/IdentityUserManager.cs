@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Silky.Core;
+using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
@@ -20,9 +22,11 @@ namespace Silky.Identity.Domain;
 
 public class IdentityUserManager : UserManager<IdentityUser>
 {
-    protected IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
+    public IIdentityUserRepository UserRepository { get; }
+    public IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
+    public IRepository<IdentityUserClaim> UserClaimRepository { get; }
 
-    protected IIdentityUserRepository UserRepository { get; }
+    public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
 
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
@@ -39,7 +43,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IRepository<UserSubsidiary> userSubsidiaryRepository,
         IIdentityUserRepository userRepository,
         IOrganizationAppService organizationAppService,
-        IPositionAppService positionAppService)
+        IPositionAppService positionAppService,
+        IRepository<IdentityUserClaim> userClaimRepository,
+        IRepository<IdentityClaimType> claimTypeRepository)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -54,6 +60,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
         UserRepository = userRepository;
         _organizationAppService = organizationAppService;
         _positionAppService = positionAppService;
+        UserClaimRepository = userClaimRepository;
+        ClaimTypeRepository = claimTypeRepository;
     }
 
     public async Task<IdentityUser> GetByIdAsync(long id)
@@ -228,5 +236,35 @@ public class IdentityUserManager : UserManager<IdentityUser>
         var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
             .CountAsync(p => p.UserSubsidiaries.Any(us => us.PositionId == positionId));
         return userCount > 0;
+    }
+
+    public async Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs)
+    {
+        if (inputs.Any(i => i.UserId != userId))
+        {
+            throw new UserFriendlyException($"指定的userId不相等");
+        }
+
+        var userClaims = new List<IdentityUserClaim>();
+        foreach (var input in inputs)
+        {
+            var claimType = await ClaimTypeRepository.FirstOrDefaultAsync(p => p.Name == input.ClaimType);
+            if (claimType == null)
+            {
+                throw new UserFriendlyException($"没有设置{input.ClaimType}的声明类型");
+            }
+
+            if (!claimType.Regex.IsNullOrEmpty() && !Regex.IsMatch(input.ClaimValue, claimType.Regex))
+            {
+                throw new UserFriendlyException($"设置的声明类型{input.ClaimType}的值{input.ClaimValue}格式不正确");
+            }
+
+            userClaims.Add(input.Adapt<IdentityUserClaim>());
+        }
+
+        var currentUserClaim = await UserClaimRepository.Where(p => p.UserId == userId).ToListAsync();
+        var newUserClaims = currentUserClaim.Except(userClaims).Distinct();
+        newUserClaims = userClaims.Except(currentUserClaim).Distinct();
+        await UserClaimRepository.UpdateAsync(newUserClaims);
     }
 }
