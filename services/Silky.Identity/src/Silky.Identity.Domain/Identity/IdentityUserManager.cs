@@ -262,9 +262,10 @@ public class IdentityUserManager : UserManager<IdentityUser>
             userClaims.Add(input.Adapt<IdentityUserClaim>());
         }
 
-        var currentUserClaim = await UserClaimRepository.Where(p => p.UserId == userId).ToListAsync();
-        var newUserClaims = currentUserClaim.Except(userClaims).Distinct();
-        newUserClaims = userClaims.Except(currentUserClaim).Distinct();
-        await UserClaimRepository.UpdateAsync(newUserClaims);
+        var currentUserClaims = await UserClaimRepository
+            .Where(p => p.UserId == userId)
+            .ToListAsync();
+        await UserClaimRepository.DeleteAsync(currentUserClaims);
+        await UserClaimRepository.InsertAsync(userClaims);
     }
 }
