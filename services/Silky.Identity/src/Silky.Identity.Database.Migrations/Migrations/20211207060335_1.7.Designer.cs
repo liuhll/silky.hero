@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Identity.EntityFrameworkCore.DbContexts;
 
 namespace Silky.Identity.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20211207060335_1.7")]
+    partial class _17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,34 +167,6 @@ namespace Silky.Identity.Database.Migrations.Migrations
                     b.HasIndex("NormalizedName");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDefault = false,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsStatic = false,
-                            Name = "admin",
-                            NormalizedName = "ADMIN",
-                            RealName = "管理员",
-                            Sort = 0
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDefault = false,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsStatic = false,
-                            Name = "normal",
-                            NormalizedName = "NORMAL",
-                            RealName = "一般角色",
-                            Sort = 0
-                        });
                 });
 
             modelBuilder.Entity("Silky.Identity.Domain.IdentityRoleClaim", b =>
@@ -393,7 +367,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "504247f2-6f85-4276-8ea5-e46d9f1d4c4a",
+                            ConcurrencyStamp = "f1683bbf-6447-4933-abc0-a29967b7919e",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@silky.com",
                             EmailConfirmed = false,
@@ -403,9 +377,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111111",
                             NormalizedEmail = "ADMIN@SILKY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAxj1PCDkpwToSrLX/XYptIvnv84Y49fOPoWE90JpTBYaZ1ZzFgmUeQtnMxp0Vo95Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE4BXvcl8DARAjuUB4uk6/BZuDCOouGicWlSnguy1jNiyaiMsdDEJDiQAms+7wMaLA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0da1cdfc-0fb5-43d8-8fc1-c6db5a3de207",
+                            SecurityStamp = "9de01029-cc54-4d74-a24b-b7b6315f7dbc",
                             UserName = "admin"
                         },
                         new
@@ -413,7 +387,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 2L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "9a2b58e3-ce1c-4837-b6ac-15055760e8e3",
+                            ConcurrencyStamp = "f93d39f9-a88f-42ab-836e-5f10fd307664",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "liuhll@silky.com",
                             EmailConfirmed = false,
@@ -423,9 +397,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111112",
                             NormalizedEmail = "LIUHLL@SILKY.COM",
                             NormalizedUserName = "LIUHLL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJcjGcqqrmQee48tLsdhxOE9xUMQp4iO5U7PjRZ4GlZgIQv7N+Ny6lS3Kj4PZFWOjg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJedqOtWTcdF+M7PITOp733ExbBEDga92fuzpckMaxiHT/sBgyk1Qp+LZ83B3x/82A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3ebf936f-e726-4c1e-bae0-e5ce9c994bcc",
+                            SecurityStamp = "bf82807e-2d3f-4c0a-9d09-d3bda411c386",
                             UserName = "liuhll"
                         });
                 });
