@@ -15,7 +15,7 @@ public class IdentityUserClaim : IdentityClaim
     public IdentityUserClaim(
         long userId,
         [NotNull] Claim claim,
-        Guid? tenantId)
+        Guid? tenantId = null)
         : base(
             claim,
             tenantId)
@@ -27,7 +27,7 @@ public class IdentityUserClaim : IdentityClaim
         long userId,
         [NotNull] string claimType,
         string claimValue,
-        Guid? tenantId)
+        Guid? tenantId = null)
         : base(
             claimType,
             claimValue,

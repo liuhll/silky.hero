@@ -62,9 +62,7 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserClaims", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-
-            b.Property(x => x.Id).ValueGeneratedNever();
-
+            
             b.Property(uc => uc.ClaimType).HasMaxLength(IdentityUserClaimConsts.MaxClaimTypeLength).IsRequired();
             b.Property(uc => uc.ClaimValue).HasMaxLength(IdentityUserClaimConsts.MaxClaimValueLength);
 
@@ -133,9 +131,7 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "RoleClaims", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-
-            b.Property(x => x.Id).ValueGeneratedNever();
-
+            
             b.Property(uc => uc.ClaimType).HasMaxLength(IdentityRoleClaimConsts.MaxClaimTypeLength).IsRequired();
             b.Property(uc => uc.ClaimValue).HasMaxLength(IdentityRoleClaimConsts.MaxClaimValueLength);
 

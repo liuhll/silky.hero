@@ -245,6 +245,11 @@ public class IdentityUserManager : UserManager<IdentityUser>
             throw new UserFriendlyException($"指定的userId不相等");
         }
 
+        var currentUserClaims = await UserClaimRepository
+            .Where(p => p.UserId == userId)
+            .AsNoTracking()
+            .ToListAsync();
+
         var userClaims = new List<IdentityUserClaim>();
         foreach (var input in inputs)
         {
@@ -259,12 +264,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 throw new UserFriendlyException($"设置的声明类型{input.ClaimType}的值{input.ClaimValue}格式不正确");
             }
 
-            userClaims.Add(input.Adapt<IdentityUserClaim>());
+            userClaims.Add(new IdentityUserClaim(input.UserId, input.ClaimType, input.ClaimValue));
         }
 
-        var currentUserClaims = await UserClaimRepository
-            .Where(p => p.UserId == userId)
-            .ToListAsync();
         await UserClaimRepository.DeleteAsync(currentUserClaims);
         await UserClaimRepository.InsertAsync(userClaims);
     }
