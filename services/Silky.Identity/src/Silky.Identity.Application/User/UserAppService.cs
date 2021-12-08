@@ -90,6 +90,14 @@ public class UserAppService : IUserAppService
         return UserManager.UpdateClaimTypesAsync(userId, inputs);
     }
 
+    public async Task LockAsync(long userId, int lockoutSeconds)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        await UserManager.SetLockoutEnabledAsync(user, true);
+        await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.Now.AddSeconds(lockoutSeconds));
+        await UserManager.UpdateAsync(user);
+    }
+
     public Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
         return UserManager.GetOrganizationUsersAsync(organizationId);

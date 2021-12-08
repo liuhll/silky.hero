@@ -29,8 +29,11 @@ public interface IUserAppService
 
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
 
-    [HttpPut("{userId:long}")]
+    [HttpPut("{userId:long}/claims")]
     Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs);
+
+    [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
+    Task LockAsync(long userId,int lockoutSeconds);
 
     [Governance(ProhibitExtranet = true)]
     Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);
