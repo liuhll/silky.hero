@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Silky.Identity.EntityFrameworkCore.DbContexts;
@@ -22,7 +23,10 @@ namespace Silky.IdentityHost
             });
 
             services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultDbContext>(); },
+                options =>
+                {
+                    options.AddDbPool<DefaultDbContext>(default, opts => { opts.UseBatchEF_MySQLPomelo(); });
+                },
                 "Silky.Identity.Database.Migrations");
         }
     }
