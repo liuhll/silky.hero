@@ -179,7 +179,7 @@ public class IdentityUserStore :
 
         try
         {
-            await UserRepository.UpdateNowAsync(user, cancellationToken: cancellationToken);
+            await UserRepository.UpdateAsync(user);
         }
         catch (Exception ex)
         {
@@ -205,7 +205,7 @@ public class IdentityUserStore :
 
         try
         {
-            await UserRepository.DeleteNowAsync(user, cancellationToken);
+            await UserRepository.DeleteAsync(user, cancellationToken);
         }
         catch (Exception ex)
         {

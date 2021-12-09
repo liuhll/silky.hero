@@ -105,6 +105,14 @@ public class UserAppService : IUserAppService
         await UserManager.UpdateAsync(user);
     }
 
+    public async Task ChangePasswordAsync(long userId, ChangePasswordInput input)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        (await UserManager.RemovePasswordAsync(user)).CheckErrors();
+        (await UserManager.AddPasswordAsync(user, input.NewPassword)).CheckErrors();
+        await UserManager.UpdateAsync(user);
+    }
+
     public Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
         return UserManager.GetOrganizationUsersAsync(organizationId);

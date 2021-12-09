@@ -187,6 +187,15 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return ((IdentityUserStore)Store).FindByAccountAsync(account, includeDetails);
     }
 
+    public override async Task<IdentityResult> RemovePasswordAsync(IdentityUser user)
+    {
+        ThrowIfDisposed();
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+        var identityResult = await UpdatePasswordHash(user, null, false);
+        return identityResult;
+    }
+
 
     public async Task<IdentityUser> GetByIdAsync(long userId, bool includeDetails)
     {

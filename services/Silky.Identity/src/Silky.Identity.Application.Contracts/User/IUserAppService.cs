@@ -38,6 +38,9 @@ public interface IUserAppService
     [HttpPut("{userId:long}/unlock")]
     Task UnLockAsync(long userId);
 
+    [HttpPut("{userId:long}/password")]
+    Task ChangePasswordAsync(long userId, ChangePasswordInput input);
+
     [Governance(ProhibitExtranet = true)]
     Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);
 
