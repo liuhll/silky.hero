@@ -128,10 +128,6 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
         {
             return Entities
                 .Include(p => p.Claims)
-                .Include(p => p.Logins)
-                .Include(p => p.Roles)
-                .Include(p => p.Tokens)
-                .Include(p => p.UserSubsidiaries)
                 .FirstOrDefaultAsync(p =>
                     (p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account) &&
                     !p.IsDeleted);
