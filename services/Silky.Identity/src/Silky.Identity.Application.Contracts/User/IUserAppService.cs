@@ -33,7 +33,10 @@ public interface IUserAppService
     Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs);
 
     [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
-    Task LockAsync(long userId,int lockoutSeconds);
+    Task LockAsync(long userId, int lockoutSeconds);
+
+    [HttpPut("{userId:long}/unlock")]
+    Task UnLockAsync(long userId);
 
     [Governance(ProhibitExtranet = true)]
     Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);

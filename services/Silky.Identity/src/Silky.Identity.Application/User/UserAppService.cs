@@ -98,6 +98,13 @@ public class UserAppService : IUserAppService
         await UserManager.UpdateAsync(user);
     }
 
+    public async Task UnLockAsync(long userId)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        await UserManager.SetLockoutEndDateAsync(user, null);
+        await UserManager.UpdateAsync(user);
+    }
+
     public Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
         return UserManager.GetOrganizationUsersAsync(organizationId);
