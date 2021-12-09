@@ -1,4 +1,4 @@
-namespace Silky.Position.Domain.Positions;
+namespace Silky.Position.Domain;
 
 public static class PositionConsts
 {

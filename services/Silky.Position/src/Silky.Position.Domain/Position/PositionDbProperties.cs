@@ -1,6 +1,6 @@
-﻿namespace Silky.Organization.Domain.Organizations;
+namespace Silky.Position.Domain;
 
-public class OrganizationDbProperties
+public class PositionDbProperties
 {
     public static string DbTablePrefix { get; set; } = "";
 

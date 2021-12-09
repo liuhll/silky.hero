@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
 using Silky.Hero.Common.EntityFrameworkCore.Contexts;
-using Silky.Position.Domain.Positions;
+using Silky.Position.Domain;
 
 namespace Silky.Position.EntityFrameworkCore.DbContexts
 {
@@ -12,6 +12,6 @@ namespace Silky.Position.EntityFrameworkCore.DbContexts
         {
         }
 
-        public DbSet<Domain.Positions.Position> Positions { get; set; }
+        public DbSet<Domain.Position> Positions { get; set; }
     }
 }

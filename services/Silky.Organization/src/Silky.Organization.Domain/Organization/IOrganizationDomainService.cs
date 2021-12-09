@@ -4,7 +4,7 @@ using Silky.Core.DependencyInjection;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 
-namespace Silky.Organization.Domain.Organizations;
+namespace Silky.Organization.Domain;
 
 public interface IOrganizationDomainService : IScopedDependency
 {

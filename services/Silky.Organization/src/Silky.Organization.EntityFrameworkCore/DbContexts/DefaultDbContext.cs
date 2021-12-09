@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
 using Silky.Hero.Common.EntityFrameworkCore.Contexts;
-using Silky.Organization.Domain.Organizations;
+using Silky.Organization.Domain;
 
 namespace Silky.Organization.EntityFrameworkCore.DbContexts
 {

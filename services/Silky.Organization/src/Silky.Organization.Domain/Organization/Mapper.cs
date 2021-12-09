@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 
-namespace Silky.Organization.Domain.Organizations;
+namespace Silky.Organization.Domain;
 
 public class Mapper : IRegister
 {

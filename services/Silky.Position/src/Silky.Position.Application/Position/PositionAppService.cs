@@ -7,7 +7,7 @@ using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
-using Silky.Position.Domain.Positions;
+using Silky.Position.Domain;
 
 namespace Silky.Position.Application.Position;
 

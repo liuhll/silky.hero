@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Silky.Hero.Common.EntityFrameworkCore.Modeling;
 using Silky.Hero.Common.Enums;
-using Silky.Organization.Domain.Organizations;
+using Silky.Organization.Domain;
 
 namespace Silky.Organization.EntityFrameworkCore.DbContexts;
 

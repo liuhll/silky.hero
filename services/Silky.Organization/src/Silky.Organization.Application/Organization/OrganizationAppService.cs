@@ -7,7 +7,7 @@ using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
-using Silky.Organization.Domain.Organizations;
+using Silky.Organization.Domain;
 
 namespace Silky.Organization.Application.Organization;
 

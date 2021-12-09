@@ -3,7 +3,7 @@ using Silky.Core.DependencyInjection;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Position.Application.Contracts.Position.Dtos;
 
-namespace Silky.Position.Domain.Positions;
+namespace Silky.Position.Domain;
 
 public interface IPositionDomainService : IScopedDependency
 { 

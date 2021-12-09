@@ -9,7 +9,7 @@ using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 
-namespace Silky.Organization.Domain.Organizations;
+namespace Silky.Organization.Domain;
 
 public class OrganizationDomainService : IOrganizationDomainService
 {

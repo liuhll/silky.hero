@@ -1,4 +1,4 @@
-﻿namespace Silky.Organization.Domain.Organizations;
+﻿namespace Silky.Organization.Domain;
 
 public static class OrganizationConsts
 {

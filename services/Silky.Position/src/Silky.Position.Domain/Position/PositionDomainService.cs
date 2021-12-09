@@ -6,7 +6,7 @@ using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Position.Application.Contracts.Position.Dtos;
 
-namespace Silky.Position.Domain.Positions;
+namespace Silky.Position.Domain;
 
 public class PositionDomainService : IPositionDomainService
 {
