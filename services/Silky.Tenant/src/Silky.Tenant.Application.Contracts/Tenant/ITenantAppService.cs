@@ -20,4 +20,7 @@ public interface ITenantAppService
 
     [HttpGet("{id:guid}")]
     Task<GetTenantOutput> GetAsync(Guid id);
+
+    [HttpDelete("{id:guid}")]
+    Task DeleteAsync(Guid id);
 }

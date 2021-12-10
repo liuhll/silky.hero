@@ -5,7 +5,7 @@ using Silky.Hero.Common.Enums;
 
 namespace Silky.Tenant.Domain;
 
-public class Tenant : IPrivateEntity, ICreatedObject, IUpdatedObject
+public class Tenant : IEntity, ICreatedObject, IUpdatedObject, ISoftDeletedObject
 {
     public Tenant()
     {
@@ -32,4 +32,7 @@ public class Tenant : IPrivateEntity, ICreatedObject, IUpdatedObject
 
     public long? UpdatedBy { get; set; }
     public DateTimeOffset? UpdatedTime { get; set; }
+    public bool IsDeleted { get; set; }
+    public long? DeletedBy { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
 }

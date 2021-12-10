@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
 using Silky.Hero.Common.EntityFrameworkCore.Contexts;
 using Silky.Tenant.Domain;
@@ -14,5 +13,6 @@ namespace Silky.Tenant.EntityFrameworkCore.DbContexts
         }
 
         public DbSet<Domain.Tenant> Tenants { get; set; }
+        
     }
 }

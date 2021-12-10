@@ -36,4 +36,15 @@ public class TenantAppService : ITenantAppService
 
         return tenant.Adapt<GetTenantOutput>();
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var tenant = await _tenantDomainService.TenantRepository.FindOrDefaultAsync(id);
+        if (tenant == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的租户信息");
+        }
+
+        await _tenantDomainService.TenantRepository.DeleteAsync(tenant);
+    }
 }
