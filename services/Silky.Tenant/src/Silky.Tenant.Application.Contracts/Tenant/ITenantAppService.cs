@@ -8,6 +8,9 @@ using Silky.Tenant.Application.Contracts.Tenant.Dtos;
 
 namespace Silky.Tenant.Application.Contracts.Tenant;
 
+/// <summary>
+/// 租户信息服务
+/// </summary>
 [ServiceRoute]
 public interface ITenantAppService
 {
@@ -19,6 +22,7 @@ public interface ITenantAppService
     [HttpPut]
     [HttpPost]
     [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>),"all")]
     Task CreateOrUpdateAsync(CreateOrUpdateTenantInput input);
 
     /// <summary>
@@ -37,6 +41,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [HttpDelete("{id:guid}")]
     [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>),"all")]
     Task DeleteAsync([CacheKey(0)]Guid id);
 
     /// <summary>
@@ -45,4 +50,11 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input);
+    
+    /// <summary>
+    /// 获取有效租户信息接口
+    /// </summary>
+    /// <returns></returns>
+    [GetCachingIntercept("all")]
+    Task<ICollection<GetTenantOutput>> GetAllAsync();
 }
