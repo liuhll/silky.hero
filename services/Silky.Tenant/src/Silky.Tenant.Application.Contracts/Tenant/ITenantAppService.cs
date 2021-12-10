@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Rpc.Routing;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
@@ -16,4 +17,7 @@ public interface ITenantAppService
     [HttpPut]
     [HttpPost]
     Task CreateOrUpdateAsync(CreateOrUpdateTenantInput input);
+
+    [HttpGet("{id:guid}")]
+    Task<GetTenantOutput> GetAsync(Guid id);
 }
