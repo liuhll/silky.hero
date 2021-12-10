@@ -12,7 +12,7 @@ public class IdentityRoleSeedData : IEntitySeedData<IdentityRole>
         var initRoles = new List<IdentityRole>()
         {
             new ("admin","管理员") { Id = 1},
-            new IdentityRole("normal","一般角色") { Id = 2}
+            new ("normal","一般角色") { Id = 2}
         };
         return initRoles;
     }
