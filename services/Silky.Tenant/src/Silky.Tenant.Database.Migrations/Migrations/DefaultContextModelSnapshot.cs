@@ -41,13 +41,22 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)")
+                        .HasColumnName("Name");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)")
+                        .HasColumnName("Remark");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1)
+                        .HasColumnName("Status");
 
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
@@ -58,6 +67,26 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tenants", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c84a96ed-b5c6-4f0b-8a5d-5ea62aab72af"),
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Name = "Silky",
+                            Remark = "silky微服务开发社区",
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("654916d5-1131-409a-8e91-5c942db72579"),
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Name = "Hero",
+                            Remark = "SilkyHero快速开发框架",
+                            Status = 1
+                        });
                 });
 #pragma warning restore 612, 618
         }

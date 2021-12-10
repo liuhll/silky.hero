@@ -23,9 +23,12 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                     Remark = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
-                    UpdatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeletedBy = table.Column<long>(type: "bigint", nullable: true),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,13 +38,13 @@ namespace Silky.Tenant.Database.Migrations.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tenants",
-                columns: new[] { "Id", "CreatedBy", "CreatedTime", "Name", "Remark", "Status", "UpdatedBy", "UpdatedTime" },
-                values: new object[] { new Guid("1d54ede5-a644-4af0-8fff-5553d5212bee"), null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Hero", "SilkyHero快速开发框架", 1, null, null });
+                columns: new[] { "Id", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "IsDeleted", "Name", "Remark", "Status", "UpdatedBy", "UpdatedTime" },
+                values: new object[] { new Guid("654916d5-1131-409a-8e91-5c942db72579"), null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "Hero", "SilkyHero快速开发框架", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Tenants",
-                columns: new[] { "Id", "CreatedBy", "CreatedTime", "Name", "Remark", "Status", "UpdatedBy", "UpdatedTime" },
-                values: new object[] { new Guid("3e884171-6ed7-4852-9077-84a96e83cd5a"), null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Silky", "silky微服务开发社区", 1, null, null });
+                columns: new[] { "Id", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "IsDeleted", "Name", "Remark", "Status", "UpdatedBy", "UpdatedTime" },
+                values: new object[] { new Guid("c84a96ed-b5c6-4f0b-8a5d-5ea62aab72af"), null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "Silky", "silky微服务开发社区", 1, null, null });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

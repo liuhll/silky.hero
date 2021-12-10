@@ -11,7 +11,7 @@ using Silky.Tenant.EntityFrameworkCore.DbContexts;
 namespace Silky.Tenant.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20211209091713_v1.0")]
+    [Migration("20211210080028_v1.0")]
     partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,15 @@ namespace Silky.Tenant.Database.Migrations.Migrations
 
                     b.Property<DateTimeOffset>("CreatedTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -64,16 +73,18 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3e884171-6ed7-4852-9077-84a96e83cd5a"),
+                            Id = new Guid("c84a96ed-b5c6-4f0b-8a5d-5ea62aab72af"),
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
                             Name = "Silky",
                             Remark = "silky微服务开发社区",
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("1d54ede5-a644-4af0-8fff-5553d5212bee"),
+                            Id = new Guid("654916d5-1131-409a-8e91-5c942db72579"),
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
                             Name = "Hero",
                             Remark = "SilkyHero快速开发框架",
                             Status = 1
