@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
+using Silky.EntityFrameworkCore.Extensions;
 using Silky.Tenant.Application.Contracts.Tenant;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
 using Silky.Tenant.Domain;
@@ -46,5 +50,14 @@ public class TenantAppService : ITenantAppService
         }
 
         await _tenantDomainService.TenantRepository.DeleteAsync(tenant);
+    }
+
+    public async Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input)
+    { 
+        return await _tenantDomainService.TenantRepository
+            .Where(!input.Name.IsNullOrEmpty(), p => p.Name == input.Name)
+            .Where(input.Status.HasValue, p => p.Status == input.Status)
+            .ProjectToType<GetTenantPageOutput>()
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 }
