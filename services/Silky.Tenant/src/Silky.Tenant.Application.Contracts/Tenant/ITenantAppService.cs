@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
 
@@ -17,6 +18,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [HttpPut]
     [HttpPost]
+    [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdateTenantInput input);
 
     /// <summary>
@@ -25,7 +27,8 @@ public interface ITenantAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:guid}")]
-    Task<GetTenantOutput> GetAsync(Guid id);
+    [GetCachingIntercept("id:{0}")]
+    Task<GetTenantOutput> GetAsync([CacheKey(0)]Guid id);
 
     /// <summary>
     /// 通过id删除租户信息
@@ -33,7 +36,8 @@ public interface ITenantAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:guid}")]
-    Task DeleteAsync(Guid id);
+    [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
+    Task DeleteAsync([CacheKey(0)]Guid id);
 
     /// <summary>
     /// 分页查询租户信息
