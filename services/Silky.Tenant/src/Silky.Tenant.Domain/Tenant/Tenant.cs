@@ -5,7 +5,7 @@ using Silky.Hero.Common.Enums;
 
 namespace Silky.Tenant.Domain;
 
-public class Tenant : Entity<Guid>, IAuditedObject
+public class Tenant : IPrivateEntity, ICreatedObject, IUpdatedObject
 {
     public Tenant()
     {
@@ -20,12 +20,16 @@ public class Tenant : Entity<Guid>, IAuditedObject
         Remark = remark;
     }
 
+    public Guid Id { get; set; }
+
     public string Name { get; set; }
 
     public Status Status { get; set; }
 
     public string Remark { get; set; }
     public long? CreatedBy { get; set; }
+    public DateTimeOffset CreatedTime { get; set; }
 
     public long? UpdatedBy { get; set; }
+    public DateTimeOffset? UpdatedTime { get; set; }
 }

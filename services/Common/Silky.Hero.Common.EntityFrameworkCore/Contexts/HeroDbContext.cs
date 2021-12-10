@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts;
-using Silky.EntityFrameworkCore.Entities;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
@@ -48,14 +47,15 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
             switch (entity.State)
             {
                 case EntityState.Added:
-                    if (entity.Entity is IAuditedObject auditedObject)
+                    if (entity.Entity is ICreatedObject createdObject)
                     {
-                        var currentTenantId = entity.Property(nameof(Entity.TenantId)).CurrentValue;
-                        if (currentTenantId == null)
-                            entity.Property(nameof(Entity.TenantId)).CurrentValue = tenantId;
-
-                        auditedObject.CreatedTime = DateTimeOffset.Now;
-                        auditedObject.CreatedBy = userId;
+                        createdObject.CreatedTime = DateTimeOffset.Now;
+                        createdObject.CreatedBy = userId;
+                    }
+                    
+                    if (entity.Entity is IHasTenantObject tenantObject)
+                    {
+                        tenantObject.TenantId ??= tenantId;
                     }
 
                     if (entity.Entity is ISoftDeletedObject deletedObject1)
