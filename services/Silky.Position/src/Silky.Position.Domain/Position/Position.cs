@@ -1,10 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
-using Silky.Hero.Common.EntityFrameworkCore.Modeling;
 using Silky.Hero.Common.Enums;
 
 namespace Silky.Position.Domain;
