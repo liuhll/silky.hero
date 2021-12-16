@@ -61,4 +61,15 @@ public class DictionaryAppService : IDictionaryAppService
 
         return _dictionaryDomainService.UpdateItemAsync(input);
     }
+
+    public async Task<GetDictionaryItemOutput> GetItemAsync(long id)
+    {
+        var dictItem = await _dictionaryDomainService.DictionaryItemRepository.FindOrDefaultAsync(id);
+        if (dictItem == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的字典项");
+        }
+
+        return dictItem.Adapt<GetDictionaryItemOutput>();
+    }
 }

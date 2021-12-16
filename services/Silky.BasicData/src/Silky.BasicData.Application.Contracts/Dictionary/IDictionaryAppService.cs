@@ -46,4 +46,12 @@ public interface IDictionaryAppService
     [HttpPost]
     [HttpPut]
     Task  CreateOrUpdateItemAsync(CreateDictionaryItemInput input);
+
+    /// <summary>
+    /// 通过Id获取字典项
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("item/{id:long}")]
+    Task<GetDictionaryItemOutput> GetItemAsync(long id);
 }
