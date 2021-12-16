@@ -20,4 +20,12 @@ public interface IDictionaryAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateTypeAsync(CreateDictionaryTypeInput input);
+
+    /// <summary>
+    /// 通过Id获取字典类型
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("type/{id:long}")]
+    Task<GetDictionaryTypeOutput> GetTypeAsync(long id);
 }

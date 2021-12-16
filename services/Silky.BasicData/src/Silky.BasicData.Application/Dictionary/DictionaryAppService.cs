@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Mapster;
 using Silky.BasicData.Application.Contracts.Dictionary;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 using Silky.BasicData.Domain.Dictionary;
+using Silky.Core.Exceptions;
 
 namespace Silky.BasicData.Application.Dictionary;
 
@@ -21,5 +23,16 @@ public class DictionaryAppService : IDictionaryAppService
             return _dictionaryDomainService.CreateTypeAsync(input);
         }
         return _dictionaryDomainService.UpdateTypeAsync(input);
+    }
+
+    public async Task<GetDictionaryTypeOutput> GetTypeAsync(long id)
+    {
+        var dictType = await _dictionaryDomainService.DictionaryTypeRepository.FindOrDefaultAsync(id);
+        if (dictType == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的字典类型");
+        }
+
+        return dictType.Adapt<GetDictionaryTypeOutput>();
     }
 }
