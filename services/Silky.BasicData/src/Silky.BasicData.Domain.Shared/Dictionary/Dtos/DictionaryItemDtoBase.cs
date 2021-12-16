@@ -2,18 +2,23 @@
 
 namespace Silky.BasicData.Domain.Shared.Dictionary.Dtos;
 
-public abstract class DictionaryTypeDtoBase
+public abstract class DictionaryItemDtoBase
 {
     /// <summary>
-    /// 字典名称
+    /// 字典类型Id
     /// </summary>
-    [Required(ErrorMessage = "字典名称不允许为空")]
-    public string Name { get; set; }
+    public long DictionaryId { get; set; }
+
+    /// <summary>
+    /// 字典项的值
+    /// </summary>
+    [Required(ErrorMessage = "字典值不允许为空")]
+    public string Value { get; set; }
 
     /// <summary>
     /// 字典编码(唯一标识)
     /// </summary>
-    [Required(ErrorMessage = "字典编码不允许为空")]
+    [Required(ErrorMessage = "字典项编码不允许为空")]
     public string Code { get; set; }
 
     /// <summary>

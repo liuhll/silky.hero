@@ -36,4 +36,14 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("type/{id:long}")]
     Task DeleteTypeAsync(long id);
+    
+    /// <summary>
+    /// 新增/更新字典项
+    /// </summary>
+    /// <remarks>主键Id为空时代表新增</remarks>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [HttpPut]
+    Task  CreateOrUpdateItemAsync(CreateDictionaryItemInput input);
 }

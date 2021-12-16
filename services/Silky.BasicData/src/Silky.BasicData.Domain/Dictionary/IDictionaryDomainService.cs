@@ -13,4 +13,6 @@ public interface IDictionaryDomainService
     Task CreateTypeAsync(CreateDictionaryTypeInput input);
     
     Task UpdateTypeAsync(CreateDictionaryTypeInput input);
+    Task CreateItemAsync(CreateDictionaryItemInput input);
+    Task UpdateItemAsync(CreateDictionaryItemInput input);
 }

@@ -51,4 +51,14 @@ public class DictionaryAppService : IDictionaryAppService
 
         await _dictionaryDomainService.DictionaryTypeRepository.DeleteAsync(dictType);
     }
+
+    public Task CreateOrUpdateItemAsync(CreateDictionaryItemInput input)
+    {
+        if (!input.Id.HasValue)
+        {
+            return _dictionaryDomainService.CreateItemAsync(input);
+        }
+
+        return _dictionaryDomainService.UpdateItemAsync(input);
+    }
 }
