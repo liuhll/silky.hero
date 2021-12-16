@@ -36,7 +36,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("type/{id:long}")]
     Task DeleteTypeAsync(long id);
-    
+
     /// <summary>
     /// 新增/更新字典项
     /// </summary>
@@ -45,7 +45,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
-    Task  CreateOrUpdateItemAsync(CreateDictionaryItemInput input);
+    Task CreateOrUpdateItemAsync(CreateDictionaryItemInput input);
 
     /// <summary>
     /// 通过Id获取字典项
@@ -54,4 +54,12 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpGet("item/{id:long}")]
     Task<GetDictionaryItemOutput> GetItemAsync(long id);
+
+    /// <summary>
+    /// 根据Id删除字典项
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("item/{id:long}")]
+    Task DeleteItemAsync(long id);
 }

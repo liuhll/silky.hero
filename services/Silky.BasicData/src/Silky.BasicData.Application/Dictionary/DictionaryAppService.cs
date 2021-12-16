@@ -72,4 +72,14 @@ public class DictionaryAppService : IDictionaryAppService
 
         return dictItem.Adapt<GetDictionaryItemOutput>();
     }
+
+    public async Task DeleteItemAsync(long id)
+    {
+        var dictItem = await _dictionaryDomainService.DictionaryItemRepository.FindOrDefaultAsync(id);
+        if (dictItem == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的字典项");
+        }
+        await _dictionaryDomainService.DictionaryItemRepository.DeleteAsync(dictItem);
+    }
 }
