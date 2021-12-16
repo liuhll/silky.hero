@@ -28,4 +28,12 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpGet("type/{id:long}")]
     Task<GetDictionaryTypeOutput> GetTypeAsync(long id);
+
+    /// <summary>
+    /// 通过Id删除字典类型
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("type/{id:long}")]
+    Task DeleteTypeAsync(long id);
 }

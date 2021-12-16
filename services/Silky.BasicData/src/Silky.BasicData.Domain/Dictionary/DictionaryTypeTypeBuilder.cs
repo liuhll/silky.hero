@@ -33,6 +33,7 @@ public class DictionaryTypeTypeBuilder : IEntityTypeBuilder<DictionaryType>
         builder.HasMany(e => e.DictionaryItems)
             .WithOne(n => n.DictionaryType)
             .HasForeignKey(i => i.DictionaryId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
