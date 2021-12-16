@@ -17,19 +17,19 @@ public class DictionaryItemTypeBuilder : IEntityTypeBuilder<DictionaryItem>
         builder.Property(e => e.Code)
             .HasMaxLength(DictionaryConsts.MaxCodeLength)
             .IsRequired()
-            .HasColumnName(nameof(DictionaryType.Code));
+            .HasColumnName(nameof(DictionaryItem.Code));
         
         builder.Property(e => e.Value)
             .HasMaxLength(DictionaryConsts.MaxValueLength)
             .IsRequired()
-            .HasColumnName(nameof(DictionaryType.Name));
+            .HasColumnName(nameof(DictionaryItem.Value));
         
         builder.Property(e => e.Remark)
             .HasMaxLength(DictionaryConsts.MaxRemarkLength)
-            .HasColumnName(nameof(DictionaryType.Remark));
+            .HasColumnName(nameof(DictionaryItem.Remark));
         
         builder.Property(e => e.Sort)
-            .HasColumnName(nameof(DictionaryType.Sort));
+            .HasColumnName(nameof(DictionaryItem.Sort));
         
     }
 }
