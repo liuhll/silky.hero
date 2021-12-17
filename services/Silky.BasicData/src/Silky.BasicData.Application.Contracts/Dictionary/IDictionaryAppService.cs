@@ -78,6 +78,22 @@ public interface IDictionaryAppService
     /// <param name="dictionaryId">字典id</param>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpGet("{dictionaryId:long}/item/page")]
+    [HttpGet("{dictionaryId:long}/items/page")]
     Task<PagedList<GetDictionaryItemPageOutput>> GetItemPageAsync(long dictionaryId, GetDictionaryItemPageInput input);
+
+    /// <summary>
+    /// 根据Id获取所有字典项项目
+    /// </summary>
+    /// <param name="dictionaryId"></param>
+    /// <returns></returns>
+    [HttpGet("{dictionaryId:long}/items")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync(long dictionaryId);
+    
+    /// <summary>
+    /// 根据Code获取所有字典项
+    /// </summary>
+    /// <param name="code"></param>
+    /// <returns></returns>
+    [HttpGet("{code}/items")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync(string code);
 }

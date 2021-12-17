@@ -109,4 +109,24 @@ public class DictionaryAppService : IDictionaryAppService
             .ProjectToType<GetDictionaryItemPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
+
+    public async Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync(long dictionaryId)
+    {
+        return await _dictionaryDomainService.DictionaryItemRepository
+            .Where(p => p.DictionaryId == dictionaryId)
+            .AsNoTracking()
+            .ProjectToType<GetDictionaryItemOutput>()
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync(string code)
+    {
+        var dictType = await _dictionaryDomainService.DictionaryTypeRepository.FirstOrDefaultAsync(p => p.Code == code);
+        if (dictType == null)
+        {
+            throw new UserFriendlyException($"不存在code为{code}的字典");
+        }
+
+        return await GetAllItemsByIdAsync(dictType.Id);
+    }
 }
