@@ -10,6 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
       <ProjectReference Include="..\Silky.BasicData.Domain.Shared\Silky.BasicData.Domain.Shared.csproj" />
     </ItemGroup>
 

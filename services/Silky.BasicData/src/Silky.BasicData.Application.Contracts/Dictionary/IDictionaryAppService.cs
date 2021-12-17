@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 using Silky.Rpc.Routing;
@@ -38,6 +39,14 @@ public interface IDictionaryAppService
     Task DeleteTypeAsync(long id);
 
     /// <summary>
+    /// 分页获取字典类型
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpGet("type/page")]
+    Task<PagedList<GetDictionaryTypePageOutput>> GetTypePageAsync(GetDictionaryTypePageInput input);
+
+    /// <summary>
     /// 新增/更新字典项
     /// </summary>
     /// <remarks>主键Id为空时代表新增</remarks>
@@ -62,4 +71,6 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("item/{id:long}")]
     Task DeleteItemAsync(long id);
+    
+    
 }
