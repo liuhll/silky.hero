@@ -54,6 +54,7 @@ public class DictionaryAppService : IDictionaryAppService
         }
 
         await _dictionaryDomainService.DictionaryTypeRepository.DeleteAsync(dictType);
+        await _dictionaryDomainService.RemoveDictionaryItemsCache(dictType.Id);
     }
 
     public async Task<PagedList<GetDictionaryTypePageOutput>> GetTypePageAsync(GetDictionaryTypePageInput input)
@@ -96,6 +97,7 @@ public class DictionaryAppService : IDictionaryAppService
         }
 
         await _dictionaryDomainService.DictionaryItemRepository.DeleteAsync(dictItem);
+        await _dictionaryDomainService.RemoveDictionaryItemsCache(dictItem.DictionaryId);
     }
 
     public async Task<PagedList<GetDictionaryItemPageOutput>> GetItemPageAsync(long dictionaryId,

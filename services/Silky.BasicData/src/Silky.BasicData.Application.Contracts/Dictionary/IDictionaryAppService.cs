@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.BasicData.Application.Contracts.Dictionary;
@@ -20,6 +21,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
     Task CreateOrUpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
 
     /// <summary>
@@ -28,7 +30,8 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("type/{id:long}")]
-    Task<GetDictionaryTypeOutput> GetTypeAsync(long id);
+    [GetCachingIntercept("type:id:{0}")]
+    Task<GetDictionaryTypeOutput> GetTypeAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 通过Id删除字典类型
@@ -36,7 +39,8 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("type/{id:long}")]
-    Task DeleteTypeAsync(long id);
+    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
+    Task DeleteTypeAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 分页获取字典类型
@@ -54,6 +58,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
     Task CreateOrUpdateItemAsync(CreateOrUpdateDictionaryItemInput input);
 
     /// <summary>
@@ -62,7 +67,8 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("item/{id:long}")]
-    Task<GetDictionaryItemOutput> GetItemAsync(long id);
+    [GetCachingIntercept("item:id:{0}")]
+    Task<GetDictionaryItemOutput> GetItemAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 根据Id删除字典项
@@ -70,7 +76,8 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("item/{id:long}")]
-    Task DeleteItemAsync(long id);
+    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
+    Task DeleteItemAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 分页获取字典项接口
@@ -87,7 +94,8 @@ public interface IDictionaryAppService
     /// <param name="dictionaryId"></param>
     /// <returns></returns>
     [HttpGet("{dictionaryId:long}/items")]
-    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync(long dictionaryId);
+    [GetCachingIntercept("items:id:{0}")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync([CacheKey(0)]long dictionaryId);
     
     /// <summary>
     /// 根据Code获取所有字典项
@@ -95,5 +103,6 @@ public interface IDictionaryAppService
     /// <param name="code"></param>
     /// <returns></returns>
     [HttpGet("{code}/items")]
-    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync(string code);
+    [GetCachingIntercept("items:code:{0}")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync([CacheKey(0)]string code);
 }

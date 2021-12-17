@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mapster;
+using Microsoft.Extensions.Caching.Distributed;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Extensions;
 
 namespace Silky.BasicData.Domain.Dictionary;
 
@@ -12,15 +15,19 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
 {
     public DictionaryDomainService(
         IRepository<DictionaryType> dictionaryTypeRepository,
-        IRepository<DictionaryItem> dictionaryItemRepository)
+        IRepository<DictionaryItem> dictionaryItemRepository, 
+        IDistributedCache distributedCache)
     {
         DictionaryTypeRepository = dictionaryTypeRepository;
         DictionaryItemRepository = dictionaryItemRepository;
+        DistributedCache = distributedCache;
     }
 
     public IRepository<DictionaryType> DictionaryTypeRepository { get; }
 
     public IRepository<DictionaryItem> DictionaryItemRepository { get; }
+
+    public IDistributedCache DistributedCache { get; }
 
     public async Task CreateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
     {
@@ -69,6 +76,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
 
         dictType = input.Adapt(dictType);
         await DictionaryTypeRepository.UpdateAsync(dictType);
+        await RemoveDictionaryItemsCache(dictType.Id);
     }
 
     public async Task CreateItemAsync(CreateOrUpdateDictionaryItemInput input)
@@ -90,6 +98,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
 
         var dictItem = input.Adapt<DictionaryItem>();
         await DictionaryItemRepository.InsertAsync(dictItem);
+        await RemoveDictionaryItemsCache(dictItem.DictionaryId);
     }
 
     public async Task UpdateItemAsync(CreateOrUpdateDictionaryItemInput input)
@@ -126,9 +135,9 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
                 throw new UserFriendlyException($"已经存在值为{input.Value}的字典值");
             }
         }
-
         dictItem = input.Adapt(dictItem);
         await DictionaryItemRepository.UpdateAsync(dictItem);
+        await RemoveDictionaryItemsCache(dictItem.DictionaryId);
     }
 
     private async Task CheckExistDictionaryType(long id)
@@ -138,5 +147,15 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         {
             throw new UserFriendlyException($"不存在Id为{id}的字典类型");
         }
+    }
+
+    public async Task RemoveDictionaryItemsCache(long dictionaryId)
+    {
+        var dictType = await DictionaryTypeRepository.FindAsync(dictionaryId);
+        
+        await DistributedCache.RemoveAsync(typeof(ICollection<GetDictionaryItemOutput>),
+            $"items:id:{dictType.Id}");
+        await DistributedCache.RemoveAsync(typeof(ICollection<GetDictionaryItemOutput>),
+            $"items:code:{dictType.Code}");
     }
 }
