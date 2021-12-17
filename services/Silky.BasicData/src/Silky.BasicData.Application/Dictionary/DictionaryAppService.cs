@@ -21,7 +21,7 @@ public class DictionaryAppService : IDictionaryAppService
         _dictionaryDomainService = dictionaryDomainService;
     }
 
-    public Task CreateOrUpdateTypeAsync(CreateDictionaryTypeInput input)
+    public Task CreateOrUpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
     {
         if (!input.Id.HasValue)
         {
@@ -66,7 +66,7 @@ public class DictionaryAppService : IDictionaryAppService
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 
-    public Task CreateOrUpdateItemAsync(CreateDictionaryItemInput input)
+    public Task CreateOrUpdateItemAsync(CreateOrUpdateDictionaryItemInput input)
     {
         if (!input.Id.HasValue)
         {
@@ -94,6 +94,19 @@ public class DictionaryAppService : IDictionaryAppService
         {
             throw new UserFriendlyException($"不存在Id为{id}的字典项");
         }
+
         await _dictionaryDomainService.DictionaryItemRepository.DeleteAsync(dictItem);
+    }
+
+    public async Task<PagedList<GetDictionaryItemPageOutput>> GetItemPageAsync(long dictionaryId,
+        GetDictionaryItemPageInput input)
+    {
+        return await _dictionaryDomainService.DictionaryItemRepository
+            .Where(p => p.DictionaryId == dictionaryId)
+            .Where(!input.Code.IsNullOrEmpty(), p => p.Code.Contains(input.Code))
+            .Where(!input.Value.IsNullOrEmpty(), p => p.Value.Contains(input.Value))
+            .AsNoTracking()
+            .ProjectToType<GetDictionaryItemPageOutput>()
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 }

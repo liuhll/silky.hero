@@ -10,9 +10,9 @@ public interface IDictionaryDomainService
 
     IRepository<DictionaryItem> DictionaryItemRepository { get; }
     
-    Task CreateTypeAsync(CreateDictionaryTypeInput input);
+    Task CreateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
     
-    Task UpdateTypeAsync(CreateDictionaryTypeInput input);
-    Task CreateItemAsync(CreateDictionaryItemInput input);
-    Task UpdateItemAsync(CreateDictionaryItemInput input);
+    Task UpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
+    Task CreateItemAsync(CreateOrUpdateDictionaryItemInput input);
+    Task UpdateItemAsync(CreateOrUpdateDictionaryItemInput input);
 }

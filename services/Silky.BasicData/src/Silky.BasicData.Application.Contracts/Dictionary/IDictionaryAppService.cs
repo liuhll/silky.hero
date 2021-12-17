@@ -20,7 +20,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
-    Task CreateOrUpdateTypeAsync(CreateDictionaryTypeInput input);
+    Task CreateOrUpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
 
     /// <summary>
     /// 通过Id获取字典类型
@@ -54,7 +54,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
-    Task CreateOrUpdateItemAsync(CreateDictionaryItemInput input);
+    Task CreateOrUpdateItemAsync(CreateOrUpdateDictionaryItemInput input);
 
     /// <summary>
     /// 通过Id获取字典项
@@ -71,6 +71,13 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("item/{id:long}")]
     Task DeleteItemAsync(long id);
-    
-    
+
+    /// <summary>
+    /// 分页获取字典项接口
+    /// </summary>
+    /// <param name="dictionaryId">字典id</param>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpGet("{dictionaryId:long}/item/page")]
+    Task<PagedList<GetDictionaryItemPageOutput>> GetItemPageAsync(long dictionaryId, GetDictionaryItemPageInput input);
 }

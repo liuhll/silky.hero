@@ -22,7 +22,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
 
     public IRepository<DictionaryItem> DictionaryItemRepository { get; }
 
-    public async Task CreateTypeAsync(CreateDictionaryTypeInput input)
+    public async Task CreateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
     {
         var existDictType = await DictionaryTypeRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
         if (existDictType != null)
@@ -40,7 +40,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await DictionaryTypeRepository.InsertAsync(dictType);
     }
 
-    public async Task UpdateTypeAsync(CreateDictionaryTypeInput input)
+    public async Task UpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
     {
         Check.NotNull(input.Id, nameof(input.Id));
         var dictType = await DictionaryTypeRepository.FindOrDefaultAsync(input.Id);
@@ -71,7 +71,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await DictionaryTypeRepository.UpdateAsync(dictType);
     }
 
-    public async Task CreateItemAsync(CreateDictionaryItemInput input)
+    public async Task CreateItemAsync(CreateOrUpdateDictionaryItemInput input)
     {
         await CheckExistDictionaryType(input.DictionaryId);
         var existDictItem = await DictionaryItemRepository.FirstOrDefaultAsync(p =>
@@ -92,7 +92,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await DictionaryItemRepository.InsertAsync(dictItem);
     }
 
-    public async Task UpdateItemAsync(CreateDictionaryItemInput input)
+    public async Task UpdateItemAsync(CreateOrUpdateDictionaryItemInput input)
     {
         await CheckExistDictionaryType(input.DictionaryId);
         Check.NotNull(input.Id, nameof(input.Id));

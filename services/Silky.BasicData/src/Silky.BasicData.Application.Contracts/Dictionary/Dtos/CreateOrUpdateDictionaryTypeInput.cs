@@ -2,7 +2,7 @@
 
 namespace Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 
-public class CreateDictionaryItemInput : DictionaryItemDtoBase
+public class CreateOrUpdateDictionaryTypeInput : DictionaryTypeDtoBase
 {
     /// <summary>
     /// 主键Id

@@ -1,6 +1,8 @@
-﻿namespace Silky.BasicData.Application.Contracts.Dictionary.Dtos;
+﻿using Silky.BasicData.Domain.Shared.Dictionary.Dtos;
 
-public class GetDictionaryItemOutput : CreateDictionaryItemInput
+namespace Silky.BasicData.Application.Contracts.Dictionary.Dtos;
+
+public class GetDictionaryItemOutput : DictionaryItemDtoBase
 {
     /// <summary>
     /// 主键Id
