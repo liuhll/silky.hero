@@ -15,7 +15,7 @@ public class UserSubsidiary : AuditedEntity
     {
     }
 
-    public UserSubsidiary(long userId, long organizationId, long positionId, Guid? tenantId)
+    public UserSubsidiary(long userId, long organizationId, long positionId, long? tenantId)
     {
         UserId = userId;
         OrganizationId = organizationId;

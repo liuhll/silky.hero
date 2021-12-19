@@ -13,7 +13,7 @@ public class IdentityUserRole : AuditedEntity
     {
     } 
     
-    protected internal IdentityUserRole(long userId, long roleId, Guid? tenantId)
+    protected internal IdentityUserRole(long userId, long roleId, long? tenantId)
     {
         UserId = userId;
         RoleId = roleId;

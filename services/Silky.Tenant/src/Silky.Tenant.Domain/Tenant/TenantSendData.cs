@@ -11,8 +11,8 @@ public class TenantSendData : IEntitySeedData<Tenant>
     public IEnumerable<Tenant> HasData(DbContext dbContext, Type dbContextLocator)
     {
         var initList = new List<Tenant>();
-        initList.Add(new Tenant(Guid.NewGuid(), "Silky", Status.Valid, "silky微服务开发社区"));
-        initList.Add(new Tenant(Guid.NewGuid(), "Hero", Status.Valid, "SilkyHero快速开发框架"));
+        initList.Add(new(1, "Silky", Status.Valid, "silky微服务开发社区"));
+        initList.Add(new(2, "Hero", Status.Valid, "SilkyHero快速开发框架"));
         return initList;
     }
 }

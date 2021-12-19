@@ -80,7 +80,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
         if (tenantId != null)
         {
-            TenantId = Guid.Parse(tenantId.ToString());
+            TenantId = long.Parse(tenantId.ToString());
         }
 
         UserName = userName;

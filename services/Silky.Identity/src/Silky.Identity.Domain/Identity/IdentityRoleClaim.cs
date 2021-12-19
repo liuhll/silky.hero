@@ -15,7 +15,7 @@ public class IdentityRoleClaim : IdentityClaim
     protected internal IdentityRoleClaim(
         long roleId,
         [NotNull] Claim claim,
-        Guid? tenantId)
+        long? tenantId)
         : base(
             claim,
             tenantId)
@@ -27,7 +27,7 @@ public class IdentityRoleClaim : IdentityClaim
         long roleId,
         [NotNull] string claimType,
         string claimValue,
-        Guid? tenantId)
+        long? tenantId)
         : base(
             claimType,
             claimValue,

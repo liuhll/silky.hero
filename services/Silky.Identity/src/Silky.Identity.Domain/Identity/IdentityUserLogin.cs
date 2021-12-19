@@ -24,7 +24,7 @@ public class IdentityUserLogin : AuditedEntity
         [NotNull] string loginProvider,
         [NotNull] string providerKey,
         string providerDisplayName,
-        Guid? tenantId)
+        long? tenantId)
     {
         Check.NotNull(loginProvider, nameof(loginProvider));
         Check.NotNull(providerKey, nameof(providerKey));
@@ -39,7 +39,7 @@ public class IdentityUserLogin : AuditedEntity
     protected internal IdentityUserLogin(
         long userId,
         [NotNull] UserLoginInfo login,
-        Guid? tenantId)
+        long? tenantId)
         : this(
             userId,
             login.LoginProvider,

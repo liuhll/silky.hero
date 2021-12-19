@@ -25,7 +25,7 @@ public class IdentityUserToken : AuditedEntity
         [NotNull] string loginProvider,
         [NotNull] string name,
         string value,
-        Guid? tenantId)
+        long? tenantId)
     {
         Check.NotNull(loginProvider, nameof(loginProvider));
         Check.NotNull(name, nameof(name));

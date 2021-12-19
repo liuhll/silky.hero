@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Position.EntityFrameworkCore.DbContexts;
 
+#nullable disable
+
 namespace Silky.Position.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
@@ -14,10 +16,10 @@ namespace Silky.Position.Database.Migrations.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.7");
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Silky.Position.Domain.Positions.Position", b =>
+            modelBuilder.Entity("Silky.Position.Domain.Position", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -26,13 +28,13 @@ namespace Silky.Position.Database.Migrations.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("Code");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasMaxLength(40)
-                        .HasColumnType("varchar(40) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
 
                     b.Property<long?>("CreatedBy")
@@ -58,13 +60,13 @@ namespace Silky.Position.Database.Migrations.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("Name");
 
                     b.Property<string>("Remark")
                         .IsRequired()
                         .HasMaxLength(512)
-                        .HasColumnType("varchar(512) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(512)")
                         .HasColumnName("Remark");
 
                     b.Property<int>("Sort")
@@ -79,8 +81,8 @@ namespace Silky.Position.Database.Migrations.Migrations
                         .HasDefaultValue(1)
                         .HasColumnName("Status");
 
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                    b.Property<long?>("TenantId")
+                        .HasColumnType("bigint")
                         .HasColumnName("TenantId");
 
                     b.Property<long?>("UpdatedBy")
@@ -93,7 +95,7 @@ namespace Silky.Position.Database.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -21,7 +21,7 @@ public class OrganizationRole : AuditedEntity
     /// <param name="tenantId">TenantId</param>
     /// <param name="roleId">Id of the User.</param>
     /// <param name="organizationId">Id of the <see cref="Organization"/>.</param>
-    public OrganizationRole(long roleId, long organizationId, Guid? tenantId = null)
+    public OrganizationRole(long roleId, long organizationId, long? tenantId = null)
     {
         RoleId = roleId;
         OrganizationId = organizationId;

@@ -2,7 +2,7 @@
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Entities;
 
-public abstract class AuditedEntity : Entity<long>, IAuditedObject
+public abstract class AuditedEntity : Entity<long>, IAuditedObject, IHasTenantObject
 {
     protected AuditedEntity()
     {
@@ -11,4 +11,6 @@ public abstract class AuditedEntity : Entity<long>, IAuditedObject
     public long? CreatedBy { get; set; }
 
     public long? UpdatedBy { get; set; }
+
+    public long? TenantId { get; set; }
 }

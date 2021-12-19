@@ -2,5 +2,5 @@
 
 public interface IHasTenantObject
 {
-    Guid? TenantId { get; set; }
+    long? TenantId { get; set; }
 }

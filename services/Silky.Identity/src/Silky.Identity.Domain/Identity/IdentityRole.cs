@@ -43,7 +43,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
         if (tenantId != null)
         {
-            TenantId = Guid.Parse(tenantId.ToString());
+            TenantId = long.Parse(tenantId.ToString());
         }
 
         Claims = new Collection<IdentityRoleClaim>();

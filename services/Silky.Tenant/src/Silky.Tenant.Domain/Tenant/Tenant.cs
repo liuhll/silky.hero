@@ -5,14 +5,13 @@ using Silky.Hero.Common.Enums;
 
 namespace Silky.Tenant.Domain;
 
-public class Tenant : IEntity, ICreatedObject, IUpdatedObject, ISoftDeletedObject
+public class Tenant : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedObject
 {
     public Tenant()
     {
-        Id = Guid.NewGuid();
     }
 
-    public Tenant(Guid id, string name, Status status, string remark)
+    public Tenant(long id, string name, Status status, string remark)
     {
         Id = id;
         Name = name;
@@ -20,7 +19,6 @@ public class Tenant : IEntity, ICreatedObject, IUpdatedObject, ISoftDeletedObjec
         Remark = remark;
     }
 
-    public Guid Id { get; set; }
 
     public string Name { get; set; }
 
@@ -28,10 +26,7 @@ public class Tenant : IEntity, ICreatedObject, IUpdatedObject, ISoftDeletedObjec
 
     public string Remark { get; set; }
     public long? CreatedBy { get; set; }
-    public DateTimeOffset CreatedTime { get; set; }
-
     public long? UpdatedBy { get; set; }
-    public DateTimeOffset? UpdatedTime { get; set; }
     public bool IsDeleted { get; set; }
     public long? DeletedBy { get; set; }
     public DateTimeOffset? DeletedTime { get; set; }

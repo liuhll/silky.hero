@@ -11,7 +11,7 @@ using Silky.Tenant.EntityFrameworkCore.DbContexts;
 namespace Silky.Tenant.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20211210080028_v1.0")]
+    [Migration("20211219100957_v1.0")]
     partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,9 +23,9 @@ namespace Silky.Tenant.Database.Migrations.Migrations
 
             modelBuilder.Entity("Silky.Tenant.Domain.Tenant", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
@@ -73,7 +73,7 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c84a96ed-b5c6-4f0b-8a5d-5ea62aab72af"),
+                            Id = 1L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky",
@@ -82,7 +82,7 @@ namespace Silky.Tenant.Database.Migrations.Migrations
                         },
                         new
                         {
-                            Id = new Guid("654916d5-1131-409a-8e91-5c942db72579"),
+                            Id = 2L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Hero",

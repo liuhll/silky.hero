@@ -16,12 +16,12 @@ public abstract class IdentityClaim : AuditedEntity
     {
     }
 
-    protected internal IdentityClaim([NotNull] Claim claim, Guid? tenantId)
+    protected internal IdentityClaim([NotNull] Claim claim, long? tenantId)
         : this(claim.Type, claim.Value, tenantId)
     {
     }
 
-    protected internal IdentityClaim([NotNull] string claimType, string claimValue, Guid? tenantId)
+    protected internal IdentityClaim([NotNull] string claimType, string claimValue, long? tenantId)
     {
         Check.NotNull(claimType, nameof(claimType));
         

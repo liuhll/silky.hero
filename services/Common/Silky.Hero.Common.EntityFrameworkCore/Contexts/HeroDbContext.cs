@@ -41,7 +41,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
 
         var session = NullSession.Instance;
         long? userId = session.UserId != null ? long.Parse(session.UserId.ToString()!) : null;
-        Guid? tenantId = session.TenantId != null ? Guid.Parse(session.TenantId.ToString()!) : null;
+        long? tenantId = session.TenantId != null ? long.Parse(session.TenantId.ToString()!) : null;
         foreach (var entity in entities)
         {
             switch (entity.State)
