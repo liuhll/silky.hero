@@ -9,5 +9,5 @@ public class CreateOrUpdateTenantInput : TenantDtoBase
     /// 主键Id
     /// </summary>
     [CacheKey(0)]
-    public Guid? Id { get; set; }
+    public long? Id { get; set; }
 }

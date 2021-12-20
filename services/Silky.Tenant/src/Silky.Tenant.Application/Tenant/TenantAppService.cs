@@ -33,7 +33,7 @@ public class TenantAppService : ITenantAppService
         return _tenantDomainService.UpdateAsync(input);
     }
 
-    public async Task<GetTenantOutput> GetAsync(Guid id)
+    public async Task<GetTenantOutput> GetAsync(long id)
     {
         var tenant = await _tenantDomainService.TenantRepository.FindOrDefaultAsync(id);
         if (tenant == null)
@@ -44,7 +44,7 @@ public class TenantAppService : ITenantAppService
         return tenant.Adapt<GetTenantOutput>();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(long id)
     {
         var tenant = await _tenantDomainService.TenantRepository.FindOrDefaultAsync(id);
         if (tenant == null)

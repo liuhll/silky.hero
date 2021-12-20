@@ -4,5 +4,5 @@ namespace Silky.Tenant.Application.Contracts.Tenant.Dtos;
 
 public class GetTenantOutput : TenantDtoBase
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
 }

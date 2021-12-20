@@ -30,19 +30,19 @@ public interface ITenantAppService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
-    Task<GetTenantOutput> GetAsync([CacheKey(0)]Guid id);
+    Task<GetTenantOutput> GetAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 通过id删除租户信息
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>),"all")]
-    Task DeleteAsync([CacheKey(0)]Guid id);
+    Task DeleteAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 分页查询租户信息
