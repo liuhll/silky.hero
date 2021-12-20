@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Silky.GatewayHost.Auditing;
 using Silky.Http.Core;
 using Silky.Http.MiniProfiler;
 
@@ -17,18 +18,18 @@ namespace Silky.GatewayHost
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services) 
+        public void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddSilkyHttpCore()
-                .AddDashboard()    
+                .AddDashboard()
                 .AddResponseCaching()
                 .AddHttpContextAccessor()
                 .AddRouting()
                 .AddSilkyIdentity()
                 .AddSilkyMiniProfiler()
-                .AddSwaggerDocuments();
-            
+                .AddSwaggerDocuments()
+                .AddAuditing<HeroAuditingStore>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -39,17 +40,16 @@ namespace Silky.GatewayHost
                 app.UseSwaggerDocuments();
                 app.UseMiniProfiler();
             }
+
             app.UseDashboard();
             app.UseRouting();
+            app.UseAuditing();
             app.UseSilkyWrapperResponse();
             app.UseResponseCaching();
             app.UseSilkyWebSocketsProxy();
             app.UseSilkyIdentity();
-            app.UseSilkyHttpServer();           
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapSilkyRpcServices();
-            });
+            app.UseSilkyHttpServer();
+            app.UseEndpoints(endpoints => { endpoints.MapSilkyRpcServices(); });
         }
     }
 }
