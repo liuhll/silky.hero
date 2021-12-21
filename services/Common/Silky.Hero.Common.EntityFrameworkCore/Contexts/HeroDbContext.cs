@@ -120,7 +120,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
         ParameterExpression parameterExpression = Expression.Parameter(metadata.ClrType, "u");
 
         // 租户过滤器
-        if (entityBuilder.Metadata.ClrType.BaseType.Name == typeof(AuditedEntity).Name)
+        if (typeof(IHasTenantObject).IsAssignableFrom(entityBuilder.Metadata.ClrType))
         {
             if (metadata.FindProperty(onTableTenantId) != null)
             {
