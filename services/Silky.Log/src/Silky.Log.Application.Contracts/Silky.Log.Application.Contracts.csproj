@@ -7,10 +7,12 @@
     <ItemGroup>
         <PackageReference Include="Silky.Rpc" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Transaction.Tcc" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.Rpc.CachingInterceptor" Version="$(SilkyVersion)" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
+      <ProjectReference Include="..\Silky.Log.Domain.Shared\Silky.Log.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>

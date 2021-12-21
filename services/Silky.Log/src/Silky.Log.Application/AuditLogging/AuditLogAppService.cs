@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Log.Application.Contracts.AuditLogging;
 using Silky.Log.Application.Contracts.AuditLogging.Dtos;
 using Silky.Log.Domain.AuditLogging;
@@ -41,9 +43,24 @@ public class AuditLogAppService : IAuditLogAppService
                 p => p.HttpMethod.Equals(input.HttpMethod))
             .Where(input.HttpStatusCode.HasValue, p => p.HttpStatusCode.Equals(input.HttpStatusCode))
             .Where(input.HasException.HasValue, p => p.ExceptionMessage != null)
-            .OrderByDescending(p=> p.ExecutionTime)
+            .OrderByDescending(p => p.ExecutionTime)
             .ProjectToType<GetAuditLogPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return auditLogPage;
+    }
+
+    public async Task<GetAuditLogOutput> GetAsync(long id)
+    {
+        var auditLog = await _auditLogRepository
+            .AsQueryable()
+            .Include(p => p.Actions)
+            .ProjectToType<GetAuditLogOutput>()
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (auditLog == null)
+        {
+            throw new EntityNotFoundException(typeof(AuditLog), id);
+        }
+
+        return auditLog;
     }
 }
