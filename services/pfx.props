@@ -1,0 +1,7 @@
+<Project>
+  <ItemGroup>
+    <None Include="..\..\..\Shared\silky.hero.pfx" Link="silky.hero.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
