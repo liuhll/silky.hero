@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts;
+using Silky.EntityFrameworkCore.Entities;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
@@ -62,7 +63,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
                     {
                         deletedObject1.IsDeleted = false;
                     }
-
+                    
                     break;
                 case EntityState.Deleted:
 

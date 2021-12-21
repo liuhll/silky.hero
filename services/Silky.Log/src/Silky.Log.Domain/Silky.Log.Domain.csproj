@@ -9,6 +9,7 @@
         <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\Silky.Log.Application.Contracts\Silky.Log.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Log.Domain.Shared\Silky.Log.Domain.Shared.csproj" />
     </ItemGroup>
