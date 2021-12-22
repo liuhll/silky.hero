@@ -42,7 +42,8 @@ public class AuditLogAppService : IAuditLogAppService
             .Where(!input.HttpMethod.IsNullOrEmpty(),
                 p => p.HttpMethod.Equals(input.HttpMethod))
             .Where(input.HttpStatusCode.HasValue, p => p.HttpStatusCode.Equals(input.HttpStatusCode))
-            .Where(input.HasException.HasValue, p => p.ExceptionMessage != null)
+            .Where(input.HasException == true, p => p.ExceptionMessage != null)
+            .Where(input.HasException == false, p => p.ExceptionMessage == null)
             .OrderByDescending(p => p.ExecutionTime)
             .ProjectToType<GetAuditLogPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
