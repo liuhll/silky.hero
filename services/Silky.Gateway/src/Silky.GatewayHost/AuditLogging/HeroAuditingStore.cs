@@ -28,8 +28,8 @@ public class HeroAuditingStore : IAuditingStore
     {
         try
         {
-            // _currentRpcToken.SetRpcToken();
-            // await _auditLogAppService.SaveAsync(auditLogInfo);
+            _currentRpcToken.SetRpcToken();
+            await _auditLogAppService.SaveAsync(auditLogInfo);
         }
         catch (Exception e)
         {
