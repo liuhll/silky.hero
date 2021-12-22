@@ -13,6 +13,7 @@ namespace Silky.Log.Application.Contracts.AuditLogging;
 /// 审计日志服务
 /// </summary>
 [ServiceRoute]
+[DisableAuditing]
 public interface IAuditLogAppService
 {
     /// <summary>
@@ -29,7 +30,7 @@ public interface IAuditLogAppService
     /// <param name="input">查询输入参数</param>
     /// <returns></returns>
     Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input);
-    
+
     /// <summary>
     /// 通过Id获取审计日志
     /// </summary>
@@ -37,5 +38,5 @@ public interface IAuditLogAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
-    Task<GetAuditLogOutput> GetAsync([CacheKey(0)]long id);
+    Task<GetAuditLogOutput> GetAsync([CacheKey(0)] long id);
 }
