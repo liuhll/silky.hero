@@ -43,12 +43,12 @@ namespace Silky.GatewayHost
 
             app.UseDashboard();
             app.UseRouting();
-            app.UseAuditing();
-            app.UseSilkyWrapperResponse();
             app.UseResponseCaching();
             app.UseSilkyWebSocketsProxy();
             app.UseSilkyIdentity();
             app.UseSilkyHttpServer();
+            app.UseSilkyWrapperResponse();
+            app.UseAuditing();
             app.UseEndpoints(endpoints => { endpoints.MapSilkyRpcServices(); });
         }
     }
