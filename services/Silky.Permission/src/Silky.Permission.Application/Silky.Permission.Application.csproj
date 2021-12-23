@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Silky.Permission.Application.Contracts\Silky.Permission.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Silky.Permission.Domain\Silky.Permission.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
