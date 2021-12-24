@@ -38,9 +38,10 @@ public class IdentitySignInManager
 
     public ILogger<IdentitySignInManager> Logger { get; set; }
 
-    public async Task<string> PasswordSignInAsync(string account, string password, bool lockoutOnFailure)
+    public async Task<string> PasswordSignInAsync(string account, string password, long? tenantId,
+        bool lockoutOnFailure)
     {
-        var user = await UserManager.FindByAccountAsync(account, true);
+        var user = await UserManager.FindByAccountAsync(account, tenantId, true);
         if (user == null)
         {
             throw new UserFriendlyException($"不存在账号为{account}的用户");
@@ -80,7 +81,6 @@ public class IdentitySignInManager
             { ClaimTypes.Name, user.UserName },
             { ClaimTypes.Email, user.Email },
             { ClaimTypes.MobilePhone, user.MobilePhone },
-            
         };
         if (user.TenantId.HasValue)
         {

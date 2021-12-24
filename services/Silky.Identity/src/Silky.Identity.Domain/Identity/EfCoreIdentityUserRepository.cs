@@ -24,7 +24,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName && !p.IsDeleted);
+                .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName);
         }
 
         return FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName);
@@ -34,7 +34,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
     {
         var query = from userRole in Context.Set<IdentityUserRole>()
             join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id
-            where userRole.UserId == id && !role.IsDeleted
+            where userRole.UserId == id
             select role.Name;
 
         return await query.ToListAsync(cancellationToken);
@@ -53,14 +53,14 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
                 .Where(u => u.Logins.Any(login =>
-                    login.LoginProvider == loginProvider && login.ProviderKey == providerKey) && !u.IsDeleted)
+                    login.LoginProvider == loginProvider && login.ProviderKey == providerKey))
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
         return Entities
             .Where(u => u.Logins.Any(login =>
-                login.LoginProvider == loginProvider && login.ProviderKey == providerKey) && !u.IsDeleted)
+                login.LoginProvider == loginProvider && login.ProviderKey == providerKey))
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -76,7 +76,7 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail && !p.IsDeleted);
+                .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail);
         }
 
         return FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail);
@@ -94,13 +94,13 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
                 .Where(u => u.Claims.Any(c =>
-                    c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
+                    c.ClaimType == claim.Type && c.ClaimValue == claim.Value))
                 .ToListAsync(cancellationToken);
         }
 
         return Entities
             .Where(u => u.Claims.Any(c =>
-                c.ClaimType == claim.Type && c.ClaimValue == claim.Value) && !u.IsDeleted)
+                c.ClaimType == claim.Type && c.ClaimValue == claim.Value))
             .ToListAsync(cancellationToken);
     }
 
@@ -115,22 +115,22 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber && !p.IsDeleted);
+                .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
         }
 
         return FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
     }
 
-    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails,
+    public Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails,
         CancellationToken cancellationToken)
     {
+        DynamicContext.TenantId = tenantId;
         if (includeDetails)
         {
             return Entities
                 .Include(p => p.Claims)
                 .FirstOrDefaultAsync(p =>
-                    (p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account) &&
-                    !p.IsDeleted);
+                    p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account);
         }
 
         return FirstOrDefaultAsync(p =>

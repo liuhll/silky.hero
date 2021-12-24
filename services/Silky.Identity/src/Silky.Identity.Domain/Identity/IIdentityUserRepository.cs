@@ -56,5 +56,6 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
     Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, bool includeDetails,
         CancellationToken cancellationToken);
 
-    Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails, CancellationToken cancellationToken);
+    Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails,
+        CancellationToken cancellationToken);
 }

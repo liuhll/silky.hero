@@ -175,7 +175,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return ((IdentityUserStore)Store).FindByPhoneNumberAsync(phoneNumber);
     }
 
-    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails = false)
+    public Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails = false)
     {
         ThrowIfDisposed();
         if (account == null)
@@ -184,7 +184,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         }
 
         account = NormalizeName(account);
-        return ((IdentityUserStore)Store).FindByAccountAsync(account, includeDetails);
+        return ((IdentityUserStore)Store).FindByAccountAsync(account, tenantId, includeDetails);
     }
 
     public override async Task<IdentityResult> RemovePasswordAsync(IdentityUser user)

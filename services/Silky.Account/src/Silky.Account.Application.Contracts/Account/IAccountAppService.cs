@@ -6,12 +6,24 @@ using Silky.Rpc.Security;
 
 namespace Silky.Account.Application.Contracts.Account;
 
+/// <summary>
+/// 账号服务
+/// </summary>
 [ServiceRoute]
 public interface IAccountAppService
 {
+    /// <summary>
+    /// 登录接口
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     Task<string> LoginAsync(LoginInput input);
 
-     [GetCachingIntercept("CurrentUserInfo", OnlyCurrentUserData = true)]
+    /// <summary>
+    /// 获取当前登录用户信息
+    /// </summary>
+    /// <returns></returns>
+    [GetCachingIntercept("CurrentUserInfo", OnlyCurrentUserData = true)]
     Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync();
 }

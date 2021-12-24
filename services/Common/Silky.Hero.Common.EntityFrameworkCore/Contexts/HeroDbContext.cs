@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Contexts;
-using Silky.EntityFrameworkCore.Entities;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
@@ -24,9 +23,25 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
         InsertOrUpdateIgnoreNullValues = true;
     }
 
+    private object _tenantId;
+
     public object GetTenantId()
     {
-        return NullSession.Instance.TenantId;
+        return TenantId;
+    }
+
+    public object TenantId
+    {
+        get
+        {
+            if (_tenantId != null)
+            {
+                return _tenantId;
+            }
+
+            return NullSession.Instance.TenantId;
+        }
+        set => _tenantId = value;
     }
 
     protected override void SavingChangesEvent(DbContextEventData eventData, InterceptionResult<int> result)
@@ -53,7 +68,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
                         createdObject.CreatedTime = DateTimeOffset.Now;
                         createdObject.CreatedBy = userId;
                     }
-                    
+
                     if (entity.Entity is IHasTenantObject tenantObject)
                     {
                         tenantObject.TenantId ??= tenantId;
@@ -63,7 +78,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
                     {
                         deletedObject1.IsDeleted = false;
                     }
-                    
+
                     break;
                 case EntityState.Deleted:
 
