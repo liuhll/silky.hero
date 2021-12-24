@@ -158,7 +158,7 @@ public class IdentityUserStore :
 
         if (user.Id == default)
         {
-            await UserRepository.InsertAsync(user, cancellationToken: cancellationToken);
+            await UserRepository.InsertNowAsync(user, cancellationToken: cancellationToken);
         }
 
         return IdentityResult.Success;
@@ -179,7 +179,7 @@ public class IdentityUserStore :
 
         try
         {
-            await UserRepository.UpdateAsync(user);
+            await UserRepository.UpdateNowAsync(user);
         }
         catch (Exception ex)
         {
@@ -205,7 +205,7 @@ public class IdentityUserStore :
 
         try
         {
-            await UserRepository.DeleteAsync(user, cancellationToken);
+            await UserRepository.DeleteNowAsync(user, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -1063,13 +1063,13 @@ public class IdentityUserStore :
             cancellationToken: cancellationToken);
     }
 
-    public Task<IdentityUser> FindByAccountAsync(string account, bool includeDetails = false,
+    public Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails = false,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         Check.NotNull(account, nameof(account));
-        return UserRepository.FindByAccountAsync(account, includeDetails,
+        return UserRepository.FindByAccountAsync(account, tenantId, includeDetails,
             cancellationToken: cancellationToken);
     }
 
