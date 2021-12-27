@@ -2,7 +2,7 @@
 
 public enum MenuType
 {
-    Directory,
+    Catalog,
     
     Menu,
     
