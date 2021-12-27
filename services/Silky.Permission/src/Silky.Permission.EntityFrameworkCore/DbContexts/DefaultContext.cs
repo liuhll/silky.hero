@@ -1,14 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
+using Silky.Hero.Common.EntityFrameworkCore.Contexts;
+using Silky.Permission.Domain;
+using Silky.Permission.Domain.Menu;
 
 namespace Silky.Permission.EntityFrameworkCore.DbContexts
 {
-    [AppDbContext("default",DbProvider.MySql)]
-    public class DefaultContext : SilkyDbContext<DefaultContext>
+    [AppDbContext(PermissionDbProperties.ConnectionStringName, DbProvider.MySql)]
+    public class DefaultContext : HeroDbContext<DefaultContext>
     {
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
         }
+
+        public DbSet<Domain.Permission> Permissions { get; set; }
+
+        public DbSet<Menu> Menus { get; set; }
     }
 }
