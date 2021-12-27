@@ -1,8 +1,10 @@
-﻿using Silky.Hero.Common.EntityFrameworkCore.Entities;
+﻿using System;
+using Silky.EntityFrameworkCore.Entities;
+using Silky.Hero.Common.EntityFrameworkCore.Entities;
 
 namespace Silky.Permission.Domain;
 
-public class Permission : FullAuditedEntity
+public class Permission : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedObject
 {
     public string Code { get; set; }
 
@@ -17,4 +19,9 @@ public class Permission : FullAuditedEntity
     public string WebApi { get; set; }
 
     public string HttpMethod { get; set; }
+    public long? CreatedBy { get; set; }
+    public long? UpdatedBy { get; set; }
+    public bool IsDeleted { get; set; }
+    public long? DeletedBy { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
 }

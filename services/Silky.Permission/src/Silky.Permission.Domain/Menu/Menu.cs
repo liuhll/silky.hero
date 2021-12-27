@@ -1,10 +1,12 @@
-﻿using Silky.Hero.Common.EntityFrameworkCore.Entities;
+﻿using System;
+using Silky.EntityFrameworkCore.Entities;
+using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Enums;
 using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Domain.Menu;
 
-public class Menu : FullAuditedEntity
+public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedObject
 {
     public string Name { get; set; }
 
@@ -29,4 +31,11 @@ public class Menu : FullAuditedEntity
     public bool? Cache { get; set; }
 
     public MenuType Type { get; set; }
+
+    public long? CreatedBy { get; set; }
+
+    public long? UpdatedBy { get; set; }
+    public bool IsDeleted { get; set; }
+    public long? DeletedBy { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
 }
