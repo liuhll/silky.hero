@@ -19,7 +19,7 @@ public interface IMenuAppService
     [HttpPost]
     [HttpPut]
     Task CreateOrUpdateAsync(CreateOrUpdateMenuInput input);
-    
+
     /// <summary>
     /// 通过Id获取菜单
     /// </summary>
@@ -27,4 +27,11 @@ public interface IMenuAppService
     /// <returns></returns>
     [HttpGet]
     Task<GetMenuOutput> GetAsync(long id);
+
+    /// <summary>
+    /// 根据id删除菜单
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task DeleteAsync(long id);
 }

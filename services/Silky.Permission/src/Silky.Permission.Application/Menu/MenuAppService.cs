@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Mapster;
 using Silky.Core.Exceptions;
 using Silky.Permission.Application.Contracts.Menu;
@@ -35,5 +36,24 @@ public class MenuAppService : IMenuAppService
         }
 
         return menu.Adapt<GetMenuOutput>();
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var menu = await _menuDomainService.MenuRepository.FindOrDefaultAsync(id);
+        if (menu == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的菜单信息");
+        }
+
+        var children = _menuDomainService.MenuRepository.Where(p => p.ParentId == id);
+        if (children.Any())
+        {
+            throw new UserFriendlyException($"请先删除子菜单");
+        }
+
+        // todo 确认菜单是否被分配
+
+        await _menuDomainService.MenuRepository.DeleteAsync(menu);
     }
 }
