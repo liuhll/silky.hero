@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Silky.Hero.Common.Enums;
+using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Application.Contracts.Menu.Dtos;
 
@@ -66,4 +67,9 @@ public class CreateOrUpdateMenuInput
     /// 是否缓存
     /// </summary>
     public bool? Cache { get; set; }
+
+    /// <summary>
+    /// 菜单类型
+    /// </summary>
+    public MenuType Type { get; set; }
 }

@@ -5,9 +5,9 @@ namespace Silky.Permission.Domain.Menu;
 
 public interface IMenuDomainService
 {
-    Task CreateCatalogAsync(CreateOrUpdateCatalogInput input);
-    Task UpdateCatalogAsync(CreateOrUpdateCatalogInput input);
-    Task CreateMenuAsync(CreateOrUpdateMenuInput input);
-    Task UpdateMenuAsync(CreateOrUpdateMenuInput input);
-    
+
+    Task CreateAsync(CreateOrUpdateMenuInput input);
+    Task UpdateAsync(CreateOrUpdateMenuInput input);
+
+  
 }

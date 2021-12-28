@@ -14,21 +14,13 @@ public class MenuAppService : IMenuAppService
         _menuDomainService = menuDomainService;
     }
 
-    public Task CreateOrUpdateCatalogAsync(CreateOrUpdateCatalogInput input)
+    public Task CreateOrUpdateAsync(CreateOrUpdateMenuInput input)
     {
         if (!input.Id.HasValue)
         {
-            return _menuDomainService.CreateCatalogAsync(input);
+            return _menuDomainService.CreateAsync(input);
         }
-        return _menuDomainService.UpdateCatalogAsync(input);
-    }
 
-    public Task CreateOrUpdateMenuAsync(CreateOrUpdateMenuInput input)
-    {
-        if (!input.Id.HasValue)
-        {
-            return _menuDomainService.CreateMenuAsync(input);
-        }
-        return _menuDomainService.UpdateMenuAsync(input);
+        return _menuDomainService.UpdateAsync(input);
     }
 }

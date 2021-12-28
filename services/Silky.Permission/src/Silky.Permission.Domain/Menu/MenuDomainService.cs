@@ -3,8 +3,10 @@ using Mapster;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
+using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Domain.Menu;
 
@@ -17,74 +19,26 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
     public IRepository<Menu> MenuRepository { get; }
 
-    public async Task CreateCatalogAsync(CreateOrUpdateCatalogInput input)
+    public async Task CreateAsync(CreateOrUpdateMenuInput input)
     {
-        var exsitCatalog = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
-        if (exsitCatalog != null)
+        switch (input.Type)
         {
-            throw new UserFriendlyException($"已经存在{input.Name}目录,目录名称不允许重复");
-        }
-
-        exsitCatalog = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
-        if (exsitCatalog != null)
-        {
-            throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,目录标识不允许重复");
-        }
-
-        var catalog = input.Adapt<Menu>();
-        await MenuRepository.InsertAsync(catalog);
-    }
-
-    public async Task UpdateCatalogAsync(CreateOrUpdateCatalogInput input)
-    {
-        Check.NotNull(input.Id, nameof(input.Id));
-        var catalog = await MenuRepository.FindOrDefaultAsync(input.Id);
-        if (catalog == null)
-        {
-            throw new UserFriendlyException($"不存在Id为{input.Id}目录");
-        }
-
-        if (!input.Name.Equals(catalog.Name))
-        {
-            var exsitCatalog = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
-            if (exsitCatalog != null)
-            {
-                throw new UserFriendlyException($"已经存在{input.Name}目录,目录名称不允许重复");
-            }
-        }
-
-        if (!input.PermissionCode.Equals(catalog.PermissionCode))
-        {
-            var exsitCatalog = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
-            if (exsitCatalog != null)
-            {
-                throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,目录标识不允许重复");
-            }
-        }
-
-        catalog = input.Adapt(catalog);
-        await MenuRepository.UpdateAsync(catalog);
-    }
-
-    public async Task CreateMenuAsync(CreateOrUpdateMenuInput input)
-    {
-        var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
-        if (exsitMenu != null)
-        {
-            throw new UserFriendlyException($"已经存在{input.Name}菜单,菜单名称不允许重复");
-        }
-
-        exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
-        if (exsitMenu != null)
-        {
-            throw new UserFriendlyException($"已经存在{input.PermissionCode}菜单,菜单标识不允许重复");
+            case MenuType.Catalog:
+                await CheckCatalogInput(input);
+                break;
+            case MenuType.Menu:
+                await CheckMenuInput(input);
+                break;
+            case MenuType.Button:
+                await CheckButtonInput(input);
+                break;
         }
 
         var menu = input.Adapt<Menu>();
         await MenuRepository.InsertAsync(menu);
     }
 
-    public async Task UpdateMenuAsync(CreateOrUpdateMenuInput input)
+    public async Task UpdateAsync(CreateOrUpdateMenuInput input)
     {
         Check.NotNull(input.Id, nameof(input.Id));
         var menu = await MenuRepository.FindOrDefaultAsync(input.Id);
@@ -93,25 +47,99 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             throw new UserFriendlyException($"不存在Id为{input.Id}菜单");
         }
 
-        if (!input.Name.Equals(menu.Name))
+        switch (input.Type)
         {
-            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
-            if (exsitMenu != null)
-            {
-                throw new UserFriendlyException($"已经存在{input.Name}菜单,菜单名称不允许重复");
-            }
-        }
-
-        if (!input.PermissionCode.Equals(menu.PermissionCode))
-        {
-            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
-            if (exsitMenu != null)
-            {
-                throw new UserFriendlyException($"已经存在{input.PermissionCode}菜单,菜单标识不允许重复");
-            }
+            case MenuType.Catalog:
+                await CheckCatalogInput(input, menu);
+                break;
+            case MenuType.Menu:
+                await CheckMenuInput(input, menu);
+                break;
+            case MenuType.Button:
+                await CheckButtonInput(input, menu);
+                break;
         }
 
         menu = input.Adapt(menu);
         await MenuRepository.UpdateAsync(menu);
+    }
+
+    private async Task CheckButtonInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    {
+        if (!input.ParentId.HasValue)
+        {
+            throw new ValidationException("父级菜单不允许为空");
+        }
+
+        if (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode))
+        {
+            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
+            if (exsitMenu != null)
+            {
+                throw new UserFriendlyException($"已经存在{input.PermissionCode}按钮,权限标识不允许重复");
+            }
+        }
+    }
+
+    private async Task CheckMenuInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    {
+        if (input.RoutePath.IsNullOrEmpty())
+        {
+            throw new ValidationException("路由地址不允许为空");
+        }
+
+        if (input.Icon.IsNullOrEmpty())
+        {
+            throw new ValidationException("图标不允许为空");
+        }
+
+        if (menu == null || !input.Name.Equals(menu?.Name))
+        {
+            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+            if (exsitMenu != null)
+            {
+                throw new UserFriendlyException($"已经存在{input.Name}菜单,名称不允许重复");
+            }
+        }
+
+        if (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode))
+        {
+            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
+            if (exsitMenu != null)
+            {
+                throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,权限标识不允许重复");
+            }
+        }
+    }
+
+    private async Task CheckCatalogInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    {
+        if (input.RoutePath.IsNullOrEmpty())
+        {
+            throw new ValidationException("路由地址不允许为空");
+        }
+
+        if (input.Icon.IsNullOrEmpty())
+        {
+            throw new ValidationException("图标不允许为空");
+        }
+
+        if (menu == null || !input.Name.Equals(menu?.Name))
+        {
+            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+            if (exsitMenu != null)
+            {
+                throw new UserFriendlyException($"已经存在{input.Name}目录,名称不允许重复");
+            }
+        }
+
+        if (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode))
+        {
+            var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
+            if (exsitMenu != null)
+            {
+                throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,权限标识不允许重复");
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
+      <ProjectReference Include="..\Silky.Permission.Domain.Shared\Silky.Permission.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>

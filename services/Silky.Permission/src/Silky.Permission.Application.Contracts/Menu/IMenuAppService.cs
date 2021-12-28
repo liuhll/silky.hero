@@ -11,24 +11,12 @@ namespace Silky.Permission.Application.Contracts.Menu;
 [ServiceRoute]
 public interface IMenuAppService
 {
-
     /// <summary>
-    /// 新增/更新菜单目录
+    /// 新增/更新菜单
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
-    Task CreateOrUpdateCatalogAsync(CreateOrUpdateCatalogInput input);
-    
-    /// <summary>
-    /// 创建/更新菜单
-    /// </summary>
-    /// <param name="input">输入参数</param>
-    /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
-    Task CreateOrUpdateMenuAsync(CreateOrUpdateMenuInput input);
-    
-    
+    Task CreateOrUpdateAsync(CreateOrUpdateMenuInput input);
 }
