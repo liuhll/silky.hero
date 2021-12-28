@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Mapster;
+using Silky.Core.Exceptions;
 using Silky.Permission.Application.Contracts.Menu;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Menu;
@@ -22,5 +24,16 @@ public class MenuAppService : IMenuAppService
         }
 
         return _menuDomainService.UpdateAsync(input);
+    }
+
+    public async Task<GetMenuOutput> GetAsync(long id)
+    {
+        var menu = await _menuDomainService.MenuRepository.FindOrDefaultAsync(id);
+        if (menu == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的菜单信息");
+        }
+
+        return menu.Adapt<GetMenuOutput>();
     }
 }

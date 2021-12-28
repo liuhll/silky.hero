@@ -1,15 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Silky.Hero.Common.Enums;
+using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Application.Contracts.Menu.Dtos;
 
-public class CreateOrUpdateCatalogInput
+public abstract class MenuDtoBase
 {
-    /// <summary>
-    /// 主键id
-    /// </summary>
-    public long? Id { get; set; }
-
     /// <summary>
     /// 菜单名称
     /// </summary>
@@ -41,7 +37,12 @@ public class CreateOrUpdateCatalogInput
     /// 前端路由
     /// </summary>
     public string RoutePath { get; set; }
-    
+
+    /// <summary>
+    /// 组件
+    /// </summary>
+    public string Component { get; set; }
+
     /// <summary>
     /// 状态
     /// </summary>
@@ -56,5 +57,14 @@ public class CreateOrUpdateCatalogInput
     /// 是否显示
     /// </summary>
     public bool? Display { get; set; }
-    
+
+    /// <summary>
+    /// 是否缓存
+    /// </summary>
+    public bool? Cache { get; set; }
+
+    /// <summary>
+    /// 菜单类型
+    /// </summary>
+    public MenuType Type { get; set; }
 }
