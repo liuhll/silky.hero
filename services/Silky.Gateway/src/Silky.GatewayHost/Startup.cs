@@ -45,9 +45,9 @@ namespace Silky.GatewayHost
             app.UseRouting();
             app.UseResponseCaching();
             app.UseSilkyWebSocketsProxy();
+            app.UseSilkyWrapperResponse();
             app.UseSilkyIdentity();
             app.UseSilkyHttpServer();
-            app.UseSilkyWrapperResponse();
             app.UseAuditing();
             app.UseEndpoints(endpoints => { endpoints.MapSilkyRpcServices(); });
         }
