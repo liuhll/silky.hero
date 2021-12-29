@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 
 namespace Silky.Permission.Application.Contracts.Menu;
@@ -19,6 +20,7 @@ public interface IMenuAppService
     /// <returns></returns>
     [HttpPost]
     [HttpPut]
+    [RemoveCachingIntercept(typeof(GetMenuOutput),"id:{0}")]
     Task CreateOrUpdateAsync(CreateOrUpdateMenuInput input);
 
     /// <summary>
@@ -27,14 +29,16 @@ public interface IMenuAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet]
-    Task<GetMenuOutput> GetAsync(long id);
+    [GetCachingIntercept("id:{0}")]
+    Task<GetMenuOutput> GetAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 根据id删除菜单
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task DeleteAsync(long id);
+    [RemoveCachingIntercept(typeof(GetMenuOutput),"id:{0}")]
+    Task DeleteAsync([CacheKey(0)]long id);
 
     /// <summary>
     /// 分页获取菜单列表
