@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Silky.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Enums;
@@ -38,4 +39,8 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
     public bool IsDeleted { get; set; }
     public long? DeletedBy { get; set; }
     public DateTimeOffset? DeletedTime { get; set; }
+
+    public virtual ICollection<Menu> Children { get; set; }
+    
+    public virtual Menu Parent { get; set; }
 }
