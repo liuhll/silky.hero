@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
@@ -62,6 +64,13 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
         menu = input.Adapt(menu);
         await MenuRepository.UpdateAsync(menu);
+    }
+
+    public async Task<ICollection<Menu>> GetTreeAsync()
+    {
+        var menus = await MenuRepository.AsQueryable().ToListAsync();
+        return menus.BuildTree();
+
     }
 
     private async Task CheckButtonInput(CreateOrUpdateMenuInput input, Menu menu = null)

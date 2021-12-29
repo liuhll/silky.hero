@@ -56,5 +56,10 @@ public class MenuTypeBuilder : IEntityTypeBuilder<Menu>
         builder.Property(e => e.Type)
             .IsRequired()
             .HasColumnName(nameof(Menu.Type));
+
+        builder.HasMany(p => p.Children)
+            .WithOne(p => p.Parent)
+            .HasForeignKey(m => m.ParentId);
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 
@@ -10,5 +11,5 @@ public interface IMenuDomainService
     Task CreateAsync(CreateOrUpdateMenuInput input);
     Task UpdateAsync(CreateOrUpdateMenuInput input);
 
-  
+    Task<ICollection<Menu>> GetTreeAsync();
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Rpc.Routing;
@@ -34,4 +35,11 @@ public interface IMenuAppService
     /// <param name="id"></param>
     /// <returns></returns>
     Task DeleteAsync(long id);
+
+    /// <summary>
+    /// 分页获取菜单列表
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PagedList<GetMenuPageOutput>> GetPageAsync(GetMenuPageInput input);
 }
