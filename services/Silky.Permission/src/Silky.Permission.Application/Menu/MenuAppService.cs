@@ -19,13 +19,14 @@ public class MenuAppService : IMenuAppService
         _menuDomainService = menuDomainService;
     }
 
-    public Task CreateOrUpdateAsync(CreateOrUpdateMenuInput input)
+    public Task CreateAsync(CreateMenuInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _menuDomainService.CreateAsync(input);
-        }
+        return _menuDomainService.CreateAsync(input);
+       
+    }
 
+    public Task UpdateAsync(UpdateMenuInput input)
+    {
         return _menuDomainService.UpdateAsync(input);
     }
 

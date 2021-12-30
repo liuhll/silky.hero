@@ -21,7 +21,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
     public IRepository<Menu> MenuRepository { get; }
 
-    public async Task CreateAsync(CreateOrUpdateMenuInput input)
+    public async Task CreateAsync(CreateMenuInput input)
     {
         switch (input.Type)
         {
@@ -40,7 +40,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         await MenuRepository.InsertAsync(menu);
     }
 
-    public async Task UpdateAsync(CreateOrUpdateMenuInput input)
+    public async Task UpdateAsync(UpdateMenuInput input)
     {
         Check.NotNull(input.Id, nameof(input.Id));
         var menu = await MenuRepository.FindOrDefaultAsync(input.Id);
@@ -70,10 +70,9 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     {
         var menus = await MenuRepository.AsQueryable().ToListAsync();
         return menus.BuildTree();
-
     }
 
-    private async Task CheckButtonInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    private async Task CheckButtonInput(MenuDtoBase input, Menu menu = null)
     {
         if (!input.ParentId.HasValue)
         {
@@ -90,7 +89,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         }
     }
 
-    private async Task CheckMenuInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    private async Task CheckMenuInput(MenuDtoBase input, Menu menu = null)
     {
         if (input.RoutePath.IsNullOrEmpty())
         {
@@ -121,7 +120,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         }
     }
 
-    private async Task CheckCatalogInput(CreateOrUpdateMenuInput input, Menu menu = null)
+    private async Task CheckCatalogInput(MenuDtoBase input, Menu menu = null)
     {
         if (input.RoutePath.IsNullOrEmpty())
         {

@@ -2,13 +2,13 @@
 
 namespace Silky.Permission.Application.Contracts.Menu.Dtos;
 
-public class CreateOrUpdateMenuInput : MenuDtoBase
+public class UpdateMenuInput : MenuDtoBase
 {
     /// <summary>
     /// 主键id
     /// </summary>
     [CacheKey(0)]
-    public long? Id { get; set; }
+    public long Id { get; set; }
 
    
 }

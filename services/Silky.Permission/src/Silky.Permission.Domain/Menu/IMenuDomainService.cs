@@ -8,8 +8,8 @@ namespace Silky.Permission.Domain.Menu;
 public interface IMenuDomainService
 {
     IRepository<Menu> MenuRepository { get; }
-    Task CreateAsync(CreateOrUpdateMenuInput input);
-    Task UpdateAsync(CreateOrUpdateMenuInput input);
+    Task CreateAsync(CreateMenuInput input);
+    Task UpdateAsync(UpdateMenuInput input);
 
     Task<ICollection<Menu>> GetTreeAsync();
 }
