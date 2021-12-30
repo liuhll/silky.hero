@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
+using Silky.Organization.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
+using Silky.Rpc.Security;
 
 namespace Silky.Organization.Application.Contracts.Organization;
 
@@ -12,6 +14,7 @@ namespace Silky.Organization.Application.Contracts.Organization;
 /// 组织机构服务
 /// </summary>
 [ServiceRoute]
+[Authorize(OrganizationPermissions.Organizations.Default)]
 public interface IOrganizationAppService
 {
     /// <summary>
@@ -20,12 +23,20 @@ public interface IOrganizationAppService
     /// <remarks>如果Id为null，则表示新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
-    [RemoveCachingIntercept(typeof(bool),"HasOrganization:{0}")]
-    Task CreateOrUpdateAsync(CreateOrUpdateOrganizationInput input);
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [Authorize(OrganizationPermissions.Organizations.Create)]
+    Task CreateAsync(CreateOrganizationInput input);
+
+    /// <summary>
+    /// 更新组织机构
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
+    [Authorize(OrganizationPermissions.Organizations.Update)]
+    Task UpdateAsync(UpdateOrganizationInput input);
 
     /// <summary>
     /// 删除组织机构
@@ -33,10 +44,11 @@ public interface IOrganizationAppService
     /// <param name="id">主键Id</param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"tree")]
-    [RemoveCachingIntercept(typeof(bool),"HasOrganization:{0}")]
-    Task DeleteAsync([CacheKey(0)]long id);
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
+    [Authorize(OrganizationPermissions.Organizations.Delete)]
+    Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 通过Id获取组织机构
@@ -45,8 +57,8 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
-    Task<GetOrganizationOutput> GetAsync([CacheKey(0)]long id);
-    
+    Task<GetOrganizationOutput> GetAsync([CacheKey(0)] long id);
+
     /// <summary>
     /// 分页获取组织机构信息
     /// </summary>
@@ -69,5 +81,5 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [Governance(ProhibitExtranet = true)]
     [GetCachingIntercept("HasOrganization:{0}")]
-    Task<bool> HasOrganizationAsync([CacheKey(0)]long organizationId);
+    Task<bool> HasOrganizationAsync([CacheKey(0)] long organizationId);
 }

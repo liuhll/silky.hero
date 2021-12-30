@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.User;
@@ -23,7 +22,7 @@ public class OrganizationDomainService : IOrganizationDomainService
         _userAppService = userAppService;
     }
 
-    public async Task CreateAsync(CreateOrUpdateOrganizationInput input)
+    public async Task CreateAsync(CreateOrganizationInput input)
     {
         var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
         if (exsitOrganization != null)
@@ -41,10 +40,9 @@ public class OrganizationDomainService : IOrganizationDomainService
         await OrganizationRepository.InsertAsync(organization);
     }
 
-    public async Task UpdateAsync(CreateOrUpdateOrganizationInput input)
+    public async Task UpdateAsync(UpdateOrganizationInput input)
     {
-        Check.NotNull(input.Id, nameof(input.Id));
-        var organization = await OrganizationRepository.FindOrDefaultAsync(input.Id.Value);
+        var organization = await OrganizationRepository.FindOrDefaultAsync(input.Id);
         if (organization == null)
         {
             throw new UserFriendlyException($"不存在Id为{input.Id}的机构");
@@ -70,7 +68,7 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         if (input.ParentId.HasValue)
         {
-            if (input.ParentId.Value == input.Id.Value)
+            if (input.ParentId.Value == input.Id)
             {
                 throw new UserFriendlyException($"父节点不允许为本节点");
             }

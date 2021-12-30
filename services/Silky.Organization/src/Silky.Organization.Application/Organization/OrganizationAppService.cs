@@ -20,13 +20,13 @@ public class OrganizationAppService : IOrganizationAppService
         _organizationDomainService = organizationDomainService;
     }
 
-    public Task CreateOrUpdateAsync(CreateOrUpdateOrganizationInput input)
+    public Task CreateAsync(CreateOrganizationInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _organizationDomainService.CreateAsync(input);
-        }
+        return _organizationDomainService.CreateAsync(input);
+    }
 
+    public Task UpdateAsync(UpdateOrganizationInput input)
+    {
         return _organizationDomainService.UpdateAsync(input);
     }
 

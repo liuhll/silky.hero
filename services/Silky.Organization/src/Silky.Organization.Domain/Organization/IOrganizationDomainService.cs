@@ -9,8 +9,8 @@ namespace Silky.Organization.Domain;
 public interface IOrganizationDomainService : IScopedDependency
 {
     IRepository<Organization> OrganizationRepository { get; }
-    Task CreateAsync(CreateOrUpdateOrganizationInput input);
-    Task UpdateAsync(CreateOrUpdateOrganizationInput input);
+    Task CreateAsync(CreateOrganizationInput input);
+    Task UpdateAsync(UpdateOrganizationInput input);
     Task DeleteAsync(long id);
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
 }

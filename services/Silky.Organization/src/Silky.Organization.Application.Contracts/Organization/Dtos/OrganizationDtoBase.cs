@@ -1,17 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Silky.Hero.Common.Enums;
-using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Organization.Application.Contracts.Organization.Dtos;
 
-public class CreateOrUpdateOrganizationInput
+public abstract class OrganizationDtoBase
 {
-    /// <summary>
-    /// 主键Id
-    /// </summary>
-    [CacheKey(0)]
-    public long? Id { get; set; }
-
     /// <summary>
     /// 父机构Id
     /// </summary>
