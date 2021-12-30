@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Log.Application.Contracts.AuditLogging.Dtos;
+using Silky.Log.Domain.Shared;
 using Silky.Rpc.Auditing;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
+using Silky.Rpc.Security;
 
 namespace Silky.Log.Application.Contracts.AuditLogging;
 
@@ -14,6 +16,7 @@ namespace Silky.Log.Application.Contracts.AuditLogging;
 /// </summary>
 [ServiceRoute]
 [DisableAuditing]
+[Authorize(LogPermissions.AuditLogging.Default)]
 public interface IAuditLogAppService
 {
     /// <summary>
