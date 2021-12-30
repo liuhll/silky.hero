@@ -29,7 +29,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
 
     public IDistributedCache DistributedCache { get; }
 
-    public async Task CreateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
+    public async Task CreateTypeAsync(CreateDictionaryTypeInput input)
     {
         var existDictType = await DictionaryTypeRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
         if (existDictType != null)
@@ -47,9 +47,8 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await DictionaryTypeRepository.InsertAsync(dictType);
     }
 
-    public async Task UpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
+    public async Task UpdateTypeAsync(UpdateDictionaryTypeInput input)
     {
-        Check.NotNull(input.Id, nameof(input.Id));
         var dictType = await DictionaryTypeRepository.FindOrDefaultAsync(input.Id);
         if (dictType == null)
         {
@@ -79,7 +78,7 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await RemoveDictionaryItemsCache(dictType.Id);
     }
 
-    public async Task CreateItemAsync(CreateOrUpdateDictionaryItemInput input)
+    public async Task CreateItemAsync(CreateDictionaryItemInput input)
     {
         await CheckExistDictionaryType(input.DictionaryId);
         var existDictItem = await DictionaryItemRepository.FirstOrDefaultAsync(p =>
@@ -101,10 +100,10 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
         await RemoveDictionaryItemsCache(dictItem.DictionaryId);
     }
 
-    public async Task UpdateItemAsync(CreateOrUpdateDictionaryItemInput input)
+    public async Task UpdateItemAsync(UpdateDictionaryItemInput input)
     {
         await CheckExistDictionaryType(input.DictionaryId);
-        Check.NotNull(input.Id, nameof(input.Id));
+
         var dictItem = await DictionaryItemRepository.FindOrDefaultAsync(input.Id);
         if (dictItem == null)
         {

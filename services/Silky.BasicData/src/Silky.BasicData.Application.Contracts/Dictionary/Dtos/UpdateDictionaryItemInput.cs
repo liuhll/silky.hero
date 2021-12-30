@@ -3,11 +3,11 @@ using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 
-public class CreateOrUpdateDictionaryItemInput : DictionaryItemDtoBase
+public class UpdateDictionaryItemInput : DictionaryItemDtoBase
 {
     /// <summary>
     /// 主键Id
     /// </summary>
     [CacheKey(0)]
-    public long? Id { get; set; }
+    public long Id { get; set; }
 }

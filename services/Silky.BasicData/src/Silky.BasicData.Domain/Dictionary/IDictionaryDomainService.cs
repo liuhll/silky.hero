@@ -13,11 +13,11 @@ public interface IDictionaryDomainService
 
     IDistributedCache DistributedCache { get; }
 
-    Task CreateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
+    Task CreateTypeAsync(CreateDictionaryTypeInput input);
 
-    Task UpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
-    Task CreateItemAsync(CreateOrUpdateDictionaryItemInput input);
-    Task UpdateItemAsync(CreateOrUpdateDictionaryItemInput input);
+    Task UpdateTypeAsync(UpdateDictionaryTypeInput input);
+    Task CreateItemAsync(CreateDictionaryItemInput input);
+    Task UpdateItemAsync(UpdateDictionaryItemInput input);
 
     Task RemoveDictionaryItemsCache(long dictionaryId);
 }

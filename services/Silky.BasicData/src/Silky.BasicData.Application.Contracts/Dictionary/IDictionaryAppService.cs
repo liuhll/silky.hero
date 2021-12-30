@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
+using Silky.BasicData.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Security;
 
 namespace Silky.BasicData.Application.Contracts.Dictionary;
 
@@ -11,18 +13,26 @@ namespace Silky.BasicData.Application.Contracts.Dictionary;
 /// 字典服务
 /// </summary>
 [ServiceRoute]
+[Authorize(BasicDataPermissions.Dictionaries.Default)]
 public interface IDictionaryAppService
 {
     /// <summary>
-    /// 新增或更新字典类型服务
+    /// 新增字典类型服务
     /// </summary>
     /// <remarks>主键Id为空时代表新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [Authorize(BasicDataPermissions.Dictionaries.Types.Create)]
+    Task CreateTypeAsync(CreateDictionaryTypeInput input);
+    
+    /// <summary>
+    /// 更新字典类型服务
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
-    Task CreateOrUpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input);
+    [Authorize(BasicDataPermissions.Dictionaries.Types.Update)]
+    Task UpdateTypeAsync(UpdateDictionaryTypeInput input);
 
     /// <summary>
     /// 通过Id获取字典类型
@@ -40,6 +50,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("type/{id:long}")]
     [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
+    [Authorize(BasicDataPermissions.Dictionaries.Types.Delete)]
     Task DeleteTypeAsync([CacheKey(0)]long id);
 
     /// <summary>
@@ -51,15 +62,22 @@ public interface IDictionaryAppService
     Task<PagedList<GetDictionaryTypePageOutput>> GetTypePageAsync(GetDictionaryTypePageInput input);
 
     /// <summary>
-    /// 新增/更新字典项
+    /// 新增字典项
     /// </summary>
     /// <remarks>主键Id为空时代表新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [Authorize(BasicDataPermissions.Dictionaries.Items.Create)]
+    Task CreateItemAsync(CreateDictionaryItemInput input);
+    
+    /// <summary>
+    /// 更新字典项
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
-    Task CreateOrUpdateItemAsync(CreateOrUpdateDictionaryItemInput input);
+    [Authorize(BasicDataPermissions.Dictionaries.Items.Update)]
+    Task UpdateItemAsync(UpdateDictionaryItemInput input);
 
     /// <summary>
     /// 通过Id获取字典项
@@ -77,6 +95,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpDelete("item/{id:long}")]
     [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
+    [Authorize(BasicDataPermissions.Dictionaries.Items.Delete)]
     Task DeleteItemAsync([CacheKey(0)]long id);
 
     /// <summary>

@@ -20,14 +20,14 @@ public class DictionaryAppService : IDictionaryAppService
     {
         _dictionaryDomainService = dictionaryDomainService;
     }
-
-    public Task CreateOrUpdateTypeAsync(CreateOrUpdateDictionaryTypeInput input)
+    
+    public Task CreateTypeAsync(CreateDictionaryTypeInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _dictionaryDomainService.CreateTypeAsync(input);
-        }
+        return _dictionaryDomainService.CreateTypeAsync(input);
+    }
 
+    public Task UpdateTypeAsync(UpdateDictionaryTypeInput input)
+    {
         return _dictionaryDomainService.UpdateTypeAsync(input);
     }
 
@@ -67,13 +67,13 @@ public class DictionaryAppService : IDictionaryAppService
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 
-    public Task CreateOrUpdateItemAsync(CreateOrUpdateDictionaryItemInput input)
+    public Task CreateItemAsync(CreateDictionaryItemInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _dictionaryDomainService.CreateItemAsync(input);
-        }
+        return _dictionaryDomainService.CreateItemAsync(input);
+    }
 
+    public Task UpdateItemAsync(UpdateDictionaryItemInput input)
+    {
         return _dictionaryDomainService.UpdateItemAsync(input);
     }
 
