@@ -8,11 +8,11 @@ using Microsoft.Extensions.Caching.Distributed;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
-using Silky.Rpc.Runtime.Server;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
 namespace Silky.Identity.Application.User;

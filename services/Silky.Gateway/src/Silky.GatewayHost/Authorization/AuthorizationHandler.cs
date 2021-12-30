@@ -20,7 +20,9 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
         _permissionAppService = permissionAppService;
     }
 
-    protected override async Task<bool> PipelineAsync(AuthorizationHandlerContext context, HttpContext httpContext)
+    protected override async Task<bool> PolicyPipelineAsync(AuthorizationHandlerContext context,
+        HttpContext httpContext,
+        IAuthorizationRequirement requirement)
     {
         var serviceEntry = httpContext.GetServiceEntry();
         var authorizeList = serviceEntry

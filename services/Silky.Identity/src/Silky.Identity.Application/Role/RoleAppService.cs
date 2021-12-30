@@ -7,9 +7,9 @@ using Silky.Core.DbContext.UnitOfWork;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain;
-using Silky.Rpc.Runtime.Server;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
 

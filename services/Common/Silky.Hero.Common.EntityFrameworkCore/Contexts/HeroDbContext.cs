@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Contexts;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;

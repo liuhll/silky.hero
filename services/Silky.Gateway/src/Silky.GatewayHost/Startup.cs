@@ -28,11 +28,10 @@ namespace Silky.GatewayHost
                 .AddResponseCaching()
                 .AddHttpContextAccessor()
                 .AddRouting()
-                .AddSilkyIdentity()
+                .AddSilkyIdentity<AuthorizationHandler>()
                 .AddSilkyMiniProfiler()
                 .AddSwaggerDocuments()
                 .AddAuditing<HeroAuditingStore>();
-            services.AddSingleton<IAuthorizationHandler, AuthorizationHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

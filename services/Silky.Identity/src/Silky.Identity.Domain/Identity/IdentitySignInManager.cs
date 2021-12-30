@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Silky.Core.Exceptions;
+using Silky.Core.Runtime.Session;
 using Silky.Jwt;
-using Silky.Rpc.Security;
 
 namespace Silky.Identity.Domain;
 

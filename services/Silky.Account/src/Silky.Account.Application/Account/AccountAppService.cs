@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Silky.Account.Application.Contracts.Account;
 using Silky.Account.Application.Contracts.Account.Dtos;
+using Silky.Core.Runtime.Session;
 using Silky.Identity.Domain;
 using Silky.Rpc.Runtime.Server;
 
