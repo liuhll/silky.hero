@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Silky.GatewayHost.AuditLogging;
+using Silky.GatewayHost.Authorization;
 using Silky.Http.Core;
 using Silky.Http.MiniProfiler;
 
@@ -30,6 +32,7 @@ namespace Silky.GatewayHost
                 .AddSilkyMiniProfiler()
                 .AddSwaggerDocuments()
                 .AddAuditing<HeroAuditingStore>();
+            services.AddSingleton<IAuthorizationHandler, AuthorizationHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
