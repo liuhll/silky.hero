@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Position.Application.Contracts.Position.Dtos;
+using Silky.Position.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
+using Silky.Rpc.Security;
 
 namespace Silky.Position.Application.Contracts.Position;
 
@@ -12,19 +14,27 @@ namespace Silky.Position.Application.Contracts.Position;
 /// 职位信息服务 
 /// </summary>
 [ServiceRoute]
+[Authorize(PositionPermissions.Positions.Default)]
 public interface IPositionAppService
 {
     /// <summary>
-    /// 新增/更新职位信息
+    /// 更新职位信息
     /// </summary>
     /// <remarks>id为空时为新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [Authorize(PositionPermissions.Positions.Create)]
+    Task CreateAsync(CreatePositionInput input);
+
+    /// <summary>
+    /// 更新职位信息
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
-    Task CreateOrUpdateAsync(CreateOrUpdatePositionInput input);
+    [Authorize(PositionPermissions.Positions.Update)]
+    Task UpdateAsync(UpdatePositionInput input);
 
     /// <summary>
     /// 通过id获取职位信息
@@ -43,6 +53,7 @@ public interface IPositionAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
+    [Authorize(PositionPermissions.Positions.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -51,7 +62,7 @@ public interface IPositionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
-    
+
     /// <summary>
     /// 判断是否存在职位
     /// </summary>
@@ -59,5 +70,5 @@ public interface IPositionAppService
     /// <returns></returns>
     [Governance(ProhibitExtranet = true)]
     [GetCachingIntercept("HasPosition:{0}")]
-    Task<bool> HasPositionAsync([CacheKey(0)]long positionId);
+    Task<bool> HasPositionAsync([CacheKey(0)] long positionId);
 }

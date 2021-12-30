@@ -20,16 +20,14 @@ public class PositionAppService : IPositionAppService
         _positionDomainService = positionDomainService;
     }
 
-    public Task CreateOrUpdateAsync(CreateOrUpdatePositionInput input)
+    public Task CreateAsync(CreatePositionInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _positionDomainService.CreateAsync(input);
-        }
-        else
-        {
-            return _positionDomainService.UpdateAsync(input);
-        }
+        return _positionDomainService.CreateAsync(input);
+    }
+
+    public Task UpdateAsync(UpdatePositionInput input)
+    {
+        return _positionDomainService.UpdateAsync(input);
     }
 
     public async Task<GetPositionOutput> GetAsync(long id)

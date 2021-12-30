@@ -21,7 +21,7 @@ public class PositionDomainService : IPositionDomainService
 
     public IRepository<Position> PositionRepository { get; }
 
-    public async Task CreateAsync(CreateOrUpdatePositionInput input)
+    public async Task CreateAsync(CreatePositionInput input)
     {
         var exsitPosition = await PositionRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
         if (exsitPosition != null)
@@ -39,10 +39,9 @@ public class PositionDomainService : IPositionDomainService
         await PositionRepository.InsertAsync(position);
     }
 
-    public async Task UpdateAsync(CreateOrUpdatePositionInput input)
+    public async Task UpdateAsync(UpdatePositionInput input)
     {
-        Check.NotNull(input.Id, nameof(input.Id));
-        var position = await PositionRepository.FindOrDefaultAsync(input.Id.Value);
+        var position = await PositionRepository.FindOrDefaultAsync(input.Id);
         if (position == null)
         {
             throw new UserFriendlyException($"不存在Id为{input.Id}的职位");

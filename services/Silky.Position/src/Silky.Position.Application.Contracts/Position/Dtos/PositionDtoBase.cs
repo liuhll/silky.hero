@@ -1,20 +1,12 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Silky.Hero.Common.Enums;
 using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Position.Application.Contracts.Position.Dtos;
 
-/// <summary>
-/// 新增或更新职位DTO对象
-/// </summary>
-public class CreateOrUpdatePositionInput
+public abstract class PositionDtoBase
 {
-    /// <summary>
-    /// 职位主键
-    /// </summary>
-    [CacheKey(0)]
-    public long? Id { get; set; }
-
+    
     /// <summary>
     /// 职位名称
     /// </summary>
