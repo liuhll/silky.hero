@@ -15,8 +15,8 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
     }
 
     public IRepository<Tenant> TenantRepository { get; }
-    
-    public async Task CreateAsync(CreateOrUpdateTenantInput input)
+
+    public async Task CreateAsync(CreateTenantInput input)
     {
         var existTenant = await TenantRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
         if (existTenant != null)
@@ -28,7 +28,7 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
         await TenantRepository.InsertAsync(tenant);
     }
 
-    public async Task UpdateAsync(CreateOrUpdateTenantInput input)
+    public async Task UpdateAsync(UpdateTenantInput input)
     {
         var tenant = await TenantRepository.FindOrDefaultAsync(input.Id);
         if (tenant == null)
@@ -44,6 +44,7 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
                 throw new UserFriendlyException($"已经存在{input.Name}的租户信息");
             }
         }
+
         tenant = input.Adapt(tenant);
         await TenantRepository.UpdateAsync(tenant);
     }

@@ -23,13 +23,13 @@ public class TenantAppService : ITenantAppService
         _tenantDomainService = tenantDomainService;
     }
 
-    public Task CreateOrUpdateAsync(CreateOrUpdateTenantInput input)
+    public Task CreateAsync(CreateTenantInput input)
     {
-        if (!input.Id.HasValue)
-        {
-            return _tenantDomainService.CreateAsync(input);
-        }
+        return _tenantDomainService.CreateAsync(input);
+    }
 
+    public Task UpdateAsync(UpdateTenantInput input)
+    {
         return _tenantDomainService.UpdateAsync(input);
     }
 

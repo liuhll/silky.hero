@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Security;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
+using Silky.Tenant.Domain.Shared;
 
 namespace Silky.Tenant.Application.Contracts.Tenant;
 
@@ -12,18 +13,27 @@ namespace Silky.Tenant.Application.Contracts.Tenant;
 /// 租户信息服务
 /// </summary>
 [ServiceRoute]
+[Authorize(TenantPermissions.Tenants.Default)]
 public interface ITenantAppService
 {
     /// <summary>
-    /// 新增或更新租户
+    /// 新增租户
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPut]
-    [HttpPost]
-    [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>),"all")]
-    Task CreateOrUpdateAsync(CreateOrUpdateTenantInput input);
+    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all")]
+    [Authorize(TenantPermissions.Tenants.Create)]
+    Task CreateAsync(CreateTenantInput input);
+
+    /// <summary>
+    /// 更新组件
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all")]
+    [Authorize(TenantPermissions.Tenants.Update)]
+    Task UpdateAsync(UpdateTenantInput input);
 
     /// <summary>
     /// 通过Id获取租户信息
@@ -32,7 +42,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
-    Task<GetTenantOutput> GetAsync([CacheKey(0)]long id);
+    Task<GetTenantOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 通过id删除租户信息
@@ -40,9 +50,10 @@ public interface ITenantAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetTenantOutput),"id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>),"all")]
-    Task DeleteAsync([CacheKey(0)]long id);
+    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all")]
+    [Authorize(TenantPermissions.Tenants.Delete)]
+    Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
     /// 分页查询租户信息
@@ -50,11 +61,12 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input);
-    
+
     /// <summary>
     /// 获取有效租户信息接口
     /// </summary>
     /// <returns></returns>
     [GetCachingIntercept("all")]
+    [AllowAnonymous]
     Task<ICollection<GetTenantOutput>> GetAllAsync();
 }
