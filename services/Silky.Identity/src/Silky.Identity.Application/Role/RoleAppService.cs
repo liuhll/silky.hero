@@ -27,20 +27,18 @@ public class RoleAppService : IRoleAppService
     }
 
     [UnitOfWork]
-    public async Task CreateOrUpdateAsync(CreateOrUpdateRoleInput input)
+    public async Task CreateAsync(CreateRoleInput input)
     {
-        var role = !input.Id.HasValue
-            ? new IdentityRole(input.Name, input.RealName, _session.TenantId)
-            : await _roleManager.GetByIdAsync(input.Id.Value);
+        var role = new IdentityRole(input.Name, input.RealName, _session.TenantId);
         await UpdateRoleByInput(role, input);
-        if (!input.Id.HasValue)
-        {
-            (await _roleManager.CreateAsync(role)).CheckErrors();
-        }
-        else
-        {
-            (await _roleManager.UpdateAsync(role)).CheckErrors();
-        }
+        (await _roleManager.CreateAsync(role)).CheckErrors();
+    }
+
+    public async Task UpdateAsync(UpdateRoleInput input)
+    {
+        var role = await _roleManager.GetByIdAsync(input.Id);
+        await UpdateRoleByInput(role, input);
+        (await _roleManager.UpdateAsync(role)).CheckErrors();
     }
 
     public async Task<GetRoleOutput> GetAsync(long id)
@@ -63,12 +61,11 @@ public class RoleAppService : IRoleAppService
             .Where(!input.RealName.IsNullOrEmpty(),
                 p => p.RealName.Contains(input.RealName))
             .ProjectToType<GetRolePageOutput>()
-            .ToPagedListAsync(input.PageIndex,input.PageSize);
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
         return pageRoles;
-
     }
 
-    private async Task UpdateRoleByInput(IdentityRole role, CreateOrUpdateRoleInput input)
+    private async Task UpdateRoleByInput(IdentityRole role, RoleDtoBase input)
     {
         role.IsDefault = input.IsDefault;
         role.IsPublic = input.IsPublic;

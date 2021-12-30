@@ -20,22 +20,26 @@ public class ClaimTypeAppService : IClaimTypeAppService
     {
         _identityClaimTypeRepository = identityClaimTypeRepository;
     }
-
-    public async Task CreateOrUpdateAsync(CreateOrUpdateClaimTypeInput input)
+    
+    public async Task CreateAsync(CreateClaimTypeInput input)
     {
-        var claimType = !input.Id.HasValue
-            ? new IdentityClaimType(input.Name,
-                input.Required,
-                input.IsStatic,
-                input.Regex,
-                input.RegexDescription,
-                input.Description,
-                input.ValueType)
-            : await _identityClaimTypeRepository.FindAsync(input.Id.Value);
+        var claimType = new IdentityClaimType(input.Name,
+            input.Required,
+            input.IsStatic,
+            input.Regex,
+            input.RegexDescription,
+            input.Description,
+            input.ValueType);
         await UpdateClaimTypeByInput(claimType, input);
-        _ = !input.Id.HasValue
-            ? await _identityClaimTypeRepository.InsertAsync(claimType)
-            : await _identityClaimTypeRepository.UpdateAsync(claimType);
+        await _identityClaimTypeRepository.InsertAsync(claimType);
+    }
+
+    public async Task UpdateAsync(UpdateClaimTypeInput input)
+    {
+        var claimType = await _identityClaimTypeRepository.FindAsync(input.Id);
+        await UpdateClaimTypeByInput(claimType, input);
+        claimType = input.Adapt(claimType);
+        await _identityClaimTypeRepository.UpdateAsync(claimType);
     }
 
     public async Task<GetClaimTypeOutput> GetAsync(long id)
@@ -75,20 +79,15 @@ public class ClaimTypeAppService : IClaimTypeAppService
         return claimType;
     }
 
-    private async Task UpdateClaimTypeByInput(IdentityClaimType claimType, CreateOrUpdateClaimTypeInput input)
+    private async Task UpdateClaimTypeByInput(IdentityClaimType claimType, ClaimTypeDtoBase input)
     {
-        if (!input.Id.HasValue || claimType.Name != input.Name)
+        if (claimType.Name != input.Name)
         {
             var existClaimType = await _identityClaimTypeRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
             if (existClaimType != null)
             {
                 throw new UserFriendlyException($"已经存在{input.Name}的声明类型");
             }
-        }
-
-        if (input.Id.HasValue)
-        {
-            claimType = input.Adapt(claimType);
         }
     }
 }

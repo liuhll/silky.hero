@@ -32,27 +32,26 @@ public class UserAppService : IUserAppService
     }
 
     [UnitOfWork]
-    public async Task CreateOrUpdateAsync(CreateOrUpdateUserInput input)
+    public async Task CreateAsync(CreateUserInput input)
     {
-        var user = !input.Id.HasValue
-            ? new IdentityUser(input.UserName, input.Email, input.MobilePhone, _session.TenantId)
-            : await UserManager.GetByIdAsync(input.Id.Value);
+        var user = new IdentityUser(input.UserName, input.Email, input.MobilePhone, _session.TenantId);
         await UpdateUserByInput(user, input);
 
-        if (!input.Id.HasValue)
-        {
-            (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
-        }
-        else
-        {
-            if (!input.Password.IsNullOrEmpty())
-            {
-                (await UserManager.RemovePasswordAsync(user)).CheckErrors();
-                (await UserManager.AddPasswordAsync(user, input.Password)).CheckErrors();
-            }
+        (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
+    }
 
-            (await UserManager.UpdateAsync(user)).CheckErrors();
+    public async Task UpdateAsync(UpdateUserInput input)
+    {
+        var user = await UserManager.GetByIdAsync(input.Id);
+        await UpdateUserByInput(user, input);
+
+        if (!input.Password.IsNullOrEmpty())
+        {
+            (await UserManager.RemovePasswordAsync(user)).CheckErrors();
+            (await UserManager.AddPasswordAsync(user, input.Password)).CheckErrors();
         }
+
+        (await UserManager.UpdateAsync(user)).CheckErrors();
     }
 
     public async Task DeleteAsync(long id)
@@ -128,7 +127,7 @@ public class UserAppService : IUserAppService
         return UserManager.HasPositionUsersAsync(positionId);
     }
 
-    protected virtual async Task UpdateUserByInput(IdentityUser user, CreateOrUpdateUserInput input)
+    protected virtual async Task UpdateUserByInput(IdentityUser user, UserDtoBase input)
     {
         if (!string.Equals(user.Email, input.Email, StringComparison.InvariantCultureIgnoreCase))
         {

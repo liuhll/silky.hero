@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
+using Silky.Rpc.Security;
 
 namespace Silky.Identity.Application.Contracts.User;
 
@@ -12,17 +14,25 @@ namespace Silky.Identity.Application.Contracts.User;
 /// 用户信息服务
 /// </summary>
 [ServiceRoute]
+[Authorize(IdentityPermissions.Users.Default)]
 public interface IUserAppService
 {
     /// <summary>
-    /// 新增/更新用户
+    /// 新增用户
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [Authorize(IdentityPermissions.Users.Create)]
+    Task CreateAsync(CreateUserInput input);
+    
+    /// <summary>
+    /// 更新用户
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    Task CreateOrUpdateAsync(CreateOrUpdateUserInput input);
+    [Authorize(IdentityPermissions.Users.Update)]
+    Task UpdateAsync(UpdateUserInput input);
 
     /// <summary>
     /// 删除用户
@@ -31,6 +41,7 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
+    [Authorize(IdentityPermissions.Users.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -56,6 +67,7 @@ public interface IUserAppService
     /// <param name="inputs"></param>
     /// <returns></returns>
     [HttpPut("{userId:long}/claims")]
+    [Authorize(IdentityPermissions.Users.UpdateClaimTypes)]
     Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs);
 
     /// <summary>
@@ -65,6 +77,7 @@ public interface IUserAppService
     /// <param name="lockoutSeconds"></param>
     /// <returns></returns>
     [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
+    [Authorize(IdentityPermissions.Users.Lock)]
     Task LockAsync(long userId, int lockoutSeconds);
 
     /// <summary>
@@ -73,6 +86,7 @@ public interface IUserAppService
     /// <param name="userId"></param>
     /// <returns></returns>
     [HttpPut("{userId:long}/unlock")]
+    [Authorize(IdentityPermissions.Users.UnLock)]
     Task UnLockAsync(long userId);
 
     /// <summary>
@@ -82,6 +96,7 @@ public interface IUserAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [HttpPut("{userId:long}/password")]
+    [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
 
     /// <summary>

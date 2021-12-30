@@ -1,20 +1,10 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Silky.Identity.Domain.Shared;
-using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
 
-/// <summary>
-/// 新增/更新角色DTO
-/// </summary>
-public class CreateOrUpdateRoleInput
+public abstract class RoleDtoBase
 {
-    /// <summary>
-    /// 主键Id
-    /// </summary>
-    [CacheKey(0)]
-    public long? Id { get; set; }
-
     /// <summary>
     /// 角色标识
     /// </summary>

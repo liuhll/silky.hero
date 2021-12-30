@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.ClaimType.Dtos;
+using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Security;
 
 namespace Silky.Identity.Application.Contracts.ClaimType;
 
@@ -11,18 +13,27 @@ namespace Silky.Identity.Application.Contracts.ClaimType;
 /// 声明类型服务
 /// </summary>
 [ServiceRoute]
+[Authorize(IdentityPermissions.ClaimTypes.Default)]
 public interface IClaimTypeAppService
 {
     /// <summary>
-    /// 新增/更新声明类型
+    /// 新增声明类型
     /// </summary>
     /// <param name="input">声明dto对象</param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
+    [Authorize(IdentityPermissions.ClaimTypes.Create)]
+    Task CreateAsync(CreateClaimTypeInput input);
+    
+    /// <summary>
+    /// 更新声明类型
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
-    Task CreateOrUpdateAsync(CreateOrUpdateClaimTypeInput input);
+    [Authorize(IdentityPermissions.ClaimTypes.Update)]
+    Task UpdateAsync(UpdateClaimTypeInput input);
 
     /// <summary>
     /// 通过Id获取声明类型
@@ -41,6 +52,7 @@ public interface IClaimTypeAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
+    [Authorize(IdentityPermissions.ClaimTypes.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>

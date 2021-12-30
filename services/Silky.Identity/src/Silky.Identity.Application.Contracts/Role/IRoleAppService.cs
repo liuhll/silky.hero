@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.Role.Dtos;
+using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Security;
 
 namespace Silky.Identity.Application.Contracts.Role;
 
@@ -11,17 +13,25 @@ namespace Silky.Identity.Application.Contracts.Role;
 /// 角色信息服务
 /// </summary>
 [ServiceRoute]
+[Authorize(IdentityPermissions.Roles.Default)]
 public interface IRoleAppService
 {
     /// <summary>
-    /// 新增/更新角色
+    /// 新增角色
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    [HttpPut]
+    [Authorize(IdentityPermissions.Roles.Create)]
+    Task CreateAsync(CreateRoleInput input);
+    
+    /// <summary>
+    /// 更新角色
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    Task CreateOrUpdateAsync(CreateOrUpdateRoleInput input);
+    [Authorize(IdentityPermissions.Roles.Update)]
+    Task UpdateAsync(UpdateRoleInput input);
 
     /// <summary>
     /// 根据id获取角色信息
@@ -39,6 +49,7 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
