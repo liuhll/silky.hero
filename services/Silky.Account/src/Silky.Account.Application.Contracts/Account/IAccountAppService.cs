@@ -25,5 +25,6 @@ public interface IAccountAppService
     /// </summary>
     /// <returns></returns>
     [GetCachingIntercept("CurrentUserInfo", OnlyCurrentUserData = true)]
+    [Authorize]
     Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync();
 }
