@@ -13,8 +13,6 @@ namespace Silky.Permission.EntityFrameworkCore.DbContexts
         {
         }
 
-        public DbSet<Domain.Permission> Permissions { get; set; }
-
         public DbSet<Menu> Menus { get; set; }
     }
 }
