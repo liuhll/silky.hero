@@ -1,14 +1,60 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Silky.Permission.Database.Migrations.Migrations
 {
-    public partial class v13 : Migration
+    public partial class v10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Menus",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PermissionCode = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ParentId = table.Column<long>(type: "bigint", nullable: true),
+                    Icon = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Sort = table.Column<int>(type: "int", nullable: false),
+                    RoutePath = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Component = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ExternalLink = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    Display = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    Cache = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeletedBy = table.Column<long>(type: "bigint", nullable: true),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    UpdatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Menus_Menus_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Menus",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "Menus",
                 columns: new[] { "Id", "Cache", "Component", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Display", "ExternalLink", "Icon", "IsDeleted", "Name", "ParentId", "PermissionCode", "RoutePath", "Sort", "Status", "Type", "UpdatedBy", "UpdatedTime" },
@@ -55,134 +101,17 @@ namespace Silky.Permission.Database.Migrations.Migrations
                     { 1103L, null, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, null, null, null, false, "编辑", 1100L, "Identity.Role.Update", null, 0, 1, 2, null, null },
                     { 1104L, null, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, null, null, null, false, "删除", 1100L, "Identity.Role.Delete", null, 0, 1, 2, null, null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_ParentId",
+                table: "Menus",
+                column: "ParentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 3L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 4L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 5L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 6L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 7L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 8L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 101L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 102L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 103L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 201L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 202L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 203L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1002L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1003L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1004L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1102L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1103L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1104L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 2L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 100L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 200L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1001L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1100L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1L);
-
-            migrationBuilder.DeleteData(
-                table: "Menus",
-                keyColumn: "Id",
-                keyValue: 1000L);
+            migrationBuilder.DropTable(
+                name: "Menus");
         }
     }
 }

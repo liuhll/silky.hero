@@ -11,8 +11,8 @@ using Silky.Permission.EntityFrameworkCore.DbContexts;
 namespace Silky.Permission.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20211231093801_v1.3")]
-    partial class v13
+    [Migration("20220101040007_v1.0")]
+    partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -405,74 +405,6 @@ namespace Silky.Permission.Database.Migrations.Migrations
                             Status = 1,
                             Type = 2
                         });
-                });
-
-            modelBuilder.Entity("Silky.Permission.Domain.Permission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("Code");
-
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("CreatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("DeletedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("DeletedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("HostName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("HostName");
-
-                    b.Property<string>("HttpMethod")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("HttpMethod");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Method")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("Method");
-
-                    b.Property<string>("ServiceEntryId")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)")
-                        .HasColumnName("ServiceEntryId");
-
-                    b.Property<string>("ServiceName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("ServiceName");
-
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("UpdatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("WebApi")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("WebApi");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("Silky.Permission.Domain.Menu.Menu", b =>
