@@ -15,7 +15,6 @@ public abstract class MenuDtoBase
     /// <summary>
     /// 权限标识
     /// </summary>
-    [Required(ErrorMessage = "权限标识不允许为空")]
     public string PermissionCode { get; set; }
 
     /// <summary>
@@ -47,7 +46,7 @@ public abstract class MenuDtoBase
     /// 状态
     /// </summary>
     public Status Status { get; set; }
-    
+
     /// <summary>
     /// 是否外链
     /// </summary>
