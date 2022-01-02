@@ -1,14 +1,17 @@
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Silky.Core;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Contexts;
+using Silky.EntityFrameworkCore.Entities;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.EntityFrameworkCore.MultiTenants.Dependencies;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
-using Silky.Rpc.Runtime.Server;
+using Silky.Hero.Common.Session;
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Contexts;
 
@@ -24,25 +27,17 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
         InsertOrUpdateIgnoreNullValues = true;
     }
 
-    private object _tenantId;
+    private static readonly MethodInfo ConfigureBasePropertiesMethodInfo
+        = typeof(HeroDbContext<TDbContext>)
+            .GetMethod(
+                nameof(ConfigureBaseProperties),
+                BindingFlags.Instance | BindingFlags.NonPublic
+            );
 
     public object GetTenantId()
     {
-        return TenantId;
-    }
-
-    public object TenantId
-    {
-        get
-        {
-            if (_tenantId != null)
-            {
-                return _tenantId;
-            }
-
-            return NullSession.Instance.TenantId;
-        }
-        set => _tenantId = value;
+        var currentTenantId = EngineContext.Current.Resolve<ICurrentTenantId>();
+        return currentTenantId.TenantId;
     }
 
     protected override void SavingChangesEvent(DbContextEventData eventData, InterceptionResult<int> result)
@@ -115,54 +110,110 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
     public void OnCreating(ModelBuilder modelBuilder, EntityTypeBuilder entityBuilder, DbContext dbContext,
         Type dbContextLocator)
     {
-        // 配置租户Id以及假删除过滤器
-        LambdaExpression expression = TenantIdAndFakeDeleteQueryFilterExpression(entityBuilder, dbContext);
-        if (expression != null)
-            entityBuilder.HasQueryFilter(expression);
+        ConfigureBasePropertiesMethodInfo
+            .MakeGenericMethod(entityBuilder.Metadata.ClrType)
+            .Invoke(this, new object[] { modelBuilder, entityBuilder.Metadata });
     }
 
-    protected static LambdaExpression TenantIdAndFakeDeleteQueryFilterExpression(EntityTypeBuilder entityBuilder,
-        DbContext dbContext, string onTableTenantId = null, string isDeletedKey = null, object filterValue = null)
+    protected virtual void ConfigureBaseProperties<TEntity>(ModelBuilder modelBuilder,
+        IMutableEntityType mutableEntityType)
+        where TEntity : class
     {
-        onTableTenantId ??= "TenantId";
-        isDeletedKey ??= "IsDeleted";
-        IMutableEntityType metadata = entityBuilder.Metadata;
-        if (metadata.FindProperty(onTableTenantId) == null && metadata.FindProperty(isDeletedKey) == null)
+        if (mutableEntityType.IsOwned())
         {
-            return null;
+            return;
         }
 
-        Expression finialExpression = Expression.Constant(true);
-        ParameterExpression parameterExpression = Expression.Parameter(metadata.ClrType, "u");
-
-        // 租户过滤器
-        if (typeof(IHasTenantObject).IsAssignableFrom(entityBuilder.Metadata.ClrType))
+        if (!typeof(IEntity).IsAssignableFrom(typeof(TEntity)))
         {
-            if (metadata.FindProperty(onTableTenantId) != null)
+            return;
+        }
+        
+        ConfigureGlobalFilters<TEntity>(modelBuilder, mutableEntityType);
+    }
+
+    protected virtual void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder,
+        IMutableEntityType mutableEntityType)
+        where TEntity : class
+    {
+        if (mutableEntityType.BaseType == null && ShouldFilterEntity<TEntity>(mutableEntityType))
+        {
+            var filterExpression = CreateFilterExpression<TEntity>();
+            if (filterExpression != null)
             {
-                ConstantExpression constantExpression = Expression.Constant(onTableTenantId);
-                MethodCallExpression right = Expression.Call(Expression.Constant(dbContext),
-                    dbContext.GetType().GetMethod("GetTenantId"));
-                finialExpression = Expression.AndAlso(finialExpression, Expression.Equal(Expression.Call(typeof(EF),
-                    "Property", new Type[1]
-                    {
-                        typeof(object)
-                    }, parameterExpression, constantExpression), right));
+                modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
             }
         }
+    }
 
-        // 假删除过滤器
-        if (metadata.FindProperty(isDeletedKey) != null)
+    protected virtual bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType) where TEntity : class
+    {
+        if (typeof(IHasTenantObject).IsAssignableFrom(typeof(TEntity)))
         {
-            ConstantExpression constantExpression = Expression.Constant(isDeletedKey);
-            ConstantExpression right = Expression.Constant(filterValue ?? false);
-            var fakeDeleteQueryExpression = Expression.Equal(Expression.Call(typeof(EF), "Property", new Type[1]
-            {
-                typeof(bool)
-            }, parameterExpression, constantExpression), right);
-            finialExpression = Expression.AndAlso(finialExpression, fakeDeleteQueryExpression);
+            return true;
         }
 
-        return Expression.Lambda(finialExpression, parameterExpression);
+        if (typeof(ISoftDeletedObject).IsAssignableFrom(typeof(TEntity)))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected virtual Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+        where TEntity : class
+    {
+        Expression<Func<TEntity, bool>> expression = null;
+
+        if (typeof(ISoftDeletedObject).IsAssignableFrom(typeof(TEntity)))
+        {
+            expression = e => !EF.Property<bool>(e, nameof(ISoftDeletedObject.IsDeleted));
+        }
+
+        if (typeof(IHasTenantObject).IsAssignableFrom(typeof(TEntity)))
+        {
+            Expression<Func<TEntity, bool>>
+                multiTenantFilter = e => EF.Property<object>(e, nameof(IHasTenantObject.TenantId)) == GetTenantId();
+            expression = expression == null ? multiTenantFilter : CombineExpressions(expression, multiTenantFilter);
+        }
+
+        return expression;
+    }
+
+    protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1,
+        Expression<Func<T, bool>> expression2)
+    {
+        var parameter = Expression.Parameter(typeof(T));
+
+        var leftVisitor = new ReplaceExpressionVisitor(expression1.Parameters[0], parameter);
+        var left = leftVisitor.Visit(expression1.Body);
+
+        var rightVisitor = new ReplaceExpressionVisitor(expression2.Parameters[0], parameter);
+        var right = rightVisitor.Visit(expression2.Body);
+
+        return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(left, right), parameter);
+    }
+
+    class ReplaceExpressionVisitor : ExpressionVisitor
+    {
+        private readonly Expression _oldValue;
+        private readonly Expression _newValue;
+
+        public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
+        {
+            _oldValue = oldValue;
+            _newValue = newValue;
+        }
+
+        public override Expression Visit(Expression node)
+        {
+            if (node == _oldValue)
+            {
+                return _newValue;
+            }
+
+            return base.Visit(node);
+        }
     }
 }

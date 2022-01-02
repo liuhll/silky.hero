@@ -6,8 +6,10 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Session;
 
 namespace Silky.Identity.Domain;
 
@@ -124,7 +126,8 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
     public Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails,
         CancellationToken cancellationToken)
     {
-        DynamicContext.TenantId = tenantId;
+        var currentTenantId = EngineContext.Current.Resolve<ICurrentTenantId>();
+        currentTenantId.SetTenantId(tenantId);
         if (includeDetails)
         {
             return Entities

@@ -2,7 +2,7 @@
 
 namespace Silky.Hero.Common.EntityFrameworkCore.Entities;
 
-public abstract class AuditedEntity : Entity<long>, IAuditedObject, IHasTenantObject
+public abstract class AuditedEntity : Entity<long>, IAuditedObject, IEntity, IHasTenantObject
 {
     protected AuditedEntity()
     {
