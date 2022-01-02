@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Claims;
@@ -25,7 +24,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
     public virtual bool IsStatic { get; set; }
 
     public virtual bool IsPublic { get; set; }
-
+    
     public string ConcurrencyStamp { get; set; }
 
     public int Sort { get; set; }

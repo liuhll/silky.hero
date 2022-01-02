@@ -39,17 +39,6 @@ public static class DbContextModelBuilderExtensions
                 .WithOne(o => o.Parent)
                 .HasForeignKey(o => o.ParentId);
         });
-
-        builder.Entity<Domain.OrganizationRole>(b =>
-        {
-            b.ToTable(OrganizationDbProperties.DbTablePrefix + "OrganizationRoles", OrganizationDbProperties.DbSchema);
-            b.ConfigureByConvention();
-            b.Property(o => o.OrganizationId)
-                .IsRequired()
-                .HasColumnName(nameof(Domain.OrganizationRole.OrganizationId));
-            b.Property(o => o.RoleId)
-                .IsRequired()
-                .HasColumnName(nameof(Domain.OrganizationRole.RoleId));
-        });
+        
     }
 }

@@ -37,7 +37,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         return role;
     }
 
-    public async override Task<IdentityResult> SetRoleNameAsync(IdentityRole role, string name)
+    public override async Task<IdentityResult> SetRoleNameAsync(IdentityRole role, string name)
     {
         if (role.IsStatic && role.Name != name)
         {

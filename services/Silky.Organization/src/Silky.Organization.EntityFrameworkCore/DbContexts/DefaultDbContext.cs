@@ -13,8 +13,6 @@ namespace Silky.Organization.EntityFrameworkCore.DbContexts
         }
 
         public DbSet<Domain.Organization> Organizations { get; set; }
-        
-        public DbSet<Domain.OrganizationRole> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
