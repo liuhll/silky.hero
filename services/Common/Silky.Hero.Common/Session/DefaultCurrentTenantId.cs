@@ -6,12 +6,13 @@ namespace Silky.Hero.Common.Session;
 public class DefaultCurrentTenantId : ICurrentTenantId, IScopedDependency
 {
     private long? _tenantId;
+    private bool isSetTenantId = false;
 
     public long? TenantId
     {
         get
         {
-            if (_tenantId != null)
+            if (isSetTenantId)
             {
                 return _tenantId;
             }
@@ -27,6 +28,7 @@ public class DefaultCurrentTenantId : ICurrentTenantId, IScopedDependency
 
     public void SetTenantId(long? tenantId)
     {
+        isSetTenantId = true;
         _tenantId = tenantId;
     }
 }
