@@ -122,7 +122,8 @@ public static class DbContextModelBuilderExtensions
             b.Property(r => r.IsPublic).HasColumnName(nameof(IdentityRole.IsPublic));
             b.Property(r => r.DataRange).HasColumnName(nameof(IdentityRole.DataRange));
             b.HasMany(r => r.Claims).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
-
+            b.HasMany(r => r.Menus).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
+            b.HasMany(r => r.CustomOrganizationDataRanges).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
             b.HasIndex(r => r.NormalizedName);
         });
 
@@ -161,12 +162,22 @@ public static class DbContextModelBuilderExtensions
         });
         builder.Entity<IdentityRoleOrganization>(b =>
         {
-            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "IdentityRoleOrganizations",
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "RoleOrganizations",
                 HeroIdentityDbProperties.DbSchema);
             b.ConfigureByConvention();
             b.Property(r => r.RoleId).IsRequired().HasColumnName(nameof(IdentityRoleOrganization.RoleId));
             b.Property(r => r.OrganizationId).IsRequired()
                 .HasColumnName(nameof(IdentityRoleOrganization.OrganizationId));
+        });
+
+        builder.Entity<IdentityRoleMenu>(b =>
+        {
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "RoleMenus",
+                HeroIdentityDbProperties.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(r => r.RoleId).IsRequired().HasColumnName(nameof(IdentityRoleMenu.RoleId));
+            b.Property(r => r.MenuId).IsRequired()
+                .HasColumnName(nameof(IdentityRoleMenu.MenuId));
         });
     }
 }

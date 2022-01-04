@@ -23,6 +23,8 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
     public virtual ICollection<IdentityRoleOrganization> CustomOrganizationDataRanges { get; protected set; }
 
+    public virtual ICollection<IdentityRoleMenu> Menus { get; protected set; }
+
     public virtual bool IsDefault { get; set; }
 
     public virtual bool IsStatic { get; set; }
@@ -38,6 +40,10 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
     public IdentityRole()
     {
         DataRange = DataRange.SelfOrganization;
+        Claims = new Collection<IdentityRoleClaim>();
+        CustomOrganizationDataRanges = new List<IdentityRoleOrganization>();
+        Menus = new List<IdentityRoleMenu>();
+        DataRange = DataRange.SelfOrganization;
     }
 
     public IdentityRole([NotNull] string name, [NotNull] string realName, object tenantId = null)
@@ -51,10 +57,6 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         {
             TenantId = long.Parse(tenantId.ToString());
         }
-
-        Claims = new Collection<IdentityRoleClaim>();
-        CustomOrganizationDataRanges = new List<IdentityRoleOrganization>();
-        DataRange = DataRange.SelfOrganization;
     }
 
     public virtual void UpdateDataRange(DataRange dataRange)
@@ -67,13 +69,50 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         DataRange = dataRange;
     }
 
+    public virtual void AddMenu(long menuId)
+    {
+        if (Menus.All(p => p.MenuId != menuId))
+        {
+            Menus.Add(new IdentityRoleMenu(Id, menuId));
+        }
+    }
+
+    public virtual void AddMenus(IEnumerable<long> menuIds)
+    {
+        foreach (var menuId in menuIds)
+        {
+            AddMenu(menuId);
+        }
+    }
+
+    public virtual void RemoveMenu(long menuId)
+    {
+        var menu = Menus.FirstOrDefault(p => p.MenuId == menuId);
+        if (menu != null)
+        {
+            Menus.Remove(menu);
+        }
+    }
+
+    public virtual void RemoveMenu(IEnumerable<long> menuIds)
+    {
+        foreach (var menuId in menuIds)
+        {
+            RemoveMenu(menuId);
+        }
+    }
+
     public virtual void AddOrganizationDataRange(long organizationId)
     {
         if (DataRange != DataRange.CustomOrganization)
         {
             DataRange = DataRange.CustomOrganization;
         }
-        CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
+
+        if (CustomOrganizationDataRanges.All(p => p.OrganizationId != organizationId))
+        {
+            CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
+        }
     }
 
     public virtual void AddOrganizationDataRanges(IEnumerable<long> organizationIds)
@@ -85,7 +124,10 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
         foreach (var organizationId in organizationIds)
         {
-            CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
+            if (CustomOrganizationDataRanges.All(p => p.OrganizationId != organizationId))
+            {
+                CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
+            }
         }
     }
 

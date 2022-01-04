@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Identity.EntityFrameworkCore.DbContexts;
 
@@ -10,9 +11,10 @@ using Silky.Identity.EntityFrameworkCore.DbContexts;
 namespace Silky.Identity.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20220104115832_v1.13")]
+    partial class v113
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -378,7 +380,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleMenus", (string)null);
+                    b.ToTable("IdentityRoleMenu", (string)null);
                 });
 
             modelBuilder.Entity("Silky.Identity.Domain.IdentityRoleOrganization", b =>
@@ -431,7 +433,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleOrganizations", (string)null);
+                    b.ToTable("IdentityRoleOrganizations", (string)null);
                 });
 
             modelBuilder.Entity("Silky.Identity.Domain.IdentityUser", b =>
@@ -590,7 +592,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "63d7423a-e677-443d-bb25-714e2fa4fd85",
+                            ConcurrencyStamp = "ef7e2e81-317e-4ac7-8360-b02df6acd938",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@silky.com",
                             EmailConfirmed = false,
@@ -600,9 +602,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111111",
                             NormalizedEmail = "ADMIN@SILKY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIV36tN9sEaG5nylxMl6jYsefV0GgjY6wJVFS87TZyRtyZ30fW1zgt/iOFlws3MTMQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHLg0UFJFnd17iIFq7a++80dpzHiQ5T2qQ5fWKVzOEL0lBZhHPmYuylbCWGKG7/8hQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7516cd69-b9a4-4cea-a215-66d8645af40c",
+                            SecurityStamp = "981f1c9b-13f3-4c94-8603-5b12328aec8a",
                             UserName = "admin"
                         },
                         new
@@ -610,7 +612,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 2L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4c57ccda-7c03-44ec-8e01-46a70e43d17d",
+                            ConcurrencyStamp = "dde5e61b-bdd6-4831-888c-b3edf37d3c3d",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "liuhll@silky.com",
                             EmailConfirmed = false,
@@ -620,9 +622,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111112",
                             NormalizedEmail = "LIUHLL@SILKY.COM",
                             NormalizedUserName = "LIUHLL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH9HQqMZoi3seqPHjJ6iCQVz3y7PzjuWWoMX4zwDMrQrl3IjotB9mbDY2Gy+F+I9ew==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGT/Upod1ihYIWxFPQc+qnHQyx52MXgueaX1/fdtYpV/5H4ce8cnP4Fzs90gAfL6AA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "627798fa-877e-4ec7-9bc5-4691229fd65a",
+                            SecurityStamp = "977f0d5c-ace7-40df-b773-c4e49f243d0d",
                             UserName = "liuhll"
                         });
                 });

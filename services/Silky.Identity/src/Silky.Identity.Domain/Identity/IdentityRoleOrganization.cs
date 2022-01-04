@@ -2,7 +2,7 @@
 
 namespace Silky.Identity.Domain;
 
-public class IdentityRoleOrganization : AuditedEntity
+public class IdentityRoleOrganization : FullAuditedEntity
 {
     public IdentityRoleOrganization()
     {
