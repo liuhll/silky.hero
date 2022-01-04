@@ -8,9 +8,11 @@ using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
+using Silky.Hero.Common.EntityFrameworkCore;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
 
 namespace Silky.Identity.Application.Role;
@@ -51,6 +53,19 @@ public class RoleAppService : IRoleAppService
     {
         var role = await _roleManager.GetByIdAsync(id);
         (await _roleManager.DeleteAsync(role)).CheckErrors();
+    }
+
+    public async Task UpdateMenusAsync(UpdateRoleMenuInput input)
+    {
+        var role = await _roleManager.RoleRepository.Include(p => p.Menus).FirstOrDefaultAsync(p => p.Id == input.Id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), input.Id);
+        }
+
+        (await _roleManager.SetRoleMenusAsync(role,
+            input.MenuIds.Select(mId => new IdentityRoleMenu(role.Id, mId, role.TenantId)).ToList())).CheckErrors();
+        (await _roleManager.UpdateAsync(role)).CheckErrors();
     }
 
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)

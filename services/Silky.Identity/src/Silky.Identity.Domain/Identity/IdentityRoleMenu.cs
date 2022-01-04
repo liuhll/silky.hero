@@ -8,10 +8,11 @@ public class IdentityRoleMenu : FullAuditedEntity
     {
     }
 
-    public IdentityRoleMenu(long roleId, long menuId)
+    public IdentityRoleMenu(long roleId, long menuId, long? tenantId = null)
     {
         RoleId = roleId;
         MenuId = menuId;
+        TenantId = tenantId;
     }
 
     public long RoleId { get; set; }

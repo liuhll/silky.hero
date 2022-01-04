@@ -30,6 +30,7 @@ public interface IMenuAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetMenuOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(bool), "HasMenu:{0}")]
     [Authorize(PermissionPermissions.Menus.Update)]
     Task UpdateAsync(UpdateMenuInput input);
 
@@ -48,6 +49,7 @@ public interface IMenuAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetMenuOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(bool), "HasMenu:{0}")]
     [Authorize(PermissionPermissions.Menus.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -57,4 +59,12 @@ public interface IMenuAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetMenuPageOutput>> GetPageAsync(GetMenuPageInput input);
+
+    /// <summary>
+    /// 根据Id判断是否存在菜单
+    /// </summary>
+    /// <param name="menuId"></param>
+    /// <returns></returns>
+    [GetCachingIntercept("HasMenu:{0}")]
+    Task<bool> HasMenuAsync([CacheKey(0)]long menuId);
 }

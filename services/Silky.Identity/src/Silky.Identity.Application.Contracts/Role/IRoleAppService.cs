@@ -53,6 +53,14 @@ public interface IRoleAppService
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
+    /// 授权角色菜单
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [Authorize(IdentityPermissions.Roles.UpdateMenus)]
+    Task UpdateMenusAsync(UpdateRoleMenuInput input);
+
+    /// <summary>
     /// 分页查询角色信息
     /// </summary>
     /// <param name="input"></param>

@@ -73,7 +73,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
     {
         if (Menus.All(p => p.MenuId != menuId))
         {
-            Menus.Add(new IdentityRoleMenu(Id, menuId));
+            Menus.Add(new IdentityRoleMenu(Id, menuId, TenantId));
         }
     }
 
@@ -179,5 +179,28 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
     public override string ToString()
     {
         return $"{base.ToString()}, Name = {Name}";
+    }
+
+    public void AddMenus(IEnumerable<IdentityRoleMenu> roleMenus)
+    {
+        foreach (var roleMenu in roleMenus)
+        {
+            AddMenu(roleMenu);
+        }
+    }
+
+    public void AddMenu(IdentityRoleMenu roleMenu)
+    {
+        if (roleMenu.RoleId != Id)
+        {
+            throw new BusinessException("增加角色菜单错误,角色Id不一致");
+        }
+
+        if (Menus.All(p => p.MenuId != roleMenu.MenuId && p.TenantId != roleMenu.TenantId))
+        {
+            Menus.Add(roleMenu);
+        }
+
+        Menus.Add(roleMenu);
     }
 }

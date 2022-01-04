@@ -67,4 +67,10 @@ public class MenuAppService : IMenuAppService
         var menuPageList = menuList.ToPagedList(input.PageIndex, input.PageSize);
         return menuPageList;
     }
+
+    public async Task<bool> HasMenuAsync(long menuId)
+    {
+        var menu = await _menuDomainService.MenuRepository.FindOrDefaultAsync(menuId);
+        return menu != null;
+    }
 }
