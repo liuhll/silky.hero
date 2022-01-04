@@ -62,7 +62,7 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserClaims", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-            
+
             b.Property(uc => uc.ClaimType).HasMaxLength(IdentityUserClaimConsts.MaxClaimTypeLength).IsRequired();
             b.Property(uc => uc.ClaimValue).HasMaxLength(IdentityUserClaimConsts.MaxClaimValueLength);
 
@@ -120,7 +120,7 @@ public static class DbContextModelBuilderExtensions
             b.Property(r => r.IsDefault).HasColumnName(nameof(IdentityRole.IsDefault));
             b.Property(r => r.IsStatic).HasColumnName(nameof(IdentityRole.IsStatic));
             b.Property(r => r.IsPublic).HasColumnName(nameof(IdentityRole.IsPublic));
-
+            b.Property(r => r.DataRange).HasColumnName(nameof(IdentityRole.DataRange));
             b.HasMany(r => r.Claims).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
 
             b.HasIndex(r => r.NormalizedName);
@@ -131,7 +131,7 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "RoleClaims", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-            
+
             b.Property(uc => uc.ClaimType).HasMaxLength(IdentityRoleClaimConsts.MaxClaimTypeLength).IsRequired();
             b.Property(uc => uc.ClaimValue).HasMaxLength(IdentityRoleClaimConsts.MaxClaimValueLength);
 
@@ -154,8 +154,19 @@ public static class DbContextModelBuilderExtensions
         builder.Entity<UserSubsidiary>(b =>
         {
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserSubsidiaries", HeroIdentityDbProperties.DbSchema);
-
+            b.Property(r => r.UserId).IsRequired().HasColumnName(nameof(UserSubsidiary.UserId));
+            b.Property(r => r.OrganizationId).HasColumnName(nameof(UserSubsidiary.OrganizationId));
+            b.Property(r => r.PositionId).HasColumnName(nameof(UserSubsidiary.PositionId));
             b.ConfigureByConvention();
+        });
+        builder.Entity<IdentityRoleOrganization>(b =>
+        {
+            b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "IdentityRoleOrganizations",
+                HeroIdentityDbProperties.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(r => r.RoleId).IsRequired().HasColumnName(nameof(IdentityRoleOrganization.RoleId));
+            b.Property(r => r.OrganizationId).IsRequired()
+                .HasColumnName(nameof(IdentityRoleOrganization.OrganizationId));
         });
     }
 }
