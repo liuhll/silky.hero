@@ -8,10 +8,11 @@ public class IdentityRoleOrganization : FullAuditedEntity
     {
     }
 
-    public IdentityRoleOrganization(long roleId, long organizationId)
+    public IdentityRoleOrganization(long roleId, long organizationId,long? tenantId = null)
     {
         RoleId = roleId;
         OrganizationId = organizationId;
+        TenantId = tenantId;
     }
 
     public long RoleId { get; set; }

@@ -9,6 +9,8 @@ using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Identity.Domain.Shared;
+using Silky.Organization.Application.Contracts.Organization;
 using Silky.Permission.Application.Contracts.Menu;
 
 namespace Silky.Identity.Domain;
@@ -17,7 +19,9 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
 {
     public IIdentityRoleRepository RoleRepository { get; }
     public IRepository<IdentityRoleMenu> RoleMenuRepository { get; }
+    public IRepository<IdentityRoleOrganization> RoleOrganizationRepository { get; }
     private readonly IMenuAppService _menuAppService;
+    private readonly IOrganizationAppService _organizationAppService;
 
     public IdentityRoleManager(IdentityRoleStore store,
         IEnumerable<IRoleValidator<IdentityRole>> roleValidators,
@@ -26,7 +30,9 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         ILogger<IdentityRoleManager> logger,
         IIdentityRoleRepository roleRepository,
         IRepository<IdentityRoleMenu> roleMenuRepository,
-        IMenuAppService menuAppService)
+        IRepository<IdentityRoleOrganization> roleOrganizationRepository,
+        IMenuAppService menuAppService,
+        IOrganizationAppService organizationAppService)
         : base(store,
             roleValidators,
             keyNormalizer,
@@ -35,7 +41,9 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
     {
         RoleRepository = roleRepository;
         RoleMenuRepository = roleMenuRepository;
+        RoleOrganizationRepository = roleOrganizationRepository;
         _menuAppService = menuAppService;
+        _organizationAppService = organizationAppService;
     }
 
     public virtual async Task<IdentityRole> GetByIdAsync(long id)
@@ -108,12 +116,78 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         {
             return result;
         }
+
         return IdentityResult.Success;
+    }
+
+    public async Task<IdentityResult> SetRoleDataRangeAsync(IdentityRole role, DataRange dataRange,
+        List<IdentityRoleOrganization> roleOrganizations)
+    {
+        if (dataRange == DataRange.CustomOrganization && roleOrganizations?.Any() == false)
+        {
+            throw new BusinessException("请指定自定义的数据权限范围");
+        }
+
+        role.SetDataRange(dataRange);
+        if (dataRange == DataRange.CustomOrganization)
+        {
+            foreach (var roleOrganization in roleOrganizations)
+            {
+                if (!await _organizationAppService.HasOrganizationAsync(roleOrganization.OrganizationId))
+                {
+                    return IdentityResult.Failed(new IdentityError()
+                    {
+                        Code = "NoOrganization",
+                        Description = $"不存在Id为{roleOrganization.OrganizationId}的组织机构"
+                    });
+                }
+            }
+            
+            var currentRoleOrganizations = await GetCurrentRoleOrganizationsAsync(role);
+            var result =
+                await RemoveFromRoleOrganizationsAsync(role,
+                    currentRoleOrganizations.Except(roleOrganizations).Distinct());
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            result = await AddToRoleOrganizationsAsync(role,
+                roleOrganizations.Except(currentRoleOrganizations).Distinct());
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+        }
+
+        return IdentityResult.Success;
+    }
+
+    private Task<IdentityResult> AddToRoleOrganizationsAsync(IdentityRole role,
+        IEnumerable<IdentityRoleOrganization> roleOrganizations)
+    {
+        role.AddCustomOrganizationDataRanges(roleOrganizations);
+        return Task.FromResult(IdentityResult.Success);
+    }
+
+    private async Task<IdentityResult> RemoveFromRoleOrganizationsAsync(IdentityRole role,
+        IEnumerable<IdentityRoleOrganization> roleOrganizations)
+    {
+        foreach (var roleOrganization in roleOrganizations)
+        {
+            role.RemoveCustomOrganizationDataRange(roleOrganization.OrganizationId);
+        }
+
+        return IdentityResult.Success;
+    }
+
+    private async Task<ICollection<IdentityRoleOrganization>> GetCurrentRoleOrganizationsAsync(IdentityRole role)
+    {
+        return await RoleOrganizationRepository.Where(p => p.RoleId == role.Id).ToListAsync();
     }
 
     private Task<IdentityResult> AddToRoleMenusAsync(IdentityRole role, IEnumerable<IdentityRoleMenu> roleMenus)
     {
-      
         role.AddMenus(roleMenus);
         return Task.FromResult(IdentityResult.Success);
     }

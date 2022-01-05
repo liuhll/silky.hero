@@ -87,14 +87,14 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
 
     public virtual void RemoveMenu(long menuId)
     {
-        var menu = Menus.FirstOrDefault(p => p.MenuId == menuId);
+        var menu = Menus.FirstOrDefault(p => p.MenuId == menuId && p.TenantId == TenantId);
         if (menu != null)
         {
             Menus.Remove(menu);
         }
     }
 
-    public virtual void RemoveMenu(IEnumerable<long> menuIds)
+    public virtual void RemoveMenus(IEnumerable<long> menuIds)
     {
         foreach (var menuId in menuIds)
         {
@@ -102,34 +102,68 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         }
     }
 
-    public virtual void AddOrganizationDataRange(long organizationId)
+    public virtual void AddCustomOrganizationDataRanges(IEnumerable<IdentityRoleOrganization> identityRoleOrganizations)
     {
-        if (DataRange != DataRange.CustomOrganization)
+        foreach (var identityRoleOrganization in identityRoleOrganizations)
         {
-            DataRange = DataRange.CustomOrganization;
-        }
-
-        if (CustomOrganizationDataRanges.All(p => p.OrganizationId != organizationId))
-        {
-            CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
+            AddCustomOrganizationDataRange(identityRoleOrganization);
         }
     }
 
-    public virtual void AddOrganizationDataRanges(IEnumerable<long> organizationIds)
+    public virtual void AddCustomOrganizationDataRange(IdentityRoleOrganization identityRoleOrganization)
     {
         if (DataRange != DataRange.CustomOrganization)
         {
-            DataRange = DataRange.CustomOrganization;
+            throw new BusinessException("只有自定义数据权限范围,才允许添加IdentityRoleOrganization数据");
         }
 
+        if (identityRoleOrganization.RoleId != Id)
+        {
+            throw new BusinessException("增加数据权限机构失败,角色Id不一致");
+        }
+
+        if (CustomOrganizationDataRanges.All(p =>
+                p.OrganizationId != identityRoleOrganization.OrganizationId &&
+                p.TenantId != identityRoleOrganization.TenantId))
+        {
+            CustomOrganizationDataRanges.Add(identityRoleOrganization);
+        }
+    }
+
+    public void RemoveCustomOrganizationDataRanges(IEnumerable<long> organizationIds)
+    {
         foreach (var organizationId in organizationIds)
         {
-            if (CustomOrganizationDataRanges.All(p => p.OrganizationId != organizationId))
-            {
-                CustomOrganizationDataRanges.Add(new IdentityRoleOrganization(Id, organizationId));
-            }
+            RemoveCustomOrganizationDataRange(organizationId);
         }
     }
+
+    public void RemoveCustomOrganizationDataRange(long organizationId)
+    {
+        if (DataRange != DataRange.CustomOrganization)
+        {
+            throw new BusinessException("只有自定义数据权限范围,才允许移除IdentityRoleOrganization数据");
+        }
+
+        var customRoleOrganization =
+            CustomOrganizationDataRanges.FirstOrDefault(p =>
+                p.OrganizationId == organizationId && p.TenantId == TenantId);
+        if (customRoleOrganization != null)
+        {
+            CustomOrganizationDataRanges.Remove(customRoleOrganization);
+        }
+    }
+
+    public virtual void SetDataRange(DataRange dataRange)
+    {
+        if (dataRange != DataRange.CustomOrganization)
+        {
+            CustomOrganizationDataRanges.Clear();
+        }
+
+        DataRange = dataRange;
+    }
+
 
     public virtual void AddClaim([NotNull] Claim claim)
     {
@@ -200,7 +234,5 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         {
             Menus.Add(roleMenu);
         }
-
-        Menus.Add(roleMenu);
     }
 }

@@ -71,6 +71,15 @@ public interface IRoleAppService
     Task<GetRoleMenuOutput> GetMenusAsync(long id);
 
     /// <summary>
+    /// 授权数据权限访问
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [Authorize(IdentityPermissions.Roles.SetDataRange)]
+    [HttpPut("datarange")]
+    Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
+
+    /// <summary>
     /// 分页查询角色信息
     /// </summary>
     /// <param name="input"></param>

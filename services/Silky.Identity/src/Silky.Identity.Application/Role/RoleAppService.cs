@@ -64,7 +64,7 @@ public class RoleAppService : IRoleAppService
         }
 
         (await _roleManager.SetRoleMenusAsync(role,
-            input.MenuIds.Select(mId => new IdentityRoleMenu(role.Id, mId, role.TenantId)).ToList())).CheckErrors();
+            input.MenuIds?.Select(mId => new IdentityRoleMenu(role.Id, mId, role.TenantId)).ToList())).CheckErrors();
         (await _roleManager.UpdateAsync(role)).CheckErrors();
     }
 
@@ -77,6 +77,21 @@ public class RoleAppService : IRoleAppService
         }
 
         return role.Adapt<GetRoleMenuOutput>();
+    }
+
+    public async Task SetDataRangeAsync(UpdateRoleDataRangeInput input)
+    {
+        var role = await _roleManager.RoleRepository.Include(p => p.CustomOrganizationDataRanges)
+            .FirstOrDefaultAsync(p => p.Id == input.Id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), input.Id);
+        }
+
+        (await _roleManager.SetRoleDataRangeAsync(role, input.DataRange,
+            input.CustomOrganizationIds?.Select(oId => new IdentityRoleOrganization(role.Id, oId, role.TenantId))
+                .ToList())).CheckErrors();
+        (await _roleManager.UpdateAsync(role)).CheckErrors();
     }
 
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)
