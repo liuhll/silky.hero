@@ -17,7 +17,6 @@ namespace Silky.Organization.EntityFrameworkCore.DbContexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ConfigureOrganization();
         }
     }
 }
