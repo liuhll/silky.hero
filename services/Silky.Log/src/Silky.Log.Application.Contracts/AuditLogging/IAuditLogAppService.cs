@@ -24,7 +24,7 @@ public interface IAuditLogAppService
     /// </summary>
     /// <param name="auditLogInfo"></param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     Task SaveAsync(AuditLogInfo auditLogInfo);
 
     /// <summary>

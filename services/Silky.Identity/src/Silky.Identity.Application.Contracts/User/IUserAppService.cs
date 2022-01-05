@@ -104,7 +104,7 @@ public interface IUserAppService
     /// </summary>
     /// <param name="organizationId">组织机构id</param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId);
 
     /// <summary>
@@ -112,7 +112,7 @@ public interface IUserAppService
     /// </summary>
     /// <param name="organizationId">组织机构id</param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     Task<bool> HasOrganizationUsersAsync(long organizationId);
 
     /// <summary>
@@ -120,6 +120,6 @@ public interface IUserAppService
     /// </summary>
     /// <param name="positionId">岗位id</param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     Task<bool> HasPositionUsersAsync(long positionId);
 }

@@ -79,7 +79,7 @@ public interface IOrganizationAppService
     /// </summary>
     /// <param name="organizationId">组织机构id</param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     [GetCachingIntercept("HasOrganization:{0}")]
     Task<bool> HasOrganizationAsync([CacheKey(0)] long organizationId);
 }

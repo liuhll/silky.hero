@@ -68,7 +68,7 @@ public interface IPositionAppService
     /// </summary>
     /// <param name="positionId">职位Id</param>
     /// <returns></returns>
-    [Governance(ProhibitExtranet = true)]
+    [ProhibitExtranet]
     [GetCachingIntercept("HasPosition:{0}")]
     Task<bool> HasPositionAsync([CacheKey(0)] long positionId);
 }
