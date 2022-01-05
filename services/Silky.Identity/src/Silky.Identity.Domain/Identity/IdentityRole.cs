@@ -122,7 +122,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
             throw new BusinessException("增加数据权限机构失败,角色Id不一致");
         }
 
-        if (CustomOrganizationDataRanges.All(p =>
+        if (!CustomOrganizationDataRanges.Any(p =>
                 p.OrganizationId != identityRoleOrganization.OrganizationId &&
                 p.TenantId != identityRoleOrganization.TenantId))
         {
@@ -230,7 +230,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
             throw new BusinessException("增加角色菜单错误,角色Id不一致");
         }
 
-        if (Menus.All(p => p.MenuId != roleMenu.MenuId && p.TenantId != roleMenu.TenantId))
+        if (!Menus.Any(p => p.MenuId != roleMenu.MenuId && p.TenantId != roleMenu.TenantId))
         {
             Menus.Add(roleMenu);
         }
