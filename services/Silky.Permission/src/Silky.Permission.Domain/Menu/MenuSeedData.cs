@@ -87,6 +87,24 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Button,
             Status = Status.Valid,
         });
+        initList.Add(new Menu()
+        {
+            Id = 1105,
+            Name = "授权菜单",
+            ParentId = 1100,
+            PermissionCode = IdentityPermissions.Roles.SetMenus,
+            Type = MenuType.Button,
+            Status = Status.Valid,
+        });
+        initList.Add(new Menu()
+        {
+            Id = 1106,
+            Name = "授权数据",
+            ParentId = 1100,
+            PermissionCode = IdentityPermissions.Roles.SetMenus,
+            Type = MenuType.Button,
+            Status = Status.Valid,
+        });
     }
 
     private void CreateMenuMenu(List<Menu> initList)
