@@ -57,7 +57,9 @@ public class RoleAppService : IRoleAppService
 
     public async Task SetMenusAsync(UpdateRoleMenuInput input)
     {
-        var role = await _roleManager.RoleRepository.Include(p => p.Menus).FirstOrDefaultAsync(p => p.Id == input.Id);
+        var role = await _roleManager.RoleRepository
+            .Include(p => p.Menus)
+            .FirstOrDefaultAsync(p => p.Id == input.Id);
         if (role == null)
         {
             throw new EntityNotFoundException(typeof(IdentityRole), input.Id);
@@ -70,7 +72,10 @@ public class RoleAppService : IRoleAppService
 
     public async Task<GetRoleMenuOutput> GetMenusAsync(long id)
     {
-        var role = await _roleManager.RoleRepository.Include(p => p.Menus).FirstOrDefaultAsync(p => p.Id == id);
+        var role = await _roleManager.RoleRepository
+            .Include(p => p.Menus)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (role == null)
         {
             throw new EntityNotFoundException(typeof(IdentityRole), id);
@@ -81,7 +86,8 @@ public class RoleAppService : IRoleAppService
 
     public async Task SetDataRangeAsync(UpdateRoleDataRangeInput input)
     {
-        var role = await _roleManager.RoleRepository.Include(p => p.CustomOrganizationDataRanges)
+        var role = await _roleManager.RoleRepository
+            .Include(p => p.CustomOrganizationDataRanges)
             .FirstOrDefaultAsync(p => p.Id == input.Id);
         if (role == null)
         {
@@ -92,6 +98,20 @@ public class RoleAppService : IRoleAppService
             input.CustomOrganizationIds?.Select(oId => new IdentityRoleOrganization(role.Id, oId, role.TenantId))
                 .ToList())).CheckErrors();
         (await _roleManager.UpdateAsync(role)).CheckErrors();
+    }
+
+    public async Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id)
+    {
+        var role = await _roleManager.RoleRepository
+            .Include(p => p.CustomOrganizationDataRanges)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), id);
+        }
+
+        return role.Adapt<GetRoleDataRangeOutput>();
     }
 
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)

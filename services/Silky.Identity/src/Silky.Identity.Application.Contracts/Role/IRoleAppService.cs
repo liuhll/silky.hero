@@ -78,6 +78,15 @@ public interface IRoleAppService
     [Authorize(IdentityPermissions.Roles.SetDataRange)]
     [HttpPut("datarange")]
     Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
+    
+    /// <summary>
+    /// 通过Id获取数据权限范围
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize(IdentityPermissions.Roles.SetDataRange)]
+    [HttpGet("datarange/{id:long}")]
+    Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id);
 
     /// <summary>
     /// 分页查询角色信息
