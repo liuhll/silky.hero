@@ -57,8 +57,18 @@ public interface IRoleAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [Authorize(IdentityPermissions.Roles.UpdateMenus)]
-    Task UpdateMenusAsync(UpdateRoleMenuInput input);
+    [Authorize(IdentityPermissions.Roles.SetMenus)]
+    [HttpPut("menus")]
+    Task SetMenusAsync(UpdateRoleMenuInput input);
+    
+    /// <summary>
+    /// 通过id获取角色菜单
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize(IdentityPermissions.Roles.SetMenus)]
+    [HttpGet("menus/{id:long}")]
+    Task<GetRoleMenuOutput> GetMenusAsync(long id);
 
     /// <summary>
     /// 分页查询角色信息

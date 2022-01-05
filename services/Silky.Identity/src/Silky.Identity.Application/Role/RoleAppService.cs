@@ -55,7 +55,7 @@ public class RoleAppService : IRoleAppService
         (await _roleManager.DeleteAsync(role)).CheckErrors();
     }
 
-    public async Task UpdateMenusAsync(UpdateRoleMenuInput input)
+    public async Task SetMenusAsync(UpdateRoleMenuInput input)
     {
         var role = await _roleManager.RoleRepository.Include(p => p.Menus).FirstOrDefaultAsync(p => p.Id == input.Id);
         if (role == null)
@@ -66,6 +66,17 @@ public class RoleAppService : IRoleAppService
         (await _roleManager.SetRoleMenusAsync(role,
             input.MenuIds.Select(mId => new IdentityRoleMenu(role.Id, mId, role.TenantId)).ToList())).CheckErrors();
         (await _roleManager.UpdateAsync(role)).CheckErrors();
+    }
+
+    public async Task<GetRoleMenuOutput> GetMenusAsync(long id)
+    {
+        var role = await _roleManager.RoleRepository.Include(p => p.Menus).FirstOrDefaultAsync(p => p.Id == id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), id);
+        }
+
+        return role.Adapt<GetRoleMenuOutput>();
     }
 
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)

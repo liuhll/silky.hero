@@ -22,7 +22,7 @@ public class IdentityPermissions
         public const string Create = Default + ".Create";
         public const string Update = Default + ".Update";
         public const string Delete = Default + ".Delete";
-        public const string UpdateMenus = Default + ".UpdateMenus";
+        public const string SetMenus = Default + ".SetMenus";
     }
 
     public static class ClaimTypes

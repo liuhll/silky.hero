@@ -13,7 +13,8 @@ namespace Silky.IdentityHost
             services.AddSilkyCaching()
                 .AddSilkySkyApm()
                 .AddMessagePackCodec()
-                .AddJwt();
+                .AddJwt()
+                .AddObjectMapper();
 
             services.AddHeroIdentity(options =>
             {
