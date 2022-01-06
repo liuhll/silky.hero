@@ -302,5 +302,15 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Button,
             Status = Status.Valid,
         });
+        
+        initList.Add(new Menu()
+        {
+            Id = 9,
+            Name = "授权角色",
+            ParentId = 2,
+            PermissionCode = IdentityPermissions.Users.SetRoles,
+            Type = MenuType.Button,
+            Status = Status.Valid,
+        });
     }
 }
