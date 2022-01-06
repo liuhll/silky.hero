@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Hero.Common.EntityFrameworkCore.Modeling;
 using Silky.Identity.Domain;
-using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.EntityFrameworkCore.DbContexts;
 
