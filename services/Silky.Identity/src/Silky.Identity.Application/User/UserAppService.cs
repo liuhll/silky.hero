@@ -155,10 +155,6 @@ public class UserAppService : IUserAppService
                 .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
-
-        if (input.RoleNames != null)
-        {
-            (await UserManager.SetRolesAsync(user, input.RoleNames)).CheckErrors();
-        }
+        
     }
 }

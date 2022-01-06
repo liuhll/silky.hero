@@ -79,9 +79,5 @@ public abstract class UserDtoBase
     /// 用户岗位、组织机构信息
     /// </summary>
     public ICollection<UserSubsidiaryDto> UserSubsidiaries { get; set; }
-
-    /// <summary>
-    /// 角色名称
-    /// </summary>
-    public ICollection<string> RoleNames { get; set; }
+    
 }
