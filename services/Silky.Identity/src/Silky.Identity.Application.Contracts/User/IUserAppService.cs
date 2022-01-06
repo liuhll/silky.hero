@@ -24,7 +24,7 @@ public interface IUserAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Users.Create)]
     Task CreateAsync(CreateUserInput input);
-    
+
     /// <summary>
     /// 更新用户
     /// </summary>
@@ -69,6 +69,16 @@ public interface IUserAppService
     [HttpPut("{userId:long}/claims")]
     [Authorize(IdentityPermissions.Users.UpdateClaimTypes)]
     Task UpdateClaimTypesAsync(long userId, ICollection<UpdateClaimTypeInput> inputs);
+
+    /// <summary>
+    /// 授权用户角色
+    /// </summary>
+    /// <param name="userId">用户Id</param>
+    /// <param name="roleNames">角色名称</param>
+    /// <returns></returns>
+    [HttpPut("{userId:long}/roles")]
+    [Authorize(IdentityPermissions.Users.SetRoles)]
+    Task SetRolesAsync(long userId, ICollection<string> roleNames);
 
     /// <summary>
     /// 根据id锁定用户账号

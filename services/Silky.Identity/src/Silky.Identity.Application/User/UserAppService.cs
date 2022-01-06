@@ -89,6 +89,13 @@ public class UserAppService : IUserAppService
         return UserManager.UpdateClaimTypesAsync(userId, inputs);
     }
 
+    public async Task SetRolesAsync(long userId, ICollection<string> roleNames)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        (await UserManager.SetRolesAsync(user,roleNames)).CheckErrors();
+        (await UserManager.UpdateAsync(user)).CheckErrors();
+    }
+
     public async Task LockAsync(long userId, int lockoutSeconds)
     {
         var user = await UserManager.GetByIdAsync(userId);

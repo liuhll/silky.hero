@@ -14,6 +14,7 @@ public class IdentityPermissions
         public const string Lock = Default + ".Lock";
         public const string UnLock = Default + ".UnLock";
         public const string ChangePassword = Default + ".ChangePassword";
+        public const string SetRoles = Default + ".SetRoles";
     }
 
     public static class Roles
