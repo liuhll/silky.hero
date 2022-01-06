@@ -21,6 +21,11 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
         long id,
         CancellationToken cancellationToken = default
     );
+    
+    Task<List<IdentityRole>> GetRolesAsync(
+        long id,
+        CancellationToken cancellationToken = default
+    );
 
     Task<IdentityUser> FindByLoginAsync(
         [NotNull] string loginProvider,

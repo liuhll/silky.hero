@@ -3,8 +3,8 @@ using Mapster;
 using Silky.Account.Application.Contracts.Account;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core.Runtime.Session;
+using Silky.Hero.Common.Dtos;
 using Silky.Identity.Domain;
-using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Account.Application.Account;
 
@@ -33,5 +33,11 @@ public class AccountAppService : IAccountAppService
     {
         var user = await UserManager.GetByIdAsync(long.Parse(_session.UserId.ToString()));
         return user.Adapt<GetCurrentUserInfoOutput>();
+    }
+
+    public async Task<GetCurrentUserDataRange> GetCurrentUserDataRangeAsync()
+    {
+        return (await UserManager.GetUserDataRange(long.Parse(_session.UserId.ToString())))
+            .Adapt<GetCurrentUserDataRange>();
     }
 }

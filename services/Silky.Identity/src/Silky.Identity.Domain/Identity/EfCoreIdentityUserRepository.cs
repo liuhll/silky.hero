@@ -42,6 +42,16 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
         return await query.ToListAsync(cancellationToken);
     }
 
+    public async Task<List<IdentityRole>> GetRolesAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var query = from userRole in Context.Set<IdentityUserRole>()
+            join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id
+            where userRole.UserId == id
+            select role;
+
+        return await query.ToListAsync(cancellationToken);
+    }
+
 
     public Task<IdentityUser> FindByLoginAsync(string loginProvider, string providerKey, bool includeDetails = true,
         CancellationToken cancellationToken = default)

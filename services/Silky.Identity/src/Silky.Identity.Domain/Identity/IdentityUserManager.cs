@@ -13,8 +13,10 @@ using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Dtos;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 
@@ -25,7 +27,6 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public IIdentityUserRepository UserRepository { get; }
     public IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
     public IRepository<IdentityUserClaim> UserClaimRepository { get; }
-
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
 
     private readonly IOrganizationAppService _organizationAppService;
@@ -278,5 +279,55 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         await UserClaimRepository.DeleteAsync(currentUserClaims);
         await UserClaimRepository.InsertAsync(userClaims);
+    }
+
+    public async Task<UserDataRange> GetUserDataRange(long userId)
+    {
+        UserDataRange userDataRange;
+        var userRoles = await UserRepository.GetRolesAsync(userId);
+        if (userRoles.Any(p => p.DataRange == DataRange.Whole))
+        {
+            userDataRange = new UserDataRange(userId, true);
+        }
+        else
+        {
+            var userOrganizationIds = new List<long>();
+            foreach (var role in userRoles)
+            {
+                switch (role.DataRange)
+                {
+                    case DataRange.CustomOrganization:
+                        userOrganizationIds.AddRange(await GetRoleCustomDataRangeOrganizationIds(role.Id));
+                        break;
+                    case DataRange.SelfOrganization:
+                        userOrganizationIds.AddRange(await GetSelfDataRangeOrganizationIds(userId));
+                        break;
+                    case DataRange.SelfAndChildrenOrganization:
+                        userOrganizationIds.AddRange(await GetSelfAndChildrenDataRangeOrganizationIds(userId));
+                        break;
+                    default:
+                        throw new BusinessException("role.DataRange is Wrong");
+                }
+            }
+
+            userDataRange = new UserDataRange(userId, false, userOrganizationIds);
+        }
+
+        return userDataRange;
+    }
+
+    private async Task<IEnumerable<long>> GetSelfAndChildrenDataRangeOrganizationIds(long userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task<IEnumerable<long>> GetSelfDataRangeOrganizationIds(long userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task<IEnumerable<long>> GetRoleCustomDataRangeOrganizationIds(long roleId)
+    {
+        throw new NotImplementedException();
     }
 }
