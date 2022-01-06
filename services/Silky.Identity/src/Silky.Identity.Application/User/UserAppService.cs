@@ -96,6 +96,18 @@ public class UserAppService : IUserAppService
         (await UserManager.UpdateAsync(user)).CheckErrors();
     }
 
+    public async Task<GetUserRoleOutput> GetRolesAsync(long userId)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        var roleNames = await UserManager.GetRolesAsync(user);
+        var output = new GetUserRoleOutput()
+        {
+            UserId = user.Id,
+            RoleNames = roleNames
+        };
+        return output;
+    }
+
     public async Task LockAsync(long userId, int lockoutSeconds)
     {
         var user = await UserManager.GetByIdAsync(userId);

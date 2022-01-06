@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -31,6 +32,7 @@ public interface IUserAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Update)]
     Task UpdateAsync(UpdateUserInput input);
 
@@ -41,6 +43,7 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -78,7 +81,18 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
     Task SetRolesAsync(long userId, ICollection<string> roleNames);
+
+    /// <summary>
+    /// 通过用户Id获取角色名称
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    [HttpGet("{userId:long}/roles")]
+    [Authorize(IdentityPermissions.Users.SetRoles)]
+    [GetCachingIntercept("roles:userId:{0}")]
+    Task<GetUserRoleOutput> GetRolesAsync([CacheKey(0)]long userId);
 
     /// <summary>
     /// 根据id锁定用户账号
