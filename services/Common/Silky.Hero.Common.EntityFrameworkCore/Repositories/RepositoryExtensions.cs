@@ -8,7 +8,7 @@ namespace Silky.Hero.Common.EntityFrameworkCore.Repositories;
 
 public static class RepositoryExtensions
 {
-    public static async Task<IQueryable<TEntity>> GetCurrentUserDataRanges<TEntity>(IQueryable<TEntity> query)
+    public static async Task<IQueryable<TEntity>> GetCurrentUserDataRanges<TEntity>(this IQueryable<TEntity> query)
         where TEntity : class, IHasOrganization, IEntity, new()
     {
         var accountAppService = EngineContext.Current.Resolve<IAccountAppService>();
@@ -26,20 +26,10 @@ public static class RepositoryExtensions
         return query.Where(p => currentUserDataRange.OrganizationIds.Contains(p.OrganizationId));
     }
 
-    public static async Task<IQueryable<TEntity>> GetCurrentUserDataRanges<TEntity>(IRepository<TEntity> repository)
+    public static async Task<IQueryable<TEntity>> GetCurrentUserDataRanges<TEntity>(
+        this IRepository<TEntity> repository, bool? tracking = false)
         where TEntity : class, IHasOrganization, IEntity, new()
     {
-        var accountAppService = EngineContext.Current.Resolve<IAccountAppService>();
-        var currentUserDataRange = await accountAppService.GetCurrentUserDataRangeAsync();
-        var query = repository.AsQueryable(false);
-        if (currentUserDataRange.IsAllData)
-        {
-            return query;
-        }
-        if (currentUserDataRange.OrganizationIds.Count() == 1)
-        {
-            return query.Where(p => p.OrganizationId == currentUserDataRange.OrganizationIds.First());
-        }
-        return query.Where(p => currentUserDataRange.OrganizationIds.Contains(p.OrganizationId));
+        return await repository.AsQueryable(tracking).GetCurrentUserDataRanges();
     }
 }
