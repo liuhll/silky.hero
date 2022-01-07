@@ -13,7 +13,6 @@ using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
-using Silky.Hero.Common.Dtos;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
@@ -29,6 +28,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public IRepository<IdentityUserClaim> UserClaimRepository { get; }
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
 
+    private readonly IRepository<IdentityRoleOrganization> _roleOrganizationRepository;
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
 
@@ -46,7 +46,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IOrganizationAppService organizationAppService,
         IPositionAppService positionAppService,
         IRepository<IdentityUserClaim> userClaimRepository,
-        IRepository<IdentityClaimType> claimTypeRepository)
+        IRepository<IdentityClaimType> claimTypeRepository,
+        IRepository<IdentityRoleOrganization> roleOrganizationRepository)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -63,6 +64,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         _positionAppService = positionAppService;
         UserClaimRepository = userClaimRepository;
         ClaimTypeRepository = claimTypeRepository;
+        _roleOrganizationRepository = roleOrganizationRepository;
     }
 
     public async Task<IdentityUser> GetByIdAsync(long id)
@@ -292,8 +294,14 @@ public class IdentityUserManager : UserManager<IdentityUser>
         else
         {
             var userOrganizationIds = new List<long>();
+            var roleDataRanges = new List<DataRange>();
             foreach (var role in userRoles)
             {
+                if (roleDataRanges.Any(p => p == role.DataRange))
+                {
+                    continue;
+                }
+
                 switch (role.DataRange)
                 {
                     case DataRange.CustomOrganization:
@@ -308,9 +316,11 @@ public class IdentityUserManager : UserManager<IdentityUser>
                     default:
                         throw new BusinessException("role.DataRange is Wrong");
                 }
+
+                roleDataRanges.Add(role.DataRange);
             }
 
-            userDataRange = new UserDataRange(userId, false, userOrganizationIds);
+            userDataRange = new UserDataRange(userId, false, userOrganizationIds.Distinct().ToList());
         }
 
         return userDataRange;
@@ -318,16 +328,29 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     private async Task<IEnumerable<long>> GetSelfAndChildrenDataRangeOrganizationIds(long userId)
     {
-        throw new NotImplementedException();
+        var allSelfAndChildrenOrganizationIds = new List<long>();
+        var user = await UserRepository.Include(p => p.UserSubsidiaries).AsNoTracking().FirstAsync(p => p.Id == userId);
+        foreach (var userSubsidiary in user.UserSubsidiaries)
+        {
+            var selfAndChildrenOrganizationIds =
+                await _organizationAppService.GetSelfAndChildrenOrganizationIdsAsync(userSubsidiary.OrganizationId);
+            allSelfAndChildrenOrganizationIds.AddRange(selfAndChildrenOrganizationIds);
+        }
+
+        return allSelfAndChildrenOrganizationIds;
     }
 
     private async Task<IEnumerable<long>> GetSelfDataRangeOrganizationIds(long userId)
     {
-        throw new NotImplementedException();
+        var user = await UserRepository.Include(p => p.UserSubsidiaries).AsNoTracking().FirstAsync(p => p.Id == userId);
+        return user.UserSubsidiaries.Select(p => p.OrganizationId);
     }
+
 
     private async Task<IEnumerable<long>> GetRoleCustomDataRangeOrganizationIds(long roleId)
     {
-        throw new NotImplementedException();
+        var roleCustomDataRangeOrganizations =
+            await _roleOrganizationRepository.Where(p => p.RoleId == roleId).AsNoTracking().ToListAsync();
+        return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);
     }
 }

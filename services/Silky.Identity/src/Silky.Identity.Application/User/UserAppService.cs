@@ -65,6 +65,8 @@ public class UserAppService : IUserAppService
         (await UserManager.DeleteAsync(user)).CheckErrors();
         await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
             string.Format(CacheKeyConsts.CurrentUserCacheKey, id));
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserDataRangeCacheKey,
+            string.Format(CacheKeyConsts.CurrentUserCacheKey, id));
     }
 
     public async Task<GetUserOutput> GetAsync(long id)
@@ -94,6 +96,8 @@ public class UserAppService : IUserAppService
         var user = await UserManager.GetByIdAsync(userId);
         (await UserManager.SetRolesAsync(user,roleNames)).CheckErrors();
         (await UserManager.UpdateAsync(user)).CheckErrors();
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserDataRangeCacheKey,
+            string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
     }
 
     public async Task<GetUserRoleOutput> GetRolesAsync(long userId)

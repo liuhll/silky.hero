@@ -117,9 +117,16 @@ public class OrganizationDomainService : IOrganizationDomainService
 
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
-        var organizations = await OrganizationRepository.AsQueryable()
+        var organizations = await OrganizationRepository.AsQueryable(false)
             .OrderByDescending(p => p.Sort)
             .ProjectToType<GetOrganizationTreeOutput>().ToListAsync();
         return organizations.BuildTree();
+    }
+
+    public async Task<IEnumerable<Organization>> GetChildrenOrganizationsAsync(long organizationId, bool includeSelf = true)
+    {
+        var organizations = await OrganizationRepository.AsQueryable(false)
+            .OrderByDescending(p => p.Sort).ToListAsync();
+        return organizations.GetChildrenOrganizations(organizationId, includeSelf);
     }
 }

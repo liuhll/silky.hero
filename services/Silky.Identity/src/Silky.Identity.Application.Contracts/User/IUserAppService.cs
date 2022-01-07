@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -82,7 +81,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    Task SetRolesAsync(long userId, ICollection<string> roleNames);
+    Task SetRolesAsync([CacheKey(0)]long userId, ICollection<string> roleNames);
 
     /// <summary>
     /// 通过用户Id获取角色名称

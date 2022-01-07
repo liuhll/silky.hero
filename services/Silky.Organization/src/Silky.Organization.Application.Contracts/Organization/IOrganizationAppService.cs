@@ -35,6 +35,7 @@ public interface IOrganizationAppService
     [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
+    [RemoveCachingIntercept(typeof(IEnumerable<long>),"GetSelfAndChildrenOrganizationIds:{0}")]
     [Authorize(OrganizationPermissions.Organizations.Update)]
     Task UpdateAsync(UpdateOrganizationInput input);
 
@@ -47,6 +48,7 @@ public interface IOrganizationAppService
     [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
+    [RemoveCachingIntercept(typeof(IEnumerable<long>),"GetSelfAndChildrenOrganizationIds:{0}")]
     [Authorize(OrganizationPermissions.Organizations.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -82,4 +84,13 @@ public interface IOrganizationAppService
     [ProhibitExtranet]
     [GetCachingIntercept("HasOrganization:{0}")]
     Task<bool> HasOrganizationAsync([CacheKey(0)] long organizationId);
+
+    /// <summary>
+    /// 获取自身和孩子节点的组织机构id
+    /// </summary>
+    /// <param name="organizationId"></param>
+    /// <returns></returns>
+    [ProhibitExtranet]
+    [GetCachingIntercept("GetSelfAndChildrenOrganizationIds:{0}")]
+    Task<IEnumerable<long>> GetSelfAndChildrenOrganizationIdsAsync([CacheKey(0)]long organizationId);
 }

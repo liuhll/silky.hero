@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Organization.Application.Contracts.Organization;
@@ -67,5 +68,13 @@ public class OrganizationAppService : IOrganizationAppService
     public async Task<bool> HasOrganizationAsync(long organizationId)
     {
         return await _organizationDomainService.OrganizationRepository.FindOrDefaultAsync(organizationId) != null;
+    }
+
+    public async Task<IEnumerable<long>> GetSelfAndChildrenOrganizationIdsAsync(long organizationId)
+    {
+        var allOrganizations = await _organizationDomainService.OrganizationRepository.AsQueryable(false).ToListAsync();
+        var childrenOrganizations =
+            await _organizationDomainService.GetChildrenOrganizationsAsync(organizationId);
+        return childrenOrganizations.Select(p => p.Id).ToList();
     }
 }

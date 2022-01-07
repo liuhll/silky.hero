@@ -43,10 +43,9 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
         Claims = new Collection<IdentityRoleClaim>();
         CustomOrganizationDataRanges = new List<IdentityRoleOrganization>();
         Menus = new List<IdentityRoleMenu>();
-        DataRange = DataRange.SelfOrganization;
     }
 
-    public IdentityRole([NotNull] string name, [NotNull] string realName, object tenantId = null)
+    public IdentityRole([NotNull] string name, [NotNull] string realName, object tenantId = null) : this()
     {
         Check.NotNull(name, nameof(name));
         Name = name;
