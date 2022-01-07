@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Silky.Hero.Common.Dtos;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;

@@ -1,4 +1,6 @@
-﻿namespace Silky.Hero.Common.Dtos;
+﻿using System.Collections.Generic;
+
+namespace Silky.Account.Application.Contracts.Account.Dtos;
 
 public class GetCurrentUserDataRange
 {

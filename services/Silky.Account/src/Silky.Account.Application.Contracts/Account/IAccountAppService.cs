@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Silky.Account.Application.Contracts.Account.Dtos;
-using Silky.Hero.Common.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 
 namespace Silky.Account.Application.Contracts.Account;
@@ -31,5 +31,6 @@ public interface IAccountAppService
 
     [Authorize]
     [GetCachingIntercept("CurrentUserDataRange", OnlyCurrentUserData = true)]
+    [ProhibitExtranet]
     Task<GetCurrentUserDataRange> GetCurrentUserDataRangeAsync();
 }
