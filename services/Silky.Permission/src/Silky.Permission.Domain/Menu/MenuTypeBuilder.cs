@@ -40,10 +40,6 @@ public class MenuTypeBuilder : IEntityTypeBuilder<Menu>
             .HasMaxLength(PermissionConsts.ComponentLength)
             .HasColumnName(nameof(Menu.Component));
         
-        builder.Property(e => e.Status)
-            .IsRequired()
-            .HasColumnName(nameof(Menu.Status));
-        
         builder.Property(e => e.ExternalLink)
             .HasColumnName(nameof(Menu.ExternalLink));
         

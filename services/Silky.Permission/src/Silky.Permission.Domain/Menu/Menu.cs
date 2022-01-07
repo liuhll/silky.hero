@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Silky.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
-using Silky.Hero.Common.Enums;
 using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Domain.Menu;
@@ -22,9 +21,7 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
     public string RoutePath { get; set; }
 
     public string Component { get; set; }
-
-    public Status Status { get; set; }
-
+    
     public bool? ExternalLink { get; set; }
 
     public bool? Display { get; set; }
@@ -41,6 +38,6 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
     public DateTimeOffset? DeletedTime { get; set; }
 
     public virtual ICollection<Menu> Children { get; set; }
-    
+
     public virtual Menu Parent { get; set; }
 }

@@ -23,7 +23,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Catalog,
             ParentId = null,
             Sort = 999,
-            Status = Status.Valid,
         });
         CreateUserMenu(initList);
 
@@ -38,11 +37,10 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Catalog,
             ParentId = null,
             Sort = 998,
-            Status = Status.Valid,
         });
 
         CreateMenuMenu(initList);
-        
+
         CreateRoleMenu(initList);
 
         return initList;
@@ -58,7 +56,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.Default,
             Type = MenuType.Menu,
             Sort = 998,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -67,7 +64,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1100,
             PermissionCode = IdentityPermissions.Roles.Create,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -76,7 +72,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1100,
             PermissionCode = IdentityPermissions.Roles.Update,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -85,7 +80,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1100,
             PermissionCode = IdentityPermissions.Roles.Delete,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -94,7 +88,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1100,
             PermissionCode = IdentityPermissions.Roles.SetMenus,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -103,7 +96,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1100,
             PermissionCode = IdentityPermissions.Roles.SetMenus,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
     }
 
@@ -117,7 +109,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.Default,
             Type = MenuType.Menu,
             Sort = 999,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -126,7 +117,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1001,
             PermissionCode = PermissionPermissions.Menus.Create,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -135,7 +125,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1001,
             PermissionCode = PermissionPermissions.Menus.Update,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -144,7 +133,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 1001,
             PermissionCode = PermissionPermissions.Menus.Delete,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
     }
 
@@ -158,7 +146,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.Default,
             Type = MenuType.Menu,
             Sort = 997,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -167,7 +154,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 200,
             PermissionCode = PositionPermissions.Positions.Create,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -176,7 +162,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 200,
             PermissionCode = PositionPermissions.Positions.Update,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -185,7 +170,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 200,
             PermissionCode = PositionPermissions.Positions.Delete,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
     }
 
@@ -199,7 +183,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.Default,
             Type = MenuType.Menu,
             Sort = 998,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -208,7 +191,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 100,
             PermissionCode = OrganizationPermissions.Organizations.Create,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -217,7 +199,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 100,
             PermissionCode = OrganizationPermissions.Organizations.Update,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -226,7 +207,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 100,
             PermissionCode = OrganizationPermissions.Organizations.Delete,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
     }
 
@@ -240,7 +220,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Default,
             Type = MenuType.Menu,
             Sort = 999,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -250,7 +229,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.Create,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -260,7 +238,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.Update,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -270,7 +247,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.Delete,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -280,7 +256,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.Lock,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -290,7 +265,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.UnLock,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -300,9 +274,8 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.UpdateClaimTypes,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
-        
+
         initList.Add(new Menu()
         {
             Id = 9,
@@ -310,7 +283,6 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ParentId = 2,
             PermissionCode = IdentityPermissions.Users.SetRoles,
             Type = MenuType.Button,
-            Status = Status.Valid,
         });
     }
 }
