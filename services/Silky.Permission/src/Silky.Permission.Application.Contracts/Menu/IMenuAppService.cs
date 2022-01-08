@@ -5,6 +5,7 @@ using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 
 namespace Silky.Permission.Application.Contracts.Menu;
@@ -67,4 +68,7 @@ public interface IMenuAppService
     /// <returns></returns>
     [GetCachingIntercept("HasMenu:{0}")]
     Task<bool> HasMenuAsync([CacheKey(0)]long menuId);
+
+    [ProhibitExtranet]
+    Task<ICollection<string>> GetPermissions(List<long> menuIds);
 }

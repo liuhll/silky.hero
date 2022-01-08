@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
@@ -94,7 +95,7 @@ public class UserAppService : IUserAppService
     public async Task SetRolesAsync(long userId, ICollection<string> roleNames)
     {
         var user = await UserManager.GetByIdAsync(userId);
-        (await UserManager.SetRolesAsync(user,roleNames)).CheckErrors();
+        (await UserManager.SetRolesAsync(user, roleNames)).CheckErrors();
         (await UserManager.UpdateAsync(user)).CheckErrors();
         await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserDataRangeCacheKey,
             string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
@@ -150,6 +151,12 @@ public class UserAppService : IUserAppService
         return UserManager.HasPositionUsersAsync(positionId);
     }
 
+    public async Task<ICollection<long>> GetRoleIdsAsync(long userId)
+    {
+        var user = await UserManager.UserRepository.Include(p => p.Roles).FirstAsync(p => p.Id == userId);
+        return user.Roles.Select(p => p.RoleId).ToList();
+    }
+
     protected virtual async Task UpdateUserByInput(IdentityUser user, UserDtoBase input)
     {
         if (!string.Equals(user.Email, input.Email, StringComparison.InvariantCultureIgnoreCase))
@@ -178,6 +185,5 @@ public class UserAppService : IUserAppService
                 .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
-        
     }
 }

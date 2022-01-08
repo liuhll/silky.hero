@@ -32,6 +32,7 @@ public interface IUserAppService
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Update)]
     Task UpdateAsync(UpdateUserInput input);
 
@@ -43,6 +44,7 @@ public interface IUserAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -81,6 +83,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     Task SetRolesAsync([CacheKey(0)]long userId, ICollection<string> roleNames);
 
     /// <summary>
@@ -145,4 +148,13 @@ public interface IUserAppService
     /// <returns></returns>
     [ProhibitExtranet]
     Task<bool> HasPositionUsersAsync(long positionId);
+
+    /// <summary>
+    /// 通过用户Id获取角色Ids
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    [ProhibitExtranet]
+    [GetCachingIntercept("roleIds:userId:{0}")]
+    Task<ICollection<long>> GetRoleIdsAsync([CacheKey(0)]long userId);
 }

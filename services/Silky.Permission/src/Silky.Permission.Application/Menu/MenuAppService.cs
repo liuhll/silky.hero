@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions.Collections.Generic;
 using Silky.Permission.Application.Contracts.Menu;
@@ -22,7 +23,6 @@ public class MenuAppService : IMenuAppService
     public Task CreateAsync(CreateMenuInput input)
     {
         return _menuDomainService.CreateAsync(input);
-       
     }
 
     public Task UpdateAsync(UpdateMenuInput input)
@@ -72,5 +72,17 @@ public class MenuAppService : IMenuAppService
     {
         var menu = await _menuDomainService.MenuRepository.FindOrDefaultAsync(menuId);
         return menu != null;
+    }
+
+    public async Task<ICollection<string>> GetPermissions(List<long> menuIds)
+    {
+        var permissionCodes = await _menuDomainService.MenuRepository
+            .AsQueryable(false)
+            .Where(p => menuIds.Contains(p.Id))
+            .Where(p => p.PermissionCode != null)
+            .Select(p => p.PermissionCode)
+            .ProjectToType<string>()
+            .ToListAsync();
+        return permissionCodes;
     }
 }

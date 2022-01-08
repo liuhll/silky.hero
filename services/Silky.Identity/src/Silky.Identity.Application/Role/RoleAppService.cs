@@ -126,6 +126,11 @@ public class RoleAppService : IRoleAppService
         return pageRoles;
     }
 
+    public Task<ICollection<string>> GetPermissionsAsync(long roleId)
+    {
+        return _roleManager.GetPermissionsAsync(roleId);
+    }
+
     private async Task UpdateRoleByInput(IdentityRole role, RoleDtoBase input)
     {
         role.IsDefault = input.IsDefault;

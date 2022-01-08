@@ -6,6 +6,7 @@ using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 
 namespace Silky.Identity.Application.Contracts.Role;
@@ -32,6 +33,7 @@ public interface IRoleAppService
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetCurrentUserDataRange),"CurrentUserDataRange:userId:*")]
+    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
 
@@ -52,6 +54,7 @@ public interface IRoleAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetCurrentUserDataRange),"CurrentUserDataRange:userId:*")]
+    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -98,4 +101,8 @@ public interface IRoleAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input);
+
+    [ProhibitExtranet]
+    [GetCachingIntercept("permissions:roleId:{0}")]
+    Task<ICollection<string>> GetPermissionsAsync([CacheKey(0)]long roleId);
 }
