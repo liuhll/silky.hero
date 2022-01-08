@@ -40,6 +40,8 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
         return currentTenantId.TenantId;
     }
 
+    public bool RealDeleteFlag { get; set; } = false;
+
     protected override void SavingChangesEvent(DbContextEventData eventData, InterceptionResult<int> result)
     {
         // 获取当前事件对应上下文
@@ -78,7 +80,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
                     break;
                 case EntityState.Deleted:
 
-                    if (entity.Entity is ISoftDeletedObject deletedObject2)
+                    if (!RealDeleteFlag && entity.Entity is ISoftDeletedObject deletedObject2)
                     {
                         deletedObject2.IsDeleted = true;
                         deletedObject2.DeletedBy = userId;
@@ -128,7 +130,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
         {
             return;
         }
-        
+
         ConfigureGlobalFilters<TEntity>(modelBuilder, mutableEntityType);
     }
 
