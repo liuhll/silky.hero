@@ -17,7 +17,8 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             Name = "Silky.Hero社区",
             Code = "silky.hero",
             Status = Status.Valid,
-            Sort = 1
+            Sort = 1,
+            TenantId = 1,
         });
         initData.Add(new Organization()
         {
@@ -28,6 +29,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             ParentId = 1,
             Remark = "负责产品开发",
             Sort = 2,
+            TenantId = 1,
         });
         initData.Add(new Organization()
         {
@@ -38,6 +40,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             ParentId = 2,
             Remark = "负责服务段接口开发",
             Sort = 3,
+            TenantId = 1
         });
         initData.Add(new Organization()
         {
@@ -48,6 +51,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             Remark = "负责前端UI、交互开发",
             ParentId = 2,
             Sort = 4,
+            TenantId = 1
         });
         initData.Add(new Organization()
         {
@@ -58,6 +62,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             Remark = "负责产品测试",
             ParentId = 1,
             Sort = 4,
+            TenantId = 1
         });
         initData.Add(new Organization()
         {
@@ -68,6 +73,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
             Remark = "负责产品规划、设计",
             ParentId = 1,
             Sort = 6,
+            TenantId = 1
         });
         return initData;
     }

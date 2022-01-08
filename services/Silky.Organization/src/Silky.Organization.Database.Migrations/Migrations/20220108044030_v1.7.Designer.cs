@@ -2,24 +2,26 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Silky.Position.EntityFrameworkCore.DbContexts;
+using Silky.Organization.EntityFrameworkCore.DbContexts;
 
 #nullable disable
 
-namespace Silky.Position.Database.Migrations.Migrations
+namespace Silky.Organization.Database.Migrations.Migrations
 {
-    [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DefaultDbContext))]
+    [Migration("20220108044030_v1.7")]
+    partial class v17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Silky.Position.Domain.Position", b =>
+            modelBuilder.Entity("Silky.Organization.Domain.Organization", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,6 +65,10 @@ namespace Silky.Position.Database.Migrations.Migrations
                         .HasColumnType("varchar(256)")
                         .HasColumnName("Name");
 
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ParentId");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(512)
                         .HasColumnType("varchar(512)")
@@ -94,57 +100,107 @@ namespace Silky.Position.Database.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions", (string)null);
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Organizations", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
-                            Code = "zjl",
-                            ConcurrencyStamp = "c264c987-090c-4e65-b8b8-33dd253d6c7c",
+                            Code = "silky.hero",
+                            ConcurrencyStamp = "42dab193-fb45-42f6-9e7c-eedd2c9dd9e7",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            Name = "总经理",
-                            Sort = 99,
-                            Status = 0,
+                            Name = "Silky.Hero社区",
+                            Sort = 1,
+                            Status = 1,
                             TenantId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            Code = "jszj",
-                            ConcurrencyStamp = "443d654b-3ca5-4e56-95a7-04fdfdc48609",
+                            Code = "silky.hero.dev",
+                            ConcurrencyStamp = "e9ce91b7-770c-459b-8751-f8986b0dc3bf",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            Name = "技术总监",
-                            Sort = 98,
-                            Status = 0,
+                            Name = "Silky.Hero开发部",
+                            ParentId = 1L,
+                            Remark = "负责产品开发",
+                            Sort = 2,
+                            Status = 1,
                             TenantId = 1L
                         },
                         new
                         {
                             Id = 3L,
-                            Code = "htzz",
-                            ConcurrencyStamp = "b3255f48-b7b5-40d0-81df-c6b9bf2b6870",
+                            Code = "silky.hero.dev.services",
+                            ConcurrencyStamp = "1376737b-0d6d-462d-a28b-c314c76332e2",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            Name = "后台组长",
-                            Sort = 97,
-                            Status = 0,
+                            Name = "Silky.Hero后端开发部",
+                            ParentId = 2L,
+                            Remark = "负责服务段接口开发",
+                            Sort = 3,
+                            Status = 1,
                             TenantId = 1L
                         },
                         new
                         {
                             Id = 4L,
-                            Code = "qtzz",
-                            ConcurrencyStamp = "cbcc1e29-56e5-467d-afb0-6111aca44a2a",
+                            Code = "silky.hero.dev.front",
+                            ConcurrencyStamp = "f0695790-7154-45a8-b402-ebe84d1ecad1",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            Name = "前台组长",
-                            Sort = 96,
-                            Status = 0,
+                            Name = "Silky.Hero前端开发部",
+                            ParentId = 2L,
+                            Remark = "负责前端UI、交互开发",
+                            Sort = 4,
+                            Status = 1,
+                            TenantId = 1L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Code = "silky.hero.test",
+                            ConcurrencyStamp = "e723f5b6-3155-47c8-b3b7-488b7697854a",
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Name = "Silky.Hero测试部",
+                            ParentId = 1L,
+                            Remark = "负责产品测试",
+                            Sort = 4,
+                            Status = 1,
+                            TenantId = 1L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Code = "silky.hero.product",
+                            ConcurrencyStamp = "ab444603-6d67-4af5-b1ed-c532a991a237",
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Name = "Silky.Hero产品部",
+                            ParentId = 1L,
+                            Remark = "负责产品规划、设计",
+                            Sort = 6,
+                            Status = 1,
                             TenantId = 1L
                         });
+                });
+
+            modelBuilder.Entity("Silky.Organization.Domain.Organization", b =>
+                {
+                    b.HasOne("Silky.Organization.Domain.Organization", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Silky.Organization.Domain.Organization", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

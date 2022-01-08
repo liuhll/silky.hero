@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Silky.Core;
+using Silky.Core.Extensions;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Identity.Domain.Shared;
 
@@ -23,7 +24,6 @@ public class IdentityClaimType : FullAuditedEntity
 
     public IdentityClaimType()
     {
-
     }
 
     public IdentityClaimType(
@@ -33,7 +33,8 @@ public class IdentityClaimType : FullAuditedEntity
         [CanBeNull] string regex = null,
         [CanBeNull] string regexDescription = null,
         [CanBeNull] string description = null,
-        IdentityClaimValueType valueType = IdentityClaimValueType.String)
+        IdentityClaimValueType valueType = IdentityClaimValueType.String,
+        object tenantId = null)
     {
         SetName(name);
         Required = required;
@@ -42,6 +43,10 @@ public class IdentityClaimType : FullAuditedEntity
         RegexDescription = regexDescription;
         Description = description;
         ValueType = valueType;
+        if (tenantId != null)
+        {
+            TenantId = long.Parse(tenantId.ToString());
+        }
     }
 
     public void SetName([NotNull] string name)

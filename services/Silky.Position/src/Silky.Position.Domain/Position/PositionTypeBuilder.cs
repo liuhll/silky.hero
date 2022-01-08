@@ -27,7 +27,6 @@ public class PositionTypeBuilder : IEntityTypeBuilder<Position>
             .HasDefaultValue(0)
             .HasColumnName(nameof(Position.Sort));
         entityBuilder.Property(o => o.Remark)
-            .IsRequired()
             .HasMaxLength(PositionConsts.MaxRemarkLength)
             .HasColumnName(nameof(Position.Remark));
         entityBuilder.Property(o => o.Status)

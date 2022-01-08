@@ -11,14 +11,14 @@ public class IdentityClaimTypeSeedData : IEntitySeedData<IdentityClaimType>
     {
         var initClaimTypes = new List<IdentityClaimType>()
         {
-            new("name", isStatic: true) { Id = 1 },
-            new("email", isStatic: true) { Id = 2 },
-            new("sex", isStatic: true) { Id = 3 },
-            new("mobilePhone", isStatic: true) { Id = 4 },
-            new("telPhone", isStatic: true) { Id = 5 },
-            new("surname", isStatic: true) { Id = 6 },
-            new("realName", isStatic: true) { Id = 7 },
-            new("jobNumber", isStatic: true) { Id = 8 },
+            new("name", isStatic: true, tenantId: 1) { Id = 1 },
+            new("email", isStatic: true, tenantId: 1) { Id = 2 },
+            new("sex", isStatic: true, tenantId: 1) { Id = 3 },
+            new("mobilePhone", isStatic: true, tenantId: 1) { Id = 4 },
+            new("telPhone", isStatic: true, tenantId: 1) { Id = 5 },
+            new("surname", isStatic: true, tenantId: 1) { Id = 6 },
+            new("realName", isStatic: true, tenantId: 1) { Id = 7 },
+            new("jobNumber", isStatic: true, tenantId: 1) { Id = 8 },
         };
         return initClaimTypes;
     }

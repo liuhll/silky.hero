@@ -18,6 +18,7 @@ public class DictionaryItemSeedData : IEntitySeedData<DictionaryItem>
             Code = "male",
             Value = "1",
             Sort = 1,
+            TenantId = 1,
         });
         
         initList.Add(new ()
@@ -27,6 +28,7 @@ public class DictionaryItemSeedData : IEntitySeedData<DictionaryItem>
             Code = "female",
             Value = "0",
             Sort = 1,
+            TenantId = 1
         });
         
         return initList;

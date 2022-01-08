@@ -107,77 +107,83 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         {
                             Id = 1L,
                             Code = "silky.hero",
-                            ConcurrencyStamp = "bbcfb581-3c2f-4156-8c2f-13a1f8a1f829",
+                            ConcurrencyStamp = "42dab193-fb45-42f6-9e7c-eedd2c9dd9e7",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero社区",
                             Sort = 1,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         },
                         new
                         {
                             Id = 2L,
                             Code = "silky.hero.dev",
-                            ConcurrencyStamp = "38cbab7e-a8f4-42b7-88f8-1dd830953e6d",
+                            ConcurrencyStamp = "e9ce91b7-770c-459b-8751-f8986b0dc3bf",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero开发部",
                             ParentId = 1L,
                             Remark = "负责产品开发",
                             Sort = 2,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         },
                         new
                         {
                             Id = 3L,
                             Code = "silky.hero.dev.services",
-                            ConcurrencyStamp = "4bdaec7b-3a31-490e-af9b-d5b9d6873233",
+                            ConcurrencyStamp = "1376737b-0d6d-462d-a28b-c314c76332e2",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero后端开发部",
                             ParentId = 2L,
                             Remark = "负责服务段接口开发",
                             Sort = 3,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         },
                         new
                         {
                             Id = 4L,
                             Code = "silky.hero.dev.front",
-                            ConcurrencyStamp = "5bed6569-07b5-48e6-a996-4272fdf6d5f7",
+                            ConcurrencyStamp = "f0695790-7154-45a8-b402-ebe84d1ecad1",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero前端开发部",
                             ParentId = 2L,
                             Remark = "负责前端UI、交互开发",
                             Sort = 4,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         },
                         new
                         {
                             Id = 5L,
                             Code = "silky.hero.test",
-                            ConcurrencyStamp = "ef88d22a-dfca-49d4-a7b0-0d85a373f07a",
+                            ConcurrencyStamp = "e723f5b6-3155-47c8-b3b7-488b7697854a",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero测试部",
                             ParentId = 1L,
                             Remark = "负责产品测试",
                             Sort = 4,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         },
                         new
                         {
                             Id = 6L,
                             Code = "silky.hero.product",
-                            ConcurrencyStamp = "22c4acd9-63fb-4fb3-a48c-f8ada067a737",
+                            ConcurrencyStamp = "ab444603-6d67-4af5-b1ed-c532a991a237",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero产品部",
                             ParentId = 1L,
                             Remark = "负责产品规划、设计",
                             Sort = 6,
-                            Status = 1
+                            Status = 1,
+                            TenantId = 1L
                         });
                 });
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.LinqBuilder;
 using Silky.EntityFrameworkCore.Repositories;
@@ -20,7 +21,7 @@ public class ClaimTypeAppService : IClaimTypeAppService
     {
         _identityClaimTypeRepository = identityClaimTypeRepository;
     }
-    
+
     public async Task CreateAsync(CreateClaimTypeInput input)
     {
         var claimType = new IdentityClaimType(input.Name,
@@ -29,7 +30,8 @@ public class ClaimTypeAppService : IClaimTypeAppService
             input.Regex,
             input.RegexDescription,
             input.Description,
-            input.ValueType);
+            input.ValueType,
+            NullSession.Instance.TenantId);
         await UpdateClaimTypeByInput(claimType, input);
         await _identityClaimTypeRepository.InsertAsync(claimType);
     }

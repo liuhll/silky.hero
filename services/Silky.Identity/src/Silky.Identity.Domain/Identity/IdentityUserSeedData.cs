@@ -12,7 +12,7 @@ public class IdentityUserSeedData : IEntitySeedData<IdentityUser>
     {
         var initUsers = new List<IdentityUser>();
 
-        var admin = new IdentityUser("admin", "admin@silky.com", "13111111111")
+        var admin = new IdentityUser("admin", "admin@silky.com", "13111111111",1)
         {
             Id = 1,
         };
@@ -20,7 +20,7 @@ public class IdentityUserSeedData : IEntitySeedData<IdentityUser>
         admin.PasswordHash =
             passwordHasher.HashPassword(admin, "123qweR!");
         initUsers.Add(admin);
-        var liuhll = new IdentityUser("liuhll", "liuhll@silky.com", "13111111112")
+        var liuhll = new IdentityUser("liuhll", "liuhll@silky.com", "13111111112",1)
         {
             Id = 2
         };

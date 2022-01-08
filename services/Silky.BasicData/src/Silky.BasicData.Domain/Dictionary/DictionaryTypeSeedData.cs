@@ -17,6 +17,7 @@ public class DictionaryTypeSeedData : IEntitySeedData<DictionaryType>
             Code = "sex",
             Name = "性别",
             Sort = 1,
+            TenantId = 1,
         });
         
         return initList;
