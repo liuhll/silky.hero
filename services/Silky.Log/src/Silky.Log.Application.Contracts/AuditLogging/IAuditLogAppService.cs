@@ -26,7 +26,7 @@ public interface IAuditLogAppService
     /// <param name="requestParameters"></param>
     /// <returns></returns>
     [ProhibitExtranet]
-    Task SaveAsync(AuditLogInfo auditLogInfo);
+    Task SaveAsync(AuditLogInfo auditLogInfo, object[] requestParameters);
 
     /// <summary>
     /// 分页查询审计日志

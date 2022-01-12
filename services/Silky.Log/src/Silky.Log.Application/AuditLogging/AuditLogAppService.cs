@@ -27,9 +27,10 @@ public class AuditLogAppService : IAuditLogAppService
         _serializer = serializer;
     }
 
-    public async Task SaveAsync(AuditLogInfo auditLogInfo)
+    public async Task SaveAsync(AuditLogInfo auditLogInfo, object[] requestParameters)
     {
         var auditLog = auditLogInfo.Adapt<AuditLog>();
+        auditLog.RequestParameters = _serializer.Serialize(requestParameters);
         await _auditLogRepository.InsertAsync(auditLog);
     }
 
