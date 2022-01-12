@@ -6,8 +6,8 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import { LoginParams,GetCurrentUserinfo } from '/@/api/account/model/accountModel';
+import { getUserInfo, loginApi } from '/@/api/account';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
@@ -87,11 +87,11 @@ export const useUserStore = defineStore({
         goHome?: boolean;
         mode?: ErrorMessageMode;
       },
-    ): Promise<GetUserInfoModel | null> {
+    ): Promise<GetCurrentUserinfo | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
-        const { token } = data;
+        const token = await loginApi(loginParams, mode);
+       
 
         // save token
         this.setToken(token);
@@ -100,7 +100,7 @@ export const useUserStore = defineStore({
         return Promise.reject(error);
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean): Promise<GetCurrentUserinfo | null> {
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
@@ -142,7 +142,7 @@ export const useUserStore = defineStore({
     async logout(goLogin = false) {
       if (this.getToken) {
         try {
-          await doLogout();
+         // await doLogout();
         } catch {
           console.log('注销Token失败');
         }

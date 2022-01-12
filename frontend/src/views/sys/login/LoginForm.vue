@@ -119,8 +119,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
-    password: '123456',
+    account: 'admin',
+    password: '123qweR!',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -136,7 +136,7 @@
       loading.value = true;
       const userInfo = await userStore.login({
         password: data.password,
-        username: data.account,
+        account: data.account,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
@@ -149,7 +149,7 @@
     } catch (error) {
       createErrorModal({
         title: t('sys.api.errorTip'),
-        content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+        content: error || t('sys.api.networkExceptionMsg'),
         getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
       });
     } finally {

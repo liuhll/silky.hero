@@ -151,6 +151,7 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    debugger
     return res;
   },
 
@@ -158,14 +159,15 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (error: any) => {
+
     const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
-    const msg: string = response?.data?.error?.message ?? '';
+    const msg: string = response.data?.errorMessage ?? '';
     const err: string = error?.toString?.() ?? '';
-    let errMessage = '';
+    let errMessage = msg;
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
@@ -176,19 +178,20 @@ const transform: AxiosTransform = {
       }
 
       if (errMessage) {
+        debugger
         if (errorMessageMode === 'modal') {
           createErrorModal({ title: t('sys.api.errorTip'), content: errMessage });
         } else if (errorMessageMode === 'message') {
           createMessage.error(errMessage);
         }
-        return Promise.reject(error);
+        return Promise.reject(errMessage);
       }
     } catch (error) {
       throw new Error(error as unknown as string);
     }
 
     checkStatus(error?.response?.status, msg, errorMessageMode);
-    return Promise.reject(error);
+    return Promise.reject(errMessage);
   },
 };
 
@@ -204,7 +207,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
 
-        headers: { 'Content-Type': ContentTypeEnum.JSON },
+        headers: { 'Content-Type': ContentTypeEnum.JSON, 'accept': 'application/json' },
         // 如果是form-data格式
         // headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
         // 数据处理方式
