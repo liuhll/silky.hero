@@ -23,6 +23,7 @@ public interface IAuditLogAppService
     /// 保存审计日志
     /// </summary>
     /// <param name="auditLogInfo"></param>
+    /// <param name="requestParameters"></param>
     /// <returns></returns>
     [ProhibitExtranet]
     Task SaveAsync(AuditLogInfo auditLogInfo);

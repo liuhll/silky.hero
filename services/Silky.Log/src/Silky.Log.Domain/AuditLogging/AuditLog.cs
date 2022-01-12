@@ -33,6 +33,9 @@ public class AuditLog : IEntity, IHasTenantObject
     public int? HttpStatusCode { get; set; }
 
     public string ExceptionMessage { get; set; }
+    
+    public string RequestParameters { get; set; }
 
     public virtual ICollection<AuditLogAction> Actions { get; set; }
+    
 }

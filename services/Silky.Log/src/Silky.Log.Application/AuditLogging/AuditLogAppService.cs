@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Extensions;
+using Silky.Core.Serialization;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
@@ -17,10 +18,13 @@ namespace Silky.Log.Application.AuditLogging;
 public class AuditLogAppService : IAuditLogAppService
 {
     private readonly IRepository<AuditLog> _auditLogRepository;
+    private readonly ISerializer _serializer;
 
-    public AuditLogAppService(IRepository<AuditLog> auditLogRepository)
+    public AuditLogAppService(IRepository<AuditLog> auditLogRepository, 
+        ISerializer serializer)
     {
         _auditLogRepository = auditLogRepository;
+        _serializer = serializer;
     }
 
     public async Task SaveAsync(AuditLogInfo auditLogInfo)

@@ -66,6 +66,10 @@ public class AuditLogTypeBuilder : IEntityTypeBuilder<AuditLog>
 
         builder.Property(o => o.HttpStatusCode)
             .HasColumnName(nameof(AuditLog.HttpStatusCode));
+        
+        builder.Property(o => o.RequestParameters)
+            .HasMaxLength(AuditLoggingConsts.LengthFor1024)
+            .HasColumnName(nameof(AuditLog.RequestParameters));
 
         builder.Property(o => o.ExceptionMessage)
             .HasMaxLength(AuditLoggingConsts.LengthFor1024)
