@@ -90,6 +90,7 @@ export default {
 
     userName: '账号',
     password: '密码',
+    tenant: '租户',
     confirmPassword: '确认密码',
     email: '邮箱',
     smsCode: '短信验证码',

@@ -8,6 +8,15 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
+    <FormItem name="tenantId" class="enter-x">
+      <Select 
+        v-model:value="formData.tenantId"
+        :placeholder="t('sys.login.tenant')"
+        :options="tenantOptions"
+        class="fix-auto-fill">
+        
+      </Select>
+    </FormItem>
     <FormItem name="account" class="enter-x">
       <Input
         size="large"
@@ -82,9 +91,9 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed, onMounted } from 'vue';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
+  import { Checkbox, Form, Input, Row, Col, Button, Divider, Select } from 'ant-design-vue';
   import {
     GithubFilled,
     WechatFilled,
@@ -124,6 +133,10 @@
   });
 
   const { validForm } = useFormValid(formRef);
+
+  onMounted(async ()=>{
+    
+  })
 
   //onKeyStroke('Enter', handleLogin);
 

@@ -96,6 +96,7 @@ export default {
 
     userName: 'Username',
     password: 'Password',
+    tenant: 'Tenant',
     confirmPassword: 'Confirm Password',
     email: 'Email',
     smsCode: 'SMS code',
