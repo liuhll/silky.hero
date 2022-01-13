@@ -18,19 +18,15 @@ namespace Silky.Log.Application.AuditLogging;
 public class AuditLogAppService : IAuditLogAppService
 {
     private readonly IRepository<AuditLog> _auditLogRepository;
-    private readonly ISerializer _serializer;
-
-    public AuditLogAppService(IRepository<AuditLog> auditLogRepository, 
-        ISerializer serializer)
+    public AuditLogAppService(IRepository<AuditLog> auditLogRepository)
     {
         _auditLogRepository = auditLogRepository;
-        _serializer = serializer;
+    
     }
 
-    public async Task SaveAsync(AuditLogInfo auditLogInfo, object[] requestParameters)
+    public async Task SaveAsync(AuditLogInfo auditLogInfo)
     {
         var auditLog = auditLogInfo.Adapt<AuditLog>();
-        auditLog.RequestParameters = _serializer.Serialize(requestParameters);
         await _auditLogRepository.InsertAsync(auditLog);
     }
 
