@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Extensions;
-using Silky.Core.Serialization;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Log.Application.Contracts.AuditLogging;
 using Silky.Log.Application.Contracts.AuditLogging.Dtos;
 using Silky.Log.Domain.AuditLogging;
-using Silky.Rpc.Auditing;
 
 namespace Silky.Log.Application.AuditLogging;
 
@@ -21,13 +19,6 @@ public class AuditLogAppService : IAuditLogAppService
     public AuditLogAppService(IRepository<AuditLog> auditLogRepository)
     {
         _auditLogRepository = auditLogRepository;
-    
-    }
-
-    public async Task SaveAsync(AuditLogInfo auditLogInfo)
-    {
-        var auditLog = auditLogInfo.Adapt<AuditLog>();
-        await _auditLogRepository.InsertAsync(auditLog);
     }
 
     public async Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input)

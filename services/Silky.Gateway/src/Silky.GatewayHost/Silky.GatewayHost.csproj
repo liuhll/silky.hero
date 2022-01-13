@@ -8,6 +8,8 @@
     <ItemGroup>
         <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Http.Auditing" Version="$(SilkyVersion)" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
     </ItemGroup>
     
     <ItemGroup>

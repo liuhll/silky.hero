@@ -19,15 +19,7 @@ namespace Silky.Log.Application.Contracts.AuditLogging;
 [Authorize(LogPermissions.AuditLogging.Default)]
 public interface IAuditLogAppService
 {
-    /// <summary>
-    /// 保存审计日志
-    /// </summary>
-    /// <param name="auditLogInfo"></param>
-    /// <param name="requestParameters"></param>
-    /// <returns></returns>
-    [ProhibitExtranet]
-    Task SaveAsync(AuditLogInfo auditLogInfo);
-
+    
     /// <summary>
     /// 分页查询审计日志
     /// </summary>

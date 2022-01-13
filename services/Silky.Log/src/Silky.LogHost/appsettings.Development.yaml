@@ -11,5 +11,12 @@ distributedCache:
   redis:
     isEnabled: true
     configuration: 127.0.0.1:6379,defaultDatabase=0
+rabbitMq:
+  host: 127.0.0.1
+  port: 5672
+  userName: rabbitmq
+  password: rabbitmq
+  virtualHost: /
+  
 connectionStrings:
   default: server=www.silky-fk.com;port=13306;database=Silky.Log;uid=root;pwd=qwe!P4ss;

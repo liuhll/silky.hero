@@ -16,5 +16,11 @@ distributedCache:
   redis:
     isEnabled: true
     configuration: 127.0.0.1:6379,defaultDatabase=0
+rabbitMq:
+  host: 127.0.0.1
+  port: 5672
+  userName: rabbitmq
+  password: rabbitmq
+  virtualHost: /
 gateway:
   jwtSecret: jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW

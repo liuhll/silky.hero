@@ -1,31 +1,31 @@
 using System;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Silky.Core.Logging;
 using Silky.Http.Auditing;
-using Silky.Log.Application.Contracts.AuditLogging;
 using Silky.Rpc.Auditing;
 
 namespace Silky.GatewayHost.AuditLogging;
 
 public class HeroAuditingStore : IAuditingStore
 {
-    private readonly IAuditLogAppService _auditLogAppService;
     private readonly ILogger<HeroAuditingStore> _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public HeroAuditingStore(IAuditLogAppService auditLogAppService,
-        ILogger<HeroAuditingStore> logger)
+    public HeroAuditingStore(
+        ILogger<HeroAuditingStore> logger,
+        IPublishEndpoint publishEndpoint)
     {
-        _auditLogAppService = auditLogAppService;
         _logger = logger;
-      
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task SaveAsync(AuditLogInfo auditLogInfo)
     {
         try
         {
-            await _auditLogAppService.SaveAsync(auditLogInfo);
+            await _publishEndpoint.Publish(auditLogInfo);
         }
         catch (Exception e)
         {
