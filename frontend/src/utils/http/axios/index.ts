@@ -178,20 +178,19 @@ const transform: AxiosTransform = {
       }
 
       if (errMessage) {
-        debugger
         if (errorMessageMode === 'modal') {
           createErrorModal({ title: t('sys.api.errorTip'), content: errMessage });
         } else if (errorMessageMode === 'message') {
           createMessage.error(errMessage);
         }
-        return Promise.reject(errMessage);
+        return Promise.reject(new Error(errMessage));
       }
     } catch (error) {
       throw new Error(error as unknown as string);
     }
 
     checkStatus(error?.response?.status, msg, errorMessageMode);
-    return Promise.reject(errMessage);
+    return Promise.reject(new Error(errMessage));
   },
 };
 
