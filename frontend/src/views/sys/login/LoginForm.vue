@@ -9,13 +9,16 @@
     @keypress.enter="handleLogin"
   >
     <FormItem name="tenantId" class="enter-x">
-      <Select 
-        v-model:value="formData.tenantId"
-        :placeholder="t('sys.login.tenant')"
-        :options="tenantOptions"
-        class="fix-auto-fill">
-        
-      </Select>
+     <Select 
+      v-model:value="formData.tenantId" 
+      size="large" 
+      :placeholder="t('sys.login.tenant')"  
+      class="fix-auto-fill">
+       <SelectOption v-for="(option,index) in tenantOptions" 
+        :key="index" 
+        :value="option.id"> {{option.name}}
+       </SelectOption>
+     </Select>
     </FormItem>
     <FormItem name="account" class="enter-x">
       <Input
@@ -93,7 +96,7 @@
 <script lang="ts" setup>
   import { reactive, ref, unref, computed, onMounted } from 'vue';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider, Select } from 'ant-design-vue';
+  import { Checkbox, Form, Input, Row, Col, Button, Divider, Select, SelectOption } from 'ant-design-vue';
   import {
     GithubFilled,
     WechatFilled,
@@ -107,6 +110,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { useUserStore } from '/@/store/modules/user';
+  import { useTenantStore } from "/@/store/modules/tenant";
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   //import { onKeyStroke } from '@vueuse/core';
@@ -119,6 +123,7 @@
   const { notification, createErrorModal } = useMessage();
   const { prefixCls } = useDesign('login');
   const userStore = useUserStore();
+  const tenantStore = useTenantStore();
 
   const { setLoginState, getLoginState } = useLoginState();
   const { getFormRules } = useFormRules();
@@ -126,16 +131,18 @@
   const formRef = ref();
   const loading = ref(false);
   const rememberMe = ref(false);
+  let tenantOptions = ref([]);
 
   const formData = reactive({
     account: 'admin',
     password: '123qweR!',
+    tenantId: 1
   });
 
   const { validForm } = useFormValid(formRef);
 
   onMounted(async ()=>{
-    
+    tenantOptions.value = await tenantStore.getAllTenants();
   })
 
   //onKeyStroke('Enter', handleLogin);
@@ -150,6 +157,7 @@
       const userInfo = await userStore.login({
         password: data.password,
         account: data.account,
+        tenantId: data.tenantId,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {

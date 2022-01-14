@@ -3,7 +3,7 @@ import { defHttp } from '/@/utils/http/axios';
 import { GetTennatModel } from './model/tenantModel'
 
 enum Api {
-  getAllTenant = '/api/tenant/all',
+  getAllTenant = '/tenant/all',
 }
 
 export function getAllTenants() {
