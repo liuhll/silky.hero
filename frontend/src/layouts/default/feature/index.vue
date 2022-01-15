@@ -5,12 +5,13 @@
   import { useRootSetting } from '/@/hooks/setting/useRootSetting';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useUserStoreWithOut } from '/@/store/modules/user';
+  import { useAccountStoreWithOut } from '../../../store/modules/account';
 
   import { SettingButtonPositionEnum } from '/@/enums/appEnum';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
   import SessionTimeoutLogin from '/@/views/sys/login/SessionTimeoutLogin.vue';
+import { useAppStoreWithOut } from '/@/store/modules/app';
   export default defineComponent({
     name: 'LayoutFeatures',
     components: {
@@ -22,11 +23,11 @@
     setup() {
       const { getUseOpenBackTop, getShowSettingButton, getSettingButtonPosition, getFullContent } =
         useRootSetting();
-      const userStore = useUserStoreWithOut();
+      const accountStore = useAccountStoreWithOut();
       const { prefixCls } = useDesign('setting-drawer-fearure');
       const { getShowHeader } = useHeaderSetting();
 
-      const getIsSessionTimeout = computed(() => userStore.getSessionTimeout);
+      const getIsSessionTimeout = computed(() => accountStore.getSessionTimeout);
 
       const getIsFixedSettingDrawer = computed(() => {
         if (!unref(getShowSettingButton)) {

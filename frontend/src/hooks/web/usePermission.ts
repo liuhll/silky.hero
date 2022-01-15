@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { useAppStore } from '/@/store/modules/app';
 import { usePermissionStore } from '/@/store/modules/permission';
-import { useUserStore } from '/@/store/modules/user';
+import { useAccountStore } from '../../store/modules/account';
 
 import { useTabs } from './useTabs';
 
@@ -19,7 +19,7 @@ import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 
 // User permissions related operations
 export function usePermission() {
-  const userStore = useUserStore();
+  const accountStore = useAccountStore();
   const appStore = useAppStore();
   const permissionStore = usePermissionStore();
   const { closeAll } = useTabs(router);
@@ -66,9 +66,9 @@ export function usePermission() {
 
     if ([PermissionModeEnum.ROUTE_MAPPING, PermissionModeEnum.ROLE].includes(permMode)) {
       if (!isArray(value)) {
-        return userStore.getRoleList?.includes(value as RoleEnum);
+        return accountStore.getRoleList?.includes(value as RoleEnum);
       }
-      return (intersection(value, userStore.getRoleList) as RoleEnum[]).length > 0;
+      return (intersection(value, accountStore.getRoleList) as RoleEnum[]).length > 0;
     }
 
     if (PermissionModeEnum.BACK === permMode) {
@@ -95,7 +95,7 @@ export function usePermission() {
     if (!isArray(roles)) {
       roles = [roles];
     }
-    userStore.setRoleList(roles);
+    accountStore.setRoleList(roles);
     await resume();
   }
 

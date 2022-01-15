@@ -4,13 +4,13 @@ import { useThrottleFn } from '@vueuse/core';
 import { useAppStore } from '/@/store/modules/app';
 import { useLockStore } from '/@/store/modules/lock';
 
-import { useUserStore } from '/@/store/modules/user';
+import { useAccountStore } from '../../store/modules/account';
 import { useRootSetting } from '../setting/useRootSetting';
 
 export function useLockPage() {
   const { getLockTime } = useRootSetting();
   const lockStore = useLockStore();
-  const userStore = useUserStore();
+  const accountStore = useAccountStore();
   const appStore = useAppStore();
 
   let timeId: TimeoutHandle;
@@ -21,7 +21,7 @@ export function useLockPage() {
 
   function resetCalcLockTimeout(): void {
     // not login
-    if (!userStore.getToken) {
+    if (!accountStore.getToken) {
       clear();
       return;
     }
@@ -45,7 +45,7 @@ export function useLockPage() {
   }
 
   watchEffect((onClean) => {
-    if (userStore.getToken) {
+    if (accountStore.getToken) {
       resetCalcLockTimeout();
     } else {
       clear();

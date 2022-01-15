@@ -6,7 +6,7 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { LoginParams,GetCurrentUserinfo } from '/@/api/account/model/accountModel';
+import { LoginParams, GetCurrentUserinfo } from '/@/api/account/model/accountModel';
 import { getUserInfo, loginApi } from '/@/api/account';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -25,8 +25,8 @@ interface UserState {
   lastUpdateTime: number;
 }
 
-export const useUserStore = defineStore({
-  id: 'app-user',
+export const useAccountStore = defineStore({
+  id: 'app-account',
   state: (): UserState => ({
     // user info
     userInfo: null,
@@ -172,6 +172,6 @@ export const useUserStore = defineStore({
 });
 
 // Need to be used outside the setup
-export function useUserStoreWithOut() {
-  return useUserStore(store);
+export function useAccountStoreWithOut() {
+  return useAccountStore(store);
 }

@@ -17,7 +17,7 @@
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageEnum } from '/@/enums/pageEnum';
-  import { useUserStore } from '/@/store/modules/user';
+  import { useAccountStore } from '../../../store/modules/account';
 
   const props = defineProps({
     /**
@@ -36,7 +36,7 @@
 
   const { prefixCls } = useDesign('app-logo');
   const { getCollapsedShowTitle } = useMenuSetting();
-  const userStore = useUserStore();
+  const accountStore = useAccountStore();
   const { title } = useGlobSetting();
   const go = useGo();
 
@@ -54,7 +54,7 @@
   ]);
 
   function goHome() {
-    go(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
+    go(accountStore.getUserInfo.homePath || PageEnum.BASE_HOME);
   }
 </script>
 <style lang="less" scoped>

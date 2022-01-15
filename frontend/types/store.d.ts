@@ -37,6 +37,7 @@ export interface UserInfo {
   avatar: string;
   desc?: string;
   homePath?: string;
+  tenantId?: number | undefined;
   roles: RoleInfo[];
 }
 

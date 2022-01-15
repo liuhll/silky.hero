@@ -109,7 +109,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
 
-  import { useUserStore } from '/@/store/modules/user';
+  import { useAccountStore } from '../../../store/modules/account';
   import { useTenantStore } from "/@/store/modules/tenant";
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -122,7 +122,7 @@
   const { t } = useI18n();
   const { notification, createErrorModal } = useMessage();
   const { prefixCls } = useDesign('login');
-  const userStore = useUserStore();
+  const accountStore = useAccountStore();
   const tenantStore = useTenantStore();
 
   const { setLoginState, getLoginState } = useLoginState();
@@ -143,7 +143,7 @@
 
   onMounted(async ()=>{
     tenantOptions.value = await tenantStore.getAllTenants();
-  })
+  });
 
   //onKeyStroke('Enter', handleLogin);
 
@@ -154,7 +154,7 @@
     if (!data) return;
     try {
       loading.value = true;
-      const userInfo = await userStore.login({
+      const userInfo = await accountStore.login({
         password: data.password,
         account: data.account,
         tenantId: data.tenantId,

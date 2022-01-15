@@ -15,7 +15,7 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
-import { useUserStoreWithOut } from '/@/store/modules/user';
+import { useAccountStoreWithOut } from '../../../store/modules/account';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -62,9 +62,9 @@ const transform: AxiosTransform = {
     switch (status) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage');
-        const userStore = useUserStoreWithOut();
-        userStore.setToken(undefined);
-        userStore.logout(true);
+        const accountStore = useAccountStoreWithOut();
+        accountStore.setToken(undefined);
+        accountStore.logout(true);
         break;
       default:
         if (errorMessage) {

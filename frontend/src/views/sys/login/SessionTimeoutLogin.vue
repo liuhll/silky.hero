@@ -9,13 +9,13 @@
   import { onBeforeUnmount, onMounted, ref } from 'vue';
   import Login from './Login.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useUserStore } from '/@/store/modules/user';
+  import { useAccountStore } from '../../../store/modules/account';
   import { usePermissionStore } from '/@/store/modules/permission';
   import { useAppStore } from '/@/store/modules/app';
   import { PermissionModeEnum } from '/@/enums/appEnum';
 
   const { prefixCls } = useDesign('st-login');
-  const userStore = useUserStore();
+  const accountStore = useAccountStore();
   const permissionStore = usePermissionStore();
   const appStore = useAppStore();
   const userId = ref<Nullable<number | string>>(0);
@@ -26,12 +26,12 @@
 
   onMounted(() => {
     // 记录当前的UserId
-    userId.value = userStore.getUserInfo?.userId;
-    console.log('Mounted', userStore.getUserInfo);
+    userId.value = accountStore.getUserInfo?.userId;
+    console.log('Mounted', accountStore.getUserInfo);
   });
 
   onBeforeUnmount(() => {
-    if (userId.value && userId.value !== userStore.getUserInfo.userId) {
+    if (userId.value && userId.value !== accountStore.getUserInfo.userId) {
       // 登录的不是同一个用户，刷新整个页面以便丢弃之前用户的页面状态
       document.location.reload();
     } else if (isBackMode() && permissionStore.getLastBuildMenuTime === 0) {

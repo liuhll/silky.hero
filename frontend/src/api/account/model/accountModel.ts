@@ -1,10 +1,10 @@
 export interface LoginParams {
   account: string;
   password: string;
-  tenantId: number;
+  tenantId: number | undefined;
 }
 
-export interface GetCurrentUserinfo { 
+export interface GetCurrentUserinfo {
   id: number;
   userName: string;
   realName: string;
