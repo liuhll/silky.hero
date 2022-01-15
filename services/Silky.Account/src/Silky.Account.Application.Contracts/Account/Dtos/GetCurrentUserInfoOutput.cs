@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Account.Application.Contracts.Account.Dtos;
@@ -49,4 +50,16 @@ public class GetCurrentUserInfoOutput
     /// 手机
     /// </summary>
     public string MobilePhone { get; set; }
+
+    /// <summary>
+    /// 当前用户的租户id
+    /// </summary>
+    public long? TenantId { get; set; }
+
+    /// <summary>
+    /// 角色
+    /// </summary>
+    public ICollection<string> Roles { get; set; }
+
+
 }

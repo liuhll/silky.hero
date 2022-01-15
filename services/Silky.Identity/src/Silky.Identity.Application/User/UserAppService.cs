@@ -97,7 +97,9 @@ public class UserAppService : IUserAppService
         var user = await UserManager.GetByIdAsync(userId);
         (await UserManager.SetRolesAsync(user, roleNames)).CheckErrors();
         (await UserManager.UpdateAsync(user)).CheckErrors();
-        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserDataRangeCacheKey,
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
+            string.Format(CacheKeyConsts.CurrentUserDataRangeCacheKey, userId));
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
             string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
     }
 

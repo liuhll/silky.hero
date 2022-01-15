@@ -32,7 +32,9 @@ public class AccountAppService : IAccountAppService
     public async Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync()
     {
         var user = await UserManager.GetByIdAsync(long.Parse(_session.UserId.ToString()));
-        return user.Adapt<GetCurrentUserInfoOutput>();
+        var currentUser = user.Adapt<GetCurrentUserInfoOutput>();
+        currentUser.Roles = await UserManager.GetRolesAsync(user);
+        return currentUser;
     }
 
     public async Task<GetCurrentUserDataRange> GetCurrentUserDataRangeAsync()
