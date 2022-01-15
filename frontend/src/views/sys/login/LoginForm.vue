@@ -9,15 +9,15 @@
     @keypress.enter="handleLogin"
   >
     <FormItem name="tenantId" class="enter-x">
-     <Select 
-      v-model:value="formData.tenantId" 
-      size="large" 
-      :placeholder="t('sys.login.tenant')"  
-      class="fix-auto-fill">
-       <SelectOption v-for="(option,index) in tenantOptions" 
-        :key="index" 
-        :value="option.id"> {{option.name}}
-       </SelectOption>
+      <Select
+        v-model:value="formData.tenantId"
+        size="large"
+        :placeholder="t('sys.login.tenant')"
+        class="fix-auto-fill"
+      >
+        <SelectOption v-for="(option, index) in tenantOptions" :key="index" :value="option.id">
+          {{option.name}}
+        </SelectOption>
      </Select>
     </FormItem>
     <FormItem name="account" class="enter-x">
@@ -113,6 +113,7 @@
   import { useTenantStore } from "/@/store/modules/tenant";
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+import user from 'mock/sys/user';
   //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
@@ -161,9 +162,10 @@
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
+        const name = userInfo.realName ?? userInfo.userName;
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+          description: `${t('sys.login.loginSuccessDesc')} : ${name}`,
           duration: 3,
         });
       }
