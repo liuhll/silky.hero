@@ -1,49 +1,82 @@
 <template>
-  <div>
-    <Row :gutter="[16, 16]">
-      <Col :span="8">
-        <Card title="组织结构树">
-          <Tree
-            title="组织机构"
-            :treeData="organizationTreeData"
-            :replace-fields="treeFields"
-            show-icon
-            default-expand-all
-          >
-            <template #icon><CarryOutOutlined /></template>
-          <!-- <template #title="{ key: treeKey, title }">{{title}}</template> -->
-          </Tree>
+  <PageWrapper>
+    <Row :gutter="[24, 16]">
+      <Col :span="6">
+        <Card title="组织机构树">
+          <BasicTree
+            defaultExpandAll
+            :treeData="treeData"
+            :beforeRightClick="getRightMenuList"
+            ref="treeRef"
+          />
         </Card>
       </Col>
-      <Col :span="8">
-        <div>组织机构用户</div>
-      </Col>
+      <Col :span="18"> <Card title="成员" class="w-3/4 xl:w-4/5"></Card></Col>
     </Row>
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { CarryOutOutlined } from '@ant-design/icons-vue';
-  import { Tree, Card, Row, Col } from 'ant-design-vue';
-  import { defineComponent, nextTick, ref, unref, onMounted } from 'vue';
-  import { useOrganizationStore } from '/@/store/modules/organization';
-  const organizationStore = useOrganizationStore();
-  const treeFields = ref({
-    title: 'name',
-    key: 'id',
-  });
-  export default defineComponent({
-    components: { Tree, Card, Row, Col, CarryOutOutlined },
-    setup() {
-      const showIcon = ref<boolean>(true);
-      const organizationTreeData = ref([]);
-      onMounted(async () => {
-        organizationTreeData.value = await organizationStore.getOrganizationTree();
+import { PageWrapper } from '/@/components/Page';
+import { Card, Row, Col } from 'ant-design-vue';
+import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
+import { defineComponent, ref, unref, onMounted } from 'vue';
+import { getOrganizationTree } from '/@/api/organization';
+import { treeMap } from '/@/utils/helper/treeHelper';
+import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
+
+export default defineComponent({
+  components: { Card, Row, Col, PageWrapper, BasicTree },
+  setup() {
+    const treeRef = ref<Nullable<TreeActionType>>(null);
+    const treeData = ref<TreeItem[]>([]);
+    function getTree() {
+      const tree = unref(treeRef);
+      if (!tree) {
+        throw new Error('tree is null!');
+      }
+      return tree;
+    }
+
+    onMounted(async () => {
+      await loadOrganizationTreeData();
+      getTree().expandAll(true);
+    });
+
+    async function loadOrganizationTreeData() {
+      const organizationTreeList = await getOrganizationTree();
+      treeData.value = treeMap(organizationTreeList, {
+        conversion: (node: GetOrgizationTreeModel) => {
+          return {
+            title: node.name,
+            key: node.id,
+            icon: 'ant-design:folder-outlined',
+          };
+        },
       });
-      return {
-        organizationTreeData,
-        treeFields,
-        showIcon,
-      };
-    },
-  });
+    }
+    function getRightMenuList(node: any): ContextMenuItem[] {
+      return [
+        {
+          label: '新增',
+          handler: () => {
+            console.log('点击了新增', node);
+          },
+          icon: 'bi:plus',
+        },
+        {
+          label: '删除',
+          handler: () => {
+            console.log('点击了删除', node);
+          },
+          icon: 'ant-design:delete-outlined',
+        },
+      ];
+    }
+    return {
+      treeData,
+      treeRef,
+      getRightMenuList,
+    };
+  },
+});
 </script>

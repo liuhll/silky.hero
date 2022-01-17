@@ -1,9 +1,9 @@
 export interface GetOrgizationTreeModel {
-    id:       number;
-    parentId: number;
-    name:     string;
-    code:     string;
-    remark:   string;
-    status:   number;
-    children: getOrgizationTreeModel[];
+  id: number;
+  parentId: number;
+  name: string;
+  code: string;
+  remark: string;
+  status: number;
+  children: GetOrgizationTreeModel[] | undefined;
 }

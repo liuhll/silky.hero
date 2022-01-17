@@ -19,8 +19,7 @@ const systemManage: AppRouteModule = {
       name: 'Organization',
       component: () => import('/@/views/system-manage/organization/index.vue'),
       meta: {
-        title: '组织机构',
-        icon: 'ion:grid-outline',
+        title: '组织机构'
       },
     },
   ],
