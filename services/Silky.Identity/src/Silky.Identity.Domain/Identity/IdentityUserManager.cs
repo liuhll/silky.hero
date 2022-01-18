@@ -218,6 +218,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public async Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
     {
         var userPage = await UserRepository
+            .Include(p=> p.UserSubsidiaries)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.Email.IsNullOrEmpty(), p => p.Email.Contains(input.Email))
             .Where(!input.MobilePhone.IsNullOrEmpty(), p => p.MobilePhone.Contains(input.MobilePhone))
@@ -225,6 +226,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(!input.JobNumber.IsNullOrEmpty(), p => p.JobNumber.Contains(input.JobNumber))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
+            .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),p=> p.UserSubsidiaries.Any(q=> input.OrganizationIds.Contains(q.OrganizationId)))
+            .Where(input.PositionIds != null && input.PositionIds.Any(), p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return userPage.Adapt<PagedList<GetUserPageOutput>>();
     }

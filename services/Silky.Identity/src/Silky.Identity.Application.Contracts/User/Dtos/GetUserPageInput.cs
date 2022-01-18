@@ -18,4 +18,8 @@ public class GetUserPageInput : PageDtoBase
     public Sex? Sex { get; set; }
 
     public string JobNumber { get; set; }
+
+    public long[] OrganizationIds { get; set; }
+
+    public long[] PositionIds { get; set; }
 }

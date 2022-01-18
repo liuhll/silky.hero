@@ -24,6 +24,6 @@ public class GetUserPageOutput
     public string MobilePhone { get; set; }
 
     public string JobNumber { get; set; }
-    
 
+    public DateTimeOffset CreatedTime { get; set; }
 }
