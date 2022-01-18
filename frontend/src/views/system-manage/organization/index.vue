@@ -18,6 +18,7 @@
 <script lang="ts">
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col } from 'ant-design-vue';
+import { BasicTable, useTable, TableAction } from '/@/components/Table';
 import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
 import { defineComponent, ref, unref, onMounted } from 'vue';
 import { getOrganizationTree } from '/@/api/organization';
@@ -25,7 +26,7 @@ import { treeMap } from '/@/utils/helper/treeHelper';
 import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
 
 export default defineComponent({
-  components: { Card, Row, Col, PageWrapper, BasicTree },
+  components: { Card, Row, Col, PageWrapper, BasicTree, BasicTable, TableAction },
   setup() {
     const treeRef = ref<Nullable<TreeActionType>>(null);
     const treeData = ref<TreeItem[]>([]);
