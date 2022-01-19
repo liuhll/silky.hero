@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -67,6 +68,9 @@ public interface IOrganizationAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input);
+
+    [HttpGet("{id:long}/user/page")]
+    Task<PagedList<GetUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input);
 
     /// <summary>
     /// 获取组织机构树

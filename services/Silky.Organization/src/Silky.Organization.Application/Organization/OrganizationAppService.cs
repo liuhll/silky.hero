@@ -6,6 +6,8 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Extensions;
+using Silky.Identity.Application.Contracts.User;
+using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain;
@@ -15,10 +17,13 @@ namespace Silky.Organization.Application.Organization;
 public class OrganizationAppService : IOrganizationAppService
 {
     private readonly IOrganizationDomainService _organizationDomainService;
+    private readonly IUserAppService _userAppService;
 
-    public OrganizationAppService(IOrganizationDomainService organizationDomainService)
+    public OrganizationAppService(IOrganizationDomainService organizationDomainService,
+        IUserAppService userAppService)
     {
         _organizationDomainService = organizationDomainService;
+        _userAppService = userAppService;
     }
 
     public Task CreateAsync(CreateOrganizationInput input)
@@ -76,5 +81,12 @@ public class OrganizationAppService : IOrganizationAppService
         var childrenOrganizations =
             await _organizationDomainService.GetChildrenOrganizationsAsync(organizationId);
         return childrenOrganizations.Select(p => p.Id).ToList();
+    }
+
+    public async Task<PagedList<GetUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
+    {
+        var userSearchInput = input.Adapt<GetUserPageInput>();
+        userSearchInput.OrganizationIds = new long[] { id };
+        return await _userAppService.GetPageAsync(userSearchInput);
     }
 }
