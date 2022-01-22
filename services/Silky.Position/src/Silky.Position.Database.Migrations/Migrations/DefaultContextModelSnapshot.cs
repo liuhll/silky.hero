@@ -25,12 +25,6 @@ namespace Silky.Position.Database.Migrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("Code");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasMaxLength(40)
@@ -100,8 +94,7 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 1L,
-                            Code = "zjl",
-                            ConcurrencyStamp = "c264c987-090c-4e65-b8b8-33dd253d6c7c",
+                            ConcurrencyStamp = "736ee5e8-18af-4e01-861e-4adadae13525",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "总经理",
@@ -112,8 +105,7 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 2L,
-                            Code = "jszj",
-                            ConcurrencyStamp = "443d654b-3ca5-4e56-95a7-04fdfdc48609",
+                            ConcurrencyStamp = "1b24a1a4-b091-4f66-8e15-af74dfecd4d5",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "技术总监",
@@ -124,8 +116,7 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 3L,
-                            Code = "htzz",
-                            ConcurrencyStamp = "b3255f48-b7b5-40d0-81df-c6b9bf2b6870",
+                            ConcurrencyStamp = "d5d75344-4e00-4329-a580-14bee0c90b75",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "后台组长",
@@ -136,8 +127,7 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 4L,
-                            Code = "qtzz",
-                            ConcurrencyStamp = "cbcc1e29-56e5-467d-afb0-6111aca44a2a",
+                            ConcurrencyStamp = "3919966e-faff-46a6-864b-9358c0288e7d",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "前台组长",
