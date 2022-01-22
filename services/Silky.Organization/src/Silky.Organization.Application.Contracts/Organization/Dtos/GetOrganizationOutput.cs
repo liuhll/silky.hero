@@ -19,11 +19,7 @@ public class GetOrganizationOutput
     /// </summary>
     public string Name { get; set; }
 
-    /// <summary>
-    /// 机构唯一编码
-    /// </summary>
-    public string Code { get; set; }
-
+    
     /// <summary>
     /// 排序
     /// </summary>

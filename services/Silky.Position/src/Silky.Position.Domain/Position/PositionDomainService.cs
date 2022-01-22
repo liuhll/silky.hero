@@ -29,12 +29,6 @@ public class PositionDomainService : IPositionDomainService
             throw new UserFriendlyException($"已经存在名称为{input.Name}的职位");
         }
 
-        exsitPosition = await PositionRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
-        if (exsitPosition != null)
-        {
-            throw new UserFriendlyException($"已经存在编码为{input.Code}的职位");
-        }
-
         var position = input.Adapt<Position>();
         await PositionRepository.InsertAsync(position);
     }
@@ -55,16 +49,7 @@ public class PositionDomainService : IPositionDomainService
                 throw new UserFriendlyException($"已经存在名称为{input.Name}的职位");
             }
         }
-
-        if (!position.Code.Equals(input.Code))
-        {
-            var exsitPosition = await PositionRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
-            if (exsitPosition != null)
-            {
-                throw new UserFriendlyException($"已经存在编码为{input.Code}的职位");
-            }
-        }
-
+        
         position = input.Adapt(position);
         await PositionRepository.UpdateAsync(position);
     }

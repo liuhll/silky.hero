@@ -15,13 +15,7 @@ public abstract class OrganizationDtoBase
     /// </summary>
     [Required(ErrorMessage = "组织机构名称不允许为空")]
     public string Name { get; set; }
-
-    /// <summary>
-    /// 机构唯一编码
-    /// </summary>
-    [Required(ErrorMessage = "机构编码不允许为空")]
-    public string Code { get; set; }
-
+    
     /// <summary>
     /// 排序
     /// </summary>

@@ -19,10 +19,6 @@ public class PositionTypeBuilder : IEntityTypeBuilder<Position>
             .IsRequired()
             .HasMaxLength(PositionConsts.MaxNameLength)
             .HasColumnName(nameof(Position.Name));
-        entityBuilder.Property(o => o.Code)
-            .IsRequired()
-            .HasMaxLength(PositionConsts.MaxCodeLength)
-            .HasColumnName(nameof(KeeperException.Code));
         entityBuilder.Property(o => o.Sort)
             .HasDefaultValue(0)
             .HasColumnName(nameof(Position.Sort));

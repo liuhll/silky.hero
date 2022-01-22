@@ -13,12 +13,7 @@ public class GetPositionOutput
     /// 职位名称
     /// </summary>
     public string Name { get; set; }
-
-    /// <summary>
-    /// 职位编码
-    /// </summary>
-    public string Code { get; set; }
-
+    
     /// <summary>
     /// 排序字段
     /// </summary>

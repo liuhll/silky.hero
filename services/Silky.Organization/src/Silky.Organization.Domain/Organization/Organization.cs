@@ -20,9 +20,7 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
     public long? ParentId { get; set; }
 
     [NotNull] public string Name { get; set; }
-
-    [NotNull] public string Code { get; set; }
-
+    
     public int Sort { get; set; }
 
     public string Remark { get; set; }

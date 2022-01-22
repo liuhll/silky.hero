@@ -13,7 +13,6 @@ public class PositionSeedData : IEntitySeedData<Position>
         initData.Add(new()
         {
             Id = 1,
-            Code = "zjl",
             Name = "总经理",
             TenantId = 1,
             Sort = 99,
@@ -21,7 +20,6 @@ public class PositionSeedData : IEntitySeedData<Position>
         initData.Add(new()
         {
             Id = 2,
-            Code = "jszj",
             Name = "技术总监",
             TenantId = 1,
             Sort = 98,
@@ -29,7 +27,6 @@ public class PositionSeedData : IEntitySeedData<Position>
         initData.Add(new()
         {
             Id = 3,
-            Code = "htzz",
             Name = "后台组长",
             TenantId = 1,
             Sort = 97,
@@ -37,7 +34,6 @@ public class PositionSeedData : IEntitySeedData<Position>
         initData.Add(new()
         {
             Id = 4,
-            Code = "qtzz",
             Name = "前台组长",
             TenantId = 1,
             Sort = 96,

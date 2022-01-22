@@ -19,10 +19,6 @@ public class OrganizationTypeBuilder : IEntityTypeBuilder<Organization>
             .IsRequired()
             .HasMaxLength(OrganizationConsts.MaxNameLength)
             .HasColumnName(nameof(Domain.Organization.Name));
-        builder.Property(o => o.Code)
-            .IsRequired()
-            .HasMaxLength(OrganizationConsts.MaxCodeLength)
-            .HasColumnName(nameof(Domain.Organization.Code));
         builder.Property(o => o.Sort)
             .HasDefaultValue(0)
             .HasColumnName(nameof(Domain.Organization.Sort));

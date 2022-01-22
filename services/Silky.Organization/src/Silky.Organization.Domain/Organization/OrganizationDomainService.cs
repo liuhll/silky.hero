@@ -29,13 +29,7 @@ public class OrganizationDomainService : IOrganizationDomainService
         {
             throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
         }
-
-        exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
-        if (exsitOrganization != null)
-        {
-            throw new UserFriendlyException($"已经存在Code为{input.Code}的机构");
-        }
-
+        
         var organization = input.Adapt<Organization>();
         await OrganizationRepository.InsertAsync(organization);
     }
@@ -56,16 +50,7 @@ public class OrganizationDomainService : IOrganizationDomainService
                 throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
             }
         }
-
-        if (!input.Code.Equals(organization.Code))
-        {
-            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Code == input.Code);
-            if (exsitOrganization != null)
-            {
-                throw new UserFriendlyException($"已经存在Code为{input.Code}的机构");
-            }
-        }
-
+        
         if (input.ParentId.HasValue)
         {
             if (input.ParentId.Value == input.Id)
