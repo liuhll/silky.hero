@@ -24,12 +24,13 @@ public class OrganizationDomainService : IOrganizationDomainService
 
     public async Task CreateAsync(CreateOrganizationInput input)
     {
-        var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+        var exsitOrganization =
+            await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name && p.ParentId == input.ParentId);
         if (exsitOrganization != null)
         {
             throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
         }
-        
+
         var organization = input.Adapt<Organization>();
         await OrganizationRepository.InsertAsync(organization);
     }
@@ -44,13 +45,13 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         if (!input.Name.Equals(organization.Name))
         {
-            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name);
+            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name && p.ParentId == input.ParentId);
             if (exsitOrganization != null)
             {
                 throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
             }
         }
-        
+
         if (input.ParentId.HasValue)
         {
             if (input.ParentId.Value == input.Id)
@@ -108,7 +109,8 @@ public class OrganizationDomainService : IOrganizationDomainService
         return organizations.BuildTree();
     }
 
-    public async Task<IEnumerable<Organization>> GetChildrenOrganizationsAsync(long organizationId, bool includeSelf = true)
+    public async Task<IEnumerable<Organization>> GetChildrenOrganizationsAsync(long organizationId,
+        bool includeSelf = true)
     {
         var organizations = await OrganizationRepository.AsQueryable(false)
             .OrderByDescending(p => p.Sort).ToListAsync();

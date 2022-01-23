@@ -29,7 +29,7 @@ export interface Result<T = any> {
   status: number;
   statusCode: string;
   errorMessage: string;
-  data: T;
+  result: T;
   validErrors: Array;
 }
 

@@ -42,20 +42,18 @@ const transform: AxiosTransform = {
     }
     // 错误的时候返回
 
-    const result = res.data;
-    if (!result) {
+    const { data } = res;
+    if (!data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
     }
- 
-    const { status, data, errorMessage } = result;
+    const { status, result, errorMessage } = data;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && Reflect.has(result, 'status') && status === ResultEnum.SUCCESS;
+    const hasSuccess = Reflect.has(data, 'status') && status === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      return data;
+      return result;
     }
-
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = '';
@@ -79,8 +77,9 @@ const transform: AxiosTransform = {
     } else if (options.errorMessageMode === 'message') {
       createMessage.error(timeoutMsg);
     }
-
-    throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
+    if (status != ResultEnum.SUCCESS) {
+      throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
+    }
   },
 
   // 请求之前处理config

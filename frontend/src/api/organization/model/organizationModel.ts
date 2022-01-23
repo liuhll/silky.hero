@@ -21,3 +21,29 @@ export interface GetOrgizationUserModel {
   jobNumber: string;
   createdTime: Date;
 }
+
+export interface GetOrgizationModel {
+  id: number;
+  parentId: number;
+  name: string;
+  sort: number;
+  remark: string;
+  status: number;
+}
+
+export interface UpdateOrgizationModel {
+  id: number;
+  parentId: number;
+  name: string;
+  sort: number;
+  remark: string;
+  status: number;
+}
+
+export interface CreateOrgizationModel {
+  parentId: number;
+  name: string;
+  sort: number;
+  remark: string;
+  status: number; 
+}
