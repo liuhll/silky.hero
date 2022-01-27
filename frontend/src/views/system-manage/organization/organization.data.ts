@@ -32,6 +32,38 @@ export const userColumns: BasicColumn[] = [
   },
 ]
 
+
+export const organizationUserColumns: BasicColumn[] = [
+  {
+    title: '用户名',
+    dataIndex: 'userName',
+    width: 120,
+  },
+  {
+    title: '真实姓名',
+    dataIndex: 'realName',
+    width: 120,
+  },
+  {
+    title: '邮箱',
+    dataIndex: 'email',
+    width: 120,
+  },
+  {
+    title: '远程下拉',
+    dataIndex: 'name4',
+    edit: true,
+    editComponent: 'ApiSelect',
+    editComponentProps: {
+      resultField: 'list',
+      labelField: 'name',
+      valueField: 'id',
+    },
+    width: 200,
+  },
+]
+
+
 export const organizationFormSchema: FormSchema[] = [
   {
     field: 'name',
@@ -68,3 +100,4 @@ export const organizationFormSchema: FormSchema[] = [
     helpMessage: ['请输入备注'],
   }
 ]
+
