@@ -69,8 +69,22 @@ public interface IOrganizationAppService
     /// <returns></returns>
     Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input);
 
+    /// <summary>
+    /// 获取某个组织机构的用户列表
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [HttpGet("{id:long}/user/page")]
     Task<PagedList<GetUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input);
+
+    /// <summary>
+    /// 获取指定组织机构的用户Ids
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id:long}/userids")]
+    Task<ICollection<long>> GetUserIdsAsync(long id);
 
     /// <summary>
     /// 获取组织机构树

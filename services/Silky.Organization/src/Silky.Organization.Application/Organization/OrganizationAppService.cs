@@ -89,4 +89,9 @@ public class OrganizationAppService : IOrganizationAppService
         userSearchInput.OrganizationIds = new long[] { id };
         return await _userAppService.GetPageAsync(userSearchInput);
     }
+
+    public async Task<ICollection<long>> GetUserIdsAsync(long id)
+    {
+        return await _userAppService.GetUserIdsAsync(id);
+    }
 }

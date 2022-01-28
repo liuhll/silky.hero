@@ -105,7 +105,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
     [Authorize(IdentityPermissions.Users.Lock)]
     Task LockAsync(long userId, int lockoutSeconds);
-
+    
     /// <summary>
     /// 根据Id解锁用户账号
     /// </summary>
@@ -157,4 +157,8 @@ public interface IUserAppService
     [ProhibitExtranet]
     [GetCachingIntercept("roleIds:userId:{0}")]
     Task<ICollection<long>> GetRoleIdsAsync([CacheKey(0)]long userId);
+
+    [ProhibitExtranet]
+    Task<ICollection<long>> GetUserIdsAsync(long organizationId);
+
 }

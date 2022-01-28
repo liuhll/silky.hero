@@ -64,6 +64,13 @@ public interface IPositionAppService
     Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
 
     /// <summary>
+    /// 不分页查询职位信息
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    Task<ICollection<GetPositionOutput>> GetListAsync([FromQuery]string name);
+
+    /// <summary>
     /// 判断是否存在职位
     /// </summary>
     /// <param name="positionId">职位Id</param>

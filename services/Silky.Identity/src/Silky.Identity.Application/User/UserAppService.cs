@@ -10,6 +10,7 @@ using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
+using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
@@ -187,5 +188,30 @@ public class UserAppService : IUserAppService
                 .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
+    }
+
+    public async Task<PagedList<GetOrganizationAssignedUserPageOutput>> GetAssignedUserPageAsync(long organizationId, GetOrganizationAssignedUserPageInput input)
+    {
+        var userPageList = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
+            .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
+            .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
+            .AsNoTracking()
+            .ToPagedListAsync(input.PageIndex,input.PageSize);
+        var userPageOutputList = userPageList.Adapt<PagedList<GetOrganizationAssignedUserPageOutput>>();
+        foreach (var item in userPageOutputList.Items) 
+        {
+            item.IsAssigned = userPageList.Items.Single(p => p.Id == item.Id).UserSubsidiaries.Any(p => p.OrganizationId == organizationId);
+        }
+        return userPageOutputList;
+       
+    }
+
+    public async Task<ICollection<long>> GetUserIdsAsync(long organizationId)
+    {
+        var organizationUserIds = await UserManager.UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => p.OrganizationId == organizationId)
+            .Select(p=> p.OrganizationId).ToListAsync();
+        return organizationUserIds;
     }
 }

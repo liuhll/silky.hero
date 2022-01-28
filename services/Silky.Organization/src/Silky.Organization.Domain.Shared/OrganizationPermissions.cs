@@ -10,5 +10,6 @@ public class OrganizationPermissions
         public const string Create = GroupName + ".Create";
         public const string Update = GroupName + ".Update";
         public const string Delete = GroupName + ".Delete";
+        public const string AssignedUser = GroupName + ".AssignedUser";
     }
 }
