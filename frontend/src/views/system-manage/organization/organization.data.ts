@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 import { Tag } from 'ant-design-vue';
 import { Icon } from '/@/components/Icon';
+import { getPositionList } from '/@/api/position'
 
 export const userColumns: BasicColumn[] = [
   {
@@ -50,14 +51,16 @@ export const organizationUserColumns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '远程下拉',
-    dataIndex: 'name4',
+    title: '岗位',
+    dataIndex: 'positionId',
     edit: true,
     editComponent: 'ApiSelect',
     editComponentProps: {
-      resultField: 'list',
+      api: getPositionList,
       labelField: 'name',
       valueField: 'id',
+      placeholder: '请选择岗位',
+
     },
     width: 200,
   },

@@ -45,5 +45,5 @@ export interface CreateOrgizationModel {
   name: string;
   sort: number;
   remark: string;
-  status: number; 
+  status: number;
 }

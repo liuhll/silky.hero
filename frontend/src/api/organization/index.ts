@@ -47,3 +47,10 @@ export const deleteOrganization = (id: number) => {
     url: `/organization/${id}`,
   });
 }
+
+export const getOrganizationUserIds = (id: number) => {
+  return defHttp.get({
+    url: `/organization/${id}/userids`,
+  });
+}
+
