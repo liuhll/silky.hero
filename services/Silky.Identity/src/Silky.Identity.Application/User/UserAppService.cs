@@ -88,9 +88,14 @@ public class UserAppService : IUserAppService
         return UserManager.GetPageAsync(input);
     }
 
-    public Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input) 
+    public Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input) 
     {
         return UserManager.GetAddOrganizationUserPageAsync(organizationId, input);
+    }
+
+    public Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input)
+    {
+        return UserManager.GetOrganizationUserPageAsync(organizationId, input);
     }
 
     [UnitOfWork]

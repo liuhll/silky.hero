@@ -76,7 +76,7 @@ public interface IOrganizationAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [HttpGet("{id:long}/user/page")]
-    Task<PagedList<GetUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input);
+    Task<PagedList<GetOrganizationUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input);
 
     /// <summary>
     /// 获取指定组织机构的用户Ids

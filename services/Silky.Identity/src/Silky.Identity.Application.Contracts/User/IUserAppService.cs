@@ -65,7 +65,10 @@ public interface IUserAppService
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
 
     [HttpGet("{organizationId:long}/organizationuser/page")]
-    Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);
+    Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);
+
+    [ProhibitExtranet]
+    Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input);
 
     /// <summary>
     /// 更新用户声明
@@ -127,9 +130,6 @@ public interface IUserAppService
     [HttpPut("{userId:long}/password")]
     [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
-
-    //[HttpGet("{userId:long}/{organizationId:long}/position")]
-    //Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId);
 
     /// <summary>
     /// 获取指定组织机构的用户

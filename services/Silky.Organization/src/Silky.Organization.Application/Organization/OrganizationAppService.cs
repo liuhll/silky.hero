@@ -83,11 +83,9 @@ public class OrganizationAppService : IOrganizationAppService
         return childrenOrganizations.Select(p => p.Id).ToList();
     }
 
-    public async Task<PagedList<GetUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
+    public Task<PagedList<GetOrganizationUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
     {
-        var userSearchInput = input.Adapt<GetUserPageInput>();
-        userSearchInput.OrganizationIds = new long[] { id };
-        return await _userAppService.GetPageAsync(userSearchInput);
+        return _userAppService.GetOrganizationUserPageAsync(id,input);
     }
 
     public async Task<ICollection<long>> GetUserIdsAsync(long id)

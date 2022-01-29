@@ -1,6 +1,6 @@
 ﻿namespace Silky.Identity.Application.Contracts.User.Dtos;
 
-public class GetAddOrganizationUserOutput : GetUserPageOutput
+public class GetAddOrganizationUserPageOutput : GetUserPageOutput
 {
     public long? PositionId { get; set; }
 

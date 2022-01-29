@@ -124,7 +124,6 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
-
     public async Task<IdentityResult> SetRolesAsync(IdentityUser user, ICollection<string> roleNames)
     {
         Check.NotNull(user, nameof(user));
@@ -233,17 +232,17 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return userPage.Adapt<PagedList<GetUserPageOutput>>();
     }
 
-    public async Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)
+    public async Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)
     {
-        var userPage = await UserRepository
+        var userPage = await UserRepository.AsQueryable(false)
             .Include(p => p.UserSubsidiaries)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .ToPagedListAsync(input.PageIndex, input.PageSize);
-        var userOutputList = new List<GetAddOrganizationUserOutput>();
+        var userOutputList = new List<GetAddOrganizationUserPageOutput>();
         foreach (var user in userPage.Items) 
         {
-            var userOutput = user.Adapt<GetAddOrganizationUserOutput>();
+            var userOutput = user.Adapt<GetAddOrganizationUserPageOutput>();
             var userOrganizationPosition = user.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
             if (userOrganizationPosition != null) 
             {
@@ -252,7 +251,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             }
             userOutputList.Add(userOutput);
         }
-        return new PagedList<GetAddOrganizationUserOutput>()
+        return new PagedList<GetAddOrganizationUserPageOutput>()
         {
             Items = userOutputList,
             HasNextPages = userPage.HasNextPages,
@@ -261,6 +260,34 @@ public class IdentityUserManager : UserManager<IdentityUser>
             TotalPages = userPage.TotalPages,
         };
 
+    }
+
+    public async Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input)
+    {
+        var userPage = await UserRepository.AsQueryable(false)
+           .Include(p => p.UserSubsidiaries)
+           .Where(p => p.UserSubsidiaries.Any(q => q.OrganizationId == organizationId))
+           .ToPagedListAsync(input.PageIndex, input.PageSize);
+        var userOutputList = new List<GetOrganizationUserPageOutput>();
+        foreach (var user in userPage.Items)
+        {
+            var userOutput = user.Adapt<GetOrganizationUserPageOutput>();
+            var userOrganizationPosition = user.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
+            if (userOrganizationPosition != null)
+            {
+                userOutput.PositionId = userOrganizationPosition.PositionId;
+                userOutput.PositionName = (await _positionAppService.GetAsync(userOrganizationPosition.PositionId)).Name;
+            }
+            userOutputList.Add(userOutput);
+        }
+        return new PagedList<GetOrganizationUserPageOutput>()
+        {
+            Items = userOutputList,
+            HasNextPages = userPage.HasNextPages,
+            HasPrevPages = userPage.HasPrevPages,
+            TotalCount = userPage.TotalCount,
+            TotalPages = userPage.TotalPages,
+        };
     }
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
