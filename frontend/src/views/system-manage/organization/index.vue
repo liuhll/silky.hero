@@ -162,7 +162,7 @@ export default defineComponent({
     }
 
     function handleAddOrganizationUsersModal() {
-      if (canAddOrganizationUsers) {
+      if (unref(canAddOrganizationUsers)) {
         openOrganizationUserModal(true, {
           id: selectedOrganizationId,
         });
@@ -256,7 +256,10 @@ export default defineComponent({
                   notification.success({
                     message: '删除机构成功',
                   });
+                  selectedOrganizationId.value = undefined;
+                  canAddOrganizationUsers.value = false;
                   await loadOrganizationTreeData();
+                  reload();
                 });
               },
             });
