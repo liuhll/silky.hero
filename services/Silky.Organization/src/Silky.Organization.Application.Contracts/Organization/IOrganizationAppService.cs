@@ -86,6 +86,9 @@ public interface IOrganizationAppService
     [HttpGet("{id:long}/userids")]
     Task<ICollection<long>> GetUserIdsAsync(long id);
 
+    [HttpPut("{id:long}/users")]
+    Task AddUsers(long id,ICollection<AddOrganizationUserInput> inputs);
+
     /// <summary>
     /// 获取组织机构树
     /// </summary>

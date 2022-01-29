@@ -10,11 +10,12 @@ using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
-using Silky.EntityFrameworkCore.Extensions;
+using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
+using Silky.Position.Application.Contracts.Position;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
 namespace Silky.Identity.Application.User;
@@ -85,6 +86,11 @@ public class UserAppService : IUserAppService
     public Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
     {
         return UserManager.GetPageAsync(input);
+    }
+
+    public Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input) 
+    {
+        return UserManager.GetAddOrganizationUserPageAsync(organizationId, input);
     }
 
     [UnitOfWork]
@@ -190,28 +196,40 @@ public class UserAppService : IUserAppService
         }
     }
 
-    public async Task<PagedList<GetOrganizationAssignedUserPageOutput>> GetAssignedUserPageAsync(long organizationId, GetOrganizationAssignedUserPageInput input)
-    {
-        var userPageList = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
-            .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
-            .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
-            .AsNoTracking()
-            .ToPagedListAsync(input.PageIndex,input.PageSize);
-        var userPageOutputList = userPageList.Adapt<PagedList<GetOrganizationAssignedUserPageOutput>>();
-        foreach (var item in userPageOutputList.Items) 
-        {
-            item.IsAssigned = userPageList.Items.Single(p => p.Id == item.Id).UserSubsidiaries.Any(p => p.OrganizationId == organizationId);
-        }
-        return userPageOutputList;
-       
-    }
-
+ 
     public async Task<ICollection<long>> GetUserIdsAsync(long organizationId)
     {
-        var organizationUserIds = await UserManager.UserSubsidiaryRepository
+        var organizationUserIds = await UserManager.UserRepository
             .AsQueryable(false)
-            .Where(p => p.OrganizationId == organizationId)
-            .Select(p=> p.OrganizationId).ToListAsync();
+            .Include(p=> p.UserSubsidiaries)
+            .Where(p => p.UserSubsidiaries.Any(us=> us.OrganizationId == organizationId))
+            .Select(p=> p.Id).ToListAsync();
         return organizationUserIds;
     }
+
+    [UnitOfWork]
+    public async Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs)
+    {
+        foreach (var input in inputs)
+        {
+            var user = await UserManager.UserRepository.Include(p=> p.UserSubsidiaries).FirstOrDefaultAsync(p=> p.Id == input.UserId);
+            if (user == null) 
+            {
+                throw new EntityNotFoundException(typeof(IdentityUser),input.UserId);
+            }
+            user.AddUserSubsidiaries(organizationId, input.PositionId);
+            await UserManager.UpdateAsync(user);
+        }
+    }
+
+    //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)
+    //{
+    //    var userSubsidiary = await UserManager.UserSubsidiaryRepository.FirstOrDefaultAsync(p => p.UserId == userId && p.OrganizationId == organizationId);
+    //    if (userSubsidiary != null) 
+    //    {
+    //        var positionInfo = await _positionAppService.GetAsync(userSubsidiary.PositionId);
+    //        return positionInfo.Adapt<GetUserPositionOutput>();
+    //    }
+    //    return null;
+    //}
 }

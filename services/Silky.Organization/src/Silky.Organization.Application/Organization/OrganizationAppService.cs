@@ -94,4 +94,14 @@ public class OrganizationAppService : IOrganizationAppService
     {
         return await _userAppService.GetUserIdsAsync(id);
     }
+
+    public async Task AddUsers(long id, ICollection<AddOrganizationUserInput> inputs)
+    {
+        var organization = await _organizationDomainService.OrganizationRepository.FindOrDefaultAsync(id);
+        if (organization == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的组织机构");
+        }
+        await _userAppService.AddOrganizationUsers(id, inputs);
+    }
 }

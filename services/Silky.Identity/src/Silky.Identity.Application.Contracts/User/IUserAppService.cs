@@ -14,7 +14,7 @@ namespace Silky.Identity.Application.Contracts.User;
 /// 用户信息服务
 /// </summary>
 [ServiceRoute]
-[Authorize(IdentityPermissions.Users.Default)]
+[Authorize]
 public interface IUserAppService
 {
     /// <summary>
@@ -63,6 +63,9 @@ public interface IUserAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
+
+    [HttpGet("{organizationId:long}/organizationuser/page")]
+    Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);
 
     /// <summary>
     /// 更新用户声明
@@ -114,7 +117,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/unlock")]
     [Authorize(IdentityPermissions.Users.UnLock)]
     Task UnLockAsync(long userId);
-
+    
     /// <summary>
     /// 修改用户密码
     /// </summary>
@@ -124,6 +127,9 @@ public interface IUserAppService
     [HttpPut("{userId:long}/password")]
     [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
+
+    //[HttpGet("{userId:long}/{organizationId:long}/position")]
+    //Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId);
 
     /// <summary>
     /// 获取指定组织机构的用户
@@ -161,4 +167,8 @@ public interface IUserAppService
     [ProhibitExtranet]
     Task<ICollection<long>> GetUserIdsAsync(long organizationId);
 
+    [ProhibitExtranet]
+    Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs);
+
+    
 }

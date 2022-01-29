@@ -124,6 +124,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
+
     public async Task<IdentityResult> SetRolesAsync(IdentityUser user, ICollection<string> roleNames)
     {
         Check.NotNull(user, nameof(user));
@@ -230,6 +231,36 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(input.PositionIds != null && input.PositionIds.Any(), p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return userPage.Adapt<PagedList<GetUserPageOutput>>();
+    }
+
+    public async Task<PagedList<GetAddOrganizationUserOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)
+    {
+        var userPage = await UserRepository
+            .Include(p => p.UserSubsidiaries)
+            .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
+            .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
+        var userOutputList = new List<GetAddOrganizationUserOutput>();
+        foreach (var user in userPage.Items) 
+        {
+            var userOutput = user.Adapt<GetAddOrganizationUserOutput>();
+            var userOrganizationPosition = user.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
+            if (userOrganizationPosition != null) 
+            {
+                userOutput.PositionId = userOrganizationPosition.PositionId;
+                userOutput.PositionName = (await _positionAppService.GetAsync(userOrganizationPosition.PositionId)).Name;
+            }
+            userOutputList.Add(userOutput);
+        }
+        return new PagedList<GetAddOrganizationUserOutput>()
+        {
+            Items = userOutputList,
+            HasNextPages = userPage.HasNextPages,
+            HasPrevPages = userPage.HasPrevPages,
+            TotalCount = userPage.TotalCount,
+            TotalPages = userPage.TotalPages,
+        };
+
     }
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
