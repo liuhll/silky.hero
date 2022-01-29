@@ -11,6 +11,7 @@ using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain;
+using Silky.Transaction.Tcc;
 
 namespace Silky.Organization.Application.Organization;
 
@@ -36,9 +37,20 @@ public class OrganizationAppService : IOrganizationAppService
         return _organizationDomainService.UpdateAsync(input);
     }
 
+    [TccTransaction(ConfirmMethod = "DeleteConfirmAsync",CancelMethod = "DeleteCancelAsync")]
     public Task DeleteAsync(long id)
     {
-        return _organizationDomainService.DeleteAsync(id);
+        return _organizationDomainService.DeleteTryAsync(id);
+    }
+
+    public async Task DeleteCancelAsync(long id)
+    {
+        
+    }
+    
+    public Task DeleteConfirmAsync(long id)
+    {
+        return _organizationDomainService.DeleteConfirmAsync(id);
     }
 
     public async Task<GetOrganizationOutput> GetAsync(long id)

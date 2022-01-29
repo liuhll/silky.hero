@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EFCore.BulkExtensions;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Core;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
@@ -16,6 +16,7 @@ using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
+using Silky.Transaction.Tcc;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
 namespace Silky.Identity.Application.User;
@@ -226,15 +227,33 @@ public class UserAppService : IUserAppService
             await UserManager.UpdateAsync(user);
         }
     }
-
+    
+    [TccTransaction(ConfirmMethod = "RemoveConfirmOrganizationUsersAsync",CancelMethod = "RemoveCancelOrganizationUsersAsync")]
     public async Task RemoveOrganizationUsersAsync(long[] organizationIds)
+    {
+        Check.NotNull(organizationIds,nameof(organizationIds));
+        var organizationUsers = await UserManager.UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => organizationIds.Contains(p.OrganizationId))
+            .ToArrayAsync();
+    }
+
+    [UnitOfWork]
+    public async Task RemoveConfirmOrganizationUsersAsync(long[] organizationIds)
     {
         var organizationUsers = await UserManager.UserSubsidiaryRepository
             .AsQueryable(false)
             .Where(p => organizationIds.Contains(p.OrganizationId))
             .ToArrayAsync();
-        await UserManager.UserSubsidiaryRepository.Context.BulkDeleteAsync(organizationUsers);
+        await UserManager.UserSubsidiaryRepository.DeleteAsync(organizationUsers);
     }
+    
+    public async Task RemoveCancelOrganizationUsersAsync(long[] organizationIds)
+    {
+        
+    }
+    
+    
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)
     //{

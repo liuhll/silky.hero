@@ -8,6 +8,7 @@ using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
+using Silky.Transaction;
 
 namespace Silky.Organization.Application.Contracts.Organization;
 
@@ -51,6 +52,7 @@ public interface IOrganizationAppService
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
     [RemoveCachingIntercept(typeof(IEnumerable<long>),"GetSelfAndChildrenOrganizationIds:{0}")]
     [Authorize(OrganizationPermissions.Organizations.Delete)]
+    [Transaction]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>

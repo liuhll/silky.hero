@@ -11,7 +11,9 @@ public interface IOrganizationDomainService : IScopedDependency
     IRepository<Organization> OrganizationRepository { get; }
     Task CreateAsync(CreateOrganizationInput input);
     Task UpdateAsync(UpdateOrganizationInput input);
-    Task DeleteAsync(long id);
+    Task DeleteTryAsync(long id);
+    Task DeleteConfirmAsync(long id);
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
     Task<IEnumerable<Organization>> GetChildrenOrganizationsAsync(long organizationId, bool includeSelf = true);
+   
 }

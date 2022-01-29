@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
+using Silky.Core.Runtime.Rpc;
+using Silky.Core.Serialization;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
@@ -15,12 +18,15 @@ public class OrganizationDomainService : IOrganizationDomainService
 {
     public IRepository<Organization> OrganizationRepository { get; }
     private readonly IUserAppService _userAppService;
+    private readonly ISerializer _serializer;
 
     public OrganizationDomainService(IRepository<Organization> organizationRepository,
-        IUserAppService userAppService)
+        IUserAppService userAppService, 
+        ISerializer serializer)
     {
         OrganizationRepository = organizationRepository;
         _userAppService = userAppService;
+        _serializer = serializer;
     }
 
     public async Task CreateAsync(CreateOrganizationInput input)
@@ -82,7 +88,7 @@ public class OrganizationDomainService : IOrganizationDomainService
     }
 
 
-    public async Task DeleteAsync(long id)
+    public async Task DeleteTryAsync(long id)
     {
 
         var organization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Id == id);
@@ -90,9 +96,18 @@ public class OrganizationDomainService : IOrganizationDomainService
         {
             throw new UserFriendlyException($"不存在Id为{id}的机构");
         }
-        var organizationAndChildrens = (await GetChildrenOrganizationsAsync(id)).ToArray();
-        await _userAppService.RemoveOrganizationUsersAsync(organizationAndChildrens.Select(p=> p.Id).ToArray());
-        await OrganizationRepository.Context.BulkDeleteAsync(organizationAndChildrens);
+        var organizationAndChildrenIds = (await GetChildrenOrganizationsAsync(id)).ToArray().Select(p=> p.Id).ToArray();
+        RpcContext.Context.SetInvokeAttachment("organizationAndChildrenIds",_serializer.Serialize(organizationAndChildrenIds));
+        await _userAppService.RemoveOrganizationUsersAsync(organizationAndChildrenIds);
+        
+    }
+
+    [UnitOfWork]
+    public async Task DeleteConfirmAsync(long id)
+    {
+        var organizationAndChildrenIds = _serializer.Deserialize<long[]>(RpcContext.Context.GetInvokeAttachment("organizationAndChildrenIds").ToString());
+        var organizations =  await OrganizationRepository.Where(p => organizationAndChildrenIds.Contains(p.Id)).ToArrayAsync();
+        await OrganizationRepository.DeleteAsync(organizations);
     }
 
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()

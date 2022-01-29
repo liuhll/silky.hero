@@ -7,6 +7,8 @@ using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
+using Silky.Transaction;
+using Silky.Transaction.Tcc;
 
 namespace Silky.Identity.Application.Contracts.User;
 
@@ -172,6 +174,7 @@ public interface IUserAppService
     Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs);
 
     [ProhibitExtranet]
+    [Transaction]
     Task RemoveOrganizationUsersAsync(long[] organizationIds);
 
 
