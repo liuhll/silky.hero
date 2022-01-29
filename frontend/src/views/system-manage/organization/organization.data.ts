@@ -6,12 +6,12 @@ export const userColumns: BasicColumn[] = [
   {
     title: '用户名',
     dataIndex: 'userName',
-    width: 120,
+    width: 100,
   },
   {
     title: '真实姓名',
     dataIndex: 'realName',
-    width: 120,
+    width: 100,
   },
   {
     title: '邮箱',
@@ -21,12 +21,17 @@ export const userColumns: BasicColumn[] = [
   {
     title: '手机',
     dataIndex: 'telPhone',
-    width: 120,
+    width: 100,
   },
   {
     title: '工号',
     dataIndex: 'jobNumber',
-    width: 120,
+    width: 100,
+  },
+  {
+    title: '岗位',
+    dataIndex: 'positionName',
+    width: 100,
   },
 ]
 
