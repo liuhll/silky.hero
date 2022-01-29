@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
@@ -80,25 +81,18 @@ public class OrganizationDomainService : IOrganizationDomainService
         await OrganizationRepository.UpdateAsync(organization);
     }
 
+
     public async Task DeleteAsync(long id)
     {
-        var organization = await OrganizationRepository.Include(p => p.Children).FirstOrDefaultAsync(p => p.Id == id);
+
+        var organization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
             throw new UserFriendlyException($"不存在Id为{id}的机构");
         }
-
-        if (organization.Children.Any())
-        {
-            throw new UserFriendlyException($"请先删除下属机构");
-        }
-
-        if (await _userAppService.HasOrganizationUsersAsync(id))
-        {
-            throw new UserFriendlyException($"该机构存在用户,无法删除");
-        }
-
-        await OrganizationRepository.DeleteAsync(organization);
+        var organizationAndChildrens = (await GetChildrenOrganizationsAsync(id)).ToArray();
+        await _userAppService.RemoveOrganizationUsersAsync(organizationAndChildrens.Select(p=> p.Id).ToArray());
+        await OrganizationRepository.Context.BulkDeleteAsync(organizationAndChildrens);
     }
 
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Silky.Organization.EntityFrameworkCore.DbContexts;
 
@@ -14,7 +15,10 @@ namespace Silky.OrganizationHost
                 .AddObjectMapper();
             
             services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultDbContext>(); },
+                options => { options.AddDbPool<DefaultDbContext>(providerName: default, optionBuilder: opt =>
+                {
+                    opt.UseBatchEF_MySQLPomelo();
+                }); },
                 "Silky.Organization.Database.Migrations");
         }
     }

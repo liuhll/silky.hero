@@ -102,6 +102,7 @@ public interface IUserAppService
     [GetCachingIntercept("roles:userId:{0}")]
     Task<GetUserRoleOutput> GetRolesAsync([CacheKey(0)]long userId);
 
+   
     /// <summary>
     /// 根据id锁定用户账号
     /// </summary>
@@ -170,5 +171,8 @@ public interface IUserAppService
     [ProhibitExtranet]
     Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs);
 
-    
+    [ProhibitExtranet]
+    Task RemoveOrganizationUsersAsync(long[] organizationIds);
+
+
 }

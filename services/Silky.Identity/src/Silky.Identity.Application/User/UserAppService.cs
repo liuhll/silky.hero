@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -224,6 +225,15 @@ public class UserAppService : IUserAppService
             user.AddUserSubsidiaries(organizationId, input.PositionId);
             await UserManager.UpdateAsync(user);
         }
+    }
+
+    public async Task RemoveOrganizationUsersAsync(long[] organizationIds)
+    {
+        var organizationUsers = await UserManager.UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => organizationIds.Contains(p.OrganizationId))
+            .ToArrayAsync();
+        await UserManager.UserSubsidiaryRepository.Context.BulkDeleteAsync(organizationUsers);
     }
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)
