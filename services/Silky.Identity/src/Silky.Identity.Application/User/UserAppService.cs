@@ -15,7 +15,6 @@ using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
-using Silky.Position.Application.Contracts.Position;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
 namespace Silky.Identity.Application.User;
