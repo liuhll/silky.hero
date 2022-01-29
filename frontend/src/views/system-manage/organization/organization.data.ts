@@ -1,9 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
-import { Tag } from 'ant-design-vue';
-import { Icon } from '/@/components/Icon';
-import { getPositionList } from '/@/api/position'
 
 export const userColumns: BasicColumn[] = [
   {
@@ -53,15 +50,7 @@ export const organizationUserColumns: BasicColumn[] = [
   {
     title: '岗位',
     dataIndex: 'positionId',
-    edit: true,
-    editComponent: 'ApiSelect',
-    editComponentProps: {
-      api: getPositionList,
-      labelField: 'name',
-      valueField: 'id',
-      placeholder: '请选择岗位',
-
-    },
+    slots: { customRender: 'position' },
     width: 200,
   },
 ]

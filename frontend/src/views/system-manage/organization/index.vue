@@ -27,7 +27,7 @@
             <template #toolbar>
               <a-button
                 type="primary"
-                @click="handleAddOrganizationUsers"
+                @click="handleAddOrganizationUsersModal"
                 v-if="canAddOrganizationUsers"
                 >添加成员</a-button
               >
@@ -51,8 +51,11 @@
         </Card>
       </Col>
     </Row>
-    <OrganizationModal @register="registerOrganizationModal" @success="handleSuccess" />
-    <OrganizationUserModal @register="registerOrganizationUserModal" />
+    <OrganizationModal @register="registerOrganizationModal" @success="handleCreateOrganization" />
+    <OrganizationUserModal
+      @register="registerOrganizationUserModal"
+      @success="handleAddOrganizationUsers"
+    />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -70,6 +73,7 @@ import {
   updateOrganization,
   createOrganization,
   deleteOrganization,
+  addOrganizationUsers,
 } from '/@/api/organization';
 import { treeMap } from '/@/utils/helper/treeHelper';
 import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
@@ -157,7 +161,7 @@ export default defineComponent({
       }
     }
 
-    function handleAddOrganizationUsers() {
+    function handleAddOrganizationUsersModal() {
       if (canAddOrganizationUsers) {
         openOrganizationUserModal(true, {
           id: selectedOrganizationId,
@@ -186,7 +190,7 @@ export default defineComponent({
         },
       });
     }
-    async function handleSuccess(data: any) {
+    async function handleCreateOrganization(data: any) {
       const { isUpdate, values } = data;
       if (isUpdate) {
         await updateOrganization(values);
@@ -204,6 +208,21 @@ export default defineComponent({
         await setCanAddOrganizationUsers(values.id);
       }
     }
+
+    async function handleAddOrganizationUsers(data: any) {
+      if (data.addUsers.length > 0) {
+        await addOrganizationUsers(data);
+        reload();
+        notification.success({
+          message: '增加组织机构用户成功',
+        });
+      } else {
+        notification.warning({
+          message: '您没有选择任何要添加的用户',
+        });
+      }
+    }
+
     function getRightMenuList(node: any): ContextMenuItem[] {
       return [
         {
@@ -257,8 +276,9 @@ export default defineComponent({
       registerTable,
       registerOrganizationModal,
       registerOrganizationUserModal,
-      handleSuccess,
+      handleCreateOrganization,
       handleCreateOrganizationRoot,
+      handleAddOrganizationUsersModal,
       handleAddOrganizationUsers,
     };
   },

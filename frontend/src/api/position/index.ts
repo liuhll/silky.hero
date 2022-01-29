@@ -8,6 +8,6 @@ enum Api {
 }
 
 
-export const getPositionList = (query) => {
-  return defHttp.get<GetPositionModel[]>({ url: Api.GetPositionList, params: { naem: query.name } });
+export const getPositionList = (query: object) => {
+  return defHttp.get<GetPositionModel[]>({ url: Api.GetPositionList, params: { name: query.name } });
 }

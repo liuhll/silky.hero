@@ -54,3 +54,11 @@ export const getOrganizationUserIds = (id: number) => {
   });
 }
 
+
+export const addOrganizationUsers = (requestParams) => {
+  return defHttp.put({
+    url: `/organization/${requestParams.organizationUserId}/users`,
+    params: requestParams.addUsers,
+  });
+}
+

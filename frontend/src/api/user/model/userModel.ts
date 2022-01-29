@@ -11,3 +11,8 @@ export interface GetUserPageModel {
   jobNumber: string;
   createdTime: Date;
 }
+
+export interface GetUserPositionModel {
+  id: number;
+  name: string;
+}
