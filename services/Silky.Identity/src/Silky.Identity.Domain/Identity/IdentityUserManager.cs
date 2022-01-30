@@ -15,6 +15,7 @@ using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Identity.Domain.Extensions;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
@@ -229,7 +230,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),p=> p.UserSubsidiaries.Any(q=> input.OrganizationIds.Contains(q.OrganizationId)))
             .Where(input.PositionIds != null && input.PositionIds.Any(), p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
             .ToPagedListAsync(input.PageIndex, input.PageSize);
-        return userPage.Adapt<PagedList<GetUserPageOutput>>();
+        var userPageOutput = userPage.Adapt<PagedList<GetUserPageOutput>>();
+        await userPageOutput.Items.SetUserSubsidiaries();
+        return userPageOutput;
     }
 
     public async Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)

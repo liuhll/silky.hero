@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.User.Dtos;
@@ -26,4 +27,8 @@ public class GetUserPageOutput
     public string JobNumber { get; set; }
 
     public DateTimeOffset CreatedTime { get; set; }
+    
+    public DateTimeOffset UpdatedTime { get; set; }
+
+    public ICollection<GetUserSubsidiaryOutput> UserSubsidiaries { get; set; }
 }

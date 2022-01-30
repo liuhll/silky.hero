@@ -8,7 +8,6 @@ using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 using Silky.Transaction;
-using Silky.Transaction.Tcc;
 
 namespace Silky.Identity.Application.Contracts.User;
 
