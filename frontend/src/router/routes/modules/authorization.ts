@@ -7,13 +7,21 @@ const authorization: AppRouteModule = {
   path: '/authorization',
   name: 'Authorization',
   component: LAYOUT,
-  redirect: '/authorization/organization',
+  redirect: '/authorization/user',
   meta: {
     icon: 'ion:key-outline',
     title: '权限管理',
     orderNo: 1000,
   },
   children: [
+    {
+      path: 'user',
+      name: 'User',
+      component: () => import('/@/views/authorization/user/index.vue'),
+      meta: {
+        title: '用户管理',
+      },
+    },
     {
       path: 'organization',
       name: 'Organization',

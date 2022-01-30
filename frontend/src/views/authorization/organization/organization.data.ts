@@ -33,8 +33,7 @@ export const userColumns: BasicColumn[] = [
     dataIndex: 'positionName',
     width: 100,
   },
-]
-
+];
 
 export const organizationUserColumns: BasicColumn[] = [
   {
@@ -58,8 +57,7 @@ export const organizationUserColumns: BasicColumn[] = [
     slots: { customRender: 'position' },
     width: 200,
   },
-]
-
+];
 
 export const organizationFormSchema: FormSchema[] = [
   {
@@ -95,6 +93,5 @@ export const organizationFormSchema: FormSchema[] = [
     label: '备注',
     component: 'Input',
     helpMessage: ['请输入备注'],
-  }
-]
-
+  },
+];
