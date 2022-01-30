@@ -1,5 +1,11 @@
 import { defHttp } from '/@/utils/http/axios';
-import { GetOrgizationTreeModel, GetOrgizationUserModel, GetOrgizationModel, UpdateOrgizationModel, CreateOrgizationModel } from './model/organizationModel';
+import {
+  GetOrgizationTreeModel,
+  GetOrgizationUserModel,
+  GetOrgizationModel,
+  UpdateOrgizationModel,
+  CreateOrgizationModel,
+} from './model/organizationModel';
 import { BasicFetchResult } from '/@/api/model/baseModel';
 
 enum Api {
@@ -9,7 +15,7 @@ enum Api {
 
 export const getOrganizationTree = () => {
   return defHttp.get<GetOrgizationTreeModel[]>({ url: Api.GetOrganizationTree });
-}
+};
 
 export const getOrganizationUserPageList = (requestParams) => {
   return defHttp.get<BasicFetchResult<GetOrgizationUserModel>>({
@@ -17,48 +23,52 @@ export const getOrganizationUserPageList = (requestParams) => {
     params: {
       pageIndex: requestParams.pageIndex,
       pageSize: requestParams.pageSize,
-    }
+    },
   });
-}
+};
 
 export const getOrganizationById = (id) => {
   return defHttp.get<GetOrgizationModel>({
     url: `/organization/${id}`,
   });
-}
+};
 
 export const updateOrganization = (params: UpdateOrgizationModel) => {
   return defHttp.put({
     url: Api.Organization,
     params: params,
   });
-}
-
+};
 
 export const createOrganization = (params: CreateOrgizationModel) => {
   return defHttp.post({
     url: Api.Organization,
     params: params,
   });
-}
+};
 
 export const deleteOrganization = (id: number) => {
   return defHttp.delete({
     url: `/organization/${id}`,
   });
-}
+};
 
 export const getOrganizationUserIds = (id: number) => {
   return defHttp.get({
     url: `/organization/${id}/userids`,
   });
-}
-
+};
 
 export const addOrganizationUsers = (requestParams) => {
   return defHttp.put({
     url: `/organization/${requestParams.organizationUserId}/users`,
     params: requestParams.addUsers,
   });
-}
+};
 
+export const removeOrganizationUsers = (organizationUserId: number, userIds: number[]) => {
+  return defHttp.delete({
+    url: `/organization/${organizationUserId}/users`,
+    params: userIds,
+  });
+};

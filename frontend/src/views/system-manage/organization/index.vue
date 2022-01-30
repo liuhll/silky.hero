@@ -38,10 +38,10 @@
                   {
                     icon: 'ant-design:delete-outlined',
                     color: 'error',
-                    tooltip: '删除此账号',
+                    tooltip: '移除此账号',
                     popConfirm: {
-                      title: '是否确认删除',
-                      confirm: handleDelete.bind(null, record),
+                      title: '是否确认移除该用户',
+                      confirm: handleRemoveUser.bind(null, record),
                     },
                   },
                 ]"
@@ -74,6 +74,7 @@
     createOrganization,
     deleteOrganization,
     addOrganizationUsers,
+    removeOrganizationUsers,
   } from '/@/api/organization';
   import { treeMap } from '/@/utils/helper/treeHelper';
   import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
@@ -121,13 +122,20 @@
         return table;
       }
 
-      const [registerTable, { reload, updateTableDataRecord }] = useTable({
+      const [registerTable, { reload }] = useTable({
         rowKey: 'id',
         columns: userColumns,
         api: getOrganizationUserPageList,
         immediate: false,
         locale: {
           emptyText: '选择一个组织机构来查看成员',
+        },
+        showTableSetting: true,
+        actionColumn: {
+          width: 100,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
         },
       });
       onMounted(async () => {
@@ -225,6 +233,14 @@
         }
       }
 
+      async function handleRemoveUser(record: Recordable) {
+        await removeOrganizationUsers(unref(selectedOrganizationId),[record.id]);
+        reload();
+        notification.success({
+          message: `移除用户${record.userName}成功`,
+        });
+      }
+
       function getRightMenuList(node: any): ContextMenuItem[] {
         return [
           {
@@ -285,6 +301,7 @@
         handleCreateOrganizationRoot,
         handleAddOrganizationUsersModal,
         handleAddOrganizationUsers,
+        handleRemoveUser,
       };
     },
   });
