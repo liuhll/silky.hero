@@ -59,231 +59,233 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-import { PageWrapper } from '/@/components/Page';
-import { Card, Row, Col } from 'ant-design-vue';
-import { useMessage } from '/@/hooks/web/useMessage';
-import { BasicTable, useTable, TableAction, TableActionType } from '/@/components/Table';
-import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
-import { defineComponent, ref, unref, onMounted, reactive } from 'vue';
-import { Status } from '/@/utils/status';
-import {
-  getOrganizationTree,
-  getOrganizationUserPageList,
-  getOrganizationById,
-  updateOrganization,
-  createOrganization,
-  deleteOrganization,
-  addOrganizationUsers,
-} from '/@/api/organization';
-import { treeMap } from '/@/utils/helper/treeHelper';
-import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
-import { userColumns } from './organization.data';
-import { useModal } from '/@/components/Modal';
-import OrganizationModal from './OrganizationModal.vue';
-import OrganizationUserModal from './OrganizationUserModal.vue';
+  import { PageWrapper } from '/@/components/Page';
+  import { Card, Row, Col } from 'ant-design-vue';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { BasicTable, useTable, TableAction, TableActionType } from '/@/components/Table';
+  import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
+  import { defineComponent, ref, unref, onMounted, reactive } from 'vue';
+  import { Status } from '/@/utils/status';
+  import {
+    getOrganizationTree,
+    getOrganizationUserPageList,
+    getOrganizationById,
+    updateOrganization,
+    createOrganization,
+    deleteOrganization,
+    addOrganizationUsers,
+  } from '/@/api/organization';
+  import { treeMap } from '/@/utils/helper/treeHelper';
+  import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
+  import { userColumns } from './organization.data';
+  import { useModal } from '/@/components/Modal';
+  import OrganizationModal from './OrganizationModal.vue';
+  import OrganizationUserModal from './OrganizationUserModal.vue';
 
-export default defineComponent({
-  name: 'OrganizationManagement',
-  components: {
-    Card,
-    Row,
-    Col,
-    PageWrapper,
-    BasicTree,
-    BasicTable,
-    TableAction,
-    OrganizationModal,
-    OrganizationUserModal,
-  },
-  setup() {
-    const treeRef = ref<Nullable<TreeActionType>>(null);
-    const tableRef = ref<Nullable<TableActionType>>(null);
-    const treeData = ref<TreeItem[]>([]);
-    const canAddOrganizationUsers = ref<boolean>(false);
-    const selectedOrganizationId = ref<number | undefined>();
-    const searchInfo = reactive<Recordable>({});
-    const [registerOrganizationModal, { openModal: openOrganizationModal }] = useModal();
-    const [registerOrganizationUserModal, { openModal: openOrganizationUserModal }] = useModal();
-    const { createConfirm, notification } = useMessage();
-    function getTree() {
-      const tree = unref(treeRef);
-      if (!tree) {
-        throw new Error('tree is null!');
-      }
-      return tree;
-    }
-
-    function getTable() {
-      const table = unref(tableRef);
-      if (!table) {
-        throw new Error('table is null!');
-      }
-      return table;
-    }
-
-    const [registerTable, { reload, updateTableDataRecord }] = useTable({
-      rowKey: 'id',
-      columns: userColumns,
-      api: getOrganizationUserPageList,
-      immediate: false,
-      locale: {
-        emptyText: '选择一个组织机构来查看成员',
-      },
-    });
-    onMounted(async () => {
-      await loadOrganizationTreeData();
-      getTree().expandAll(true);
-    });
-
-    async function handleSelect(keys: number[]) {
-      if (keys.length > 0) {
-        const orgId = keys[0];
-        if (orgId != unref(selectedOrganizationId)) {
-          selectedOrganizationId.value = orgId;
-          searchInfo.id = orgId;
-          getTable().setProps({
-            locale: {
-              emptyText: '暂无数据',
-            },
-          });
-          await setCanAddOrganizationUsers(orgId);
-          reload();
+  export default defineComponent({
+    name: 'OrganizationManagement',
+    components: {
+      Card,
+      Row,
+      Col,
+      PageWrapper,
+      BasicTree,
+      BasicTable,
+      TableAction,
+      OrganizationModal,
+      OrganizationUserModal,
+    },
+    setup() {
+      const treeRef = ref<Nullable<TreeActionType>>(null);
+      const tableRef = ref<Nullable<TableActionType>>(null);
+      const treeData = ref<TreeItem[]>([]);
+      const canAddOrganizationUsers = ref<boolean>(false);
+      const selectedOrganizationId = ref<number | undefined>();
+      const searchInfo = reactive<Recordable>({});
+      const [registerOrganizationModal, { openModal: openOrganizationModal }] = useModal();
+      const [registerOrganizationUserModal, { openModal: openOrganizationUserModal }] = useModal();
+      const { createConfirm, notification } = useMessage();
+      function getTree() {
+        const tree = unref(treeRef);
+        if (!tree) {
+          throw new Error('tree is null!');
         }
+        return tree;
       }
-    }
 
-    async function setCanAddOrganizationUsers(orgId: number) {
-      const orgInfo = await getOrganizationById(orgId);
-      if (orgInfo.status == Status.Valid) {
-        canAddOrganizationUsers.value = true;
-      } else {
-        canAddOrganizationUsers.value = false;
+      function getTable() {
+        const table = unref(tableRef);
+        if (!table) {
+          throw new Error('table is null!');
+        }
+        return table;
       }
-    }
 
-    function handleAddOrganizationUsersModal() {
-      if (unref(canAddOrganizationUsers)) {
-        openOrganizationUserModal(true, {
-          id: selectedOrganizationId,
-        });
-      }
-    }
-
-    function handleCreateOrganizationRoot() {
-      openOrganizationModal(true, {
-        isUpdate: false,
-        id: undefined,
-      });
-    }
-
-    async function loadOrganizationTreeData() {
-      const organizationTreeList = await getOrganizationTree();
-      treeData.value = treeMap(organizationTreeList, {
-        conversion: (node: GetOrgizationTreeModel) => {
-          const orgIcon =
-            node.status == Status.Valid ? 'ant-design:folder-outlined' : 'ant-design:folder-filled';
-          return {
-            title: node.name,
-            key: node.id,
-            icon: orgIcon,
-          };
+      const [registerTable, { reload, updateTableDataRecord }] = useTable({
+        rowKey: 'id',
+        columns: userColumns,
+        api: getOrganizationUserPageList,
+        immediate: false,
+        locale: {
+          emptyText: '选择一个组织机构来查看成员',
         },
       });
-    }
-    async function handleCreateOrganization(data: any) {
-      const { isUpdate, values } = data;
-      if (isUpdate) {
-        await updateOrganization(values);
-        notification.success({
-          message: '更新组织机构成功',
-        });
-      } else {
-        await createOrganization(values);
-        notification.success({
-          message: '创建组织机构成功',
-        });
-      }
-      await loadOrganizationTreeData();
-      if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
-        await setCanAddOrganizationUsers(values.id);
-      }
-    }
+      onMounted(async () => {
+        await loadOrganizationTreeData();
+        getTree().expandAll(true);
+      });
 
-    async function handleAddOrganizationUsers(data: any) {
-      if (data.addUsers.length > 0) {
-        await addOrganizationUsers(data);
-        reload();
-        notification.success({
-          message: '增加组织机构用户成功',
-        });
-      } else {
-        notification.warning({
-          message: '您没有选择任何要添加的用户',
-        });
-      }
-    }
-
-    function getRightMenuList(node: any): ContextMenuItem[] {
-      return [
-        {
-          label: '编辑',
-          handler: () => {
-            openOrganizationModal(true, {
-              isUpdate: true,
-              id: node.eventKey,
-            });
-          },
-          icon: 'clarity:note-edit-line',
-        },
-        {
-          label: '添加子机构',
-          handler: () => {
-            openOrganizationModal(true, {
-              isUpdate: false,
-              id: node.eventKey,
-            });
-          },
-          icon: 'bi:plus',
-        },
-        {
-          label: '删除',
-          handler: () => {
-            createConfirm({
-              title: '删除',
-              content: '您是否确认删除该机构',
-              onOk: () => {
-                deleteOrganization(node.eventKey).then(async () => {
-                  notification.success({
-                    message: '删除机构成功',
-                  });
-                  selectedOrganizationId.value = undefined;
-                  canAddOrganizationUsers.value = false;
-                  await loadOrganizationTreeData();
-                  reload();
-                });
+      async function handleSelect(keys: number[]) {
+        if (keys.length > 0) {
+          const orgId = keys[0];
+          if (orgId != unref(selectedOrganizationId)) {
+            selectedOrganizationId.value = orgId;
+            searchInfo.id = orgId;
+            getTable().setProps({
+              locale: {
+                emptyText: '暂无数据',
               },
             });
+            await setCanAddOrganizationUsers(orgId);
+            reload();
+          }
+        }
+      }
+
+      async function setCanAddOrganizationUsers(orgId: number) {
+        const orgInfo = await getOrganizationById(orgId);
+        if (orgInfo.status == Status.Valid) {
+          canAddOrganizationUsers.value = true;
+        } else {
+          canAddOrganizationUsers.value = false;
+        }
+      }
+
+      function handleAddOrganizationUsersModal() {
+        if (unref(canAddOrganizationUsers)) {
+          openOrganizationUserModal(true, {
+            id: selectedOrganizationId,
+          });
+        }
+      }
+
+      function handleCreateOrganizationRoot() {
+        openOrganizationModal(true, {
+          isUpdate: false,
+          id: undefined,
+        });
+      }
+
+      async function loadOrganizationTreeData() {
+        const organizationTreeList = await getOrganizationTree();
+        treeData.value = treeMap(organizationTreeList, {
+          conversion: (node: GetOrgizationTreeModel) => {
+            const orgIcon =
+              node.status == Status.Valid
+                ? 'ant-design:folder-outlined'
+                : 'ant-design:folder-filled';
+            return {
+              title: node.name,
+              key: node.id,
+              icon: orgIcon,
+            };
           },
-          icon: 'ant-design:delete-outlined',
-        },
-      ];
-    }
-    return {
-      treeData,
-      treeRef,
-      tableRef,
-      canAddOrganizationUsers,
-      searchInfo,
-      getRightMenuList,
-      handleSelect,
-      registerTable,
-      registerOrganizationModal,
-      registerOrganizationUserModal,
-      handleCreateOrganization,
-      handleCreateOrganizationRoot,
-      handleAddOrganizationUsersModal,
-      handleAddOrganizationUsers,
-    };
-  },
-});
+        });
+      }
+      async function handleCreateOrganization(data: any) {
+        const { isUpdate, values } = data;
+        if (isUpdate) {
+          await updateOrganization(values);
+          notification.success({
+            message: '更新组织机构成功',
+          });
+        } else {
+          await createOrganization(values);
+          notification.success({
+            message: '创建组织机构成功',
+          });
+        }
+        await loadOrganizationTreeData();
+        if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
+          await setCanAddOrganizationUsers(values.id);
+        }
+      }
+
+      async function handleAddOrganizationUsers(data: any) {
+        if (data.addUsers.length > 0) {
+          await addOrganizationUsers(data);
+          reload();
+          notification.success({
+            message: '增加组织机构用户成功',
+          });
+        } else {
+          notification.warning({
+            message: '您没有选择任何要添加的用户',
+          });
+        }
+      }
+
+      function getRightMenuList(node: any): ContextMenuItem[] {
+        return [
+          {
+            label: '编辑',
+            handler: () => {
+              openOrganizationModal(true, {
+                isUpdate: true,
+                id: node.eventKey,
+              });
+            },
+            icon: 'clarity:note-edit-line',
+          },
+          {
+            label: '添加子机构',
+            handler: () => {
+              openOrganizationModal(true, {
+                isUpdate: false,
+                id: node.eventKey,
+              });
+            },
+            icon: 'bi:plus',
+          },
+          {
+            label: '删除',
+            handler: () => {
+              createConfirm({
+                title: '删除',
+                content: '您是否确认删除该机构',
+                onOk: () => {
+                  deleteOrganization(node.eventKey).then(async () => {
+                    notification.success({
+                      message: '删除机构成功',
+                    });
+                    selectedOrganizationId.value = undefined;
+                    canAddOrganizationUsers.value = false;
+                    await loadOrganizationTreeData();
+                    reload();
+                  });
+                },
+              });
+            },
+            icon: 'ant-design:delete-outlined',
+          },
+        ];
+      }
+      return {
+        treeData,
+        treeRef,
+        tableRef,
+        canAddOrganizationUsers,
+        searchInfo,
+        getRightMenuList,
+        handleSelect,
+        registerTable,
+        registerOrganizationModal,
+        registerOrganizationUserModal,
+        handleCreateOrganization,
+        handleCreateOrganizationRoot,
+        handleAddOrganizationUsersModal,
+        handleAddOrganizationUsers,
+      };
+    },
+  });
 </script>
