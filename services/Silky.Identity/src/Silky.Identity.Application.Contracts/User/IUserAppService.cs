@@ -133,7 +133,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/password")]
     [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
-
+    
     /// <summary>
     /// 获取指定组织机构的用户
     /// </summary>
@@ -172,6 +172,9 @@ public interface IUserAppService
 
     [ProhibitExtranet]
     Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs);
+
+    [ProhibitExtranet]
+    Task RemoveOrganizationUsers(long organizationId, long[] userIds);
 
     [ProhibitExtranet]
     [Transaction]

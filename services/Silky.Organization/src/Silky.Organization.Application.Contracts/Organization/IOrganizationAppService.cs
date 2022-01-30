@@ -88,8 +88,23 @@ public interface IOrganizationAppService
     [HttpGet("{id:long}/userids")]
     Task<ICollection<long>> GetUserIdsAsync(long id);
 
+    /// <summary>
+    /// 添加指定组织机构用户
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="inputs"></param>
+    /// <returns></returns>
     [HttpPut("{id:long}/users")]
     Task AddUsers(long id,ICollection<AddOrganizationUserInput> inputs);
+
+    /// <summary>
+    /// 移除指定组织机构用户
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="userIds"></param>
+    /// <returns></returns>
+    [HttpDelete("{id:long}/users")]
+    Task RemoveUsers(long id, long[] userIds);
 
     /// <summary>
     /// 获取组织机构树

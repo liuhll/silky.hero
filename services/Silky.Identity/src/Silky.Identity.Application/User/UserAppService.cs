@@ -252,8 +252,18 @@ public class UserAppService : IUserAppService
     {
         
     }
-    
-    
+
+    [UnitOfWork]
+    public async Task RemoveOrganizationUsers(long organizationId, long[] userIds)
+    {
+        var userSubsidiaries = await UserManager.UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => p.OrganizationId == organizationId && userIds.Contains(p.UserId))
+            .ToArrayAsync();
+        await UserManager.UserSubsidiaryRepository.DeleteAsync(userSubsidiaries);
+    }
+
+
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)
     //{

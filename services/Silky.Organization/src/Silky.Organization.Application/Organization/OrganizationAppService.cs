@@ -114,4 +114,14 @@ public class OrganizationAppService : IOrganizationAppService
         }
         await _userAppService.AddOrganizationUsers(id, inputs);
     }
+
+    public async Task RemoveUsers(long id, long[] userIds)
+    {
+        var organization = await _organizationDomainService.OrganizationRepository.FindOrDefaultAsync(id);
+        if (organization == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的组织机构");
+        }
+        await _userAppService.RemoveOrganizationUsers(id, userIds);
+    }
 }
