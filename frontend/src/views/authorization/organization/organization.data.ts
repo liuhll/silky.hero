@@ -2,6 +2,12 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 
+import { getOrganizationTree } from '/@/api/organization';
+import { Status } from '/@/utils/status';
+import { treeMap } from '/@/utils/helper/treeHelper';
+import { TreeItem } from '/@/components/Tree';
+import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
+
 export const userColumns: BasicColumn[] = [
   {
     title: '用户名',
@@ -95,3 +101,17 @@ export const organizationFormSchema: FormSchema[] = [
     helpMessage: ['请输入备注'],
   },
 ];
+
+export const getOrganizationTreeList = async (): Promise<TreeItem[]> => {
+  const organizationTreeList = await getOrganizationTree();
+  return treeMap(organizationTreeList, {
+    conversion: (node: GetOrgizationTreeModel) => {
+      return {
+        title: node.name,
+        key: node.id,
+        value: node.id,
+        disabled: node.status == Status.Invalid,
+      };
+    },
+  });
+};

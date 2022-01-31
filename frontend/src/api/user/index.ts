@@ -4,6 +4,7 @@ import { GetUserPageModel, GetUserPositionModel } from './model/userModel';
 
 enum Api {
   GetUserPageList = '/user/page',
+  CreateUser = '/user',
 }
 
 export const getUserPageList = (requestParams) => {
@@ -22,5 +23,12 @@ export const getOrganizationUserPage = (requestParams) => {
       userName: requestParams.userName,
       realName: requestParams.realName,
     },
+  });
+};
+
+export const createUser = (requestParams) => {
+  return defHttp.post({
+    url: Api.CreateUser,
+    params: requestParams,
   });
 };

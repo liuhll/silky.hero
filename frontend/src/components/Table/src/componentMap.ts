@@ -7,6 +7,7 @@ import {
   Switch,
   DatePicker,
   TimePicker,
+  TreeSelect,
 } from 'ant-design-vue';
 import type { ComponentType } from './types/componentType';
 import { ApiSelect, ApiTreeSelect } from '/@/components/Form';
@@ -22,6 +23,7 @@ componentMap.set('Switch', Switch);
 componentMap.set('Checkbox', Checkbox);
 componentMap.set('DatePicker', DatePicker);
 componentMap.set('TimePicker', TimePicker);
+componentMap.set('TreeSelect', TreeSelect);
 
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component);

@@ -53,6 +53,8 @@
   import { omit, pick, set } from 'lodash-es';
   import { treeToList } from '/@/utils/helper/treeHelper';
   import { Spin } from 'ant-design-vue';
+  import { TreeItem } from '/@/components/Tree';
+  import { findNode } from '/@/utils/helper/treeHelper';
 
   export default defineComponent({
     name: 'EditableCell',
@@ -129,20 +131,24 @@
         const { editComponentProps, editValueMap } = props.column;
 
         const value = unref(currentValueRef);
-
         if (editValueMap && isFunction(editValueMap)) {
           return editValueMap(value);
         }
 
         const component = unref(getComponent);
-        if (!component.includes('Select')) {
-          return value;
+        if (component == 'Select' || component == 'ApiSelect') {
+          const options: LabelValueOptions =
+            editComponentProps?.options ?? (unref(optionsRef) || []);
+          const option = options.find((item) => `${item.value}` === `${value}`);
+          return option?.label ?? value;
         }
-
-        const options: LabelValueOptions = editComponentProps?.options ?? (unref(optionsRef) || []);
-        const option = options.find((item) => `${item.value}` === `${value}`);
-
-        return option?.label ?? value;
+        if (component == 'TreeSelect' || component == 'ApiTreeSelect') {
+          const treeDataList: TreeItem[] =
+            editComponentProps?.treeData ?? (unref(optionsRef) || []);
+          const treeDataItem = findNode(treeDataList, (item) => `${item.key}` === `${value}`);
+          return treeDataItem?.title ?? value;
+        }
+        return value;
       });
 
       const getWrapperStyle = computed((): CSSProperties => {

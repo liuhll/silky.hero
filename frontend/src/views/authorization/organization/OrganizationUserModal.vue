@@ -33,9 +33,7 @@
   import { getOrganizationUserIds, getOrganizationById } from '/@/api/organization';
   import { GetOrgizationModel } from '/@/api/organization/model/organizationModel';
   import { organizationUserColumns } from './organization.data';
-  import { getPositionList } from '/@/api/position';
-  import { omit } from 'lodash-es';
-  import { Status } from '/@/utils/status';
+  import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { useMessage } from '/@/hooks/web/useMessage';
 
   type OptionsItem = { label: string; value: string; disabled?: boolean };
@@ -89,18 +87,7 @@
         var organizationUserIds = await getOrganizationUserIds(data.id);
         selectedOrganizationUserIds.value = organizationUserIds;
         setSelectedRowKeys(organizationUserIds);
-        const positionList = await getPositionList({});
-        positionOptions.value = positionList.reduce((prev, next: Recordable) => {
-          if (next) {
-            prev.push({
-              ...omit(next, ['name', 'id']),
-              label: next['name'],
-              value: next['id'],
-              disabled: next['status'] === Status.Invalid,
-            });
-          }
-          return prev;
-        }, [] as OptionsItem[]);
+        positionOptions.value = await getPositionOptions({});
         reload();
       });
 
@@ -110,8 +97,6 @@
           const selectedRows = getTableAction().getSelectRows();
           const addUsers = selectedRows.map((item) => {
             if (!item.positionId) {
-              debugger;
-
               notification.warning({
                 message: `请先为用户${item.userName}选择职位信息`,
               });
