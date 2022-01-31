@@ -248,6 +248,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
             .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),p=> p.UserSubsidiaries.Any(q=> input.OrganizationIds.Contains(q.OrganizationId)))
             .Where(input.PositionIds != null && input.PositionIds.Any(), p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
+            .OrderByDescending(p=> p.CreatedTime)
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         var userPageOutput = userPage.Adapt<PagedList<GetUserPageOutput>>();
         await userPageOutput.Items.SetUserSubsidiaries();
