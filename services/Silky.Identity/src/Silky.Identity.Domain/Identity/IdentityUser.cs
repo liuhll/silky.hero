@@ -6,6 +6,7 @@ using System.Security.Claims;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core;
+using Silky.Core.Exceptions;
 using Silky.Core.Extensions.Collections.Generic;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Identity.Domain.Shared;
@@ -247,6 +248,13 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
                 positionId,
                 TenantId
             )
+        );
+    }
+
+    public bool IsInUserOrganization(long organizationId)
+    {
+        return UserSubsidiaries.Any(
+            us => us.OrganizationId == organizationId
         );
     }
 

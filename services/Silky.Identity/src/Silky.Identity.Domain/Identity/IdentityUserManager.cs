@@ -86,6 +86,17 @@ public class IdentityUserManager : UserManager<IdentityUser>
         Check.NotNull(user, nameof(user));
         Check.NotNull(userSubsidiaries, nameof(userSubsidiaries));
 
+        var userOrganizationGroup = userSubsidiaries.GroupBy(p => p.OrganizationId)
+            .Select(p => new { OrganizationId = p.Key, Count = p.ToArray().Length }).Where(p=> p.Count > 1)
+            .ToArray();
+        if (userOrganizationGroup.Any())
+        {
+            return IdentityResult.Failed(new IdentityError()
+            {
+                Code = "OrganizationRepeat",
+                Description = "用户所在部门不允许重复"
+            });
+        }
         foreach (var userSubsidiary in userSubsidiaries)
         {
             if (!await _organizationAppService.HasOrganizationAsync(userSubsidiary.OrganizationId))
@@ -157,6 +168,14 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         foreach (var userSubsidiary in userSubsidiaries)
         {
+            if (user.IsInUserOrganization(userSubsidiary.OrganizationId))
+            {
+                return IdentityResult.Failed(new IdentityError()
+                {
+                    Code = "OrganizationRepeat",
+                    Description = "用户已存在该部门，不允许重复添加"
+                });
+            }
             user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }
 
