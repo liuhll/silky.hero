@@ -31,6 +31,14 @@ const authorization: AppRouteModule = {
       },
     },
     {
+      path: 'position',
+      name: 'Position',
+      component: () => import('/@/views/authorization/position/index.vue'),
+      meta: {
+        title: '岗位管理',
+      },
+    },
+    {
       path: 'organization',
       name: 'Organization',
       component: () => import('/@/views/authorization/organization/index.vue'),
