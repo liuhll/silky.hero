@@ -118,7 +118,7 @@ public class RoleAppService : IRoleAppService
     {
         var pageRoles = await _roleManager.RoleRepository
             .Where(!input.Name.IsNullOrEmpty(),
-                p => p.Name.Contains(input.Name, StringComparison.CurrentCultureIgnoreCase))
+                p => p.Name.Contains(input.Name))
             .Where(!input.RealName.IsNullOrEmpty(),
                 p => p.RealName.Contains(input.RealName))
             .ProjectToType<GetRolePageOutput>()
