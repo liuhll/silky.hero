@@ -1,6 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 import { BasicFetchResult } from '/@/api/model/baseModel';
 import { GetRolePageModel } from './model/roleModel';
+import { Status } from '/@/utils/status';
 
 enum Api {
   GetUserPageList = '/role/page',
@@ -33,3 +34,9 @@ export const deleteRole = (id: number) => {
     url: `/role/${id}`,
   });
 };
+
+// export const setRoleStatus = (id: number, status: Status) => {
+//   return defHttp.put({
+//     url: `/role/status/${id}/${status}`,
+//   });
+// };

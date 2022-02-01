@@ -86,7 +86,7 @@
           const isUpdate = !!data?.isUpdate;
           if (isUpdate) {
             await updateRole(data.values);
-            updateTableDataRecord(data.values.id, data.values);
+            // updateTableDataRecord(data.values.id, data.values);
             notification.success({
               message: `更新角色${data.values.name}成功.`,
             });
@@ -95,8 +95,8 @@
             notification.success({
               message: `新增角色${data.values.name}成功.`,
             });
-            reload();
           }
+          reload();
         });
       }
       function handleView(record: Recordable) {}
