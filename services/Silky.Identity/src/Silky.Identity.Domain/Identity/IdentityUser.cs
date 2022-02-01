@@ -66,13 +66,18 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public IdentityUser()
     {
+        Roles = new Collection<IdentityUserRole>();
+        Claims = new Collection<IdentityUserClaim>();
+        Logins = new Collection<IdentityUserLogin>();
+        Tokens = new Collection<IdentityUserToken>();
+        UserSubsidiaries = new List<UserSubsidiary>();
     }
 
     public IdentityUser(
         [NotNull] string userName,
         [NotNull] string email,
         [NotNull] string mobilePhone,
-        object tenantId = null)
+        object tenantId = null) : this()
     {
         Check.NotNull(userName, nameof(userName));
         Check.NotNull(email, nameof(email));
@@ -91,12 +96,6 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         ConcurrencyStamp = Guid.NewGuid().ToString();
         SecurityStamp = Guid.NewGuid().ToString();
         IsActive = true;
-
-        Roles = new Collection<IdentityUserRole>();
-        Claims = new Collection<IdentityUserClaim>();
-        Logins = new Collection<IdentityUserLogin>();
-        Tokens = new Collection<IdentityUserToken>();
-        UserSubsidiaries = new List<UserSubsidiary>();
     }
 
     public virtual void AddRole(long roleId)
