@@ -12,25 +12,23 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, computed, unref, onMounted } from 'vue';
+  import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { roleSchemas } from './role.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { Card } from 'ant-design-vue';
 
   export default defineComponent({
-    name: 'roleDrawer',
-    components: { BasicDrawer, BasicForm, Card },
+    name: 'RoleDrawer',
+    components: { BasicDrawer, BasicForm },
     setup(_, { emit }) {
       const isUpdate = ref(false);
-      const roleId = ref<Nullable<number>>(undefined);
+      const roleId = ref<Nullable<number>>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
-      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
-        useForm({
-          labelWidth: 140,
-          schemas: roleSchemas,
-          showActionButtonGroup: false,
-        });
+      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate }] = useForm({
+        labelWidth: 140,
+        schemas: roleSchemas,
+        showActionButtonGroup: false,
+      });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
