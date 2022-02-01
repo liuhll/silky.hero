@@ -41,16 +41,18 @@
       const isUpdate = ref(false);
       const positionOptions = ref<OptionsItem[]>([]);
       const organizaionTreeList = ref<TreeItem[]>([]);
+      const userId = ref<Nullable<number>>(undefined);
       const userSubsidiaryTableRef = ref<{
         getDataSource: () => any;
         setTableData: (data: any[]) => void;
       } | null>(null);
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑角色'));
-      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate }] = useForm({
-        labelWidth: 140,
-        schemas: userSchemas,
-        showActionButtonGroup: false,
-      });
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
+      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
+        useForm({
+          labelWidth: 140,
+          schemas: userSchemas,
+          showActionButtonGroup: false,
+        });
       const { notification } = useMessage();
 
       onMounted(async () => {
@@ -61,9 +63,16 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         clearValidate();
-        const isUpdate = !!data?.isUpdate;
-        if (isUpdate) {
+        isUpdate.value = !!data?.isUpdate;
+        if (unref(isUpdate)) {
+          setFieldsValue({
+            ...data.record,
+          });
+          userId.value = data.record.id;
+          updateSchema({ field: 'password', show: false });
+          userSubsidiaryTableRef.value?.setTableData(data.record.userSubsidiaries);
         } else {
+          updateSchema({ field: 'password', show: true });
           userSubsidiaryTableRef.value?.setTableData([]);
         }
         setDrawerProps({ confirmLoading: false });
@@ -86,7 +95,7 @@
             return { organizationId: item.organizationId, positionId: item.positionId };
           });
           values.userSubsidiaries = userSubsidiaries;
-          emit('success', { ...values });
+          emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: unref(userId) } });
           closeDrawer();
         } finally {
           setDrawerProps({ confirmLoading: false });

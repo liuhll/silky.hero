@@ -4,7 +4,7 @@ import { GetUserPageModel, GetUserPositionModel } from './model/userModel';
 
 enum Api {
   GetUserPageList = '/user/page',
-  CreateUser = '/user',
+  User = '/user',
 }
 
 export const getUserPageList = (requestParams) => {
@@ -28,7 +28,20 @@ export const getOrganizationUserPage = (requestParams) => {
 
 export const createUser = (requestParams) => {
   return defHttp.post({
-    url: Api.CreateUser,
+    url: Api.User,
     params: requestParams,
+  });
+};
+
+export const updateUser = (requestParams) => {
+  return defHttp.put({
+    url: Api.User,
+    params: requestParams,
+  });
+};
+
+export const deleteUser = (id: number) => {
+  return defHttp.delete({
+    url: `/user/${id}`,
   });
 };

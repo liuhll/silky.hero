@@ -28,17 +28,42 @@
         </Tag>
       </template>
       <template #toolbar>
-        <a-button type="primary" @click="handleCreateUserDrawer">新增账号</a-button>
+        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              icon: 'clarity:info-standard-line',
+              tooltip: '查看用户详情',
+              onClick: handleView.bind(null, record),
+            },
+            {
+              icon: 'clarity:note-edit-line',
+              tooltip: '编辑用户资料',
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              tooltip: '删除此账号',
+              popConfirm: {
+                title: '是否确认删除',
+                confirm: handleDelete.bind(null, record),
+              },
+            },
+          ]"
+        />
       </template>
     </BasicTable>
-    <UserDrawer @register="registerDrawer" @success="handleCreateUser" />
+    <UserDrawer @register="registerDrawer" @success="handleSuccess" />
   </PageWrapper>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, onMounted, unref } from 'vue';
+  import { defineComponent, ref, onMounted, unref, nextTick } from 'vue';
   import { TreeSelect, Tag, Select } from 'ant-design-vue';
-  import { getUserPageList, createUser } from '/@/api/user';
+  import { getUserPageList, createUser, updateUser, deleteUser } from '/@/api/user';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { columns, searchFormSchema } from './user.data';
@@ -69,17 +94,48 @@
         return `${userSubsidiary.organizationName}(${userSubsidiary.positionName})`;
       }
 
-      function handleCreateUserDrawer() {
+      function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
         });
       }
-      async function handleCreateUser(data) {
-        await createUser(data);
-        notification.success({
-          message: `新增用户${data.userName}成功.`,
+
+      function handleEdit(record: Recordable) {
+        openDrawer(true, {
+          isUpdate: true,
+          record,
         });
-        reload();
+      }
+
+      function handleView(record: Recordable) {}
+
+      function handleDelete(record: Recordable) {
+        nextTick(async () => {
+          await deleteUser(record.id);
+          notification.success({
+            message: `删除用户${record.userName}成功.`,
+          });
+          reload();
+        });
+      }
+
+      function handleSuccess(data) {
+        nextTick(async () => {
+          const isUpdate = !!data?.isUpdate;
+          if (isUpdate) {
+            await updateUser(data.values);
+            //updateTableDataRecord(data.values.id, data.values);
+            notification.success({
+              message: `更新用户${data.values.userName}成功.`,
+            });
+          } else {
+            await createUser(data.values);
+            notification.success({
+              message: `新增用户${data.values.userName}成功.`,
+            });
+          }
+          reload();
+        });
       }
 
       const [registerTable, { reload }] = useTable({
@@ -110,13 +166,23 @@
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
+        actionColumn: {
+          width: 120,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
+        },
       });
+
       return {
         registerTable,
         displayUserSubsidiary,
-        handleCreateUserDrawer,
+        handleCreate,
+        handleEdit,
+        handleView,
+        handleDelete,
         registerDrawer,
-        handleCreateUser,
+        handleSuccess,
         positionOptions,
         searchInfo,
         treeData,

@@ -1,6 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { sexOptions } from '/@/utils/sex';
+import { formatToDate } from '/@/utils/dateUtil';
+import { Sex } from '/@/utils/sex';
 
 export const columns: BasicColumn[] = [
   {
@@ -26,11 +28,24 @@ export const columns: BasicColumn[] = [
   {
     title: '生日',
     dataIndex: 'birthDay',
+    format: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD');
+    },
     width: 80,
   },
   {
     title: '性别',
     dataIndex: 'sex',
+    format: (value) => {
+      if (`${value}` === `${Sex.Female}`) {
+        return '女';
+      }
+      if (`${value}` === `${Sex.Male}`) {
+        return '男';
+      }
+
+      return null;
+    },
     width: 50,
   },
   {
@@ -140,6 +155,7 @@ export const userSchemas: FormSchema[] = [
       span: 12,
     },
     helpMessage: '至少8位，包含大小写、数字和特殊符号',
+    show: false,
     rules: [
       {
         required: true,
@@ -234,6 +250,9 @@ export const userSchemas: FormSchema[] = [
     field: 'birthDay',
     component: 'DatePicker',
     label: '生日',
+    componentProps: {
+      format: 'YYYY-MM-DD',
+    },
     colProps: {
       span: 12,
     },
