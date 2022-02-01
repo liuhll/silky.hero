@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Identity.EntityFrameworkCore.DbContexts;
 
@@ -10,9 +11,10 @@ using Silky.Identity.EntityFrameworkCore.DbContexts;
 namespace Silky.Identity.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20220201133829_v1.16")]
+    partial class v116
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,17 +244,13 @@ namespace Silky.Identity.Database.Migrations.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("longtext")
-                        .HasColumnName("Remark");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Sort")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1)
-                        .HasColumnName("Status");
+                        .HasColumnType("int");
 
                     b.Property<long?>("TenantId")
                         .HasColumnType("bigint")
@@ -612,7 +610,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "df3d16a2-ac45-4a9d-b31b-2e64fa24b2a5",
+                            ConcurrencyStamp = "78c159e9-227e-4530-b798-788034bdfcf3",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@silky.com",
                             EmailConfirmed = false,
@@ -622,9 +620,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111111",
                             NormalizedEmail = "ADMIN@SILKY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAXSfUXlYLSgVTyFzVb1MIGbE0c0mjJujd0ndu+i7cmobgQx25YuDfqLiqdeWguZHg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO0Cc/VPYNvR9sXTz0kKhxj2FQRrO/1NnebIdoeTvjouHVfb1YVo222cLMYaqoN9mg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "37bacc0b-b09e-42f2-a3e7-10c50f80961d",
+                            SecurityStamp = "e4d2051e-fa39-471a-955d-06b00e688686",
                             TenantId = 1L,
                             UserName = "admin"
                         },
@@ -633,7 +631,7 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             Id = 2L,
                             AccessFailedCount = 0,
                             BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "556368d2-1dab-44f8-ba68-6712261c874f",
+                            ConcurrencyStamp = "668da29d-a9cd-434f-91da-44d4e0f228a2",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "liuhll@silky.com",
                             EmailConfirmed = false,
@@ -643,9 +641,9 @@ namespace Silky.Identity.Database.Migrations.Migrations
                             MobilePhone = "13111111112",
                             NormalizedEmail = "LIUHLL@SILKY.COM",
                             NormalizedUserName = "LIUHLL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC+bfkBKtM7vqKOqa6NqnNOjr2R3J54EDIJFF95MKyFPu3NXcOKmV+kpfvSGjS/y7Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBkci36+c2ID6uFI4Iw1RLz3ivSoT2G3oyt342j2dMAAbQR/1lyMONhU+25K28IliA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ca3f1adc-b3a2-4b0f-a41f-9fc919a51e1c",
+                            SecurityStamp = "b40e9bae-b1ed-4cfd-97c7-93ecda7dcf32",
                             TenantId = 1L,
                             UserName = "liuhll"
                         });

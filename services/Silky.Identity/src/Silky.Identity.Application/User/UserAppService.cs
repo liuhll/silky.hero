@@ -12,6 +12,7 @@ using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
@@ -89,12 +90,14 @@ public class UserAppService : IUserAppService
         return UserManager.GetPageAsync(input);
     }
 
-    public Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input) 
+    public Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId,
+        GetAddOrganizationUserPageInput input)
     {
         return UserManager.GetAddOrganizationUserPageAsync(organizationId, input);
     }
 
-    public Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input)
+    public Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId,
+        GetOrganizationUserPageInput input)
     {
         return UserManager.GetOrganizationUserPageAsync(organizationId, input);
     }
@@ -166,10 +169,13 @@ public class UserAppService : IUserAppService
         return UserManager.HasPositionUsersAsync(positionId);
     }
 
-    public async Task<ICollection<long>> GetRoleIdsAsync(long userId)
+    public async Task<ICollection<long>> GetValidRoleIdsAsync(long userId)
     {
-        var user = await UserManager.UserRepository.Include(p => p.Roles).FirstAsync(p => p.Id == userId);
-        return user.Roles.Select(p => p.RoleId).ToList();
+        return await UserManager.UserRepository
+            .GetRolesAsync(userId)
+            .Where(p => p.Status == Status.Valid)
+            .Select(p => p.Id)
+            .ToListAsync();
     }
 
     protected virtual async Task UpdateUserByInput(IdentityUser user, UserDtoBase input)
@@ -202,14 +208,14 @@ public class UserAppService : IUserAppService
         }
     }
 
- 
+
     public async Task<ICollection<long>> GetUserIdsAsync(long organizationId)
     {
         var organizationUserIds = await UserManager.UserRepository
             .AsQueryable(false)
-            .Include(p=> p.UserSubsidiaries)
-            .Where(p => p.UserSubsidiaries.Any(us=> us.OrganizationId == organizationId))
-            .Select(p=> p.Id).ToListAsync();
+            .Include(p => p.UserSubsidiaries)
+            .Where(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId))
+            .Select(p => p.Id).ToListAsync();
         return organizationUserIds;
     }
 
@@ -218,24 +224,39 @@ public class UserAppService : IUserAppService
     {
         foreach (var input in inputs)
         {
-            var user = await UserManager.UserRepository.Include(p=> p.UserSubsidiaries).FirstOrDefaultAsync(p=> p.Id == input.UserId);
-            if (user == null) 
+            var user = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
+                .FirstOrDefaultAsync(p => p.Id == input.UserId);
+            if (user == null)
             {
-                throw new EntityNotFoundException(typeof(IdentityUser),input.UserId);
+                throw new EntityNotFoundException(typeof(IdentityUser), input.UserId);
             }
+
             user.AddUserSubsidiaries(organizationId, input.PositionId);
             await UserManager.UpdateAsync(user);
         }
     }
-    
-    [TccTransaction(ConfirmMethod = "RemoveConfirmOrganizationUsersAsync",CancelMethod = "RemoveCancelOrganizationUsersAsync")]
+
+    [TccTransaction(ConfirmMethod = "RemoveConfirmOrganizationUsersAsync",
+        CancelMethod = "RemoveCancelOrganizationUsersAsync")]
     public async Task RemoveOrganizationUsersAsync(long[] organizationIds)
     {
-        Check.NotNull(organizationIds,nameof(organizationIds));
+        Check.NotNull(organizationIds, nameof(organizationIds));
         var organizationUsers = await UserManager.UserSubsidiaryRepository
             .AsQueryable(false)
             .Where(p => organizationIds.Contains(p.OrganizationId))
             .ToArrayAsync();
+    }
+
+    public async Task<GetUserRoleOutput> GetValidRolesAsync(long userId)
+    {
+        var user = await UserManager.GetByIdAsync(userId);
+        var roleNames = await UserManager.GetValidRolesAsync(user);
+        var output = new GetUserRoleOutput()
+        {
+            UserId = user.Id,
+            RoleNames = roleNames
+        };
+        return output;
     }
 
     [UnitOfWork]
@@ -247,10 +268,9 @@ public class UserAppService : IUserAppService
             .ToArrayAsync();
         await UserManager.UserSubsidiaryRepository.DeleteAsync(organizationUsers);
     }
-    
+
     public async Task RemoveCancelOrganizationUsersAsync(long[] organizationIds)
     {
-        
     }
 
     [UnitOfWork]
@@ -262,7 +282,6 @@ public class UserAppService : IUserAppService
             .ToArrayAsync();
         await UserManager.UserSubsidiaryRepository.DeleteAsync(userSubsidiaries);
     }
-
 
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)

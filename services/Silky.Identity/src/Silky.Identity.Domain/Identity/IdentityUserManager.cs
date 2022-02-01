@@ -14,6 +14,7 @@ using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Extensions;
 using Silky.Identity.Domain.Shared;
@@ -370,7 +371,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public async Task<UserDataRange> GetUserDataRange(long userId)
     {
         UserDataRange userDataRange;
-        var userRoles = await UserRepository.GetRolesAsync(userId);
+        var userRoles = await UserRepository.GetRolesAsync(userId).Where(p=> p.Status == Status.Valid).ToListAsync();
         if (userRoles.Any(p => p.DataRange == DataRange.Whole))
         {
             userDataRange = new UserDataRange(userId, true);
@@ -436,5 +437,11 @@ public class IdentityUserManager : UserManager<IdentityUser>
         var roleCustomDataRangeOrganizations =
             await _roleOrganizationRepository.Where(p => p.RoleId == roleId).AsNoTracking().ToListAsync();
         return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);
+    }
+
+    public async Task<ICollection<string>> GetValidRolesAsync(IdentityUser user)
+    {
+        return await UserRepository.GetRolesAsync(user.Id).Where(p => p.Status == Status.Valid).Select(p => p.Name)
+            .ToListAsync();
     }
 }

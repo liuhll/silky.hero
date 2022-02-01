@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Hero.Common.EntityFrameworkCore.Modeling;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain;
 
 namespace Silky.Identity.EntityFrameworkCore.DbContexts;
@@ -73,7 +74,6 @@ public static class DbContextModelBuilderExtensions
             b.ToTable(HeroIdentityDbProperties.DbTablePrefix + "UserRoles", HeroIdentityDbProperties.DbSchema);
 
             b.ConfigureByConvention();
-
             b.HasOne<IdentityRole>().WithMany().HasForeignKey(ur => ur.RoleId).IsRequired();
             b.HasOne<IdentityUser>().WithMany(u => u.Roles).HasForeignKey(ur => ur.UserId).IsRequired();
 
@@ -120,6 +120,8 @@ public static class DbContextModelBuilderExtensions
             b.Property(r => r.IsStatic).HasColumnName(nameof(IdentityRole.IsStatic));
             b.Property(r => r.IsPublic).HasColumnName(nameof(IdentityRole.IsPublic));
             b.Property(r => r.DataRange).HasColumnName(nameof(IdentityRole.DataRange));
+            b.Property(r => r.Status).IsRequired().HasDefaultValue(Status.Valid).HasColumnName(nameof(IdentityRole.Status));
+            b.Property(r => r.Remark).HasColumnName(nameof(IdentityRole.Remark));
             b.HasMany(r => r.Claims).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
             b.HasMany(r => r.Menus).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
             b.HasMany(r => r.CustomOrganizationDataRanges).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();

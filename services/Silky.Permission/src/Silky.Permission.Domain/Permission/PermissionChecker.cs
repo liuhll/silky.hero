@@ -18,7 +18,7 @@ public class PermissionChecker : IPermissionChecker, IScopedDependency
 
     public async Task<bool> IsGrantedByPermissionAsync(string permissionName)
     {
-        var userRoleIds = await _permissionManager.GetUserRoleIdsAsync(long.Parse(_session.UserId.ToString()));
+        var userRoleIds = await _permissionManager.GetUserValidRoleIdsAsync(long.Parse(_session.UserId.ToString()));
         if (!userRoleIds.Any())
         {
             return false;
@@ -43,7 +43,7 @@ public class PermissionChecker : IPermissionChecker, IScopedDependency
 
     public async Task<bool> IsGrantedByRoleAsync(string roleName)
     {
-        var userRoleNames = await _permissionManager.GetUserRoleNamesAsync(long.Parse(_session.UserId.ToString()));
+        var userRoleNames = await _permissionManager.GetUserValidRoleNamesAsync(long.Parse(_session.UserId.ToString()));
         return userRoleNames.Any(p => p == roleName);
     }
 }

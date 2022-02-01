@@ -7,6 +7,7 @@ using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions.Collections.Generic;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Domain;
@@ -30,15 +31,21 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
     public virtual bool IsStatic { get; set; }
 
     public virtual bool IsPublic { get; set; }
+    
+    public string Remark { get; set; }
 
     public virtual DataRange DataRange { get; protected internal set; }
 
     public string ConcurrencyStamp { get; set; }
+    
+    public Status Status { get; set; }
 
     public int Sort { get; set; }
 
     public IdentityRole()
     {
+        Status = Status.Valid;
+        
         DataRange = DataRange.SelfOrganization;
         Claims = new Collection<IdentityRoleClaim>();
         CustomOrganizationDataRanges = new List<IdentityRoleOrganization>();
@@ -75,7 +82,7 @@ public class IdentityRole : FullAuditedEntity, IHasConcurrencyStamp
             Menus.Add(new IdentityRoleMenu(Id, menuId, TenantId));
         }
     }
-
+    
     public virtual void AddMenus(IEnumerable<long> menuIds)
     {
         foreach (var menuId in menuIds)

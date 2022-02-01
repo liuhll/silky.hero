@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,11 +8,14 @@ using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Identity.Application.Contracts.User.Dtos;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
+using Silky.Hero.Common.Extensions;
 
 namespace Silky.Identity.Application.Role;
 
@@ -21,10 +23,13 @@ public class RoleAppService : IRoleAppService
 {
     private readonly IdentityRoleManager _roleManager;
     private readonly ISession _session;
-
-    public RoleAppService(IdentityRoleManager roleManager)
+    private readonly IDistributedCache _distributedCache;
+    
+    public RoleAppService(IdentityRoleManager roleManager,
+        IDistributedCache distributedCache)
     {
         _roleManager = roleManager;
+        _distributedCache = distributedCache;
         _session = NullSession.Instance;
     }
 
@@ -41,6 +46,7 @@ public class RoleAppService : IRoleAppService
         var role = await _roleManager.GetByIdAsync(input.Id);
         await UpdateRoleByInput(role, input);
         (await _roleManager.UpdateAsync(role)).CheckErrors();
+        await RemoveUserRoleCacheAsync();
     }
 
     public async Task<GetRoleOutput> GetAsync(long id)
@@ -53,6 +59,7 @@ public class RoleAppService : IRoleAppService
     {
         var role = await _roleManager.GetByIdAsync(id);
         (await _roleManager.DeleteAsync(role)).CheckErrors();
+        await RemoveUserRoleCacheAsync();
     }
 
     public async Task SetMenusAsync(UpdateRoleMenuInput input)
@@ -122,7 +129,8 @@ public class RoleAppService : IRoleAppService
                 p => p.Name.Contains(input.Name))
             .Where(!input.RealName.IsNullOrEmpty(),
                 p => p.RealName.Contains(input.RealName))
-            .OrderByDescending(p=> p.CreatedTime)
+            .OrderByDescending(p=> p.Sort)
+            .ThenByDescending(p=> p.CreatedTime)
             .ProjectToType<GetRolePageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return pageRoles;
@@ -138,7 +146,16 @@ public class RoleAppService : IRoleAppService
         role.IsDefault = input.IsDefault;
         role.IsPublic = input.IsPublic;
         role.Sort = input.Sort;
+        role.Status = input.Status;
+        role.Remark = input.Remark;
         (await _roleManager.SetRoleNameAsync(role, input.Name)).CheckErrors();
         (await _roleManager.SetRoleRealNameAsync(role, input.RealName)).CheckErrors();
+    }
+
+    private async Task RemoveUserRoleCacheAsync()
+    {
+        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:userId:*");
+        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:valid:userId:*");
+        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roleIds:valid:userId:*");
     }
 }

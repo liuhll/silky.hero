@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading;
@@ -22,7 +23,12 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
         CancellationToken cancellationToken = default
     );
     
-    Task<List<IdentityRole>> GetRolesAsync(
+    IQueryable<IdentityRole> GetRolesAsync(
+        long id,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<List<IdentityRole>> GetValidRolesAsync(
         long id,
         CancellationToken cancellationToken = default
     );

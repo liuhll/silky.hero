@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Session;
 
 namespace Silky.Identity.Domain;
@@ -42,11 +43,21 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<List<IdentityRole>> GetRolesAsync(long id, CancellationToken cancellationToken = default)
+    public IQueryable<IdentityRole> GetRolesAsync(long id, CancellationToken cancellationToken = default)
     {
         var query = from userRole in Context.Set<IdentityUserRole>()
             join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id
             where userRole.UserId == id
+            select role;
+
+        return query;
+    }
+    
+    public async Task<List<IdentityRole>> GetValidRolesAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var query = from userRole in Context.Set<IdentityUserRole>()
+            join role in Context.Set<IdentityRole>() on userRole.RoleId equals role.Id
+            where userRole.UserId == id && role.Status == Status.Valid
             select role;
 
         return await query.ToListAsync(cancellationToken);

@@ -210,7 +210,8 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
 
     public async Task<ICollection<string>> GetPermissionsAsync(long roleId)
     {
-        var roleMenuIds = await RoleMenuRepository.AsQueryable(false).Where(p => p.RoleId == roleId)
+        var roleMenuIds = await RoleMenuRepository.AsQueryable(false)
+            .Where(p => p.RoleId == roleId)
             .Select(p => p.MenuId)
             .ToListAsync();
         var permissions = await _menuAppService.GetPermissions(roleMenuIds);

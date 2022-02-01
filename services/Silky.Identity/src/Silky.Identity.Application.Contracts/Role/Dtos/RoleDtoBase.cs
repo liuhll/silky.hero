@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
@@ -17,11 +18,21 @@ public abstract class RoleDtoBase
     /// </summary>
     [Required(ErrorMessage = "角色真实名称不允许为空")]
     public string RealName { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public Status Status { get; set; }
 
     /// <summary>
     /// 排序
     /// </summary>
     public int Sort { get; set; }
+    
+    /// <summary>
+    /// 备注
+    /// </summary>
+    public string Remark { get; set; }
 
     /// <summary>
     /// 是否默认角色
