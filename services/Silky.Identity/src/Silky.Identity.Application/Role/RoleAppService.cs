@@ -117,10 +117,12 @@ public class RoleAppService : IRoleAppService
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)
     {
         var pageRoles = await _roleManager.RoleRepository
+            .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(),
                 p => p.Name.Contains(input.Name))
             .Where(!input.RealName.IsNullOrEmpty(),
                 p => p.RealName.Contains(input.RealName))
+            .OrderByDescending(p=> p.CreatedTime)
             .ProjectToType<GetRolePageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return pageRoles;

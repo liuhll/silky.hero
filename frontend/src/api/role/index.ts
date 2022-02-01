@@ -13,3 +13,23 @@ export const getRolePageList = (requestParams) => {
     params: requestParams,
   });
 };
+
+export const createRole = (requestParams) => {
+  return defHttp.post({
+    url: Api.Role,
+    params: requestParams,
+  });
+};
+
+export const updateRole = (requestParams) => {
+  return defHttp.put({
+    url: Api.Role,
+    params: requestParams,
+  });
+};
+
+export const deleteRole = (id: number) => {
+  return defHttp.delete({
+    url: `/role/${id}`,
+  });
+};
