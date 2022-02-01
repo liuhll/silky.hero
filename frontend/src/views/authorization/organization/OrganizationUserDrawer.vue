@@ -1,9 +1,10 @@
 <template>
-  <BasicModal
+  <BasicDrawer
     v-bind="$attrs"
-    @register="registerModal"
+    @register="registerDrawer"
     :title="getTitle"
     @ok="handleSubmit"
+    showFooter
     :width="800"
   >
     <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="400">
@@ -21,33 +22,32 @@
         />
       </template>
     </BasicTable>
-  </BasicModal>
+  </BasicDrawer>
 </template>
 
 <script lang="ts">
   import { defineComponent, reactive, ref, unref, computed } from 'vue';
   import { Tag, Select } from 'ant-design-vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTable, useTable, TableActionType } from '/@/components/Table';
   import { getOrganizationUserPage } from '/@/api/user';
   import { getOrganizationUserIds, getOrganizationById } from '/@/api/organization';
   import { GetOrgizationModel } from '/@/api/organization/model/organizationModel';
-  import { organizationUserColumns } from './organization.data';
+  import { organizationUserColumns, searchFormSchema } from './organization.data';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { useMessage } from '/@/hooks/web/useMessage';
 
   type OptionsItem = { label: string; value: string; disabled?: boolean };
 
   export default defineComponent({
-    name: 'OrganizationUserModal',
-    components: { BasicModal, BasicTable, Tag, Select },
+    name: 'OrganizationUserDrawer',
+    components: { BasicDrawer, BasicTable, Tag, Select },
     setup(_, { emit }) {
       const selectedOrganizationUserIds = ref<number[]>([]);
       const searchInfo = reactive<Recordable>({});
       const tableRef = ref<Nullable<TableActionType>>(null);
       const positionOptions = ref<OptionsItem[]>([]);
       const { notification } = useMessage();
-
       const organizationInfo = ref<GetOrgizationModel>({});
 
       const getTitle = computed(() => `添加【${unref(organizationInfo).name}】成员`);
@@ -58,6 +58,12 @@
         immediate: false,
         clickToRowSelect: false,
         api: getOrganizationUserPage,
+        formConfig: {
+          labelWidth: 120,
+          schemas: searchFormSchema,
+          autoSubmitOnEnter: true,
+        },
+        useSearchForm: true,
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps(record: Recordable) {
@@ -81,19 +87,21 @@
         }
         return tableAction;
       }
-      const [registerModal, { closeModal, setModalProps }] = useModalInner(async (data: any) => {
-        searchInfo.id = data.id;
-        organizationInfo.value = await getOrganizationById(data.id);
-        var organizationUserIds = await getOrganizationUserIds(data.id);
-        selectedOrganizationUserIds.value = organizationUserIds;
-        setSelectedRowKeys(organizationUserIds);
-        positionOptions.value = await getPositionOptions({});
-        reload();
-      });
+      const [registerDrawer, { closeDrawer, setDrawerProps }] = useDrawerInner(
+        async (data: any) => {
+          searchInfo.id = data.id;
+          organizationInfo.value = await getOrganizationById(data.id);
+          var organizationUserIds = await getOrganizationUserIds(data.id);
+          selectedOrganizationUserIds.value = organizationUserIds;
+          setSelectedRowKeys(organizationUserIds);
+          positionOptions.value = await getPositionOptions({});
+          reload();
+        },
+      );
 
       async function handleSubmit() {
         try {
-          setModalProps({ confirmLoading: true });
+          setDrawerProps({ confirmLoading: true });
           const selectedRows = getTableAction().getSelectRows();
           const addUsers = selectedRows.map((item) => {
             if (!item.positionId) {
@@ -105,16 +113,16 @@
             return { userId: item.id, positionId: item.positionId };
           });
 
-          closeModal();
+          closeDrawer();
           emit('success', { organizationUserId: searchInfo.id, addUsers });
         } finally {
-          setModalProps({ confirmLoading: false });
+          setDrawerProps({ confirmLoading: false });
         }
       }
 
       return {
         registerTable,
-        registerModal,
+        registerDrawer,
         handleSubmit,
         isCheckedUser,
         searchInfo,

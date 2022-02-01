@@ -102,6 +102,21 @@ export const organizationFormSchema: FormSchema[] = [
   },
 ];
 
+export const searchFormSchema: FormSchema[] = [
+  {
+    field: 'userName',
+    label: '用户名',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'realName',
+    label: '真实姓名',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+];
+
 export const getOrganizationTreeList = async (): Promise<TreeItem[]> => {
   const organizationTreeList = await getOrganizationTree();
   return treeMap(organizationTreeList, {

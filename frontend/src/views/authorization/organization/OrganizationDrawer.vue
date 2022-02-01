@@ -1,19 +1,26 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicDrawer
+    v-bind="$attrs"
+    @register="registerDrawer"
+    :title="getTitle"
+    @ok="handleSubmit"
+    showFooter
+    width="600px"
+  >
     <BasicForm @register="registerForm" />
-  </BasicModal>
+  </BasicDrawer>
 </template>
 
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { organizationFormSchema } from './organization.data';
   import { getOrganizationById } from '/@/api/organization';
 
   export default defineComponent({
-    name: 'OrganizationModal',
-    components: { BasicModal, BasicForm },
+    name: 'OrganizationDrawer',
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
@@ -30,7 +37,7 @@
         },
       });
 
-      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
@@ -48,20 +55,20 @@
       async function handleSubmit() {
         try {
           const values = await validate();
-          setModalProps({ confirmLoading: true });
-          closeModal();
+          setDrawerProps({ confirmLoading: true });
+          closeDrawer();
           emit('success', {
             isUpdate: unref(isUpdate),
             values: { ...values, id: unref(id), parentId: unref(parentId) },
           });
         } finally {
-          setModalProps({ confirmLoading: false });
+          setDrawerProps({ confirmLoading: false });
         }
       }
       return {
         getTitle,
         registerForm,
-        registerModal,
+        registerDrawer,
         handleSubmit,
       };
     },

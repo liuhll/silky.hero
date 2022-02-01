@@ -27,7 +27,7 @@
             <template #toolbar>
               <a-button
                 type="primary"
-                @click="handleAddOrganizationUsersModal"
+                @click="handleAddOrganizationUsersDrawer"
                 v-if="canAddOrganizationUsers"
                 >添加成员</a-button
               >
@@ -51,9 +51,12 @@
         </Card>
       </Col>
     </Row>
-    <OrganizationModal @register="registerOrganizationModal" @success="handleCreateOrganization" />
-    <OrganizationUserModal
-      @register="registerOrganizationUserModal"
+    <OrganizationDrawer
+      @register="registerOrganizationDrawer"
+      @success="handleCreateOrganization"
+    />
+    <OrganizationUserDrawer
+      @register="registerOrganizationUserDrawer"
       @success="handleAddOrganizationUsers"
     />
   </PageWrapper>
@@ -64,7 +67,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction, TableActionType } from '/@/components/Table';
   import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
-  import { defineComponent, ref, unref, onMounted, reactive } from 'vue';
+  import { defineComponent, ref, unref, onMounted, reactive, nextTick } from 'vue';
   import { Status } from '/@/utils/status';
   import {
     getOrganizationTree,
@@ -79,9 +82,9 @@
   import { treeMap } from '/@/utils/helper/treeHelper';
   import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
   import { userColumns } from './organization.data';
-  import { useModal } from '/@/components/Modal';
-  import OrganizationModal from './OrganizationModal.vue';
-  import OrganizationUserModal from './OrganizationUserModal.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import OrganizationDrawer from './OrganizationDrawer.vue';
+  import OrganizationUserDrawer from './OrganizationUserDrawer.vue';
 
   export default defineComponent({
     name: 'OrganizationManagement',
@@ -93,8 +96,8 @@
       BasicTree,
       BasicTable,
       TableAction,
-      OrganizationModal,
-      OrganizationUserModal,
+      OrganizationDrawer,
+      OrganizationUserDrawer,
     },
     setup() {
       const treeRef = ref<Nullable<TreeActionType>>(null);
@@ -103,8 +106,9 @@
       const canAddOrganizationUsers = ref<boolean>(false);
       const selectedOrganizationId = ref<number | undefined>();
       const searchInfo = reactive<Recordable>({});
-      const [registerOrganizationModal, { openModal: openOrganizationModal }] = useModal();
-      const [registerOrganizationUserModal, { openModal: openOrganizationUserModal }] = useModal();
+      const [registerOrganizationDrawer, { openDrawer: openOrganizationDrawer }] = useDrawer();
+      const [registerOrganizationUserDrawer, { openDrawer: openOrganizationUserDrawer }] =
+        useDrawer();
       const { createConfirm, notification } = useMessage();
       function getTree() {
         const tree = unref(treeRef);
@@ -143,42 +147,46 @@
         getTree().expandAll(true);
       });
 
-      async function handleSelect(keys: number[]) {
-        if (keys.length > 0) {
-          const orgId = keys[0];
-          if (orgId != unref(selectedOrganizationId)) {
-            selectedOrganizationId.value = orgId;
-            searchInfo.id = orgId;
-            getTable().setProps({
-              locale: {
-                emptyText: '暂无数据',
-              },
-            });
-            await setCanAddOrganizationUsers(orgId);
-            reload();
+      function handleSelect(keys: number[]) {
+        nextTick(async () => {
+          if (keys.length > 0) {
+            const orgId = keys[0];
+            if (orgId != unref(selectedOrganizationId)) {
+              selectedOrganizationId.value = orgId;
+              searchInfo.id = orgId;
+              getTable().setProps({
+                locale: {
+                  emptyText: '暂无数据',
+                },
+              });
+              await setCanAddOrganizationUsers(orgId);
+              reload();
+            }
           }
-        }
+        });
       }
 
-      async function setCanAddOrganizationUsers(orgId: number) {
-        const orgInfo = await getOrganizationById(orgId);
-        if (orgInfo.status == Status.Valid) {
-          canAddOrganizationUsers.value = true;
-        } else {
-          canAddOrganizationUsers.value = false;
-        }
+      function setCanAddOrganizationUsers(orgId: number) {
+        nextTick(async () => {
+          const orgInfo = await getOrganizationById(orgId);
+          if (orgInfo.status == Status.Valid) {
+            canAddOrganizationUsers.value = true;
+          } else {
+            canAddOrganizationUsers.value = false;
+          }
+        });
       }
 
-      function handleAddOrganizationUsersModal() {
+      function handleAddOrganizationUsersDrawer() {
         if (unref(canAddOrganizationUsers)) {
-          openOrganizationUserModal(true, {
+          openOrganizationUserDrawer(true, {
             id: selectedOrganizationId,
           });
         }
       }
 
       function handleCreateOrganizationRoot() {
-        openOrganizationModal(true, {
+        openOrganizationDrawer(true, {
           isUpdate: false,
           id: undefined,
         });
@@ -200,44 +208,50 @@
           },
         });
       }
-      async function handleCreateOrganization(data: any) {
-        const { isUpdate, values } = data;
-        if (isUpdate) {
-          await updateOrganization(values);
-          notification.success({
-            message: '更新组织机构成功',
-          });
-        } else {
-          await createOrganization(values);
-          notification.success({
-            message: '创建组织机构成功',
-          });
-        }
-        await loadOrganizationTreeData();
-        if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
-          await setCanAddOrganizationUsers(values.id);
-        }
+      function handleCreateOrganization(data: any) {
+        nextTick(async () => {
+          const { isUpdate, values } = data;
+          if (isUpdate) {
+            await updateOrganization(values);
+            notification.success({
+              message: '更新组织机构成功',
+            });
+          } else {
+            await createOrganization(values);
+            notification.success({
+              message: '创建组织机构成功',
+            });
+          }
+          await loadOrganizationTreeData();
+          if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
+            await setCanAddOrganizationUsers(values.id);
+          }
+        });
       }
 
-      async function handleAddOrganizationUsers(data: any) {
-        if (data.addUsers.length > 0) {
-          await addOrganizationUsers(data);
+      function handleAddOrganizationUsers(data: any) {
+        nextTick(async () => {
+          if (data.addUsers.length > 0) {
+            await addOrganizationUsers(data);
+            reload();
+            notification.success({
+              message: '增加组织机构用户成功',
+            });
+          } else {
+            notification.warning({
+              message: '您没有选择任何要添加的用户',
+            });
+          }
+        });
+      }
+
+      function handleRemoveUser(record: Recordable) {
+        nextTick(async () => {
+          await removeOrganizationUsers(unref(selectedOrganizationId), [record.id]);
           reload();
           notification.success({
-            message: '增加组织机构用户成功',
+            message: `移除用户${record.userName}成功`,
           });
-        } else {
-          notification.warning({
-            message: '您没有选择任何要添加的用户',
-          });
-        }
-      }
-
-      async function handleRemoveUser(record: Recordable) {
-        await removeOrganizationUsers(unref(selectedOrganizationId),[record.id]);
-        reload();
-        notification.success({
-          message: `移除用户${record.userName}成功`,
         });
       }
 
@@ -246,7 +260,7 @@
           {
             label: '编辑',
             handler: () => {
-              openOrganizationModal(true, {
+              openOrganizationDrawer(true, {
                 isUpdate: true,
                 id: node.eventKey,
               });
@@ -256,7 +270,7 @@
           {
             label: '添加子机构',
             handler: () => {
-              openOrganizationModal(true, {
+              openOrganizationDrawer(true, {
                 isUpdate: false,
                 id: node.eventKey,
               });
@@ -295,11 +309,11 @@
         getRightMenuList,
         handleSelect,
         registerTable,
-        registerOrganizationModal,
-        registerOrganizationUserModal,
+        registerOrganizationDrawer,
+        registerOrganizationUserDrawer,
         handleCreateOrganization,
         handleCreateOrganizationRoot,
-        handleAddOrganizationUsersModal,
+        handleAddOrganizationUsersDrawer,
         handleAddOrganizationUsers,
         handleRemoveUser,
       };
