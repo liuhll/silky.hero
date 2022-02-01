@@ -7,7 +7,7 @@
     showFooter
     :width="800"
   >
-    <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="400">
+    <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="650">
       <template #position="{ record }">
         <Tag v-if="isCheckedUser(record.id) && record.positionName" color="green">{{
           record.positionName
