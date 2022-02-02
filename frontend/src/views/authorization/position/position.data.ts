@@ -8,7 +8,7 @@ import { OptionsItem } from '/@/utils/model';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
-export const getPositionOptions = async (query) => {
+export const getPositionOptions = async (query: any) => {
   const positionList = await getPositionList(query);
   const positionOptions = positionList.reduce((prev, next: Recordable) => {
     if (next) {

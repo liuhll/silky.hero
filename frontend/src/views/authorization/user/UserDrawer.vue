@@ -11,27 +11,18 @@
       <BasicForm @register="registerForm" />
     </Card>
     <Card title="组织信息" :bordered="false">
-      <UserSubsidiaryTable
-        :user-subsidiary-data="userSubsidiariesList"
-        :position-options="positionOptions"
-        :organization-tree-list="organizaionTreeList"
-        ref="userSubsidiaryTableRef"
-      />
+      <UserSubsidiaryTable ref="userSubsidiaryTableRef" />
     </Card>
   </BasicDrawer>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, computed, unref, onMounted } from 'vue';
+  import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userSchemas } from './user.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Card } from 'ant-design-vue';
-  import { getPositionOptions } from '/@/views/authorization/position/position.data';
-  import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
-  import { OptionsItem } from '/@/utils/model';
   import UserSubsidiaryTable from './UserSubsidiaryTable.vue';
-  import { TreeItem } from '/@/components/Tree';
   import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
@@ -39,12 +30,13 @@
     components: { BasicDrawer, BasicForm, UserSubsidiaryTable, Card },
     setup(_, { emit }) {
       const isUpdate = ref(false);
-      const positionOptions = ref<OptionsItem[]>([]);
-      const organizaionTreeList = ref<TreeItem[]>([]);
-      const userId = ref<Nullable<number>>(undefined);
+
+      const userId = ref<Nullable<number>>(null);
       const userSubsidiaryTableRef = ref<{
         getDataSource: () => any;
         setTableData: (data: any[]) => void;
+        setOrganizaionTreeList: () => void;
+        setPositionOptions: () => void;
       } | null>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
@@ -55,14 +47,11 @@
         });
       const { notification } = useMessage();
 
-      onMounted(async () => {
-        positionOptions.value = await getPositionOptions({});
-        organizaionTreeList.value = await getOrganizationTreeList();
-      });
-
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         clearValidate();
+        await userSubsidiaryTableRef.value?.setOrganizaionTreeList();
+        await userSubsidiaryTableRef.value?.setPositionOptions();
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
           setFieldsValue({
@@ -103,8 +92,6 @@
       }
       return {
         getTitle,
-        positionOptions,
-        organizaionTreeList,
         userSubsidiaryTableRef,
         registerForm,
         handleSubmit,

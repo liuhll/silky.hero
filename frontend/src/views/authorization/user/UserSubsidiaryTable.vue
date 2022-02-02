@@ -9,8 +9,14 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { getPositionOptions } from '/@/views/authorization/position/position.data';
+  import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
+  import { OptionsItem } from '/@/utils/model';
+  import { TreeItem } from '/@/components/Tree';
+  const positionOptions = ref<OptionsItem[]>([]);
+  const organizaionTreeList = ref<TreeItem[]>([]);
   import {
     BasicTable,
     useTable,
@@ -20,15 +26,9 @@
     EditRecordRow,
   } from '/@/components/Table';
 
-  const props = {
-    positionOptions: [],
-    organizationTreeList: [],
-  };
-
   export default defineComponent({
     components: { BasicTable, TableAction },
-    props,
-    setup(props) {
+    setup() {
       const columns: BasicColumn[] = [
         {
           title: '所属部门',
@@ -36,7 +36,7 @@
           editRow: true,
           editComponent: 'TreeSelect',
           editComponentProps: {
-            treeData: props.organizationTreeList,
+            treeData: unref(organizaionTreeList),
             treeDefaultExpandAll: true,
             placeholder: '请选择所属部门',
           },
@@ -47,13 +47,16 @@
           editRow: true,
           editComponent: 'Select',
           editComponentProps: {
-            options: props.positionOptions,
+            options: unref(positionOptions),
             placeholder: '请选择所属岗位',
           },
         },
       ];
       const { notification } = useMessage();
-      const [registerTable, { getDataSource, setTableData, getRawDataSource }] = useTable({
+      const [
+        registerTable,
+        { getDataSource, setTableData, getRawDataSource, getColumns, setProps },
+      ] = useTable({
         columns: columns,
         showIndexColumn: false,
         actionColumn: {
@@ -67,6 +70,26 @@
 
       function handleEdit(record: EditRecordRow) {
         record.onEdit?.(true);
+      }
+
+      async function setOrganizaionTreeList() {
+        organizaionTreeList.value = await getOrganizationTreeList();
+        const tableColumns = getColumns();
+        const organizationColumn = tableColumns.find((col) => col.dataIndex === 'organizationId');
+        organizationColumn.editComponentProps.treeData = unref(organizaionTreeList);
+        setProps({
+          columns: tableColumns,
+        });
+      }
+
+      async function setPositionOptions() {
+        positionOptions.value = await getPositionOptions({});
+        const tableColumns = getColumns();
+        const positionColumn = tableColumns.find((col) => col.dataIndex === 'positionId');
+        positionColumn.editComponentProps.options = unref(positionOptions);
+        setProps({
+          columns: tableColumns,
+        });
       }
 
       function handleCancel(record: EditRecordRow) {
@@ -130,8 +153,8 @@
       function handleAdd() {
         const data = getDataSource();
         const addRow: EditRecordRow = {
-          organizationId: undefined,
-          positionId: undefined,
+          organizationId: null,
+          positionId: null,
           editable: true,
           isNew: true,
           key: `${Date.now()}`,
@@ -178,6 +201,8 @@
         getDataSource,
         getRawDataSource,
         setTableData,
+        setOrganizaionTreeList,
+        setPositionOptions,
         handleEditChange,
       };
     },
