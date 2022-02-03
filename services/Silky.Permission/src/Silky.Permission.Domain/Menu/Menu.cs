@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Silky.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.Hero.Common.Enums;
 using Silky.Permission.Domain.Shared.Menu;
 
 namespace Silky.Permission.Domain.Menu;
@@ -26,9 +27,11 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
 
     public bool? Display { get; set; }
 
-    public bool? Cache { get; set; }
+    public bool? KeepAlive { get; set; }
 
     public MenuType Type { get; set; }
+
+    public Status Status { get; set; }
 
     public long? CreatedBy { get; set; }
 

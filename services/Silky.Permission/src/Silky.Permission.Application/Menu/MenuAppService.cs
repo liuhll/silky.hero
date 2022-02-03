@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
-using Silky.Core.Extensions.Collections.Generic;
 using Silky.Permission.Application.Contracts.Menu;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Menu;
@@ -59,13 +58,12 @@ public class MenuAppService : IMenuAppService
 
         await _menuDomainService.MenuRepository.DeleteAsync(menu);
     }
-
-    public async Task<PagedList<GetMenuPageOutput>> GetPageAsync(GetMenuPageInput input)
+    
+    public async Task<ICollection<GetMenuTreeOutput>> GetTreeAsync(string name)
     {
-        var menuTree = await _menuDomainService.GetTreeAsync();
-        var menuList = menuTree.Adapt<ICollection<GetMenuPageOutput>>();
-        var menuPageList = menuList.ToPagedList(input.PageIndex, input.PageSize);
-        return menuPageList;
+        var menuTree = await _menuDomainService.GetTreeAsync(name);
+        var menuList = menuTree.Adapt<ICollection<GetMenuTreeOutput>>();
+        return menuList;
     }
 
     public async Task<bool> HasMenuAsync(long menuId)

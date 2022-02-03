@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -66,9 +67,11 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         await MenuRepository.UpdateAsync(menu);
     }
 
-    public async Task<ICollection<Menu>> GetTreeAsync()
+    public async Task<ICollection<Menu>> GetTreeAsync(string name)
     {
-        var menus = await MenuRepository.AsQueryable().ToListAsync();
+        var menus = await MenuRepository.AsQueryable(false)
+            .Where(!name.IsNullOrEmpty(), p=> p.Name.Contains(name))
+            .ToListAsync();
         return menus.BuildTree();
     }
 
@@ -96,10 +99,10 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             throw new ValidationException("路由地址不允许为空");
         }
 
-        if (input.Icon.IsNullOrEmpty())
-        {
-            throw new ValidationException("图标不允许为空");
-        }
+        // if (input.Icon.IsNullOrEmpty())
+        // {
+        //     throw new ValidationException("图标不允许为空");
+        // }
 
         if (menu == null || !input.Name.Equals(menu?.Name))
         {
@@ -141,7 +144,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             }
         }
 
-        if (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode))
+        if (!input.PermissionCode.IsNullOrEmpty() && (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
         {
             var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
             if (exsitMenu != null)

@@ -19,26 +19,17 @@ public class MenuSeedData : IEntitySeedData<Menu>
         initList.Add(new Menu()
         {
             Id = 1,
-            Name = "组织架构",
+            Name = "权限管理",
             Type = MenuType.Catalog,
             ParentId = null,
-            Sort = 999,
+            Sort = 998,
         });
         CreateUserMenu(initList);
 
         CreateOrganizationMenu(initList);
 
         CreatePositionMenu(initList);
-
-        initList.Add(new Menu()
-        {
-            Id = 1000,
-            Name = "权限管理",
-            Type = MenuType.Catalog,
-            ParentId = null,
-            Sort = 998,
-        });
-
+        
         CreateMenuMenu(initList);
 
         CreateRoleMenu(initList);
@@ -52,7 +43,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
         {
             Id = 1100,
             Name = "角色管理",
-            ParentId = 1000,
+            ParentId = 1,
             PermissionCode = IdentityPermissions.Roles.Default,
             Type = MenuType.Menu,
             Sort = 998,
@@ -105,7 +96,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
         {
             Id = 1001,
             Name = "菜单管理",
-            ParentId = 1000,
+            ParentId = 1,
             PermissionCode = PermissionPermissions.Menus.Default,
             Type = MenuType.Menu,
             Sort = 999,

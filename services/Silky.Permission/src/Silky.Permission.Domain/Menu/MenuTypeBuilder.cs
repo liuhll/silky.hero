@@ -46,8 +46,11 @@ public class MenuTypeBuilder : IEntityTypeBuilder<Menu>
         builder.Property(e => e.Display)
             .HasColumnName(nameof(Menu.Display));
         
-        builder.Property(e => e.Cache)
-            .HasColumnName(nameof(Menu.Cache));
+        builder.Property(e => e.KeepAlive)
+            .HasColumnName(nameof(Menu.KeepAlive));
+        
+        builder.Property(e => e.Status)
+            .HasColumnName(nameof(Menu.Status));
 
         builder.Property(e => e.Type)
             .IsRequired()

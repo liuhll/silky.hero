@@ -54,12 +54,14 @@ public interface IMenuAppService
     [Authorize(PermissionPermissions.Menus.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
+    
     /// <summary>
-    /// 分页获取菜单列表
+    /// 获取菜单树
     /// </summary>
     /// <param name="input"></param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    Task<PagedList<GetMenuPageOutput>> GetPageAsync(GetMenuPageInput input);
+    Task<ICollection<GetMenuTreeOutput>> GetTreeAsync([FromQuery]string name);
 
     /// <summary>
     /// 根据Id判断是否存在菜单
@@ -67,6 +69,7 @@ public interface IMenuAppService
     /// <param name="menuId"></param>
     /// <returns></returns>
     [GetCachingIntercept("HasMenu:{0}")]
+    [ProhibitExtranet]
     Task<bool> HasMenuAsync([CacheKey(0)]long menuId);
 
     [ProhibitExtranet]

@@ -60,7 +60,7 @@ public abstract class MenuDtoBase
     /// <summary>
     /// 是否缓存
     /// </summary>
-    public bool? Cache { get; set; }
+    public bool? KeepAlive { get; set; }
 
     /// <summary>
     /// 菜单类型

@@ -11,5 +11,5 @@ public interface IMenuDomainService
     Task CreateAsync(CreateMenuInput input);
     Task UpdateAsync(UpdateMenuInput input);
 
-    Task<ICollection<Menu>> GetTreeAsync();
+    Task<ICollection<Menu>> GetTreeAsync(string name);
 }

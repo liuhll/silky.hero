@@ -24,15 +24,16 @@ public static class MenuExtensions
     private static ICollection<Menu> GetTreeChildren(Menu node,
         IEnumerable<Menu> treeData)
     {
-        var children = treeData.Where(p => p.ParentId == node.Id);
-        if (children.Any())
+        var children = treeData?.Where(p => p.ParentId == node.Id);
+        if (children?.Any() == true)
         {
             foreach (var child in children)
             {
                 child.Children = GetTreeChildren(child, treeData);
             }
+            return children.ToList();
         }
 
-        return children.ToList();
+        return null;
     }
 }
