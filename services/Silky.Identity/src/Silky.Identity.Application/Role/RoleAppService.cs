@@ -141,6 +141,11 @@ public class RoleAppService : IRoleAppService
         return _roleManager.GetPermissionsAsync(roleId);
     }
 
+    public Task<bool> CheckHasMenusAsync(long[] menuIds)
+    {
+        return _roleManager.CheckHasMenusAsync(menuIds);
+    }
+
     private async Task UpdateRoleByInput(IdentityRole role, RoleDtoBase input)
     {
         role.IsDefault = input.IsDefault;

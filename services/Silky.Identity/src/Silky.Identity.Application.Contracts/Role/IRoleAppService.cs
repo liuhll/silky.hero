@@ -105,4 +105,7 @@ public interface IRoleAppService
     [ProhibitExtranet]
     [GetCachingIntercept("permissions:roleId:{0}")]
     Task<ICollection<string>> GetPermissionsAsync([CacheKey(0)]long roleId);
+
+    [ProhibitExtranet]
+    Task<bool> CheckHasMenusAsync(long[] menuIds);
 }

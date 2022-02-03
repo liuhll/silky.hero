@@ -126,7 +126,7 @@ public abstract class HeroDbContext<TDbContext> : SilkyDbContext<TDbContext>, IM
             return;
         }
 
-        if (!typeof(IEntity).IsAssignableFrom(typeof(TEntity)))
+        if (!typeof(IEntity).IsAssignableFrom(typeof(TEntity)) && !typeof(IPrivateEntity).IsAssignableFrom(typeof(Entity)))
         {
             return;
         }

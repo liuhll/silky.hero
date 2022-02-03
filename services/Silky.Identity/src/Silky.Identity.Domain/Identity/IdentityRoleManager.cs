@@ -217,4 +217,10 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         var permissions = await _menuAppService.GetPermissions(roleMenuIds);
         return permissions;
     }
+
+    public async Task<bool> CheckHasMenusAsync(long[] menuIds)
+    {
+        Check.NotNull(menuIds, nameof(menuIds));
+        return (await RoleMenuRepository.AsQueryable(false).CountAsync(p => menuIds.Contains(p.MenuId))) > 0;
+    }
 }

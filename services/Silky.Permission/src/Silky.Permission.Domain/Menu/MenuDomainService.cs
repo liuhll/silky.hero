@@ -8,6 +8,7 @@ using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Identity.Application.Contracts.Role;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Shared.Menu;
 
@@ -15,9 +16,12 @@ namespace Silky.Permission.Domain.Menu;
 
 public class MenuDomainService : IMenuDomainService, IScopedDependency
 {
-    public MenuDomainService(IRepository<Menu> menuRepository)
+    private readonly IRoleAppService _roleAppService;
+    public MenuDomainService(IRepository<Menu> menuRepository, 
+        IRoleAppService roleAppService)
     {
         MenuRepository = menuRepository;
+        _roleAppService = roleAppService;
     }
 
     public IRepository<Menu> MenuRepository { get; }
@@ -73,6 +77,31 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             .Where(!name.IsNullOrEmpty(), p=> p.Name.Contains(name))
             .ToListAsync();
         return menus.BuildTree();
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var menu = await MenuRepository.FindOrDefaultAsync(id);
+        if (menu == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的菜单信息");
+        }
+
+        var childrenMenus = await GetChildrenMenusAsync(id);
+        if (await _roleAppService.CheckHasMenusAsync(childrenMenus.Select(p => p.Id).ToArray()))
+        {
+            throw new UserFriendlyException($"该菜单或存在子菜单被授权,无法删除");
+        }
+
+        await MenuRepository.DeleteAsync(childrenMenus);
+    }
+    
+    public async Task<IEnumerable<Menu>> GetChildrenMenusAsync(long menuId,
+        bool includeSelf = true)
+    {
+        var menus = await MenuRepository.AsQueryable()
+            .OrderByDescending(p => p.Sort).ToListAsync();
+        return menus.GetChildrenMenus(menuId, includeSelf);
     }
 
     private async Task CheckButtonInput(MenuDtoBase input, Menu menu = null)

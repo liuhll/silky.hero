@@ -12,4 +12,6 @@ public interface IMenuDomainService
     Task UpdateAsync(UpdateMenuInput input);
 
     Task<ICollection<Menu>> GetTreeAsync(string name);
+    
+    Task DeleteAsync(long id);
 }
