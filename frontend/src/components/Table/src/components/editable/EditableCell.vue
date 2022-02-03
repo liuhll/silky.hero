@@ -6,7 +6,7 @@
       @click="handleEdit"
     >
       <div class="cell-content" :title="column.ellipsis ? getValues ?? '' : ''">
-        {{ getValues ? getValues : '&nbsp;' }}
+        {{ getValues || getValues === 0 ? getValues : '&nbsp;' }}
       </div>
       <FormOutlined :class="`${prefixCls}__normal-icon`" v-if="!column.editRow" />
     </div>
@@ -41,12 +41,9 @@
   import type { EditRecordRow } from './index';
   import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons-vue';
   import { CellComponent } from './CellComponent';
-
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useTableContext } from '../../hooks/useTableContext';
-
   import clickOutside from '/@/directives/clickOutside';
-
   import { propTypes } from '/@/utils/propTypes';
   import { isArray, isBoolean, isFunction, isNumber, isString } from '/@/utils/is';
   import { createPlaceholderMessage } from './helper';
@@ -129,12 +126,10 @@
 
       const getValues = computed(() => {
         const { editComponentProps, editValueMap } = props.column;
-
         const value = unref(currentValueRef);
         if (editValueMap && isFunction(editValueMap)) {
           return editValueMap(value);
         }
-
         const component = unref(getComponent);
         if (component == 'Select' || component == 'ApiSelect') {
           const options: LabelValueOptions =

@@ -59,11 +59,11 @@ export const roleSchemas: FormSchema[] = [
     rules: [
       {
         required: true,
-        message: '角色标示不允许为空',
+        message: '角色不允许为空',
       },
       {
         max: 50,
-        message: '角色标示长度不允许超过50个字符',
+        message: '角色标识长度不允许超过50个字符',
         validateTrigger: ['change', 'blur'],
       },
       {
