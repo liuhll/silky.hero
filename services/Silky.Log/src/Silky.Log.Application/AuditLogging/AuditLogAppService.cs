@@ -24,6 +24,7 @@ public class AuditLogAppService : IAuditLogAppService
     public async Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input)
     {
         var auditLogPage = await _auditLogRepository
+            .AsQueryable(false)
             .Where(input.StartTime.HasValue, p => p.ExecutionTime >= input.StartTime)
             .Where(input.EndTime.HasValue, p => p.ExecutionTime <= input.EndTime)
             .Where(input.MaxExecutionDuration.HasValue, p => p.ExecutionDuration <= input.MaxExecutionDuration)
