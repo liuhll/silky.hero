@@ -52,7 +52,7 @@
           schemas: searchFormSchema,
           autoSubmitOnEnter: true,
         },
-        handleSearchInfoFn: (formSearch) => {
+        beforeFetch: (formSearch) => {
           if (formSearch.startTime) {
             formSearch.startTime = formSearch.startTime.format('YYYY-MM-DD HH:mm:ss');
           }
