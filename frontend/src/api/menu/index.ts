@@ -1,6 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
-import { BasicFetchResult, GetMenuTreeModel } from '/@/api/model/baseModel';
-import { GetMenuPageModel } from './model/menuModel';
+import { BasicFetchResult } from '/@/api/model/baseModel';
+import { GetMenuPageModel, GetMenuTreeModel } from './model/menuModel';
 
 enum Api {
   GetMenuPageList = '/menu/page',
