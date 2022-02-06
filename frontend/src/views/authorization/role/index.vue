@@ -51,6 +51,11 @@
       @success="handleSuccessAuthorizeRoleMenu"
       ref="roleMenuDrawerRef"
     />
+    <RoleDataDrawer
+      @register="registerRoleDataDrawer"
+      @success="handleSuccessAuthorizeRoleData"
+      ref="roleDataDrawerRef"
+    />
   </PageWrapper>
 </template>
 
@@ -69,17 +74,29 @@
     updateRole,
     deleteRole,
     updateRoleMenuIds,
+    getRoleDataRange,
+    updateRoleDataRange,
   } from '/@/api/role';
   import { columns, searchFormSchema } from './role.data';
   import { PageWrapper } from '/@/components/Page';
   import RoleDrawer from './RoleDrawer.vue';
   import RoleMenuDrawer from './RoleMenuDrawer.vue';
+  import RoleDataDrawer from './RoleDataDrawer.vue';
   import { TreeItem } from '/@/components/Tree';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
   export default defineComponent({
     name: 'Role',
-    components: { PageWrapper, BasicTable, TableAction, Tag, RoleDrawer, RoleMenuDrawer },
+    components: {
+      PageWrapper,
+      BasicTable,
+      TableAction,
+      Tag,
+      RoleDrawer,
+      RoleMenuDrawer,
+      RoleDataDrawer,
+    },
     setup() {
       const searchInfo = ref({});
       const { notification } = useMessage();
@@ -103,14 +120,14 @@
           slots: { customRender: 'action' },
         },
       });
-      const roleMenuDrawerRef =
-        ref<{
-          getTree: () => any;
-          setMenusTreeData: (treeData: TreeItem[]) => void;
-          setCheckAllStateStatus: (indeterminate: boolean, checkAll: boolean) => void;
-        }>('roleMenuDrawerRef');
+      const roleMenuDrawerRef = ref<{
+        getTree: () => any;
+        setMenusTreeData: (treeData: TreeItem[]) => void;
+        setCheckAllStateStatus: (indeterminate: boolean, checkAll: boolean) => void;
+      }>('roleMenuDrawerRef');
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerRoleMenuDrawer, { openDrawer: openRoleMenuDrawer }] = useDrawer();
+      const [registerRoleDataDrawer, { openDrawer: openRoleDataDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
@@ -144,9 +161,18 @@
         });
       }
 
+      function handleSuccessAuthorizeRoleData(data) {
+        nextTick(async () => {
+          await updateRoleDataRange(data);
+          notification.success({
+            message: `更新角色数据权限成功.`,
+          });
+        });
+      }
+
       function handleView(record: Recordable) {}
 
-      function isCheckedAll(menuTree: TreeItem[],checkedMenuIds:number[]) {
+      function isCheckedAll(menuTree: TreeItem[], checkedMenuIds: number[]) {
         const allMenuIds = treeToList(menuTree)
           .map((item) => item.key)
           .sort((item1, item2) => {
@@ -171,12 +197,21 @@
           const roleMenu = await getRoleMenuIds(record.id);
           roleMenuDrawerRef.value?.getTree().setCheckedKeys(roleMenu.menuIds);
           const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
-          const indeterminate = !checkedAll  && roleMenu.menuIds.length > 0;
+          const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
           roleMenuDrawerRef.value?.setCheckAllStateStatus(indeterminate, checkedAll);
         });
       }
 
-      function handleAuthorizeDataRange(record: Recordable) {}
+      function handleAuthorizeDataRange(record: Recordable) {
+        nextTick(async () => {
+          const roleDataRange = await getRoleDataRange(record.id);
+          const orgTreeData = await getOrganizationTreeList();
+          openRoleDataDrawer(true, {
+            roleDataRange: roleDataRange,
+            orgTreeData: orgTreeData,
+          });
+        });
+      }
 
       function handleEdit(record: Recordable) {
         openDrawer(true, {
@@ -198,6 +233,7 @@
         handleCreate,
         registerDrawer,
         registerRoleMenuDrawer,
+        registerRoleDataDrawer,
         handleSuccess,
         handleView,
         handleEdit,
@@ -205,6 +241,7 @@
         handleAuthorizeMenu,
         handleAuthorizeDataRange,
         handleSuccessAuthorizeRoleMenu,
+        handleSuccessAuthorizeRoleData,
         searchInfo,
         roleMenuDrawerRef,
       };

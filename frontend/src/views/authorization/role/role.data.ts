@@ -4,7 +4,7 @@ import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
 import { Tag } from 'ant-design-vue';
 import { h } from 'vue';
-import styleImport from 'vite-plugin-style-import';
+import { DataRange } from '/@/utils/dataRangeUtil';
 
 export const columns: BasicColumn[] = [
   {
@@ -136,5 +136,41 @@ export const roleSchemas: FormSchema[] = [
     field: 'remark',
     component: 'InputTextArea',
     label: '备注',
+  },
+];
+
+export const roleDataSchemas: FormSchema[] = [
+  {
+    field: 'dataRange',
+    label: '数据范围',
+    component: 'Select',
+    required: true,
+    slot: 'dataRangeSlot',
+  },
+  {
+    field: 'customOrganizationIds',
+    label: '自定义部门',
+    component: 'TreeSelect',
+    componentProps: {
+      checkable: true,
+      multiple: true,
+    },
+    rules: [
+      {
+        validator: (rule, value) => {
+          return new Promise((resolve, reject) => {
+            if (value.length <= 0) {
+              reject();
+            } else {
+              resolve();
+            }
+          });
+        },
+        message: '请选择角色有的数据权限部门',
+      },
+    ],
+    ifShow: ({ values }) => {
+      return values.dataRange === DataRange.CustomOrganization.valueOf();
+    },
   },
 ];

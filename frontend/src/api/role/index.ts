@@ -1,7 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
 import { BasicFetchResult } from '/@/api/model/baseModel';
 import { GetRolePageModel } from './model/roleModel';
-import { requestParams } from '../../../mock/_util';
 
 enum Api {
   GetRolePageList = '/role/page',
@@ -44,6 +43,19 @@ export const getRoleMenuIds = (id: number) => {
 export const updateRoleMenuIds = (requestParams) => {
   return defHttp.put({
     url: `/role/menus`,
+    params: requestParams,
+  });
+};
+
+export const getRoleDataRange = (id: number) => {
+  return defHttp.get({
+    url: `/role/datarange/${id}`,
+  });
+};
+
+export const updateRoleDataRange = (requestParams) => {
+  return defHttp.put({
+    url: `/role/datarange`,
     params: requestParams,
   });
 };
