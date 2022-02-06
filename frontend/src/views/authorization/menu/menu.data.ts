@@ -232,3 +232,17 @@ export const getMenuTreeList = async (requestParams: any): Promise<TreeItem[]> =
     },
   });
 };
+
+export const getMenuTreeList2 = async (requestParams: any): Promise<TreeItem[]> => {
+  const organizationTreeList = await getMenuTree(requestParams);
+  return treeMap(organizationTreeList, {
+    conversion: (node: GetMenuTreeModel) => {
+      return {
+        title: node.name,
+        key: node.id,
+        value: node.id,
+        disabled: node.status === Status.Invalid,
+      };
+    },
+  });
+};

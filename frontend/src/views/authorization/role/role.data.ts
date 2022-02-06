@@ -4,6 +4,7 @@ import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
 import { Tag } from 'ant-design-vue';
 import { h } from 'vue';
+import styleImport from 'vite-plugin-style-import';
 
 export const columns: BasicColumn[] = [
   {
@@ -93,6 +94,9 @@ export const roleSchemas: FormSchema[] = [
   {
     field: 'sort',
     component: 'InputNumber',
+    componentProps: {
+      style: { width: '100%' },
+    },
     label: '排序',
   },
   {

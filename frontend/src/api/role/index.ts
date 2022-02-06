@@ -1,6 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 import { BasicFetchResult } from '/@/api/model/baseModel';
 import { GetRolePageModel } from './model/roleModel';
+import { requestParams } from '../../../mock/_util';
 
 enum Api {
   GetRolePageList = '/role/page',
@@ -31,6 +32,19 @@ export const updateRole = (requestParams) => {
 export const deleteRole = (id: number) => {
   return defHttp.delete({
     url: `/role/${id}`,
+  });
+};
+
+export const getRoleMenuIds = (id: number) => {
+  return defHttp.get({
+    url: `/role/menus/${id}`,
+  });
+};
+
+export const updateRoleMenuIds = (requestParams) => {
+  return defHttp.put({
+    url: `/role/menus`,
+    params: requestParams,
   });
 };
 
