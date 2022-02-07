@@ -2,6 +2,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { formatToDate } from '/@/utils/dateUtil';
+import { DescItem } from '/@/components/Description/index';
 
 export const columns: BasicColumn[] = [
   {
@@ -201,3 +202,94 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
 ];
+
+
+export const auditLogDetailSchemas: DescItem[] = [
+  {
+    field: 'httpStatusCode',
+    label: 'http状态码',
+  },
+  {
+    field: 'httpMethod',
+    label: 'http方法',
+  },
+  {
+    field: 'url',
+    label: 'url',
+  },
+  {
+    field: 'requestParameters',
+    label: '请求参数',
+  },
+  {
+    field: 'clientIpAddress',
+    label: '客户端Ip',
+  },
+  {
+    field: 'exceptionMessage',
+    label: '异常',
+  },
+  {
+    field: 'userName',
+    label: '用户名',
+  },
+  {
+    field: 'executionTime',
+    label: '时间',
+  },
+  {
+    field: 'executionDuration',
+    label: '持续时间',
+  },
+  {
+    field: 'browserInfo',
+    label: '浏览器信息',
+  },
+  {
+    field: 'clientId',
+    label: '关联Id',
+  },
+]
+
+export const auditLogActionSchemas: DescItem[] = [
+  {
+    field: 'hostName',
+    label: '所属应用',
+  },
+  {
+    field: 'hostAddress',
+    label: '主机实例地址',
+  },
+  {
+    field: 'serviceName',
+    label: '服务名称',
+  },
+  {
+    field: 'serviceEntryId',
+    label: '服务条目',
+  },
+  {
+    field: 'serviceKey',
+    label: 'serviceKey',
+  },
+  {
+    field: 'parameters',
+    label: '参数',
+  },
+    {
+    field: 'executionTime',
+    label: '执行时间',
+  },
+      {
+    field: 'executionDuration',
+    label: '执行时长',
+  },
+  {
+    field: 'exceptionMessage',
+    label: '异常',
+  },
+  {
+    field: 'isDistributedTransaction',
+    label: '是否是分布式事务',
+  },
+]

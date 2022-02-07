@@ -2,26 +2,69 @@
   <BasicDrawer
     v-bind="$attrs"
     @register="registerDrawer"
-    showFooter
     title="审计日志详情"
-    width="50%"
+    destroyOnClose
+    width="40%"
   >
-    <div>审计日志详情</div>
+    <Tabs default-active-key="1">
+      <TabPane key="1" tab="总体">
+        <Description
+          size="middle"
+          :column="2"
+          :data="auditLogDetail"
+          :schema="auditLogDetailSchemas"
+        />
+      </TabPane>
+      <TabPane key="2" :tab="getOperateTitile">
+        <Empty v-if="auditLogDetail.actions.length <= 0" />
+        <Collapse v-if="auditLogDetail.actions.length >= 0" accordion>
+          <CollapsePanel
+            v-for="(item, index) in auditLogDetail.actions"
+            :key="index"
+            :header="item.methodName"
+          >
+            <Description size="middle" :column="2" :data="item" :schema="auditLogActionSchemas" />
+          </CollapsePanel>
+        </Collapse>
+      </TabPane>
+    </Tabs>
   </BasicDrawer>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
+  import { GetAuditLogDetailModel } from '/@/api/auditlog/model/auditLogModel';
+  import { auditLogDetailSchemas, auditLogActionSchemas } from './auditlog.data';
+  import { Description } from '/@/components/Description/index';
+  import { Empty, Tabs, TabPane, Collapse, CollapsePanel } from 'ant-design-vue';
   export default defineComponent({
     name: 'AuditLogDrawer',
-    components: { BasicDrawer },
+    components: { BasicDrawer, Description, Tabs, TabPane, Collapse, CollapsePanel, Empty },
     setup() {
-      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+      const auditLogDetail = ref<GetAuditLogDetailModel>({});
+      const getOperateTitile = ref<string>(`操作(0)`);
+      // computed(() => {
+      //   if (unref(auditLogDetail).actions?.length > 0) {
+      //     return `操作(${unref(auditLogDetail).actions?.length})`;
+      //   }
+      //   return `操作(0)`;
+      // });
+      const [registerDrawer, { setDrawerProps }] = useDrawerInner(async (data) => {
+        auditLogDetail.value = data;
+        if (unref(auditLogDetail).actions?.length > 0) {
+          getOperateTitile.value = `操作(${unref(auditLogDetail).actions?.length})`;
+        } else {
+          getOperateTitile.value = `操作(0)`;
+        }
         setDrawerProps({ confirmLoading: false });
       });
       return {
         registerDrawer,
+        auditLogDetail,
+        auditLogDetailSchemas,
+        auditLogActionSchemas,
+        getOperateTitile,
       };
     },
   });

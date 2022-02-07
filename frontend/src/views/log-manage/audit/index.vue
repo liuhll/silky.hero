@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, nextTick } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAuditLogPageList } from '/@/api/auditlog';
+  import { getAuditLogPageList, getAuditLogDetail } from '/@/api/auditlog';
   import { columns, searchFormSchema } from './auditlog.data';
   import { PageWrapper } from '/@/components/Page';
   import AuditLogDrawer from './AuditLogDrawer.vue';
@@ -72,7 +72,12 @@
         },
       });
       const [registerDrawer, { openDrawer }] = useDrawer();
-      function handleView(record: Recordable) {}
+      function handleView(record: Recordable) {
+        nextTick(async () => {
+          const auditLogDetail = await getAuditLogDetail(record.id);
+          openDrawer(true, { ...auditLogDetail });
+        });
+      }
 
       function setHttpResponseStatusColor(httpResponseStatus: number): string {
         let color = 'green';
