@@ -60,6 +60,14 @@ export const updateRoleDataRange = (requestParams) => {
   });
 };
 
+export const getRoleList = (requestParams) => {
+  return defHttp.get({
+    url: `/role/list`,
+    params: requestParams,
+  });
+};
+ 
+
 // export const setRoleStatus = (id: number, status: Status) => {
 //   return defHttp.put({
 //     url: `/role/status/${id}/${status}`,

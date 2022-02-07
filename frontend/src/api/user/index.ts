@@ -45,3 +45,17 @@ export const deleteUser = (id: number) => {
     url: `/user/${id}`,
   });
 };
+
+export const getUserRoles = (id: number) => {
+  return defHttp.get({
+    url: `/user/${id}/roles`,
+  });
+};
+
+
+export const updateUserRoles = (id: number, roleNames: string[]) => {
+  return defHttp.put({
+    url: `/user/${id}/roles`,
+    params: roleNames
+  });
+};

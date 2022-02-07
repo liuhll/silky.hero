@@ -16,6 +16,7 @@ using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
 using Silky.Hero.Common.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Silky.Identity.Application.Role;
 
@@ -162,5 +163,14 @@ public class RoleAppService : IRoleAppService
         await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:userId:*");
         await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:valid:userId:*");
         await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roleIds:valid:userId:*");
+    }
+
+    public async Task<ICollection<GetRoleOutput>> GetListAsync(string realName,string name)
+    {
+        return await _roleManager.RoleRepository.AsQueryable(false)
+              .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
+              .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+              .ProjectToType<GetRoleOutput>()
+              .ToListAsync();
     }
 }

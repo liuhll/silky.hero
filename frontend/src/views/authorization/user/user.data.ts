@@ -284,3 +284,15 @@ export const userSchemas: FormSchema[] = [
     defaultValue: true,
   },
 ];
+
+export const userRoleSchemas: FormSchema[] = [
+  {
+    field: 'roleNames',
+    label: '角色',
+    component: 'Select',
+    componentProps: {
+      mode: 'multiple',
+      allowClear: true,
+    },
+  },
+];
