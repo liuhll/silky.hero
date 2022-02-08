@@ -31,4 +31,6 @@ public class GetUserPageOutput
     public DateTimeOffset UpdatedTime { get; set; }
 
     public ICollection<GetUserSubsidiaryOutput> UserSubsidiaries { get; set; }
+
+    public ICollection<GetUserRolePageOutput> Roles { get; set; }
 }

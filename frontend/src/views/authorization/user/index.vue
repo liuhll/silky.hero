@@ -22,9 +22,14 @@
           :options="positionOptions"
         />
       </template>
-      <template #userSubsidiaries="{ record }">
-        <Tag v-for="(userSubsidiary, index) in record.userSubsidiaries" :key="index" color="green">
+      <template #userSubsidiaries="{ text }">
+        <Tag v-for="(userSubsidiary, index) in text" :key="index" color="green" style="margin: 2px">
           {{ displayUserSubsidiary(userSubsidiary) }}
+        </Tag>
+      </template>
+      <template #roles="{ text }">
+        <Tag v-for="(role, index) in text" :key="index" color="blue" style="margin: 3px">
+          {{ role.realName }}
         </Tag>
       </template>
       <template #toolbar>
@@ -190,6 +195,7 @@
           notification.success({
             message: `更新用户${data.userName}角色成功.`,
           });
+          reload();
         });
       }
 

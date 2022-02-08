@@ -64,6 +64,13 @@ export const columns: BasicColumn[] = [
     width: 100,
     slots: { customRender: 'userSubsidiaries' },
   },
+  {
+    title: '角色',
+    dataIndex: 'roles',
+    align: 'left',
+    width: 150,
+    slots: { customRender: 'roles' },
+  },
 ];
 
 export const searchFormSchema: FormSchema[] = [

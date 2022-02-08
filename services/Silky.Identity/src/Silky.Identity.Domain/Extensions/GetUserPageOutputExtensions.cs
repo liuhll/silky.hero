@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Silky.Core;
+using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
@@ -22,6 +23,20 @@ public static class GetUserPageOutputExtensions
                 userSubsidiaryOutput.PositionName =
                     (await positionAppService.GetAsync(userSubsidiaryOutput.PositionId))?.Name;
             }
+        }
+    }
+
+    public static async Task SetUserRoles(this IEnumerable<GetUserPageOutput> userPageOutputs) 
+    {
+        var roleAppService = EngineContext.Current.Resolve<IRoleAppService>();
+        foreach (var userPageOutput in userPageOutputs) 
+        {
+            foreach (var userRolePageOutput in userPageOutput.Roles) 
+            {
+                userRolePageOutput.Name = (await roleAppService.GetAsync(userRolePageOutput.RoleId))?.Name;
+                userRolePageOutput.RealName = (await roleAppService.GetAsync(userRolePageOutput.RoleId))?.RealName;
+            }
+        
         }
     }
 }

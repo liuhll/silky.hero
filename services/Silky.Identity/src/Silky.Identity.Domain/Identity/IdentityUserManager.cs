@@ -240,6 +240,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         var userPage = await UserRepository
             .Include(p=> p.UserSubsidiaries)
+            .Include(p=> p.Roles)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.Email.IsNullOrEmpty(), p => p.Email.Contains(input.Email))
             .Where(!input.MobilePhone.IsNullOrEmpty(), p => p.MobilePhone.Contains(input.MobilePhone))
@@ -253,6 +254,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         var userPageOutput = userPage.Adapt<PagedList<GetUserPageOutput>>();
         await userPageOutput.Items.SetUserSubsidiaries();
+        await userPageOutput.Items.SetUserRoles();
         return userPageOutput;
     }
 
