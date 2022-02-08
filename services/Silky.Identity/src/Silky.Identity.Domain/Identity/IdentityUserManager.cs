@@ -160,7 +160,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     private async Task<IEnumerable<UserSubsidiary>> GetUserOrganizationsAsync(IdentityUser user)
     {
-        var userSubsidiaries = UserSubsidiaryRepository.Where(p => p.UserId == user.Id);
+        var userSubsidiaries = UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
 
@@ -228,7 +230,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
             return await GetByIdAsync(userId);
         }
 
-        return await UserRepository.Include(p => p.Claims)
+        return await UserRepository
+             .AsQueryable(false)
+            .Include(p => p.Claims)
             .Include(p => p.Logins)
             .Include(p => p.Roles)
             .Include(p => p.Tokens)
@@ -239,6 +243,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public async Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
     {
         var userPage = await UserRepository
+            .AsQueryable(false)
             .Include(p=> p.UserSubsidiaries)
             .Include(p=> p.Roles)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
@@ -260,79 +265,60 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     public async Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)
     {
-        var userPage = await UserRepository.AsQueryable(false)
+        var userPage = await UserRepository
+            .AsQueryable(false)
             .Include(p => p.UserSubsidiaries)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .ToPagedListAsync(input.PageIndex, input.PageSize);
-        var userOutputList = new List<GetAddOrganizationUserPageOutput>();
-        foreach (var user in userPage.Items) 
+
+        var pageOutput = userPage.Adapt<PagedList<GetAddOrganizationUserPageOutput>>();
+        foreach (var organizationUser in pageOutput.Items) 
         {
-            var userOutput = user.Adapt<GetAddOrganizationUserPageOutput>();
-            var userOrganizationPosition = user.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
-            if (userOrganizationPosition != null) 
-            {
-                userOutput.PositionId = userOrganizationPosition.PositionId;
-                userOutput.PositionName = (await _positionAppService.GetAsync(userOrganizationPosition.PositionId)).Name;
-            }
-            userOutputList.Add(userOutput);
+            await organizationUser.SetPositionInfo(organizationId);
         }
-        return new PagedList<GetAddOrganizationUserPageOutput>()
-        {
-            Items = userOutputList,
-            HasNextPages = userPage.HasNextPages,
-            HasPrevPages = userPage.HasPrevPages,
-            TotalCount = userPage.TotalCount,
-            TotalPages = userPage.TotalPages,
-        };
+        return pageOutput;
 
     }
 
     public async Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input)
     {
-        var userPage = await UserRepository.AsQueryable(false)
+        var userPage = await UserRepository
+            .AsQueryable(false)
            .Include(p => p.UserSubsidiaries)
            .Where(p => p.UserSubsidiaries.Any(q => q.OrganizationId == organizationId))
            .ToPagedListAsync(input.PageIndex, input.PageSize);
-        var userOutputList = new List<GetOrganizationUserPageOutput>();
-        foreach (var user in userPage.Items)
+        var userOutputList = userPage.Adapt<PagedList<GetOrganizationUserPageOutput>>();
+        foreach (var userOutput in userOutputList.Items)
         {
-            var userOutput = user.Adapt<GetOrganizationUserPageOutput>();
-            var userOrganizationPosition = user.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
-            if (userOrganizationPosition != null)
-            {
-                userOutput.PositionId = userOrganizationPosition.PositionId;
-                userOutput.PositionName = (await _positionAppService.GetAsync(userOrganizationPosition.PositionId)).Name;
-            }
-            userOutputList.Add(userOutput);
+            await userOutput.SetPositionInfo(organizationId);
         }
-        return new PagedList<GetOrganizationUserPageOutput>()
-        {
-            Items = userOutputList,
-            HasNextPages = userPage.HasNextPages,
-            HasPrevPages = userPage.HasPrevPages,
-            TotalCount = userPage.TotalCount,
-            TotalPages = userPage.TotalPages,
-        };
+        return userOutputList;
     }
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
-        var users = UserRepository.Include(p => p.UserSubsidiaries)
+        var users = UserRepository
+             .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries)
             .Where(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
     }
 
     public async Task<bool> HasOrganizationUsersAsync(long organizationId)
     {
-        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+        var userCount = await UserRepository
+            .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries)
             .CountAsync(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return userCount > 0;
     }
 
     public async Task<bool> HasPositionUsersAsync(long positionId)
     {
-        var userCount = await UserRepository.Include(p => p.UserSubsidiaries)
+        var userCount = await UserRepository
+            .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries)
             .CountAsync(p => p.UserSubsidiaries.Any(us => us.PositionId == positionId));
         return userCount > 0;
     }
@@ -345,8 +331,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
         }
 
         var currentUserClaims = await UserClaimRepository
+            .AsQueryable(false)
             .Where(p => p.UserId == userId)
-            .AsNoTracking()
             .ToListAsync();
 
         var userClaims = new List<IdentityUserClaim>();
@@ -416,7 +402,10 @@ public class IdentityUserManager : UserManager<IdentityUser>
     private async Task<IEnumerable<long>> GetSelfAndChildrenDataRangeOrganizationIds(long userId)
     {
         var allSelfAndChildrenOrganizationIds = new List<long>();
-        var user = await UserRepository.Include(p => p.UserSubsidiaries).AsNoTracking().FirstAsync(p => p.Id == userId);
+        var user = await UserRepository
+            .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries)
+            .FirstAsync(p => p.Id == userId);
         foreach (var userSubsidiary in user.UserSubsidiaries)
         {
             var selfAndChildrenOrganizationIds =
@@ -429,7 +418,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     private async Task<IEnumerable<long>> GetSelfDataRangeOrganizationIds(long userId)
     {
-        var user = await UserRepository.Include(p => p.UserSubsidiaries).AsNoTracking().FirstAsync(p => p.Id == userId);
+        var user = await UserRepository
+            .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries).FirstAsync(p => p.Id == userId);
         return user.UserSubsidiaries.Select(p => p.OrganizationId);
     }
 
@@ -437,7 +428,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
     private async Task<IEnumerable<long>> GetRoleCustomDataRangeOrganizationIds(long roleId)
     {
         var roleCustomDataRangeOrganizations =
-            await _roleOrganizationRepository.Where(p => p.RoleId == roleId).AsNoTracking().ToListAsync();
+            await _roleOrganizationRepository
+            .AsQueryable(false)
+            .Where(p => p.RoleId == roleId).ToListAsync();
         return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);
     }
 
