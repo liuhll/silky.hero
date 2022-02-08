@@ -213,7 +213,7 @@
             selectedPositionIds.value = [];
           },
         },
-        handleSearchInfoFn: (formData) => {
+        beforeFetch: (formData) => {
           const organizationIds = unref(selectedOrganizationIds);
           if (organizationIds.length > 0) {
             formData.OrganizationIds = organizationIds.join(',');
