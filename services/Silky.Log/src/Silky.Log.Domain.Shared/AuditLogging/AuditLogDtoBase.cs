@@ -43,4 +43,9 @@ public abstract class AuditLogDtoBase
     /// 响应码
     /// </summary>
     public int? HttpStatusCode { get; set; }
+
+    /// <summary>
+    /// http请求参数
+    /// </summary>
+    public string RequestParameters { get; set; }
 }
