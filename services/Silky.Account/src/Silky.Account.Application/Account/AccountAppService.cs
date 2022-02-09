@@ -49,4 +49,9 @@ public class AccountAppService : IAccountAppService
     {
         return UserManager.GetUserMenusAsync(_session.UserId.To<long>());
     }
+
+    public Task<string[]> GetCurrentUserPermissionCodesAsync()
+    {
+        return UserManager.GetUserPermissionCodesAsync(_session.UserId.To<long>());
+    }
 }

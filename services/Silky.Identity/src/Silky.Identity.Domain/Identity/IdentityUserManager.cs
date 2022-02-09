@@ -80,6 +80,22 @@ public class IdentityUserManager : UserManager<IdentityUser>
         _menuAppService = menuAppService;
     }
 
+    public async Task<string[]> GetUserPermissionCodesAsync(long userId)
+    {
+        // 1. 获取用户的角色信息
+        var userRoleIds = await UserRepository.GetRolesAsync(userId).Select(p => p.Id).ToListAsync();
+        // 2. 获取角色的菜单信息
+        var roleMenuIds = await _roleMenuRepository
+            .AsQueryable(false)
+            .Where(p => userRoleIds.Contains(p.RoleId))
+            .Select(p => p.MenuId)
+            .Distinct()
+            .ToArrayAsync();
+        // 3. 获取所有菜单的父级信息
+        var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
+        return menus.Where(p => !p.PermissionCode.IsNullOrEmpty() && p.Status == Status.Valid).Select(p => p.PermissionCode).ToArray();
+    }
+
     public async Task<ICollection<GetCurrentUserMenuOutput>> GetUserMenusAsync(long userId)
     {
         // 1. 获取用户的角色信息
@@ -110,6 +126,28 @@ public class IdentityUserManager : UserManager<IdentityUser>
             return menus.Where(p => p.ParentId == menu.Id).OrderByDescending(p => p.Sort).FirstOrDefault()?.RoutePath;
         }
 
+        IDictionary<string, object> SetMeta(GetMenuOutput menu) 
+        {
+            var meta = new Dictionary<string, object>();
+            meta["Title"] = menu.Name;
+            meta["Icon"] = menu.Icon;
+            meta["OrderNo"] = menu.Sort;
+            if (menu.Display == false) 
+            {
+                meta["ShowMenu"] = false;
+            }
+            if (menu.KeepAlive == false) 
+            {
+                meta["IgnoreKeepAlive"] = true;
+            }
+            if (menu.ExternalLink == true) 
+            {
+                meta["frameSrc"] = menu.ExternalLink;
+            }
+            meta["Icon"] = menu.Icon;
+            return meta;
+        }
+
        var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
             .Select(m => new FrontendMenu()
         {
@@ -119,6 +157,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             Component = m.Component,
             Path = m.RoutePath,
             Redirect = GetRedirect(menus, m),
+            Meta = SetMeta(m),
         });
         return frontendMenus;
     }

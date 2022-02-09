@@ -4,6 +4,11 @@ namespace Silky.Identity.Domain.Identity;
 
 public class FrontendMenu
 {
+    public FrontendMenu() 
+    {
+        Meta = new Dictionary<string, object>();
+    }
+
     /// <summary>
     /// 菜单Id
     /// </summary>
@@ -29,6 +34,8 @@ public class FrontendMenu
     /// 重定向地址
     /// </summary>
     public string Redirect { get; set; }
+    
+    public IDictionary<string, object> Meta { get; set; }
 
     /// <summary>
     /// 子路由

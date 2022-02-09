@@ -24,6 +24,8 @@ public class GetCurrentUserMenuOutput
     /// </summary>
     public string Redirect { get; set; }
 
+    public IDictionary<string, object> Meta { get; set; }
+
     /// <summary>
     /// 子路由
     /// </summary>

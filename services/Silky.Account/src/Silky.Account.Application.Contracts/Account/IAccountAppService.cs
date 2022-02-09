@@ -36,6 +36,10 @@ public interface IAccountAppService
     Task<ICollection<GetCurrentUserMenuOutput>> GetCurrentUserMenusAsync();
 
     [Authorize]
+    [HttpGet("permissioncodes")]
+    Task<string[]> GetCurrentUserPermissionCodesAsync();
+
+    [Authorize]
     [GetCachingIntercept("CurrentUserDataRange", OnlyCurrentUserData = true)]
     [ProhibitExtranet]
     Task<GetCurrentUserDataRange> GetCurrentUserDataRangeAsync();
