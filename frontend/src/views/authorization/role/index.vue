@@ -7,7 +7,9 @@
         <Tag color="blue" v-if="record.isPublic">公开</Tag>
       </template>
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增角色</a-button>
+        <a-button type="primary" v-auth="'Identity.Role.Create'" @click="handleCreate"
+          >新增角色</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
@@ -16,21 +18,25 @@
               icon: 'clarity:info-standard-line',
               tooltip: '查看角色详情',
               onClick: handleView.bind(null, record),
+              auth: 'Identity.Role.LookDetail',
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑角色资料',
               onClick: handleEdit.bind(null, record),
+              auth: 'Identity.Role.Update',
             },
             {
               icon: 'clarity:menu-line',
               tooltip: '授权菜单',
               onClick: handleAuthorizeMenu.bind(null, record),
+              auth: 'Identity.Role.SetMenus',
             },
             {
               icon: 'mdi:database-outline',
               tooltip: '授权数据',
               onClick: handleAuthorizeDataRange.bind(null, record),
+              auth: 'Identity.Role.SetDataRange',
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -40,6 +46,7 @@
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
               },
+              auth: 'Identity.Role.Delete',
             },
           ]"
         />
@@ -60,7 +67,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref, unref, computed, nextTick } from 'vue';
   import { Tag } from 'ant-design-vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { getMenuTreeList2 } from '/@/views/authorization/menu/menu.data';
@@ -86,6 +93,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'Role',
     components: {
@@ -100,7 +108,9 @@
     setup() {
       const searchInfo = ref({});
       const { notification } = useMessage();
-      const [registerTable, { reload }] = useTable({
+      const { hasPermission } = usePermission();
+      const showSearchForm = computed(() => hasPermission('Identity.Role.Search'));
+      const tableConfig: any = {
         title: '角色列表',
         rowKey: 'id',
         columns,
@@ -110,16 +120,27 @@
           schemas: searchFormSchema,
           autoSubmitOnEnter: true,
         },
-        useSearchForm: true,
+        useSearchForm: unref(showSearchForm),
         showTableSetting: true,
         bordered: true,
-        actionColumn: {
+      };
+      if (
+        hasPermission([
+          'Identity.Role.Create',
+          'Identity.Role.Update',
+          'Identity.Role.Delete',
+          'Identity.Role.SetMenus',
+          'Identity.Role.SetDataRange',
+        ])
+      ) {
+        tableConfig.actionColumn = {
           width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-      });
+        };
+      }
+      const [registerTable, { reload }] = useTable(tableConfig);
       const roleMenuDrawerRef = ref<{
         getTree: () => any;
         setMenusTreeData: (treeData: TreeItem[]) => void;
