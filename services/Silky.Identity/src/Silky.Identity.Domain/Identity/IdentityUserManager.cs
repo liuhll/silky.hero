@@ -132,9 +132,21 @@ public class IdentityUserManager : UserManager<IdentityUser>
             meta["Title"] = menu.Name;
             meta["Icon"] = menu.Icon;
             meta["OrderNo"] = menu.Sort;
+            meta["Icon"] = menu.Icon;
+            if (menu.HideBreadcrumb == true)
+            {
+                meta["HideBreadcrumb"] = true;
+            }
+            
+            if (!menu.CurrentActiveMenu.IsNullOrEmpty())
+            {
+                meta["CurrentActiveMenu"] = menu.CurrentActiveMenu;
+            }
+
             if (menu.Display == false) 
             {
                 meta["ShowMenu"] = false;
+                meta["HideMenu"] = true;
             }
             if (menu.KeepAlive == false) 
             {
@@ -144,7 +156,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             {
                 meta["frameSrc"] = menu.ExternalLink;
             }
-            meta["Icon"] = menu.Icon;
+            
             return meta;
         }
 

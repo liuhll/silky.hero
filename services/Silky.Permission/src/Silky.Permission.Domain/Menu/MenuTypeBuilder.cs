@@ -49,6 +49,12 @@ public class MenuTypeBuilder : IEntityTypeBuilder<Menu>
         builder.Property(e => e.KeepAlive)
             .HasColumnName(nameof(Menu.KeepAlive));
         
+        builder.Property(e => e.HideBreadcrumb)
+            .HasColumnName(nameof(Menu.HideBreadcrumb));
+        
+        builder.Property(e => e.CurrentActiveMenu)
+            .HasColumnName(nameof(Menu.CurrentActiveMenu));
+        
         builder.Property(e => e.Status)
             .HasColumnName(nameof(Menu.Status));
 

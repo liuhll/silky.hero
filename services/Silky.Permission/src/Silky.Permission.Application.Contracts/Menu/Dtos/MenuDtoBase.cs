@@ -61,6 +61,16 @@ public abstract class MenuDtoBase
     /// 是否缓存
     /// </summary>
     public bool? KeepAlive { get; set; }
+    
+    /// <summary>
+    /// 是否隐藏面包屑导航 
+    /// </summary>
+    public bool? HideBreadcrumb { get; set; }
+    
+    /// <summary>
+    /// 当前活动的菜单页
+    /// </summary>
+    public string CurrentActiveMenu { get; set; }
 
     /// <summary>
     /// 菜单类型
