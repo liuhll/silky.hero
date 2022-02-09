@@ -4,7 +4,12 @@
       <Col :span="6">
         <Card title="组织机构树">
           <template #extra>
-            <a-button type="primary" @click="handleCreateOrganizationRoot">添加根机构</a-button>
+            <a-button
+              type="primary"
+              v-auth="'Organization.Create'"
+              @click="handleCreateOrganizationRoot"
+              >添加根机构</a-button
+            >
           </template>
           <BasicTree
             defaultExpandAll
@@ -28,6 +33,7 @@
               <a-button
                 type="primary"
                 @click="handleAddOrganizationUsersDrawer"
+                v-auth="'Organization.AddUsers'"
                 v-if="canAddOrganizationUsers"
                 >添加成员</a-button
               >
@@ -85,7 +91,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import OrganizationDrawer from './OrganizationDrawer.vue';
   import OrganizationUserDrawer from './OrganizationUserDrawer.vue';
-
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'OrganizationManagement',
     components: {
@@ -106,6 +112,7 @@
       const canAddOrganizationUsers = ref<boolean>(false);
       const selectedOrganizationId = ref<number | undefined>();
       const searchInfo = reactive<Recordable>({});
+      const { hasPermission } = usePermission();
       const [registerOrganizationDrawer, { openDrawer: openOrganizationDrawer }] = useDrawer();
       const [registerOrganizationUserDrawer, { openDrawer: openOrganizationUserDrawer }] =
         useDrawer();
@@ -126,7 +133,7 @@
         return table;
       }
 
-      const [registerTable, { reload }] = useTable({
+      const tableConfig: any = {
         rowKey: 'id',
         columns: userColumns,
         api: getOrganizationUserPageList,
@@ -135,13 +142,18 @@
           emptyText: '选择一个组织机构来查看成员',
         },
         showTableSetting: true,
-        actionColumn: {
+      };
+
+      if (hasPermission(['Organization.RemoveUser'])) {
+        tableConfig.actionColumn = {
           width: 100,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-      });
+        };
+      }
+      const [registerTable, { reload }] = useTable(tableConfig);
+
       onMounted(async () => {
         await loadOrganizationTreeData();
         getTree().expandAll(true);
@@ -256,8 +268,9 @@
       }
 
       function getRightMenuList(node: any): ContextMenuItem[] {
-        return [
-          {
+        let rigthMenList: ContextMenuItem[] = [];
+        if (hasPermission('Organization.Update')) {
+          rigthMenList.push({
             label: '编辑',
             handler: () => {
               openOrganizationDrawer(true, {
@@ -266,8 +279,10 @@
               });
             },
             icon: 'clarity:note-edit-line',
-          },
-          {
+          });
+        }
+        if (hasPermission('Organization.Create')) {
+          rigthMenList.push({
             label: '添加子机构',
             handler: () => {
               openOrganizationDrawer(true, {
@@ -276,8 +291,10 @@
               });
             },
             icon: 'bi:plus',
-          },
-          {
+          });
+        }
+        if (hasPermission('Organization.Delete')) {
+          rigthMenList.push({
             label: '删除',
             handler: () => {
               createConfirm({
@@ -297,8 +314,9 @@
               });
             },
             icon: 'ant-design:delete-outlined',
-          },
-        ];
+          });
+        }
+        return rigthMenList;
       }
       return {
         treeData,
