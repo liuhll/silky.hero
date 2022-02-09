@@ -22,4 +22,6 @@ public class GetUserPageInput : PageDtoBase
     public long[] OrganizationIds { get; set; }
 
     public long[] PositionIds { get; set; }
+    
+    public long[] RoleIds { get; set; }
 }
