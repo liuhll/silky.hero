@@ -76,6 +76,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     {
         var menus = await MenuRepository.AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p=> p.Name.Contains(name))
+            .OrderByDescending(p=> p.Sort)
             .ToListAsync();
         return menus.BuildTree();
     }
@@ -143,12 +144,12 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             }
         }
 
-        if (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode))
+        if (!input.PermissionCode.IsNullOrEmpty() && (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
         {
             var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
             if (exsitMenu != null)
             {
-                throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,权限标识不允许重复");
+                throw new UserFriendlyException($"已经存在{input.PermissionCode}菜单,权限标识不允许重复");
             }
         }
     }
@@ -195,7 +196,10 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             var allMenus = await MenuRepository.AsQueryable(false).ProjectToType<GetMenuOutput>().ToArrayAsync();
             var menus = allMenus.Where(p => menuIds.Contains(p.Id));
             var parentIds = menus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
-            return GetMenusIncludeParents(allMenus, menus, parentIds);
+            return GetMenusIncludeParents(allMenus, menus, parentIds)
+                .Distinct()
+                .OrderByDescending(p=> p.Sort)
+                .ToList();
         }
     }
 

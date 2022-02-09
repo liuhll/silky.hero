@@ -30,6 +30,8 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
     public bool? KeepAlive { get; set; }
 
     public bool? HideBreadcrumb { get; set; }
+    
+    public bool? HideChildrenInMenu { get; set; }
 
     public string CurrentActiveMenu { get; set; }
 

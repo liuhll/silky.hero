@@ -138,6 +138,11 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 meta["HideBreadcrumb"] = true;
             }
             
+            if (menu.HideChildrenInMenu == true)
+            {
+                meta["HideChildrenInMenu"] = true;
+            }
+            
             if (!menu.CurrentActiveMenu.IsNullOrEmpty())
             {
                 meta["CurrentActiveMenu"] = menu.CurrentActiveMenu;

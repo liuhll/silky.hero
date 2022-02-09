@@ -68,6 +68,11 @@ public abstract class MenuDtoBase
     public bool? HideBreadcrumb { get; set; }
     
     /// <summary>
+    /// 隐藏子菜单
+    /// </summary>
+    public bool? HideChildrenInMenu { get; set; }
+    
+    /// <summary>
     /// 当前活动的菜单页
     /// </summary>
     public string CurrentActiveMenu { get; set; }
