@@ -69,7 +69,7 @@ public class PositionAppService : IPositionAppService
         return await _positionDomainService.PositionRepository
             .AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
-            .Where(p => p.Status == Status.Valid)
+            //.Where(p => p.Status == Status.Valid)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }
