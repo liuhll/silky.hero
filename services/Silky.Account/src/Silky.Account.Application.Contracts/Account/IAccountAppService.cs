@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
@@ -28,6 +30,10 @@ public interface IAccountAppService
     [GetCachingIntercept("CurrentUserInfo", OnlyCurrentUserData = true)]
     [Authorize]
     Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync();
+
+    [Authorize]
+    [HttpGet("menus")]
+    Task<ICollection<GetCurrentUserMenuOutput>> GetCurrentUserMenusAsync();
 
     [Authorize]
     [GetCachingIntercept("CurrentUserDataRange", OnlyCurrentUserData = true)]

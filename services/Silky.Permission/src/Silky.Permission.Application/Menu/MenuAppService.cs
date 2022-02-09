@@ -69,4 +69,9 @@ public class MenuAppService : IMenuAppService
             .ToListAsync();
         return permissionCodes;
     }
+
+    public Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds, bool includeParents = true)
+    {
+        return _menuDomainService.GetMenusAsync(menuIds, includeParents);
+    }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
@@ -17,8 +18,12 @@ using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Hero.Common.Enums;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Extensions;
+using Silky.Identity.Domain.Identity;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
+using Silky.Permission.Application.Contracts.Menu;
+using Silky.Permission.Application.Contracts.Menu.Dtos;
+using Silky.Permission.Domain.Shared.Menu;
 using Silky.Position.Application.Contracts.Position;
 
 namespace Silky.Identity.Domain;
@@ -33,6 +38,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
     private readonly IRepository<IdentityRoleOrganization> _roleOrganizationRepository;
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
+    private readonly IRepository<IdentityRoleMenu> _roleMenuRepository;
+    private readonly IMenuAppService _menuAppService;
 
     public IdentityUserManager(IdentityUserStore store,
         IOptions<IdentityOptions> optionsAccessor,
@@ -49,7 +56,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IPositionAppService positionAppService,
         IRepository<IdentityUserClaim> userClaimRepository,
         IRepository<IdentityClaimType> claimTypeRepository,
-        IRepository<IdentityRoleOrganization> roleOrganizationRepository)
+        IRepository<IdentityRoleOrganization> roleOrganizationRepository,
+        IRepository<IdentityRoleMenu> roleMenuRepository,
+        IMenuAppService menuAppService)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -67,6 +76,51 @@ public class IdentityUserManager : UserManager<IdentityUser>
         UserClaimRepository = userClaimRepository;
         ClaimTypeRepository = claimTypeRepository;
         _roleOrganizationRepository = roleOrganizationRepository;
+        _roleMenuRepository = roleMenuRepository;
+        _menuAppService = menuAppService;
+    }
+
+    public async Task<ICollection<GetCurrentUserMenuOutput>> GetUserMenusAsync(long userId)
+    {
+        // 1. 获取用户的角色信息
+        var userRoleIds = await UserRepository.GetRolesAsync(userId).Select(p=> p.Id).ToListAsync();
+        // 2. 获取角色的菜单信息
+        var roleMenuIds = await _roleMenuRepository
+            .AsQueryable(false)
+            .Where(p => userRoleIds.Contains(p.RoleId))
+            .Select(p=> p.MenuId)
+            .Distinct()
+            .ToArrayAsync();
+        // 3. 获取所有菜单的父级信息
+        var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
+        // 4. 构建菜单
+        var frontendMenus = MapFrontendMenus(menus);
+        // 5. 构建树
+        return frontendMenus.BuildTree().Adapt<ICollection<GetCurrentUserMenuOutput>>();
+    }
+
+    private IEnumerable<FrontendMenu> MapFrontendMenus(IEnumerable<GetMenuOutput> menus)
+    {
+        string GetRedirect(IEnumerable<GetMenuOutput> menus, GetMenuOutput menu) 
+        {
+            if (menu.Type != MenuType.Catalog) 
+            {
+                return null;
+            }
+            return menus.Where(p => p.ParentId == menu.Id).OrderByDescending(p => p.Sort).FirstOrDefault()?.RoutePath;
+        }
+
+       var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
+            .Select(m => new FrontendMenu()
+        {
+            Id = m.Id,
+            ParentId = m.ParentId,
+            Name = m.RoutePath.Replace("/", ".").TrimStart('.'),
+            Component = m.Component,
+            Path = m.RoutePath,
+            Redirect = GetRedirect(menus, m),
+        });
+        return frontendMenus;
     }
 
     public async Task<IdentityUser> GetByIdAsync(long id)

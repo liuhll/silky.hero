@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mapster;
 using Silky.Account.Application.Contracts.Account;
 using Silky.Account.Application.Contracts.Account.Dtos;
+using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.Dtos;
 using Silky.Identity.Domain;
@@ -41,5 +43,10 @@ public class AccountAppService : IAccountAppService
     {
         return (await UserManager.GetUserDataRange(long.Parse(_session.UserId.ToString())))
             .Adapt<GetCurrentUserDataRange>();
+    }
+
+    public Task<ICollection<GetCurrentUserMenuOutput>> GetCurrentUserMenusAsync()
+    {
+        return UserManager.GetUserMenusAsync(_session.UserId.To<long>());
     }
 }

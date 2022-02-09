@@ -58,7 +58,6 @@ public interface IMenuAppService
     /// <summary>
     /// 获取菜单树
     /// </summary>
-    /// <param name="input"></param>
     /// <param name="name"></param>
     /// <returns></returns>
     Task<ICollection<GetMenuTreeOutput>> GetTreeAsync([FromQuery]string name);
@@ -74,4 +73,7 @@ public interface IMenuAppService
 
     [ProhibitExtranet]
     Task<ICollection<string>> GetPermissions(List<long> menuIds);
+
+    [ProhibitExtranet]
+    Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds,bool includeParents = true);
 }

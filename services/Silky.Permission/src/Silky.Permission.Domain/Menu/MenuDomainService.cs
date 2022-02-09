@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -181,5 +182,34 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
                 throw new UserFriendlyException($"已经存在{input.PermissionCode}目录,权限标识不允许重复");
             }
         }
+    }
+
+    public async Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds, bool includeParents)
+    {
+        if (!includeParents)
+        {
+            return await MenuRepository.AsQueryable(false).Where(p => menuIds.Contains(p.Id)).ProjectToType<GetMenuOutput>().ToListAsync();
+        }
+        else 
+        {
+            var allMenus = await MenuRepository.AsQueryable(false).ProjectToType<GetMenuOutput>().ToArrayAsync();
+            var menus = allMenus.Where(p => menuIds.Contains(p.Id));
+            var parentIds = menus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
+            return GetMenusIncludeParents(allMenus, menus, parentIds);
+        }
+    }
+
+    private ICollection<GetMenuOutput> GetMenusIncludeParents(GetMenuOutput[] allMenus, IEnumerable<GetMenuOutput> menus, long[] parnetIds)
+    {
+        var includeParentMenus = new List<GetMenuOutput>();
+        includeParentMenus.AddRange(menus);
+        if (parnetIds != null && parnetIds.Any()) 
+        {
+            var parnetMenus = allMenus.Where(p => parnetIds.Contains(p.Id));
+            includeParentMenus.AddRange(parnetMenus);
+            var parnetMenuParentIds = parnetMenus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
+            return GetMenusIncludeParents(allMenus, includeParentMenus, parnetMenuParentIds);
+        }
+        return includeParentMenus;
     }
 }

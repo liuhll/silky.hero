@@ -14,4 +14,6 @@ public interface IMenuDomainService
     Task<ICollection<Menu>> GetTreeAsync(string name);
     
     Task DeleteAsync(long id);
+
+    Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds, bool includeParents);
 }
