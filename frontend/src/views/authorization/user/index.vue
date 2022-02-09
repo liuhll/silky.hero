@@ -42,7 +42,9 @@
         </Tag>
       </template>
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+        <a-button type="primary" v-auth="'Identity.User.Create'" @click="handleCreate"
+          >新增账号</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
@@ -51,16 +53,19 @@
               icon: 'clarity:info-standard-line',
               tooltip: '查看用户详情',
               onClick: handleView.bind(null, record),
+              auth: 'Identity.User.LookDetail',
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑用户资料',
               onClick: handleEdit.bind(null, record),
+              auth: 'Identity.User.Update',
             },
             {
               icon: 'carbon:user-role',
               tooltip: '授权角色',
               onClick: handleAuthorizeRole.bind(null, record),
+              auth: 'Identity.User.SetRoles',
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -70,6 +75,7 @@
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
               },
+              auth: 'Identity.User.Delete',
             },
           ]"
         />
@@ -81,7 +87,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, onMounted, unref, nextTick } from 'vue';
+  import { defineComponent, ref, onMounted, unref, nextTick, computed } from 'vue';
   import { TreeSelect, Tag, Select } from 'ant-design-vue';
   import {
     getUserPageList,
@@ -105,6 +111,7 @@
   import { OptionsItem } from '/@/utils/model';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Status } from '/@/utils/status';
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'User',
     components: {
@@ -128,6 +135,8 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerUserRoleDrawer, { openDrawer: openUserRoleDrawer }] = useDrawer();
       const { notification } = useMessage();
+      const { hasPermission } = usePermission();
+      const showSearchForm = computed(() => hasPermission('Identity.User.Search'));
       onMounted(async () => {
         treeData.value = await getOrganizationTreeList();
         positionOptions.value = await getPositionOptions({});
@@ -212,7 +221,7 @@
         });
       }
 
-      const [registerTable, { reload }] = useTable({
+      const tableConfig: any = {
         title: '用户列表',
         rowKey: 'id',
         columns,
@@ -242,16 +251,29 @@
           }
           return formData;
         },
-        useSearchForm: true,
+        useSearchForm: unref(showSearchForm),
         showTableSetting: true,
         bordered: true,
-        actionColumn: {
+      };
+
+      if (
+        hasPermission([
+          'Identity.User.LookDetail',
+          'Identity.User.Create',
+          'Identity.User.Update',
+          'Identity.User.Delete',
+          'Identity.User.SetUsers',
+        ])
+      ) {
+        tableConfig.actionColumn = {
           width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-      });
+        };
+      }
+
+      const [registerTable, { reload }] = useTable(tableConfig);
 
       return {
         registerTable,
