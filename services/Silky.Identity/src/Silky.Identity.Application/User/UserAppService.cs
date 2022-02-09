@@ -47,7 +47,7 @@ public class UserAppService : IUserAppService
 
     public async Task UpdateAsync(UpdateUserInput input)
     {
-        var user = await UserManager.GetByIdAsync(input.Id);
+        var user = await UserManager.UserRepository.Include(p=> p.UserSubsidiaries).FirstOrDefaultAsync(p=> p.Id == input.Id);
         await UpdateUserByInput(user, input);
 
         if (!input.Password.IsNullOrEmpty())
