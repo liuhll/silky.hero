@@ -205,7 +205,6 @@ export const menuSchemas: FormSchema[] = [
     },
     ifShow: ({ values }) => isMenu(values.type),
   },
-
   {
     field: 'display',
     label: '是否显示',
@@ -215,6 +214,38 @@ export const menuSchemas: FormSchema[] = [
       options: [
         { label: '是', value: true },
         { label: '否', value: false },
+      ],
+    },
+    ifShow: ({ values }) => !isButton(values.type),
+  },
+  {
+    field: 'hideChildrenInMenu',
+    label: '隐藏子菜单',
+    component: 'RadioButtonGroup',
+    defaultValue: false,
+    componentProps: {
+      options: [
+        { label: '否', value: false },
+        { label: '是', value: true },
+      ],
+    },
+    ifShow: ({ values }) => isDir(values.type),
+  },
+  {
+    field: 'currentActiveMenu',
+    label: '当前活动菜单',
+    component: 'Input',
+    ifShow: ({ values }) => isMenu(values.type) && values.display == false,
+  },
+  {
+    field: 'hideBreadcrumb',
+    label: '是否隐藏面包屑',
+    component: 'RadioButtonGroup',
+    defaultValue: false,
+    componentProps: {
+      options: [
+        { label: '否', value: false },
+        { label: '是', value: true },
       ],
     },
     ifShow: ({ values }) => !isButton(values.type),

@@ -8,7 +8,14 @@
     @ok="handleSubmit"
   >
     <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="checkeAllMenus">全选</Checkbox>
-    <BasicTree :tree-data="menusTreeData" defaultExpandAll checkable ref="treeRef" @change="handleCheckedMenus" />
+    <BasicTree
+      :tree-data="menusTreeData"
+      defaultExpandAll
+      checkable
+      multiple
+      ref="treeRef"
+      @change="handleCheckedMenus"
+    />
   </BasicDrawer>
 </template>
 
