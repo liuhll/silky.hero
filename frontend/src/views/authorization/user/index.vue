@@ -22,6 +22,15 @@
           :options="positionOptions"
         />
       </template>
+      <template #form-roleIdSelect>
+        <Select
+          v-model:value="selectedRoleIds"
+          placeholder="请选择"
+          mode="multiple"
+          allow-clear
+          :options="roleOptions"
+        />
+      </template>
       <template #userSubsidiaries="{ text }">
         <Tag v-for="(userSubsidiary, index) in text" :key="index" color="green" style="margin: 2px">
           {{ displayUserSubsidiary(userSubsidiary) }}
@@ -92,6 +101,7 @@
   import UserRoleDrawer from './UserRoleDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
+  import { getRoleOptions } from '/@/views/authorization/role/role.data';
   import { OptionsItem } from '/@/utils/model';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Status } from '/@/utils/status';
@@ -112,13 +122,16 @@
       const treeData = ref<TreeItem[]>([]);
       const selectedOrganizationIds = ref([]);
       const selectedPositionIds = ref([]);
+      const selectedRoleIds = ref([]);
       const positionOptions = ref<OptionsItem[]>([]);
+      const roleOptions = ref<OptionsItem[]>([]);
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerUserRoleDrawer, { openDrawer: openUserRoleDrawer }] = useDrawer();
       const { notification } = useMessage();
       onMounted(async () => {
         treeData.value = await getOrganizationTreeList();
         positionOptions.value = await getPositionOptions({});
+        roleOptions.value = await getRoleOptions({});
       });
 
       function displayUserSubsidiary(userSubsidiary) {
@@ -211,6 +224,7 @@
           resetFunc: () => {
             selectedOrganizationIds.value = [];
             selectedPositionIds.value = [];
+            selectedRoleIds.value = [];
           },
         },
         beforeFetch: (formData) => {
@@ -221,6 +235,10 @@
           const positionIds = unref(selectedPositionIds);
           if (positionIds.length > 0) {
             formData.PositionIds = positionIds.join(',');
+          }
+          const roleIds = unref(selectedRoleIds);
+          if (roleIds.length > 0) {
+            formData.RoleIds = roleIds.join(',');
           }
           return formData;
         },
@@ -248,10 +266,12 @@
         registerUserRoleDrawer,
         handleSuccessAuthorizeUserRole,
         positionOptions,
+        roleOptions,
         searchInfo,
         treeData,
         selectedOrganizationIds,
         selectedPositionIds,
+        selectedRoleIds,
       };
     },
   });

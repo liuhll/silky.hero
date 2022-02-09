@@ -2,6 +2,9 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
+import { getRoleList } from '/@/api/role';
+import { omit } from 'lodash-es';
+import { OptionsItem } from '/@/utils/model';
 import { Tag } from 'ant-design-vue';
 import { h } from 'vue';
 import { DataRange } from '/@/utils/dataRangeUtil';
@@ -174,3 +177,19 @@ export const roleDataSchemas: FormSchema[] = [
     },
   },
 ];
+
+export const getRoleOptions = async (query:any) => {
+  const roleList = await getRoleList(query);
+  const positionOptions = roleList.reduce((prev, next: Recordable) => {
+    if (next) {
+      prev.push({
+        ...omit(next, ['realName', 'id']),
+        label: next['realName'],
+        value: next['id'],
+        disabled: next['status'] === Status.Invalid,
+      });
+    }
+    return prev;
+  }, [] as OptionsItem[]);
+  return positionOptions;
+}

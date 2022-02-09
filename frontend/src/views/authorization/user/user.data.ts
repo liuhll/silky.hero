@@ -112,6 +112,13 @@ export const searchFormSchema: FormSchema[] = [
     slot: 'positionIdSelect',
     colProps: { span: 6 },
   },
+  {
+    field: 'roleIds',
+    label: '角色',
+    component: 'Select',
+    slot: 'roleIdSelect',
+    colProps: { span: 6 },
+  },
 ];
 
 export const userSchemas: FormSchema[] = [
