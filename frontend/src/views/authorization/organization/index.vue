@@ -152,7 +152,7 @@
           slots: { customRender: 'action' },
         };
       }
-      const [registerTable, { reload }] = useTable(tableConfig);
+      const [registerTable, { reload, setTableData }] = useTable(tableConfig);
 
       onMounted(async () => {
         await loadOrganizationTreeData();
@@ -305,10 +305,13 @@
                     notification.success({
                       message: '删除机构成功',
                     });
-                    selectedOrganizationId.value = undefined;
-                    canAddOrganizationUsers.value = false;
                     await loadOrganizationTreeData();
-                    reload();
+                    if (node.eventKey === unref(selectedOrganizationId)) {
+                      selectedOrganizationId.value = undefined;
+                      canAddOrganizationUsers.value = false;
+                      setTableData([]);
+                    }
+        
                   });
                 },
               });
