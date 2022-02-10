@@ -97,23 +97,27 @@
       }
       function handleSuccess(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          const isUpdate = !!data?.isUpdate;
-          if (isUpdate) {
-            await updateMenu(data.values);
+          try {
+            loadingRef.value = true;
+            const isUpdate = !!data?.isUpdate;
+            if (isUpdate) {
+              await updateMenu(data.values);
+              loadingRef.value = false;
+              // updateTableDataRecord(data.values.id, data.values);
+              notification.success({
+                message: `更新菜单${data.values.name}成功.`,
+              });
+            } else {
+              await createMenu(data.values);
+              loadingRef.value = false;
+              notification.success({
+                message: `新增菜单${data.values.name}成功.`,
+              });
+            }
+            reload();
+          } catch (err) {
             loadingRef.value = false;
-            // updateTableDataRecord(data.values.id, data.values);
-            notification.success({
-              message: `更新菜单${data.values.name}成功.`,
-            });
-          } else {
-            await createMenu(data.values);
-            loadingRef.value = false;
-            notification.success({
-              message: `新增菜单${data.values.name}成功.`,
-            });
           }
-          reload();
         });
       }
       function handleView(record: Recordable) {}
@@ -125,13 +129,17 @@
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await deleteMenu(record.id);
-          loadingRef.value = false;
-          notification.success({
-            message: `删除菜单${record.name}成功.`,
-          });
-          reload();
+          try {
+            loadingRef.value = true;
+            await deleteMenu(record.id);
+            loadingRef.value = false;
+            notification.success({
+              message: `删除菜单${record.name}成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 

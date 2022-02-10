@@ -157,45 +157,57 @@
       }
       function handleSuccess(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          const isUpdate = !!data?.isUpdate;
-          if (isUpdate) {
-            await updateRole(data.values);
+          try {
+            loadingRef.value = true;
+            const isUpdate = !!data?.isUpdate;
+            if (isUpdate) {
+              await updateRole(data.values);
+              loadingRef.value = false;
+              // updateTableDataRecord(data.values.id, data.values);
+              notification.success({
+                message: `更新角色${data.values.name}成功.`,
+              });
+            } else {
+              await createRole(data.values);
+              loadingRef.value = false;
+              notification.success({
+                message: `新增角色${data.values.name}成功.`,
+              });
+            }
+            reload();
+          } catch (err) {
             loadingRef.value = false;
-            // updateTableDataRecord(data.values.id, data.values);
-            notification.success({
-              message: `更新角色${data.values.name}成功.`,
-            });
-          } else {
-            await createRole(data.values);
-            loadingRef.value = false;
-            notification.success({
-              message: `新增角色${data.values.name}成功.`,
-            });
           }
-          reload();
         });
       }
 
       function handleSuccessAuthorizeRoleMenu(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await updateRoleMenuIds(data);
-          loadingRef.value = false;
-          notification.success({
-            message: `更新角色菜单权限成功.`,
-          });
+          try {
+            loadingRef.value = true;
+            await updateRoleMenuIds(data);
+            loadingRef.value = false;
+            notification.success({
+              message: `更新角色菜单权限成功.`,
+            });
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
       function handleSuccessAuthorizeRoleData(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await updateRoleDataRange(data);
-          loadingRef.value = false;
-          notification.success({
-            message: `更新角色数据权限成功.`,
-          });
+          try {
+            loadingRef.value = true;
+            await updateRoleDataRange(data);
+            loadingRef.value = false;
+            notification.success({
+              message: `更新角色数据权限成功.`,
+            });
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
@@ -250,13 +262,17 @@
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await deleteRole(record.id);
-          loadingRef.value = false;
-          notification.success({
-            message: `删除角色${record.name}成功.`,
-          });
-          reload();
+          try {
+            loadingRef.value = true;
+            await deleteRole(record.id);
+            loadingRef.value = false;
+            notification.success({
+              message: `删除角色${record.name}成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
       return {

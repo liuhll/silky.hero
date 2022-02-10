@@ -229,24 +229,28 @@
       }
       function handleCreateOrganization(data: any) {
         nextTick(async () => {
-          loadingRef.value = true;
-          const { isUpdate, values } = data;
-          if (isUpdate) {
-            await updateOrganization(values);
+          try {
+            loadingRef.value = true;
+            const { isUpdate, values } = data;
+            if (isUpdate) {
+              await updateOrganization(values);
+              loadingRef.value = false;
+              notification.success({
+                message: '更新组织机构成功',
+              });
+            } else {
+              await createOrganization(values);
+              loadingRef.value = false;
+              notification.success({
+                message: '创建组织机构成功',
+              });
+            }
+            await loadOrganizationTreeData();
+            if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
+              await setCanAddOrganizationUsers(values.id);
+            }
+          } catch (err) {
             loadingRef.value = false;
-            notification.success({
-              message: '更新组织机构成功',
-            });
-          } else {
-            await createOrganization(values);
-            loadingRef.value = false;
-            notification.success({
-              message: '创建组织机构成功',
-            });
-          }
-          await loadOrganizationTreeData();
-          if (unref(selectedOrganizationId) && unref(selectedOrganizationId) == values.id) {
-            await setCanAddOrganizationUsers(values.id);
           }
         });
       }
@@ -269,13 +273,17 @@
 
       function handleRemoveUser(record: Recordable) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await removeOrganizationUsers(unref(selectedOrganizationId), [record.id]);
-          loadingRef.value = false;
-          reload();
-          notification.success({
-            message: `移除用户${record.userName}成功`,
-          });
+          try {
+            loadingRef.value = true;
+            await removeOrganizationUsers(unref(selectedOrganizationId), [record.id]);
+            loadingRef.value = false;
+            reload();
+            notification.success({
+              message: `移除用户${record.userName}成功`,
+            });
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
@@ -313,17 +321,21 @@
                 title: '删除',
                 content: '您是否确认删除该机构',
                 onOk: async () => {
-                  loadingRef.value = true;
-                  await deleteOrganization(node.eventKey);
-                  loadingRef.value = false;
-                  notification.success({
-                    message: '删除机构成功',
-                  });
-                  await loadOrganizationTreeData();
-                  if (node.eventKey === unref(selectedOrganizationId)) {
-                    selectedOrganizationId.value = null;
-                    canAddOrganizationUsers.value = false;
-                    setTableData([]);
+                  try {
+                    loadingRef.value = true;
+                    await deleteOrganization(node.eventKey);
+                    loadingRef.value = false;
+                    notification.success({
+                      message: '删除机构成功',
+                    });
+                    await loadOrganizationTreeData();
+                    if (node.eventKey === unref(selectedOrganizationId)) {
+                      selectedOrganizationId.value = null;
+                      canAddOrganizationUsers.value = false;
+                      setTableData([]);
+                    }
+                  } catch (err) {
+                    loadingRef.value = false;
                   }
                 },
               });

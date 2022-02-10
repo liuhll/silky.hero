@@ -165,13 +165,17 @@
 
       function handleDelete(record: Recordable) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await deleteUser(record.id);
-          loadingRef.value = false;
-          notification.success({
-            message: `删除用户${record.userName}成功.`,
-          });
-          reload();
+          try {
+            loadingRef.value = true;
+            await deleteUser(record.id);
+            loadingRef.value = false;
+            notification.success({
+              message: `删除用户${record.userName}成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
@@ -197,35 +201,43 @@
 
       function handleSuccess(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          const isUpdate = !!data?.isUpdate;
-          if (isUpdate) {
-            await updateUser(data.values);
+          try {
+            loadingRef.value = true;
+            const isUpdate = !!data?.isUpdate;
+            if (isUpdate) {
+              await updateUser(data.values);
+              loadingRef.value = false;
+              //updateTableDataRecord(data.values.id, data.values);
+              notification.success({
+                message: `更新用户${data.values.userName}成功.`,
+              });
+            } else {
+              await createUser(data.values);
+              loadingRef.value = false;
+              notification.success({
+                message: `新增用户${data.values.userName}成功.`,
+              });
+            }
+            reload();
+          } catch (err) {
             loadingRef.value = false;
-            //updateTableDataRecord(data.values.id, data.values);
-            notification.success({
-              message: `更新用户${data.values.userName}成功.`,
-            });
-          } else {
-            await createUser(data.values);
-            loadingRef.value = false;
-            notification.success({
-              message: `新增用户${data.values.userName}成功.`,
-            });
           }
-          reload();
         });
       }
 
       function handleSuccessAuthorizeUserRole(data) {
         nextTick(async () => {
-          loadingRef.value = true;
-          await updateUserRoles(data.id, data.roleNames);
-          loadingRef.value = false;
-          notification.success({
-            message: `更新用户${data.userName}角色成功.`,
-          });
-          reload();
+          try {
+            loadingRef.value = true;
+            await updateUserRoles(data.id, data.roleNames);
+            loadingRef.value = false;
+            notification.success({
+              message: `更新用户${data.userName}角色成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
