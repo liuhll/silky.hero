@@ -16,7 +16,7 @@ namespace Silky.Organization.Application.Contracts.Organization;
 /// 组织机构服务
 /// </summary>
 [ServiceRoute]
-[Authorize(OrganizationPermissions.Organizations.Default)]
+[Authorize]
 public interface IOrganizationAppService
 {
     /// <summary>

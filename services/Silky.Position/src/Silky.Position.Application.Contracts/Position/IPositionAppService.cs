@@ -14,7 +14,7 @@ namespace Silky.Position.Application.Contracts.Position;
 /// 职位信息服务 
 /// </summary>
 [ServiceRoute]
-[Authorize(PositionPermissions.Positions.Default)]
+[Authorize]
 public interface IPositionAppService
 {
     /// <summary>

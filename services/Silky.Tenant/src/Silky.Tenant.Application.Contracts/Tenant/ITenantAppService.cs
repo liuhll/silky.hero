@@ -13,7 +13,7 @@ namespace Silky.Tenant.Application.Contracts.Tenant;
 /// 租户信息服务
 /// </summary>
 [ServiceRoute]
-[Authorize(TenantPermissions.Tenants.Default)]
+[Authorize]
 public interface ITenantAppService
 {
     /// <summary>

@@ -13,7 +13,7 @@ namespace Silky.BasicData.Application.Contracts.Dictionary;
 /// 字典服务
 /// </summary>
 [ServiceRoute]
-[Authorize(BasicDataPermissions.Dictionaries.Default)]
+[Authorize]
 public interface IDictionaryAppService
 {
     /// <summary>

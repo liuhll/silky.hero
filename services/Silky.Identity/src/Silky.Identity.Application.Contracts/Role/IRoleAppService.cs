@@ -15,7 +15,7 @@ namespace Silky.Identity.Application.Contracts.Role;
 /// 角色信息服务
 /// </summary>
 [ServiceRoute]
-[Authorize(IdentityPermissions.Roles.Default)]
+[Authorize]
 public interface IRoleAppService
 {
     /// <summary>
@@ -65,6 +65,10 @@ public interface IRoleAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.SetMenus)]
     [HttpPut("menus")]
+    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(bool),"permissionName:*")]
+    [RemoveCachingIntercept(typeof(bool),"roleName:*")]
     Task SetMenusAsync(UpdateRoleMenuInput input);
     
     /// <summary>

@@ -14,7 +14,7 @@ namespace Silky.Permission.Application.Contracts.Menu;
 /// 菜单服务
 /// </summary>
 [ServiceRoute]
-[Authorize(PermissionPermissions.Menus.Default)]
+[Authorize]
 public interface IMenuAppService
 {
     /// <summary>

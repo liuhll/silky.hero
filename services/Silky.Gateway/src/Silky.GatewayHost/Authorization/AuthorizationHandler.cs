@@ -23,12 +23,11 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
         HttpContext httpContext,
         IAuthorizationRequirement requirement)
     {
-#if !DEBUG
         if (requirement is PermissionRequirement permissionRequirement)
         {
             return await _permissionAppService.CheckPermissionAsync(permissionRequirement.PermissionName);
-        }     
-#endif
+        }
+
         return true;
     }
 

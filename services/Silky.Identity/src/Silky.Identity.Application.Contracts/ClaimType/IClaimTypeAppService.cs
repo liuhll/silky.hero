@@ -13,7 +13,7 @@ namespace Silky.Identity.Application.Contracts.ClaimType;
 /// 声明类型服务
 /// </summary>
 [ServiceRoute]
-[Authorize(IdentityPermissions.ClaimTypes.Default)]
+[Authorize]
 public interface IClaimTypeAppService
 {
     /// <summary>

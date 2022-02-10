@@ -16,7 +16,7 @@ namespace Silky.Log.Application.Contracts.AuditLogging;
 /// </summary>
 [ServiceRoute]
 [DisableAuditing]
-[Authorize(LogPermissions.AuditLogging.Default)]
+[Authorize]
 public interface IAuditLogAppService
 {
     
