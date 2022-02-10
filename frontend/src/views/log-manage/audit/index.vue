@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref, unref, computed, nextTick } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { getAuditLogPageList, getAuditLogDetail } from '/@/api/auditlog';
   import { columns, searchFormSchema } from './auditlog.data';
@@ -36,13 +36,17 @@
   import AuditLogDrawer from './AuditLogDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { Tag } from 'ant-design-vue';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'AuditLog',
     components: { PageWrapper, BasicTable, TableAction, AuditLogDrawer, Tag },
     setup() {
       const searchInfo = ref({});
-      const [registerTable] = useTable({
+      const { hasPermission } = usePermission();
+      const showSearchForm = computed(() => hasPermission('Log.AuditLogging.Search'));
+
+      const tableConfig:any = {
         title: '审计日志列表',
         rowKey: 'id',
         columns,
@@ -61,16 +65,19 @@
           }
           return formSearch;
         },
-        useSearchForm: true,
+        useSearchForm: unref(showSearchForm),
         showTableSetting: true,
         bordered: true,
-        actionColumn: {
+      };
+      if (hasPermission(['Log.AuditLogging.LookDetail'])) {
+        tableConfig.actionColumn = {
           width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-      });
+        };
+      }
+      const [registerTable] = useTable(tableConfig);
       const [registerDrawer, { openDrawer }] = useDrawer();
       function handleView(record: Recordable) {
         nextTick(async () => {
