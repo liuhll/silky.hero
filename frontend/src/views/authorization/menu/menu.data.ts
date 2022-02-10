@@ -189,9 +189,21 @@ export const menuSchemas: FormSchema[] = [
         { label: '是', value: true },
       ],
     },
-    ifShow: ({ values }) => !isButton(values.type),
+    ifShow: ({ values }) => isMenu(values.type),
   },
-
+  {
+    field: 'externalLinkType',
+    label: '外链类型',
+    component: 'RadioButtonGroup',
+    required: true,
+    componentProps: {
+      options: [
+        { label: '内嵌', value: 0 },
+        { label: '外部', value: 1 },
+      ],
+    },
+    ifShow: ({ values }) => isMenu(values.type) && values.externalLink === true,
+  },
   {
     field: 'keepAlive',
     label: '是否缓存',
