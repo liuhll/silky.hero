@@ -43,6 +43,9 @@ public class MenuTypeBuilder : IEntityTypeBuilder<Menu>
         builder.Property(e => e.ExternalLink)
             .HasColumnName(nameof(Menu.ExternalLink));
         
+        builder.Property(e => e.ExternalLinkType)
+            .HasColumnName(nameof(Menu.ExternalLinkType));
+        
         builder.Property(e => e.Display)
             .HasColumnName(nameof(Menu.Display));
         

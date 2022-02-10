@@ -51,6 +51,11 @@ public abstract class MenuDtoBase
     /// 是否外链
     /// </summary>
     public bool? ExternalLink { get; set; }
+    
+    /// <summary>
+    /// 外链类型
+    /// </summary>
+    public ExternalLinkType? ExternalLinkType { get; set; }
 
     /// <summary>
     /// 是否显示

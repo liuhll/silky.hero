@@ -157,20 +157,31 @@ public class IdentityUserManager : UserManager<IdentityUser>
             {
                 meta["IgnoreKeepAlive"] = true;
             }
-            if (menu.ExternalLink == true) 
+            if (menu.ExternalLink == true && menu.ExternalLinkType == ExternalLinkType.Inline) 
             {
-                meta["frameSrc"] = menu.ExternalLink;
+                meta["frameSrc"] = menu.RoutePath;
             }
             
             return meta;
         }
 
-       var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
+        string SetName(GetMenuOutput menu)
+        {
+            if (Regex.IsMatch(menu.Name, RegularExpressionConsts.Http))
+            {
+                var routePathName = Regex.Replace(menu.RoutePath, RegularExpressionConsts.Http, "");
+                return routePathName.Replace("/", ".").TrimStart('.');
+            }
+
+            return menu.RoutePath.Replace("/", ".").TrimStart('.');
+        }
+
+        var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
             .Select(m => new FrontendMenu()
         {
             Id = m.Id,
             ParentId = m.ParentId,
-            Name = m.RoutePath.Replace("/", ".").TrimStart('.'),
+            Name = SetName(m),
             Component = m.Component,
             Path = m.RoutePath,
             Redirect = GetRedirect(menus, m),

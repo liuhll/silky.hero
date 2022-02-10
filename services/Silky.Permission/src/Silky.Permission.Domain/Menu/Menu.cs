@@ -24,6 +24,8 @@ public class Menu : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedOb
     public string Component { get; set; }
     
     public bool? ExternalLink { get; set; }
+    
+    public ExternalLinkType? ExternalLinkType { get; set; }
 
     public bool? Display { get; set; }
 
