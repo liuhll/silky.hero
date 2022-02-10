@@ -34,8 +34,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
     public IRepository<IdentityUserClaim> UserClaimRepository { get; }
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
-
-    private readonly IRepository<IdentityRoleOrganization> _roleOrganizationRepository;
+    public IRepository<IdentityRoleOrganization> RoleOrganizationRepository { get; }
+    
     private readonly IRepository<IdentityRoleMenu> _roleMenuRepository;
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
@@ -75,7 +75,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         _positionAppService = positionAppService;
         UserClaimRepository = userClaimRepository;
         ClaimTypeRepository = claimTypeRepository;
-        _roleOrganizationRepository = roleOrganizationRepository;
+        RoleOrganizationRepository = roleOrganizationRepository;
         _roleMenuRepository = roleMenuRepository;
         _menuAppService = menuAppService;
     }
@@ -567,7 +567,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     private async Task<IEnumerable<long>> GetRoleCustomDataRangeOrganizationIds(long roleId)
     {
         var roleCustomDataRangeOrganizations =
-            await _roleOrganizationRepository
+            await RoleOrganizationRepository
             .AsQueryable(false)
             .Where(p => p.RoleId == roleId).ToListAsync();
         return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);

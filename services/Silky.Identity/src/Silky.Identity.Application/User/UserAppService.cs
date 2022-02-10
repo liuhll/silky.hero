@@ -239,17 +239,38 @@ public class UserAppService : IUserAppService
         }
     }
 
-    [TccTransaction(ConfirmMethod = "RemoveConfirmOrganizationUsersAsync",
-        CancelMethod = "RemoveCancelOrganizationUsersAsync")]
-    public async Task RemoveOrganizationUsersAsync(long[] organizationIds)
+    [TccTransaction(ConfirmMethod = "RemoveConfirmOrganizationLinkedDataAsync",
+        CancelMethod = "RemoveCancelOrganizationLinkedDataAsync")]
+    public async Task RemoveOrganizationLinkedDataAsync(long[] organizationIds)
     {
         Check.NotNull(organizationIds, nameof(organizationIds));
         var organizationUsers = await UserManager.UserSubsidiaryRepository
             .AsQueryable(false)
             .Where(p => organizationIds.Contains(p.OrganizationId))
             .ToArrayAsync();
+        var roleOrganizations = await UserManager.RoleOrganizationRepository.AsQueryable(false)
+            .Where(p => organizationIds.Contains(p.OrganizationId))
+            .ToArrayAsync();
+    }
+    
+    [UnitOfWork]
+    public async Task RemoveConfirmOrganizationLinkedDataAsync(long[] organizationIds)
+    {
+        var organizationUsers = await UserManager.UserSubsidiaryRepository
+            .AsQueryable(false)
+            .Where(p => organizationIds.Contains(p.OrganizationId))
+            .ToArrayAsync();
+        var roleOrganizations = await UserManager.RoleOrganizationRepository.AsQueryable(false)
+            .Where(p => organizationIds.Contains(p.OrganizationId))
+            .ToArrayAsync();
+        await UserManager.UserSubsidiaryRepository.DeleteAsync(organizationUsers);
+        await UserManager.RoleOrganizationRepository.DeleteAsync(roleOrganizations);
     }
 
+    public async Task RemoveCancelOrganizationLinkedDataAsync(long[] organizationIds)
+    {
+    }
+    
     public async Task<GetUserRoleOutput> GetValidRolesAsync(long userId)
     {
         var user = await UserManager.GetByIdAsync(userId);
@@ -260,20 +281,6 @@ public class UserAppService : IUserAppService
             RoleNames = roleNames
         };
         return output;
-    }
-
-    [UnitOfWork]
-    public async Task RemoveConfirmOrganizationUsersAsync(long[] organizationIds)
-    {
-        var organizationUsers = await UserManager.UserSubsidiaryRepository
-            .AsQueryable(false)
-            .Where(p => organizationIds.Contains(p.OrganizationId))
-            .ToArrayAsync();
-        await UserManager.UserSubsidiaryRepository.DeleteAsync(organizationUsers);
-    }
-
-    public async Task RemoveCancelOrganizationUsersAsync(long[] organizationIds)
-    {
     }
 
     [UnitOfWork]

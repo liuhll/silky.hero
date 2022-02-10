@@ -98,7 +98,7 @@ public class OrganizationDomainService : IOrganizationDomainService
         }
         var organizationAndChildrenIds = (await GetChildrenOrganizationsAsync(id)).ToArray().Select(p=> p.Id).ToArray();
         RpcContext.Context.SetInvokeAttachment("organizationAndChildrenIds",_serializer.Serialize(organizationAndChildrenIds));
-        await _userAppService.RemoveOrganizationUsersAsync(organizationAndChildrenIds);
+        await _userAppService.RemoveOrganizationLinkedDataAsync(organizationAndChildrenIds);
         
     }
 

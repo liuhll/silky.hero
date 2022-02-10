@@ -179,7 +179,7 @@ public interface IUserAppService
 
     [ProhibitExtranet]
     [Transaction]
-    Task RemoveOrganizationUsersAsync(long[] organizationIds);
+    Task RemoveOrganizationLinkedDataAsync(long[] organizationIds);
     
     [ProhibitExtranet]
     [GetCachingIntercept("roles:valid:userId:{0}")]
