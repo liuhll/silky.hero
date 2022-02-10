@@ -36,9 +36,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
 
     private readonly IRepository<IdentityRoleOrganization> _roleOrganizationRepository;
+    private readonly IRepository<IdentityRoleMenu> _roleMenuRepository;
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
-    private readonly IRepository<IdentityRoleMenu> _roleMenuRepository;
     private readonly IMenuAppService _menuAppService;
 
     public IdentityUserManager(IdentityUserStore store,
@@ -269,7 +269,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return result;
     }
 
-    public async Task<IdentityResult> SetRolesAsync(IdentityUser user, ICollection<string> roleNames)
+    public async Task<IdentityResult> SetRolesAsync(IdentityUser user, IEnumerable<string> roleNames)
     {
         Check.NotNull(user, nameof(user));
         Check.NotNull(roleNames, nameof(roleNames));
@@ -487,6 +487,12 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         await UserClaimRepository.DeleteAsync(currentUserClaims);
         await UserClaimRepository.InsertAsync(userClaims);
+    }
+
+    public async Task<IdentityResult> SetDefaultRolesAsync(IdentityUser user)
+    {
+        var defaultRoles = await ((IdentityUserStore)Store).DefaultRolesAsync();
+        return await SetRolesAsync(user, defaultRoles.Select(p=> p.Name));
     }
 
     public async Task<UserDataRange> GetUserDataRange(long userId)

@@ -7,8 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Silky.Core;
+using Silky.Hero.Common.Enums;
 
 namespace Silky.Identity.Domain;
 
@@ -1072,8 +1074,16 @@ public class IdentityUserStore :
         return UserRepository.FindByAccountAsync(account, tenantId, includeDetails,
             cancellationToken: cancellationToken);
     }
+    
+    public async Task<IdentityRole[]> DefaultRolesAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return await RoleRepository.AsQueryable(false).Where(p => p.IsDefault && p.Status == Status.Valid).ToArrayAsync();
+    }
 
     public virtual void Dispose()
     {
     }
+
+    
 }

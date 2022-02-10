@@ -41,7 +41,7 @@ public class UserAppService : IUserAppService
     {
         var user = new IdentityUser(input.UserName, input.Email, input.MobilePhone, _session.TenantId);
         await UpdateUserByInput(user, input);
-
+        (await UserManager.SetDefaultRolesAsync(user)).CheckErrors();
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
     }
 
