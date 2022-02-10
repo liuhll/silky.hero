@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <Row :gutter="[24, 16]">
       <Col :span="6">
         <Card title="组织机构树">
@@ -73,7 +73,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction, TableActionType } from '/@/components/Table';
   import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
-  import { defineComponent, ref, unref, onMounted, reactive, nextTick } from 'vue';
+  import { defineComponent, ref, unref, onMounted, reactive, nextTick, computed } from 'vue';
   import { Status } from '/@/utils/status';
   import {
     getOrganizationTree,
@@ -110,8 +110,15 @@
       const tableRef = ref<Nullable<TableActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
       const canAddOrganizationUsers = ref<boolean>(false);
-      const selectedOrganizationId = ref<number | undefined>();
+      const selectedOrganizationId = ref<Nullable<number>>();
       const searchInfo = reactive<Recordable>({});
+      const loadingRef = ref(false);
+      const emptyText = computed(() => {
+        if (unref(selectedOrganizationId)) {
+          return '暂无数据';
+        }
+        return '选择一个组织机构来查看成员';
+      });
       const { hasPermission } = usePermission();
       const [registerOrganizationDrawer, { openDrawer: openOrganizationDrawer }] = useDrawer();
       const [registerOrganizationUserDrawer, { openDrawer: openOrganizationUserDrawer }] =
@@ -139,7 +146,7 @@
         api: getOrganizationUserPageList,
         immediate: false,
         locale: {
-          emptyText: '选择一个组织机构来查看成员',
+          emptyText: unref(emptyText),
         },
         showTableSetting: true,
       };
@@ -168,7 +175,7 @@
               searchInfo.id = orgId;
               getTable().setProps({
                 locale: {
-                  emptyText: '暂无数据',
+                  emptyText: unref(emptyText),
                 },
               });
               await setCanAddOrganizationUsers(orgId);
@@ -222,14 +229,17 @@
       }
       function handleCreateOrganization(data: any) {
         nextTick(async () => {
+          loadingRef.value = true;
           const { isUpdate, values } = data;
           if (isUpdate) {
             await updateOrganization(values);
+            loadingRef.value = false;
             notification.success({
               message: '更新组织机构成功',
             });
           } else {
             await createOrganization(values);
+            loadingRef.value = false;
             notification.success({
               message: '创建组织机构成功',
             });
@@ -259,7 +269,9 @@
 
       function handleRemoveUser(record: Recordable) {
         nextTick(async () => {
+          loadingRef.value = true;
           await removeOrganizationUsers(unref(selectedOrganizationId), [record.id]);
+          loadingRef.value = false;
           reload();
           notification.success({
             message: `移除用户${record.userName}成功`,
@@ -300,19 +312,19 @@
               createConfirm({
                 title: '删除',
                 content: '您是否确认删除该机构',
-                onOk: () => {
-                  deleteOrganization(node.eventKey).then(async () => {
-                    notification.success({
-                      message: '删除机构成功',
-                    });
-                    await loadOrganizationTreeData();
-                    if (node.eventKey === unref(selectedOrganizationId)) {
-                      selectedOrganizationId.value = undefined;
-                      canAddOrganizationUsers.value = false;
-                      setTableData([]);
-                    }
-        
+                onOk: async () => {
+                  loadingRef.value = true;
+                  await deleteOrganization(node.eventKey);
+                  loadingRef.value = false;
+                  notification.success({
+                    message: '删除机构成功',
                   });
+                  await loadOrganizationTreeData();
+                  if (node.eventKey === unref(selectedOrganizationId)) {
+                    selectedOrganizationId.value = null;
+                    canAddOrganizationUsers.value = false;
+                    setTableData([]);
+                  }
                 },
               });
             },
@@ -327,6 +339,7 @@
         tableRef,
         canAddOrganizationUsers,
         searchInfo,
+        loadingRef,
         getRightMenuList,
         handleSelect,
         registerTable,

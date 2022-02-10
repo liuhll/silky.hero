@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button type="primary" v-auth="'Position.Create'" @click="handleCreate"
@@ -59,6 +59,7 @@
     components: { PageWrapper, BasicTable, TableAction, PositionDrawer },
     setup() {
       const searchInfo = ref({});
+      const loadingRef = ref(false);
       const { notification } = useMessage();
       const { hasPermission } = usePermission();
       const showSearchForm = computed(() => hasPermission('Position.Search'));
@@ -93,15 +94,18 @@
       }
       function handleSuccess(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           const isUpdate = !!data?.isUpdate;
           if (isUpdate) {
             await updatePosition(data.values);
+            loadingRef.value = false;
             // updateTableDataRecord(data.values.id, data.values);
             notification.success({
               message: `更新岗位${data.values.name}成功.`,
             });
           } else {
             await createPosition(data.values);
+            loadingRef.value = false;
             notification.success({
               message: `新增岗位${data.values.name}成功.`,
             });
@@ -118,7 +122,9 @@
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
+          loadingRef.value = true;
           await deletePosition(record.id);
+          loadingRef.value = false;
           notification.success({
             message: `删除岗位${record.name}成功.`,
           });
@@ -134,6 +140,7 @@
         handleEdit,
         handleDelete,
         searchInfo,
+        loadingRef,
       };
     },
   });

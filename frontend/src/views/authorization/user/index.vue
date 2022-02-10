@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #form-organizationTree>
         <TreeSelect
@@ -136,6 +136,7 @@
       const [registerUserRoleDrawer, { openDrawer: openUserRoleDrawer }] = useDrawer();
       const { notification } = useMessage();
       const { hasPermission } = usePermission();
+      const loadingRef = ref(false);
       const showSearchForm = computed(() => hasPermission('Identity.User.Search'));
       onMounted(async () => {
         treeData.value = await getOrganizationTreeList();
@@ -164,7 +165,9 @@
 
       function handleDelete(record: Recordable) {
         nextTick(async () => {
+          loadingRef.value = true;
           await deleteUser(record.id);
+          loadingRef.value = false;
           notification.success({
             message: `删除用户${record.userName}成功.`,
           });
@@ -194,15 +197,18 @@
 
       function handleSuccess(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           const isUpdate = !!data?.isUpdate;
           if (isUpdate) {
             await updateUser(data.values);
+            loadingRef.value = false;
             //updateTableDataRecord(data.values.id, data.values);
             notification.success({
               message: `更新用户${data.values.userName}成功.`,
             });
           } else {
             await createUser(data.values);
+            loadingRef.value = false;
             notification.success({
               message: `新增用户${data.values.userName}成功.`,
             });
@@ -213,7 +219,9 @@
 
       function handleSuccessAuthorizeUserRole(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           await updateUserRoles(data.id, data.roleNames);
+          loadingRef.value = false;
           notification.success({
             message: `更新用户${data.userName}角色成功.`,
           });
@@ -294,6 +302,7 @@
         selectedOrganizationIds,
         selectedPositionIds,
         selectedRoleIds,
+        loadingRef,
       };
     },
   });

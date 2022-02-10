@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button type="primary" v-auth="'Permission.Menu.Create'" @click="handleCreate"
@@ -52,6 +52,7 @@
     setup() {
       const searchInfo = ref({});
       const { notification } = useMessage();
+      const loadingRef = ref(false);
       const { hasPermission } = usePermission();
       const showSearchForm = computed(() => hasPermission('Permission.Menu.Search'));
       const tableConfig: any = {
@@ -96,15 +97,18 @@
       }
       function handleSuccess(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           const isUpdate = !!data?.isUpdate;
           if (isUpdate) {
             await updateMenu(data.values);
+            loadingRef.value = false;
             // updateTableDataRecord(data.values.id, data.values);
             notification.success({
               message: `更新菜单${data.values.name}成功.`,
             });
           } else {
             await createMenu(data.values);
+            loadingRef.value = false;
             notification.success({
               message: `新增菜单${data.values.name}成功.`,
             });
@@ -121,7 +125,9 @@
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
+          loadingRef.value = true;
           await deleteMenu(record.id);
+          loadingRef.value = false;
           notification.success({
             message: `删除菜单${record.name}成功.`,
           });
@@ -138,6 +144,7 @@
         handleEdit,
         handleDelete,
         searchInfo,
+        loadingRef,
       };
     },
   });

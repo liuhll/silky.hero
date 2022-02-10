@@ -108,8 +108,8 @@ export const roleSchemas: FormSchema[] = [
     component: 'RadioButtonGroup',
     componentProps: {
       options: [
-        { label: '是', value: true },
         { label: '否', value: false },
+        { label: '是', value: true },
       ],
     },
     defaultValue: false,
@@ -120,8 +120,8 @@ export const roleSchemas: FormSchema[] = [
     component: 'RadioButtonGroup',
     componentProps: {
       options: [
-        { label: '是', value: true },
         { label: '否', value: false },
+        { label: '是', value: true },
       ],
     },
     defaultValue: false,

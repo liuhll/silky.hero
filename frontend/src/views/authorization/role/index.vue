@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #realName="{ text, record }">
         {{ text }}
@@ -110,6 +110,7 @@
       const { notification } = useMessage();
       const { hasPermission } = usePermission();
       const showSearchForm = computed(() => hasPermission('Identity.Role.Search'));
+      const loadingRef = ref(false);
       const tableConfig: any = {
         title: '角色列表',
         rowKey: 'id',
@@ -156,15 +157,18 @@
       }
       function handleSuccess(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           const isUpdate = !!data?.isUpdate;
           if (isUpdate) {
             await updateRole(data.values);
+            loadingRef.value = false;
             // updateTableDataRecord(data.values.id, data.values);
             notification.success({
               message: `更新角色${data.values.name}成功.`,
             });
           } else {
             await createRole(data.values);
+            loadingRef.value = false;
             notification.success({
               message: `新增角色${data.values.name}成功.`,
             });
@@ -175,7 +179,9 @@
 
       function handleSuccessAuthorizeRoleMenu(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           await updateRoleMenuIds(data);
+          loadingRef.value = false;
           notification.success({
             message: `更新角色菜单权限成功.`,
           });
@@ -184,7 +190,9 @@
 
       function handleSuccessAuthorizeRoleData(data) {
         nextTick(async () => {
+          loadingRef.value = true;
           await updateRoleDataRange(data);
+          loadingRef.value = false;
           notification.success({
             message: `更新角色数据权限成功.`,
           });
@@ -242,7 +250,9 @@
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
+          loadingRef.value = true;
           await deleteRole(record.id);
+          loadingRef.value = false;
           notification.success({
             message: `删除角色${record.name}成功.`,
           });
@@ -265,6 +275,7 @@
         handleSuccessAuthorizeRoleData,
         searchInfo,
         roleMenuDrawerRef,
+        loadingRef,
       };
     },
   });
