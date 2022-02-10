@@ -2,7 +2,9 @@
   <PageWrapper>
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增菜单</a-button>
+        <a-button type="primary" v-auth="'Permission.Menu.Create'" @click="handleCreate"
+          >新增菜单</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
@@ -35,7 +37,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref, unref, computed, nextTick } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { getMenuTree, createMenu, updateMenu, deleteMenu } from '/@/api/menu';
   import { columns, searchFormSchema } from './menu.data';
@@ -43,13 +45,16 @@
   import MenuDrawer from './MenuDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'Menu',
     components: { PageWrapper, BasicTable, TableAction, MenuDrawer },
     setup() {
       const searchInfo = ref({});
       const { notification } = useMessage();
-      const [registerTable, { reload }] = useTable({
+      const { hasPermission } = usePermission();
+      const showSearchForm = computed(() => hasPermission('Permission.Menu.Search'));
+      const tableConfig: any = {
         title: '菜单列表',
         rowKey: 'id',
         columns,
@@ -59,7 +64,7 @@
           schemas: searchFormSchema,
           autoSubmitOnEnter: true,
         },
-        useSearchForm: true,
+        useSearchForm: unref(showSearchForm),
         isTreeTable: true,
         pagination: false,
         striped: false,
@@ -67,13 +72,22 @@
         bordered: true,
         showIndexColumn: false,
         canResize: false,
-        actionColumn: {
+      };
+      if (
+        hasPermission([
+          'Permission.Menu.LookDetail',
+          'Permission.Menu.Update',
+          'Permission.Menu.Delete',
+        ])
+      ) {
+        tableConfig.actionColumn = {
           width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-      });
+        };
+      }
+      const [registerTable, { reload }] = useTable(tableConfig);
       const [registerDrawer, { openDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
