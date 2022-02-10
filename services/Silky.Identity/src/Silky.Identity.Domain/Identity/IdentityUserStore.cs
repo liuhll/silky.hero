@@ -1054,6 +1054,27 @@ public class IdentityUserStore :
 
         return Task.CompletedTask;
     }
+    
+    public Task<string> GetJobNumberAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        return Task.FromResult(user.JobNumber);
+    }
+    
+    public Task SetJobNumberAsync([NotNull] IdentityUser user, string jobNumber,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(user, nameof(user));
+
+        user.JobNumber = jobNumber;
+
+        return Task.CompletedTask;
+    }
 
     public Task<IdentityUser> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
     {
@@ -1080,10 +1101,19 @@ public class IdentityUserStore :
         cancellationToken.ThrowIfCancellationRequested();
         return await RoleRepository.AsQueryable(false).Where(p => p.IsDefault && p.Status == Status.Valid).ToArrayAsync();
     }
+    public Task<IdentityUser> FindByJobNumberAsync(string jobNumber, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(jobNumber, nameof(jobNumber));
+
+        return UserRepository.FindByJobNumberAsync(jobNumber, includeDetails: false,
+            cancellationToken: cancellationToken);
+    }
 
     public virtual void Dispose()
     {
     }
 
-    
+ 
 }

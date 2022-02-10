@@ -572,10 +572,32 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(p => p.RoleId == roleId).ToListAsync();
         return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);
     }
+    
+    public virtual async Task<string> GetJobNumberAsync(IdentityUser user)
+    {
+        ThrowIfDisposed();
+        if (user == null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
+        return await ((IdentityUserStore)Store).GetJobNumberAsync(user, CancellationToken);
+    }
 
     public async Task<ICollection<string>> GetValidRolesAsync(IdentityUser user)
     {
         return await UserRepository.GetRolesAsync(user.Id).Where(p => p.Status == Status.Valid).Select(p => p.Name)
             .ToListAsync();
+    }
+
+    public Task<IdentityUser> FindByJobNumberAsync(string jobNumber)
+    {
+        return ((IdentityUserStore)Store).FindByJobNumberAsync(jobNumber);
+    }
+
+    public async Task<IdentityResult> SetJobNumberAsync(IdentityUser user, string jobNumber)
+    {
+        ThrowIfDisposed();
+        await ((IdentityUserStore)Store).SetJobNumberAsync(user, jobNumber, CancellationToken);
+        return await UpdateUserAsync(user);
     }
 }

@@ -140,6 +140,12 @@ export const userSchemas: FormSchema[] = [
         message: '用户名长度不允许超过50个字符',
         validateTrigger: ['change', 'blur'],
       },
+      {
+        type: 'string',
+        pattern: new RegExp('^\\w+$'),
+        message: '用户名格式不正确',
+        validateTrigger: ['change', 'blur'],
+      },
     ],
   },
   {
@@ -249,6 +255,12 @@ export const userSchemas: FormSchema[] = [
       {
         required: true,
         message: '工号不允许为空',
+      },
+      {
+        type: 'string',
+        pattern: new RegExp('^\\w+$'),
+        message: '工号格式不正确',
+        validateTrigger: ['change', 'blur'],
       },
     ],
   },

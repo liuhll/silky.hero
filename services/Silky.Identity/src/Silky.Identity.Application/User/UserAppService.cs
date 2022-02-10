@@ -190,12 +190,15 @@ public class UserAppService : IUserAppService
             (await UserManager.SetPhoneNumberAsync(user, input.MobilePhone)).CheckErrors();
         }
 
-        (await UserManager.SetLockoutEnabledAsync(user, input.LockoutEnabled)).CheckErrors();
+        if (!string.Equals(user.JobNumber, input.JobNumber, StringComparison.InvariantCultureIgnoreCase))
+        {
+            (await UserManager.SetJobNumberAsync(user, input.JobNumber)).CheckErrors();
+        }
 
+        (await UserManager.SetLockoutEnabledAsync(user, input.LockoutEnabled)).CheckErrors();
         user.UserName = input.UserName;
         user.Surname = input.Surname;
         user.RealName = input.RealName;
-        user.JobNumber = input.JobNumber;
         user.Sex = input.Sex;
         user.BirthDay = input.BirthDay;
         user.TelPhone = input.TelPhone;

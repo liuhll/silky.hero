@@ -161,6 +161,22 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
             p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account);
     }
 
+    public Task<IdentityUser> FindByJobNumberAsync(string jobNumber, bool includeDetails, CancellationToken cancellationToken)
+    {
+        if (includeDetails)
+        {
+            return Entities
+                .Include(p => p.Claims)
+                .Include(p => p.Logins)
+                .Include(p => p.Roles)
+                .Include(p => p.Tokens)
+                .Include(p => p.UserSubsidiaries)
+                .FirstOrDefaultAsync(p => p.JobNumber == jobNumber);
+        }
+
+        return FirstOrDefaultAsync(p => p.JobNumber == jobNumber);
+    }
+
     public Task<List<IdentityUser>> GetListByNormalizedRoleNameAsync(string normalizedRoleName,
         bool includeDetails = false,
         CancellationToken cancellationToken = default)

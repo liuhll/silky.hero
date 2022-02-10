@@ -69,4 +69,6 @@ public interface IIdentityUserRepository : IRepository<IdentityUser>
 
     Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails,
         CancellationToken cancellationToken);
+
+    Task<IdentityUser> FindByJobNumberAsync(string jobNumber, bool includeDetails, CancellationToken cancellationToken);
 }

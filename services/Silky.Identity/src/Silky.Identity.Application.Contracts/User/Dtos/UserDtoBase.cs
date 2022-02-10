@@ -14,6 +14,7 @@ public abstract class UserDtoBase
     /// </summary>
     [Required(ErrorMessage = "用户名不允许为空")]
     [MaxLength(50, ErrorMessage = "用户名不允许超过50个字符")]
+    [RegularExpression(RegularExpressionConsts.UserName, ErrorMessage = "用户名格式不正确")]
     public string UserName { get; set; }
 
     /// <summary>
@@ -68,6 +69,8 @@ public abstract class UserDtoBase
     /// <summary>
     /// 工号
     /// </summary>
+    [Required(ErrorMessage = "工号不允许为空")]
+    [RegularExpression(RegularExpressionConsts.JobNumber, ErrorMessage = "工号格式不正确")]
     public string JobNumber { get; set; }
 
     /// <summary>

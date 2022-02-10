@@ -27,12 +27,47 @@ public class IdentityUserValidator : UserValidator<IdentityUser>
         var errors = new List<IdentityError>();
         await ValidateUserName(manager, user, errors);
         await ValidatePhoneNumber(manager, user, errors);
+        await ValidateJobMumber(manager, user, errors);
         if (manager.Options.User.RequireUniqueEmail)
         {
             await ValidateEmail(manager, user, errors);
         }
 
         return errors.Count > 0 ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
+    }
+
+    private async Task ValidateJobMumber(UserManager<IdentityUser> manager, IdentityUser user, List<IdentityError> errors)
+    {
+        var jobNumber = await ((IdentityUserManager)manager).GetJobNumberAsync(user);
+        if (jobNumber.IsNullOrWhiteSpace())
+        {
+            errors.Add(new IdentityError()
+            {
+                Code = "InvalidJobNumber",
+                Description = "工号不允许为空"
+            });
+            return;
+        }
+
+        if (!Regex.IsMatch(jobNumber, RegularExpressionConsts.JobNumber))
+        {
+            errors.Add(new IdentityError()
+            {
+                Code = "InvalidJobNumber",
+                Description = "工号格式不正确"
+            });
+            return;
+        }
+
+        var owner = await ((IdentityUserManager)manager).FindByJobNumberAsync(jobNumber);
+        if (owner != null && !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)))
+        {
+            errors.Add(new IdentityError()
+            {
+                Code = "DuplicateJobNumber",
+                Description = "工号不允许重复"
+            });
+        }
     }
 
     private async Task ValidatePhoneNumber(UserManager<IdentityUser> manager, IdentityUser user,
