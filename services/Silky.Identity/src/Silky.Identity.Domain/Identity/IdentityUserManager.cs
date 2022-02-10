@@ -175,6 +175,17 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
             return menu.RoutePath.Replace("/", ".").TrimStart('.');
         }
+        
+        string SetPath(GetMenuOutput menu)
+        {
+            if (menu.ExternalLink == true && menu.ExternalLinkType == ExternalLinkType.Inline)
+            {
+                var routePathName = Regex.Replace(menu.RoutePath, RegularExpressionConsts.Http, "");
+                return routePathName.Replace("/", ".").TrimStart('.');
+            }
+
+            return menu.RoutePath;
+        }
 
         var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
             .Select(m => new FrontendMenu()
@@ -183,7 +194,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             ParentId = m.ParentId,
             Name = SetName(m),
             Component = m.Component,
-            Path = m.RoutePath,
+            Path = SetPath(m),
             Redirect = GetRedirect(menus, m),
             Meta = SetMeta(m),
         });

@@ -10,6 +10,6 @@ public class RegularExpressionConsts
 
     public const string RoleName = "^\\w+$";
 
-    public const string Http = "^([hH][tT]{2}[pP]:\\/\\/|[hH][tT]{2}[pP][sS]:\\/\\/)(([A-Za-z0-9-~]+)\\.)+([A-Za-z0-9-~\\/])+$";
+    public const string Http = "^https?:\\/\\/";
        
 }
