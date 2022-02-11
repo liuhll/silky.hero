@@ -279,7 +279,6 @@
       if (
         hasPermission([
           'Identity.User.LookDetail',
-          'Identity.User.Create',
           'Identity.User.Update',
           'Identity.User.Delete',
           'Identity.User.SetUsers',
