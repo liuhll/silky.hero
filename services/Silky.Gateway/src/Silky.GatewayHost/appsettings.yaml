@@ -18,6 +18,12 @@ serilog:
       args:
         outputTemplate: "[{Timestamp:yyyy/MM/dd HH:mm:ss} {Level:u11}] {Message:lj} {NewLine}{Exception}{NewLine}"
         theme: "Serilog.Sinks.SystemConsole.Themes.SystemConsoleTheme::Literate, Serilog.Sinks.Console"
+healthChecksUI:
+  healthChecks:
+    - name: silkyrpc
+      uri: http://127.0.0.1:5000/silkyrpc/healthz
+  evaluationTimeinSeconds: 30
+  minimumSecondsBetweenFailureNotifications: 60
 skyWalking:
   serviceName: Silky.GatewayHost
   headerVersions:

@@ -32,6 +32,12 @@ namespace Silky.GatewayHost
                 .AddSilkyMiniProfiler()
                 .AddSwaggerDocuments()
                 .AddAuditing<HeroAuditingStore>();
+            
+            services.AddHealthChecks()
+                .AddSilkyRpc();
+            services
+                .AddHealthChecksUI()
+                .AddInMemoryStorage();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,6 +50,8 @@ namespace Silky.GatewayHost
             }
 
             app.UseDashboard();
+            app.UseSilkyRpcHealthCheck()
+                .UseHealthChecksPrometheusExporter("/metrics");
             app.UseRouting();
             app.UseResponseCaching();
             app.UseSilkyWebSocketsProxy();
@@ -51,7 +59,11 @@ namespace Silky.GatewayHost
             app.UseSilkyIdentity();
             app.UseSilkyHttpServer();
             app.UseAuditing();
-            app.UseEndpoints(endpoints => { endpoints.MapSilkyRpcServices(); });
+            app.UseEndpoints(endpoints =>
+            {  
+                endpoints.MapHealthChecksUI();
+                endpoints.MapSilkyRpcServices();
+            });
         }
     }
 }
