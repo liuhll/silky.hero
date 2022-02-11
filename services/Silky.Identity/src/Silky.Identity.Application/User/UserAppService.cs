@@ -47,7 +47,8 @@ public class UserAppService : IUserAppService
 
     public async Task UpdateAsync(UpdateUserInput input)
     {
-        var user = await UserManager.UserRepository.Include(p=> p.UserSubsidiaries).FirstOrDefaultAsync(p=> p.Id == input.Id);
+        var user = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
+            .FirstOrDefaultAsync(p => p.Id == input.Id);
         await UpdateUserByInput(user, input);
 
         if (!input.Password.IsNullOrEmpty())
@@ -206,7 +207,7 @@ public class UserAppService : IUserAppService
         if (input.UserSubsidiaries != null)
         {
             var userSubsidiaries = input.UserSubsidiaries
-                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToList();
+                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToArray();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
     }
@@ -225,6 +226,7 @@ public class UserAppService : IUserAppService
     [UnitOfWork]
     public async Task AddOrganizationUsers(long organizationId, ICollection<AddOrganizationUserInput> inputs)
     {
+        bool isAddUserFlag = false;
         foreach (var input in inputs)
         {
             var user = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
@@ -234,8 +236,20 @@ public class UserAppService : IUserAppService
                 throw new EntityNotFoundException(typeof(IdentityUser), input.UserId);
             }
 
-            user.AddUserSubsidiaries(organizationId, input.PositionId);
+            if (user.IsInUserOrganization(organizationId))
+            {
+                continue;
+            }
+
+            isAddUserFlag = true;
+            (await UserManager.AddToUserSubsidiariesAsync(user,
+                new UserSubsidiary(user.Id, organizationId, input.PositionId, user.TenantId))).CheckErrors();
             await UserManager.UpdateAsync(user);
+        }
+
+        if (!isAddUserFlag)
+        {
+            throw new UserFriendlyException("请选择要添加的用户成员");
         }
     }
 
@@ -252,7 +266,7 @@ public class UserAppService : IUserAppService
             .Where(p => organizationIds.Contains(p.OrganizationId))
             .ToArrayAsync();
     }
-    
+
     [UnitOfWork]
     public async Task RemoveConfirmOrganizationLinkedDataAsync(long[] organizationIds)
     {
@@ -270,7 +284,7 @@ public class UserAppService : IUserAppService
     public async Task RemoveCancelOrganizationLinkedDataAsync(long[] organizationIds)
     {
     }
-    
+
     public async Task<GetUserRoleOutput> GetValidRolesAsync(long userId)
     {
         var user = await UserManager.GetByIdAsync(userId);

@@ -12,10 +12,12 @@ using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Hero.Common.Enums;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Extensions;
 using Silky.Identity.Domain.Identity;
@@ -35,11 +37,12 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public IRepository<IdentityUserClaim> UserClaimRepository { get; }
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
     public IRepository<IdentityRoleOrganization> RoleOrganizationRepository { get; }
-    
+
     private readonly IRepository<IdentityRoleMenu> _roleMenuRepository;
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
     private readonly IMenuAppService _menuAppService;
+    private readonly ISession _session;
 
     public IdentityUserManager(IdentityUserStore store,
         IOptions<IdentityOptions> optionsAccessor,
@@ -78,6 +81,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         RoleOrganizationRepository = roleOrganizationRepository;
         _roleMenuRepository = roleMenuRepository;
         _menuAppService = menuAppService;
+        _session = NullSession.Instance;
     }
 
     public async Task<string[]> GetUserPermissionCodesAsync(long userId)
@@ -93,18 +97,19 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .ToArrayAsync();
         // 3. 获取所有菜单的父级信息
         var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
-        return menus.Where(p => !p.PermissionCode.IsNullOrEmpty() && p.Status == Status.Valid).Select(p => p.PermissionCode).ToArray();
+        return menus.Where(p => !p.PermissionCode.IsNullOrEmpty() && p.Status == Status.Valid)
+            .Select(p => p.PermissionCode).ToArray();
     }
 
     public async Task<ICollection<GetCurrentUserMenuOutput>> GetUserMenusAsync(long userId)
     {
         // 1. 获取用户的角色信息
-        var userRoleIds = await UserRepository.GetRolesAsync(userId).Select(p=> p.Id).ToListAsync();
+        var userRoleIds = await UserRepository.GetRolesAsync(userId).Select(p => p.Id).ToListAsync();
         // 2. 获取角色的菜单信息
         var roleMenuIds = await _roleMenuRepository
             .AsQueryable(false)
             .Where(p => userRoleIds.Contains(p.RoleId))
-            .Select(p=> p.MenuId)
+            .Select(p => p.MenuId)
             .Distinct()
             .ToArrayAsync();
         // 3. 获取所有菜单的父级信息
@@ -117,16 +122,17 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     private IEnumerable<FrontendMenu> MapFrontendMenus(IEnumerable<GetMenuOutput> menus)
     {
-        string GetRedirect(IEnumerable<GetMenuOutput> menus, GetMenuOutput menu) 
+        string GetRedirect(IEnumerable<GetMenuOutput> menus, GetMenuOutput menu)
         {
-            if (menu.Type != MenuType.Catalog) 
+            if (menu.Type != MenuType.Catalog)
             {
                 return null;
             }
+
             return menus.Where(p => p.ParentId == menu.Id).OrderByDescending(p => p.Sort).FirstOrDefault()?.RoutePath;
         }
 
-        IDictionary<string, object> SetMeta(GetMenuOutput menu) 
+        IDictionary<string, object> SetMeta(GetMenuOutput menu)
         {
             var meta = new Dictionary<string, object>();
             meta["Title"] = menu.Name;
@@ -137,31 +143,33 @@ public class IdentityUserManager : UserManager<IdentityUser>
             {
                 meta["HideBreadcrumb"] = true;
             }
-            
+
             if (menu.HideChildrenInMenu == true)
             {
                 meta["HideChildrenInMenu"] = true;
             }
-            
+
             if (!menu.CurrentActiveMenu.IsNullOrEmpty())
             {
                 meta["CurrentActiveMenu"] = menu.CurrentActiveMenu;
             }
 
-            if (menu.Display == false) 
+            if (menu.Display == false)
             {
                 meta["ShowMenu"] = false;
                 meta["HideMenu"] = true;
             }
-            if (menu.KeepAlive == false) 
+
+            if (menu.KeepAlive == false)
             {
                 meta["IgnoreKeepAlive"] = true;
             }
-            if (menu.ExternalLink == true && menu.ExternalLinkType == ExternalLinkType.Inline) 
+
+            if (menu.ExternalLink == true && menu.ExternalLinkType == ExternalLinkType.Inline)
             {
                 meta["frameSrc"] = menu.RoutePath;
             }
-            
+
             return meta;
         }
 
@@ -175,7 +183,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
             return menu.RoutePath.Replace("/", ".").TrimStart('.');
         }
-        
+
         string SetPath(GetMenuOutput menu)
         {
             if (menu.ExternalLink == true && menu.ExternalLinkType == ExternalLinkType.Inline)
@@ -189,15 +197,15 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
             .Select(m => new FrontendMenu()
-        {
-            Id = m.Id,
-            ParentId = m.ParentId,
-            Name = SetName(m),
-            Component = m.Component,
-            Path = SetPath(m),
-            Redirect = GetRedirect(menus, m),
-            Meta = SetMeta(m),
-        });
+            {
+                Id = m.Id,
+                ParentId = m.ParentId,
+                Name = SetName(m),
+                Component = m.Component,
+                Path = SetPath(m),
+                Redirect = GetRedirect(menus, m),
+                Meta = SetMeta(m),
+            });
         return frontendMenus;
     }
 
@@ -214,13 +222,13 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
 
     public async Task<IdentityResult> SetUserOrganizations(IdentityUser user,
-        ICollection<UserSubsidiary> userSubsidiaries)
+        params UserSubsidiary[] userSubsidiaries)
     {
         Check.NotNull(user, nameof(user));
         Check.NotNull(userSubsidiaries, nameof(userSubsidiaries));
 
         var userOrganizationGroup = userSubsidiaries.GroupBy(p => p.OrganizationId)
-            .Select(p => new { OrganizationId = p.Key, Count = p.ToArray().Length }).Where(p=> p.Count > 1)
+            .Select(p => new { OrganizationId = p.Key, Count = p.ToArray().Length }).Where(p => p.Count > 1)
             .ToArray();
         if (userOrganizationGroup.Any())
         {
@@ -230,6 +238,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 Description = "用户所在部门不允许重复"
             });
         }
+
         foreach (var userSubsidiary in userSubsidiaries)
         {
             if (!await _organizationAppService.HasOrganizationAsync(userSubsidiary.OrganizationId))
@@ -254,13 +263,14 @@ public class IdentityUserManager : UserManager<IdentityUser>
         var currentUserSubsidiaries = await GetUserOrganizationsAsync(user);
 
         var result =
-            await RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
+            await  RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
         if (!result.Succeeded)
         {
             return result;
         }
 
-        result = await AddToUserSubsidiariesAsync(user, userSubsidiaries.Except(currentUserSubsidiaries).Distinct());
+        result = await AddToUserSubsidiariesAsync(user,
+            userSubsidiaries.Except(currentUserSubsidiaries).Distinct().ToArray());
         if (!result.Succeeded)
         {
             return result;
@@ -297,10 +307,20 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
-
-    private async Task<IdentityResult> AddToUserSubsidiariesAsync(IdentityUser user,
-        IEnumerable<UserSubsidiary> userSubsidiaries)
+    
+    public async Task<IdentityResult> AddToUserSubsidiariesAsync(IdentityUser user,
+        params UserSubsidiary[] userSubsidiaries)
     {
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
+        if (!currentUserDataRange.IsAllData && !userSubsidiaries.Any())
+        {
+            return IdentityResult.Failed(new IdentityError()
+            {
+                Code = "NoAuth",
+                Description = "请选择用户的部门信息"
+            });
+        }
+
         foreach (var userSubsidiary in userSubsidiaries)
         {
             if (user.IsInUserOrganization(userSubsidiary.OrganizationId))
@@ -311,6 +331,18 @@ public class IdentityUserManager : UserManager<IdentityUser>
                     Description = "用户已存在该部门，不允许重复添加"
                 });
             }
+
+            if (!currentUserDataRange.IsAllData &&
+                currentUserDataRange.OrganizationIds.All(p => p != userSubsidiary.OrganizationId))
+            {
+                var organization = await _organizationAppService.GetAsync(userSubsidiary.OrganizationId);
+                return IdentityResult.Failed(new IdentityError()
+                {
+                    Code = "NoAuth",
+                    Description = $"您没有新增/修改【{organization.Name}】机构用户的权限"
+                });
+            }
+
             user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
         }
 
@@ -363,7 +395,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         }
 
         return await UserRepository
-             .AsQueryable(false)
+            .AsQueryable(false)
             .Include(p => p.Claims)
             .Include(p => p.Logins)
             .Include(p => p.Roles)
@@ -374,10 +406,13 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
     public async Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)
     {
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
         var userPage = await UserRepository
             .AsQueryable(false)
-            .Include(p=> p.UserSubsidiaries)
-            .Include(p=> p.Roles)
+            .Include(p => p.UserSubsidiaries)
+            .Include(p => p.Roles)
+            .Where(!currentUserDataRange.IsAllData,
+                p => p.UserSubsidiaries.Any(q => currentUserDataRange.OrganizationIds.Contains(q.OrganizationId)))
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.Email.IsNullOrEmpty(), p => p.Email.Contains(input.Email))
             .Where(!input.MobilePhone.IsNullOrEmpty(), p => p.MobilePhone.Contains(input.MobilePhone))
@@ -385,10 +420,13 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(!input.JobNumber.IsNullOrEmpty(), p => p.JobNumber.Contains(input.JobNumber))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
-            .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),p=> p.UserSubsidiaries.Any(q=> input.OrganizationIds.Contains(q.OrganizationId)))
-            .Where(input.PositionIds != null && input.PositionIds.Any(), p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
-            .Where(input.RoleIds != null && input.RoleIds.Any(), p=> p.Roles.Any(q=> input.RoleIds.Contains(q.RoleId)))
-            .OrderByDescending(p=> p.CreatedTime)
+            .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),
+                p => p.UserSubsidiaries.Any(q => input.OrganizationIds.Contains(q.OrganizationId)))
+            .Where(input.PositionIds != null && input.PositionIds.Any(),
+                p => p.UserSubsidiaries.Any(q => input.PositionIds.Contains(q.PositionId)))
+            .Where(input.RoleIds != null && input.RoleIds.Any(),
+                p => p.Roles.Any(q => input.RoleIds.Contains(q.RoleId)))
+            .OrderByDescending(p => p.CreatedTime)
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         var userPageOutput = userPage.Adapt<PagedList<GetUserPageOutput>>();
         await userPageOutput.Items.SetUserSubsidiaries();
@@ -396,43 +434,53 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return userPageOutput;
     }
 
-    public async Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input)
+    public async Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId,
+        GetAddOrganizationUserPageInput input)
     {
         var userPage = await UserRepository
             .AsQueryable(false)
             .Include(p => p.UserSubsidiaries)
             .Where(!input.UserName.IsNullOrEmpty(), p => p.UserName.Contains(input.UserName))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
+            .OrderByDescending(p => p.CreatedTime)
             .ToPagedListAsync(input.PageIndex, input.PageSize);
 
         var pageOutput = userPage.Adapt<PagedList<GetAddOrganizationUserPageOutput>>();
-        foreach (var organizationUser in pageOutput.Items) 
+        foreach (var organizationUser in pageOutput.Items)
         {
             await organizationUser.SetPositionInfo(organizationId);
         }
-        return pageOutput;
 
+        return pageOutput;
     }
 
-    public async Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input)
+    public async Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId,
+        GetOrganizationUserPageInput input)
     {
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
         var userPage = await UserRepository
             .AsQueryable(false)
-           .Include(p => p.UserSubsidiaries)
-           .Where(p => p.UserSubsidiaries.Any(q => q.OrganizationId == organizationId))
-           .ToPagedListAsync(input.PageIndex, input.PageSize);
+            .Include(p => p.UserSubsidiaries)
+            .Where(!currentUserDataRange.IsAllData,
+                p => p.UserSubsidiaries.Any(q =>
+                    currentUserDataRange.OrganizationIds.Contains(q.OrganizationId) &&
+                    q.OrganizationId == organizationId))
+            .Where(p => p.UserSubsidiaries.Any(q => q.OrganizationId == organizationId))
+            .OrderByDescending(p => p.CreatedTime)
+            .ToPagedListAsync(input.PageIndex, input.PageSize);
         var userOutputList = userPage.Adapt<PagedList<GetOrganizationUserPageOutput>>();
         foreach (var userOutput in userOutputList.Items)
         {
             await userOutput.SetPositionInfo(organizationId);
         }
+
         return userOutputList;
     }
 
     public async Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)
     {
         var users = UserRepository
-             .AsQueryable(false)
+            .AsQueryable(false)
             .Include(p => p.UserSubsidiaries)
             .Where(p => p.UserSubsidiaries.Any(us => us.OrganizationId == organizationId));
         return (await users.ToListAsync()).Adapt<ICollection<GetUserOutput>>();
@@ -492,13 +540,13 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public async Task<IdentityResult> SetDefaultRolesAsync(IdentityUser user)
     {
         var defaultRoles = await ((IdentityUserStore)Store).DefaultRolesAsync();
-        return await SetRolesAsync(user, defaultRoles.Select(p=> p.Name));
+        return await SetRolesAsync(user, defaultRoles.Select(p => p.Name));
     }
 
     public async Task<UserDataRange> GetUserDataRange(long userId)
     {
         UserDataRange userDataRange;
-        var userRoles = await UserRepository.GetRolesAsync(userId).Where(p=> p.Status == Status.Valid).ToListAsync();
+        var userRoles = await UserRepository.GetRolesAsync(userId).Where(p => p.Status == Status.Valid).ToListAsync();
         if (userRoles.Any(p => p.DataRange == DataRange.Whole))
         {
             userDataRange = new UserDataRange(userId, true);
@@ -568,11 +616,11 @@ public class IdentityUserManager : UserManager<IdentityUser>
     {
         var roleCustomDataRangeOrganizations =
             await RoleOrganizationRepository
-            .AsQueryable(false)
-            .Where(p => p.RoleId == roleId).ToListAsync();
+                .AsQueryable(false)
+                .Where(p => p.RoleId == roleId).ToListAsync();
         return roleCustomDataRangeOrganizations.Select(p => p.OrganizationId);
     }
-    
+
     public virtual async Task<string> GetJobNumberAsync(IdentityUser user)
     {
         ThrowIfDisposed();
@@ -580,6 +628,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         {
             throw new ArgumentNullException(nameof(user));
         }
+
         return await ((IdentityUserStore)Store).GetJobNumberAsync(user, CancellationToken);
     }
 

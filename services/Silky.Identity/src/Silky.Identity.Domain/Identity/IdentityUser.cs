@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core;
 using Silky.Core.Extensions.Collections.Generic;
+using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Identity.Domain.Shared;
 
@@ -238,7 +239,6 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         {
             return;
         }
-
         UserSubsidiaries.Add(
             new UserSubsidiary(
                 Id,
