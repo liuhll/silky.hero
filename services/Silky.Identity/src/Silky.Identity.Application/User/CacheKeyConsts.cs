@@ -6,5 +6,4 @@ public static class CacheKeyConsts
 
     public const string CurrentUserCacheKey = "CurrentUserInfo:userId:{0}";
     
-    public const string CurrentUserDataRangeCacheKey = "CurrentUserDataRange:userId:{0}";
 }

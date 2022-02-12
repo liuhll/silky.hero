@@ -6,13 +6,13 @@ using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore;
-using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
@@ -49,8 +49,12 @@ public class UserAppService : IUserAppService
     {
         var user = await UserManager.UserRepository.Include(p => p.UserSubsidiaries)
             .FirstOrDefaultAsync(p => p.Id == input.Id);
-        await UpdateUserByInput(user, input);
+        if (user == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityUser), input.Id);
+        }
 
+        await UpdateUserByInput(user, input);
         if (!input.Password.IsNullOrEmpty())
         {
             (await UserManager.RemovePasswordAsync(user)).CheckErrors();
@@ -58,6 +62,7 @@ public class UserAppService : IUserAppService
         }
 
         (await UserManager.UpdateAsync(user)).CheckErrors();
+        await RemoveUserCacheAsync(user.Id);
     }
 
     public async Task DeleteAsync(long id)
@@ -69,12 +74,9 @@ public class UserAppService : IUserAppService
         }
 
         (await UserManager.DeleteAsync(user)).CheckErrors();
-        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
-            string.Format(CacheKeyConsts.CurrentUserCacheKey, id));
-        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserDataRangeCacheKey,
-            string.Format(CacheKeyConsts.CurrentUserCacheKey, id));
+        await RemoveUserCacheAsync(id);
     }
-
+    
     public async Task<GetUserOutput> GetAsync(long id)
     {
         var user = await UserManager.GetByIdAsync(id, true);
@@ -114,10 +116,7 @@ public class UserAppService : IUserAppService
         var user = await UserManager.GetByIdAsync(userId);
         (await UserManager.SetRolesAsync(user, roleNames)).CheckErrors();
         (await UserManager.UpdateAsync(user)).CheckErrors();
-        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
-            string.Format(CacheKeyConsts.CurrentUserDataRangeCacheKey, userId));
-        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
-            string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
+        await RemoveUserCacheAsync(userId);
     }
 
     public async Task<GetUserRoleOutput> GetRolesAsync(long userId)
@@ -295,6 +294,14 @@ public class UserAppService : IUserAppService
         await UserManager.UserSubsidiaryRepository.DeleteAsync(userSubsidiaries);
     }
 
+    private async Task RemoveUserCacheAsync(long userId)
+    {
+        await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
+            string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
+        await _distributedCache.RemoveAsync(typeof(GetCurrentUserDataRange), $"CurrentUserDataRange:userId:{userId}");
+        await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>), $"CurrentUserMenus:userId:{userId}");
+        await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissioncodes:userId:{userId}");
+    }
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)
     //{

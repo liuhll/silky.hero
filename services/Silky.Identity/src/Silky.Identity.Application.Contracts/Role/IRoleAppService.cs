@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -66,8 +65,6 @@ public interface IRoleAppService
     [HttpPut("menus")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(bool),"permissionName:*")]
-    [RemoveCachingIntercept(typeof(bool),"roleName:*")]
     Task SetMenusAsync(UpdateRoleMenuInput input);
     
     /// <summary>
@@ -86,7 +83,6 @@ public interface IRoleAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.SetDataRange)]
     [HttpPut("datarange")]
-    [RemoveCachingIntercept(typeof(GetCurrentUserDataRange),"CurrentUserDataRange:*")]
     Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
     
     /// <summary>

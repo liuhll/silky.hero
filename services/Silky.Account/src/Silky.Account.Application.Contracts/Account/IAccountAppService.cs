@@ -33,10 +33,12 @@ public interface IAccountAppService
 
     [Authorize]
     [HttpGet("menus")]
+    [GetCachingIntercept("CurrentUserMenus", OnlyCurrentUserData = true)]
     Task<ICollection<GetCurrentUserMenuOutput>> GetCurrentUserMenusAsync();
 
     [Authorize]
     [HttpGet("permissioncodes")]
+    [GetCachingIntercept("CurrentUserPermissioncodes", OnlyCurrentUserData = true)]
     Task<string[]> GetCurrentUserPermissionCodesAsync();
 
     [Authorize]

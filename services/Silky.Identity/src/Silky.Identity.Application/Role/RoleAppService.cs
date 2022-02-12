@@ -9,6 +9,7 @@ using Silky.Identity.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
@@ -79,6 +80,7 @@ public class RoleAppService : IRoleAppService
         (await _roleManager.SetRoleMenusAsync(role,
             input.MenuIds?.Select(mId => new IdentityRoleMenu(role.Id, mId, role.TenantId)).ToList())).CheckErrors();
         (await _roleManager.UpdateAsync(role)).CheckErrors();
+        await RemoveUserRoleCacheAsync(role.Id);
     }
 
     public async Task<GetRoleMenuOutput> GetMenusAsync(long id)
@@ -109,6 +111,7 @@ public class RoleAppService : IRoleAppService
             input.CustomOrganizationIds?.Select(oId => new IdentityRoleOrganization(role.Id, oId, role.TenantId))
                 .ToList())).CheckErrors();
         (await _roleManager.UpdateAsync(role)).CheckErrors();
+        await RemoveUserRoleCacheAsync(role.Id);
     }
 
     public async Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id)
@@ -169,6 +172,9 @@ public class RoleAppService : IRoleAppService
             await _distributedCache.RemoveAsync(typeof(GetUserOutput), $"id:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), $"roles:userId:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(ICollection<long>), $"roleIds:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(GetCurrentUserDataRange), $"CurrentUserDataRange:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>), $"CurrentUserMenus:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissioncodes:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
         }
