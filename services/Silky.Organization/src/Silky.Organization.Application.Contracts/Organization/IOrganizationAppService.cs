@@ -62,7 +62,7 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
-    [Authorize(OrganizationPermissions.Organizations.LookDetail)]
+   // [Authorize(OrganizationPermissions.Organizations.LookDetail)]
     Task<GetOrganizationOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
