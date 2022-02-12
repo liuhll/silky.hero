@@ -18,15 +18,15 @@ public class PermissionManager : IPermissionManager, IScopedDependency
         _roleAppService = roleAppService;
     }
 
-    public async Task<ICollection<string>> GetUserValidRoleNamesAsync(long userId)
+    public async Task<ICollection<string>> GetUserRoleNamesAsync(long userId)
     {
-        var userRoleOutput = await _userAppService.GetValidRolesAsync(userId);
+        var userRoleOutput = await _userAppService.GetRolesAsync(userId);
         return userRoleOutput.RoleNames;
     }
 
-    public async Task<ICollection<long>> GetUserValidRoleIdsAsync(long userId)
+    public async Task<ICollection<long>> GetUserRoleIdsAsync(long userId)
     {
-        var userRoleIds = await _userAppService.GetValidRoleIdsAsync(userId);
+        var userRoleIds = await _userAppService.GetRoleIdsAsync(userId);
         return userRoleIds;
     }
 

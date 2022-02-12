@@ -33,8 +33,7 @@ public interface IUserAppService
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:valid:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:valid:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Update)]
     Task UpdateAsync(UpdateUserInput input);
 
@@ -46,8 +45,7 @@ public interface IUserAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:valid:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:valid:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     [Authorize(IdentityPermissions.Users.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -165,8 +163,8 @@ public interface IUserAppService
     /// <param name="userId"></param>
     /// <returns></returns>
     [ProhibitExtranet]
-    [GetCachingIntercept("roleIds:valid:userId:{0}")]
-    Task<ICollection<long>> GetValidRoleIdsAsync([CacheKey(0)]long userId);
+    [GetCachingIntercept("roleIds:userId:{0}")]
+    Task<ICollection<long>> GetRoleIdsAsync([CacheKey(0)]long userId);
 
     [ProhibitExtranet]
     Task<ICollection<long>> GetUserIdsAsync(long organizationId);
@@ -181,8 +179,5 @@ public interface IUserAppService
     [Transaction]
     Task RemoveOrganizationLinkedDataAsync(long[] organizationIds);
     
-    [ProhibitExtranet]
-    [GetCachingIntercept("roles:valid:userId:{0}")]
-    Task<GetUserRoleOutput> GetValidRolesAsync([CacheKey(0)]long userId);
     
 }

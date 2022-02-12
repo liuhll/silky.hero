@@ -546,7 +546,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     public async Task<UserDataRange> GetUserDataRange(long userId)
     {
         UserDataRange userDataRange;
-        var userRoles = await UserRepository.GetRolesAsync(userId).Where(p => p.Status == Status.Valid).ToListAsync();
+        var userRoles = await UserRepository.GetRolesAsync(userId).ToListAsync();
         if (userRoles.Any(p => p.DataRange == DataRange.Whole))
         {
             userDataRange = new UserDataRange(userId, true);
@@ -631,13 +631,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         return await ((IdentityUserStore)Store).GetJobNumberAsync(user, CancellationToken);
     }
-
-    public async Task<ICollection<string>> GetValidRolesAsync(IdentityUser user)
-    {
-        return await UserRepository.GetRolesAsync(user.Id).Where(p => p.Status == Status.Valid).Select(p => p.Name)
-            .ToListAsync();
-    }
-
+    
     public Task<IdentityUser> FindByJobNumberAsync(string jobNumber)
     {
         return ((IdentityUserStore)Store).FindByJobNumberAsync(jobNumber);

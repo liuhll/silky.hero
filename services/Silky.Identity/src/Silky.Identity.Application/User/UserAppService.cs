@@ -170,11 +170,10 @@ public class UserAppService : IUserAppService
         return UserManager.HasPositionUsersAsync(positionId);
     }
 
-    public async Task<ICollection<long>> GetValidRoleIdsAsync(long userId)
+    public async Task<ICollection<long>> GetRoleIdsAsync(long userId)
     {
         return await UserManager.UserRepository
             .GetRolesAsync(userId)
-            .Where(p => p.Status == Status.Valid)
             .Select(p => p.Id)
             .ToListAsync();
     }
@@ -285,18 +284,7 @@ public class UserAppService : IUserAppService
     {
     }
 
-    public async Task<GetUserRoleOutput> GetValidRolesAsync(long userId)
-    {
-        var user = await UserManager.GetByIdAsync(userId);
-        var roleNames = await UserManager.GetValidRolesAsync(user);
-        var output = new GetUserRoleOutput()
-        {
-            UserId = user.Id,
-            RoleNames = roleNames
-        };
-        return output;
-    }
-
+    
     [UnitOfWork]
     public async Task RemoveOrganizationUsers(long organizationId, long[] userIds)
     {

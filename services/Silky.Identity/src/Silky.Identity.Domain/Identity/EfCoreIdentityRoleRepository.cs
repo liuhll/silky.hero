@@ -18,7 +18,7 @@ public class EfCoreIdentityRoleRepository : EFCoreRepository<IdentityRole>, IIde
         {
             return Entities
                 .Include(p => p.Claims)
-                .FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName && !p.IsDeleted);
+                .FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName);
         }
 
         return FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName);

@@ -31,12 +31,13 @@ public static class GetUserPageOutputExtensions
         var roleAppService = EngineContext.Current.Resolve<IRoleAppService>();
         foreach (var userPageOutput in userPageOutputs) 
         {
-            foreach (var userRolePageOutput in userPageOutput.Roles) 
+            foreach (var userRolePageOutput in userPageOutput.Roles)
             {
-                userRolePageOutput.Name = (await roleAppService.GetAsync(userRolePageOutput.RoleId))?.Name;
-                userRolePageOutput.RealName = (await roleAppService.GetAsync(userRolePageOutput.RoleId))?.RealName;
+                var roleInfo = (await roleAppService.GetAsync(userRolePageOutput.RoleId));
+                userRolePageOutput.Name = roleInfo.Name;
+                userRolePageOutput.RealName = roleInfo.RealName;
+                userRolePageOutput.Status = roleInfo.Status;
             }
-        
         }
     }
 }

@@ -81,8 +81,8 @@ public class RoleAppService : IRoleAppService
     public async Task<GetRoleMenuOutput> GetMenusAsync(long id)
     {
         var role = await _roleManager.RoleRepository
+            .AsQueryable(false)
             .Include(p => p.Menus)
-            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id);
         if (role == null)
         {
