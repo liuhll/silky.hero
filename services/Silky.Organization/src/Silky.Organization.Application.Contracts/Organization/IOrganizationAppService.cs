@@ -62,6 +62,7 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(OrganizationPermissions.Organizations.LookDetail)]
     Task<GetOrganizationOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -86,6 +87,7 @@ public interface IOrganizationAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}/userids")]
+    [Authorize(OrganizationPermissions.Organizations.AddUsers)]
     Task<ICollection<long>> GetUserIdsAsync(long id);
 
     /// <summary>
@@ -95,6 +97,7 @@ public interface IOrganizationAppService
     /// <param name="inputs"></param>
     /// <returns></returns>
     [HttpPut("{id:long}/users")]
+    [Authorize(OrganizationPermissions.Organizations.AddUsers)]
     Task AddUsers(long id,ICollection<AddOrganizationUserInput> inputs);
 
     /// <summary>
@@ -104,6 +107,7 @@ public interface IOrganizationAppService
     /// <param name="userIds"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}/users")]
+    [Authorize(OrganizationPermissions.Organizations.RemoveUser)]
     Task RemoveUsers(long id, long[] userIds);
 
     /// <summary>

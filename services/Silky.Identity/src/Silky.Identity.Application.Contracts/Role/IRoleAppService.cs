@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Identity.Application.Contracts.Role.Dtos;
-using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
@@ -44,6 +43,7 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(IdentityPermissions.Roles.LookDetail)]
     Task<GetRoleOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>

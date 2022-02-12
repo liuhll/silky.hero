@@ -43,6 +43,7 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(PositionPermissions.Positions.LookDetail)]
     Task<GetPositionOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>

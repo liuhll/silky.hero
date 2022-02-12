@@ -10,6 +10,7 @@ public class IdentityPermissions
         public const string Create = Default + ".Create";
         public const string Update = Default + ".Update";
         public const string Delete = Default + ".Delete";
+        public const string LookDetail = Default + ".LookDetail";
         public const string UpdateClaimTypes = Default + ".UpdateClaimTypes";
         public const string Lock = Default + ".Lock";
         public const string UnLock = Default + ".UnLock";
@@ -23,6 +24,7 @@ public class IdentityPermissions
         public const string Create = Default + ".Create";
         public const string Update = Default + ".Update";
         public const string Delete = Default + ".Delete";
+        public const string LookDetail = Default + ".LookDetail";
         public const string SetMenus = Default + ".SetMenus";
         public const string SetDataRange = Default + ".SetDataRange";
     }

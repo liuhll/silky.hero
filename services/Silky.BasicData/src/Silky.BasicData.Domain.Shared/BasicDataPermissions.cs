@@ -14,6 +14,7 @@ public class BasicDataPermissions
             public const string Create = Default + ".Create";
             public const string Update = Default + ".Update";
             public const string Delete = Default + ".Delete";
+            public const string LookDetail = Default + ".LookDetail";
         }
         
         public static class Items
@@ -22,6 +23,7 @@ public class BasicDataPermissions
             public const string Create = Default + ".Create";
             public const string Update = Default + ".Update";
             public const string Delete = Default + ".Delete";
+            public const string LookDetail = Default + ".LookDetail";
         }
     }
 }

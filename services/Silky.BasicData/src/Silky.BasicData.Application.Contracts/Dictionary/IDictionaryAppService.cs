@@ -41,6 +41,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpGet("type/{id:long}")]
     [GetCachingIntercept("type:id:{0}")]
+    [Authorize(BasicDataPermissions.Dictionaries.Types.LookDetail)]
     Task<GetDictionaryTypeOutput> GetTypeAsync([CacheKey(0)]long id);
 
     /// <summary>
@@ -86,6 +87,7 @@ public interface IDictionaryAppService
     /// <returns></returns>
     [HttpGet("item/{id:long}")]
     [GetCachingIntercept("item:id:{0}")]
+    [Authorize(BasicDataPermissions.Dictionaries.Items.LookDetail)]
     Task<GetDictionaryItemOutput> GetItemAsync([CacheKey(0)]long id);
 
     /// <summary>

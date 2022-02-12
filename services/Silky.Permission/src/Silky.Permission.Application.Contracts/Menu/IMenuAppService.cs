@@ -42,6 +42,7 @@ public interface IMenuAppService
     /// <returns></returns>
     [HttpGet]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(PermissionPermissions.Menus.LookDetail)]
     Task<GetMenuOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
+using Silky.Organization.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
@@ -56,6 +57,7 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(IdentityPermissions.Users.LookDetail)]
     Task<GetUserOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -66,6 +68,7 @@ public interface IUserAppService
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
 
     [HttpGet("{organizationId:long}/organizationuser/page")]
+    [Authorize(OrganizationPermissions.Organizations.AddUsers)]
     Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);
 
     [ProhibitExtranet]

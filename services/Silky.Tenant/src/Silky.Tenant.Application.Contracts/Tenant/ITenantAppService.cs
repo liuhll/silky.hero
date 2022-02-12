@@ -42,6 +42,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(TenantPermissions.Tenants.LookDetail)]
     Task<GetTenantOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>

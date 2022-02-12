@@ -25,6 +25,7 @@ public interface IAuditLogAppService
     /// </summary>
     /// <param name="input">查询输入参数</param>
     /// <returns></returns>
+    [Authorize(LogPermissions.AuditLogging.Search)]
     Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input);
 
     /// <summary>
@@ -34,5 +35,6 @@ public interface IAuditLogAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}")]
+    [Authorize(LogPermissions.AuditLogging.LookDetail)]
     Task<GetAuditLogOutput> GetAsync([CacheKey(0)] long id);
 }
