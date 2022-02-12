@@ -9,7 +9,7 @@ public class IdentityUserRole : AuditedEntity
 
     public long RoleId { get; set; }
     
-    protected IdentityUserRole()
+    public IdentityUserRole()
     {
     } 
     

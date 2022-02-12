@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Identity.Application.Contracts.Role.Dtos;
+using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
@@ -32,7 +33,6 @@ public interface IRoleAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetCurrentUserDataRange),"CurrentUserDataRange:userId:*")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
@@ -53,7 +53,6 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetCurrentUserDataRange),"CurrentUserDataRange:userId:*")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);

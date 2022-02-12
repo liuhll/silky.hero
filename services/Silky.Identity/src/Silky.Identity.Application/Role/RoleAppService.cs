@@ -12,25 +12,28 @@ using Microsoft.Extensions.Caching.Distributed;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
+using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
-using Silky.Hero.Common.Extensions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Silky.Identity.Application.Role;
 
 public class RoleAppService : IRoleAppService
 {
     private readonly IdentityRoleManager _roleManager;
+    private readonly IRepository<IdentityUserRole> _userRoleRepository;
     private readonly ISession _session;
     private readonly IDistributedCache _distributedCache;
     
     public RoleAppService(IdentityRoleManager roleManager,
-        IDistributedCache distributedCache)
+        IDistributedCache distributedCache, 
+        IRepository<IdentityUserRole> userRoleRepository)
     {
         _roleManager = roleManager;
         _distributedCache = distributedCache;
+        _userRoleRepository = userRoleRepository;
         _session = NullSession.Instance;
     }
 
@@ -47,7 +50,7 @@ public class RoleAppService : IRoleAppService
         var role = await _roleManager.GetByIdAsync(input.Id);
         await UpdateRoleByInput(role, input);
         (await _roleManager.UpdateAsync(role)).CheckErrors();
-        await RemoveUserRoleCacheAsync();
+        await RemoveUserRoleCacheAsync(role.Id);
     }
 
     public async Task<GetRoleOutput> GetAsync(long id)
@@ -60,7 +63,7 @@ public class RoleAppService : IRoleAppService
     {
         var role = await _roleManager.GetByIdAsync(id);
         (await _roleManager.DeleteAsync(role)).CheckErrors();
-        await RemoveUserRoleCacheAsync();
+        await RemoveUserRoleCacheAsync(role.Id);
     }
 
     public async Task SetMenusAsync(UpdateRoleMenuInput input)
@@ -158,11 +161,18 @@ public class RoleAppService : IRoleAppService
         (await _roleManager.SetRoleRealNameAsync(role, input.RealName)).CheckErrors();
     }
 
-    private async Task RemoveUserRoleCacheAsync()
+    private async Task RemoveUserRoleCacheAsync(long roleId)
     {
-        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:userId:*");
-        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roles:valid:userId:*");
-        await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), "roleIds:valid:userId:*");
+        var userRoles = await _userRoleRepository.AsQueryable(false).Where(p => p.RoleId == roleId).ToArrayAsync();
+        foreach (var userRole in userRoles)
+        {
+            await _distributedCache.RemoveAsync(typeof(GetUserOutput), $"id:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(GetUserRoleOutput), $"roles:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(ICollection<long>), $"roleIds:userId:{userRole.UserId}");
+            await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
+            await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
+        }
+        
     }
 
     public async Task<ICollection<GetRoleOutput>> GetListAsync(string realName,string name)

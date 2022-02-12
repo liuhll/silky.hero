@@ -151,7 +151,6 @@ public class DictionaryDomainService : IDictionaryDomainService, IScopedDependen
     public async Task RemoveDictionaryItemsCache(long dictionaryId)
     {
         var dictType = await DictionaryTypeRepository.FindAsync(dictionaryId);
-        
         await DistributedCache.RemoveAsync(typeof(ICollection<GetDictionaryItemOutput>),
             $"items:id:{dictType.Id}");
         await DistributedCache.RemoveAsync(typeof(ICollection<GetDictionaryItemOutput>),

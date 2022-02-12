@@ -89,9 +89,9 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:valid:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:valid:userId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
     Task SetRolesAsync([CacheKey(0)]long userId, ICollection<string> roleNames);
 
     /// <summary>
