@@ -37,7 +37,12 @@
         </Tag>
       </template>
       <template #roles="{ text }">
-        <Tag v-for="(role, index) in text" :key="index" color="blue" style="margin: 3px">
+        <Tag
+          v-for="(role, index) in text"
+          :key="index"
+          :color="setRoleColor(role.status)"
+          style="margin: 3px"
+        >
           {{ role.realName }}
         </Tag>
       </template>
@@ -225,6 +230,13 @@
         });
       }
 
+      function setRoleColor(status: Status) {
+        if (status === Status.Invalid) {
+          return 'red';
+        }
+        return 'blue';
+      }
+
       function handleSuccessAuthorizeUserRole(data) {
         nextTick(async () => {
           try {
@@ -306,6 +318,7 @@
         handleSuccess,
         registerUserRoleDrawer,
         handleSuccessAuthorizeUserRole,
+        setRoleColor,
         positionOptions,
         roleOptions,
         searchInfo,

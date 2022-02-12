@@ -46,7 +46,7 @@ export const columns: BasicColumn[] = [
 
       return null;
     },
-    width: 50,
+    width: 30,
   },
   {
     title: '手机',
@@ -61,7 +61,7 @@ export const columns: BasicColumn[] = [
   {
     title: '部门(职位)',
     dataIndex: 'userSubsidiaries',
-    width: 100,
+    width: 150,
     slots: { customRender: 'userSubsidiaries' },
   },
   {
