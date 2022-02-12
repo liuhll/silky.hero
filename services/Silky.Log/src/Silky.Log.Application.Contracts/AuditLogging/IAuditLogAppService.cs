@@ -6,7 +6,6 @@ using Silky.Log.Domain.Shared;
 using Silky.Rpc.Auditing;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
-using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 
 namespace Silky.Log.Application.Contracts.AuditLogging;
@@ -25,7 +24,7 @@ public interface IAuditLogAppService
     /// </summary>
     /// <param name="input">查询输入参数</param>
     /// <returns></returns>
-    [Authorize(LogPermissions.AuditLogging.Search)]
+   // [Authorize(LogPermissions.AuditLogging.Search)]
     Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input);
 
     /// <summary>
