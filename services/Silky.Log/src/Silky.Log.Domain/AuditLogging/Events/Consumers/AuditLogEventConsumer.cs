@@ -19,7 +19,6 @@ public class AuditLogEventConsumer: IConsumer<AuditLogInfo>
     public async Task Consume(ConsumeContext<AuditLogInfo> context)
     {
         var auditLog = context.Message.Adapt<AuditLog>();
-        await _auditLogRepository.InsertAsync(auditLog);
-        await _auditLogRepository.SavePoolNowAsync();
+        await _auditLogRepository.InsertNowAsync(auditLog);
     }
 }
