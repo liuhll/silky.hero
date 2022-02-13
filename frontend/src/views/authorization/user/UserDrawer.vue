@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="700px"
+    width="40%"
     @ok="handleSubmit"
   >
     <Card title="基础信息" :bordered="false">

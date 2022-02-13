@@ -5,11 +5,13 @@
         <TableAction :actions="createActions(record, column)" />
       </template>
     </BasicTable>
-    <a-button block class="mt-5" type="dashed" @click="handleAdd"> 增行 </a-button>
+    <a-button block class="mt-5" type="dashed" @click="handleAdd" v-if="isEditable">
+      增行
+    </a-button>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
+  import { defineComponent, ref, unref, computed } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
@@ -28,7 +30,15 @@
 
   export default defineComponent({
     components: { BasicTable, TableAction },
-    setup() {
+    name: 'UserSubsidiaryTable',
+    props: {
+      editable: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    setup(props) {
+      const isEditable = computed(() => props.editable);
       const columns: BasicColumn[] = [
         {
           title: '所属部门',
@@ -53,20 +63,23 @@
         },
       ];
       const { notification } = useMessage();
-      const [
-        registerTable,
-        { getDataSource, setTableData, getRawDataSource, getColumns, setProps },
-      ] = useTable({
+      const tableConfig: any = {
         columns: columns,
         showIndexColumn: false,
-        actionColumn: {
+        pagination: false,
+      };
+      if (unref(isEditable)) {
+        tableConfig.actionColumn = {
           width: 140,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-        },
-        pagination: false,
-      });
+        };
+      }
+      const [
+        registerTable,
+        { getDataSource, setTableData, getRawDataSource, getColumns, setProps },
+      ] = useTable(tableConfig);
 
       function handleEdit(record: EditRecordRow) {
         record.onEdit?.(true);
@@ -204,6 +217,7 @@
         setOrganizaionTreeList,
         setPositionOptions,
         handleEditChange,
+        isEditable,
       };
     },
   });

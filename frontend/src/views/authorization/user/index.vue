@@ -88,6 +88,7 @@
     </BasicTable>
     <UserDrawer @register="registerDrawer" @success="handleSuccess" />
     <UserRoleDrawer @register="registerUserRoleDrawer" @success="handleSuccessAuthorizeUserRole" />
+    <UserDetailDrawer @register="registerUserDetailDrawer" />
   </PageWrapper>
 </template>
 
@@ -95,6 +96,7 @@
   import { defineComponent, ref, onMounted, unref, nextTick, computed } from 'vue';
   import { TreeSelect, Tag, Select } from 'ant-design-vue';
   import {
+    getUserById,
     getUserPageList,
     createUser,
     updateUser,
@@ -110,6 +112,7 @@
   import { TreeItem } from '/@/components/Tree';
   import UserDrawer from './UserDrawer.vue';
   import UserRoleDrawer from './UserRoleDrawer.vue';
+  import UserDetailDrawer from './UserDetailDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { getRoleOptions } from '/@/views/authorization/role/role.data';
@@ -128,6 +131,7 @@
       Select,
       UserDrawer,
       UserRoleDrawer,
+      UserDetailDrawer,
     },
     setup() {
       const searchInfo = ref({});
@@ -139,6 +143,7 @@
       const roleOptions = ref<OptionsItem[]>([]);
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerUserRoleDrawer, { openDrawer: openUserRoleDrawer }] = useDrawer();
+      const [registerUserDetailDrawer, { openDrawer: openUserDetailDrawer }] = useDrawer();
       const { notification } = useMessage();
       const { hasPermission } = usePermission();
       const loadingRef = ref(false);
@@ -166,7 +171,12 @@
         });
       }
 
-      function handleView(record: Recordable) {}
+      function handleView(record: Recordable) {
+        nextTick(async () => {
+          const userModel = await getUserById(record.id);
+          openUserDetailDrawer(true, userModel);
+        });
+      }
 
       function handleDelete(record: Recordable) {
         nextTick(async () => {
@@ -317,6 +327,7 @@
         registerDrawer,
         handleSuccess,
         registerUserRoleDrawer,
+        registerUserDetailDrawer,
         handleSuccessAuthorizeUserRole,
         setRoleColor,
         positionOptions,

@@ -13,6 +13,7 @@
           :column="2"
           :data="auditLogDetail"
           :schema="auditLogDetailSchemas"
+          class="enter-y"
         />
       </TabPane>
       <TabPane key="2" :tab="getOperateTitile">

@@ -3,6 +3,13 @@ import { FormSchema } from '/@/components/Table';
 import { sexOptions } from '/@/utils/sex';
 import { formatToDate } from '/@/utils/dateUtil';
 import { Sex } from '/@/utils/sex';
+import { DescItem } from '/@/components/Description/index';
+import { h, render } from 'vue';
+import { Tag } from 'ant-design-vue';
+import { Status } from '../../../utils/status';
+
+const commonTagRender = (color: string, curVal: string) => h(Tag, { color }, () => curVal);
+// const commonLinkRender = (text: string) => (href) => h('a', { href, target: '_blank' }, text);
 
 export const columns: BasicColumn[] = [
   {
@@ -29,6 +36,16 @@ export const columns: BasicColumn[] = [
     title: '工号',
     dataIndex: 'jobNumber',
     width: 80,
+  },
+  {
+    title: '状态',
+    dataIndex: 'isActive',
+    width: 50,
+    format: (value) => {
+      const colorValue = value ? 'blue' : 'red';
+      const valText = value ? '正常' : '冻结';
+      return commonTagRender(colorValue, valText);
+    },
   },
   {
     title: '昵称',
@@ -322,6 +339,106 @@ export const userRoleSchemas: FormSchema[] = [
     componentProps: {
       mode: 'multiple',
       allowClear: true,
+    },
+  },
+];
+
+export const userDetailSchemas: DescItem[] = [
+  {
+    label: '用户名',
+    field: 'userName',
+  },
+  {
+    label: '真实姓名',
+    field: 'realName',
+  },
+  {
+    label: '昵称',
+    field: 'surname',
+  },
+  {
+    label: '生日',
+    field: 'birthDay',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD');
+    },
+  },
+  {
+    label: '性别',
+    field: 'sex',
+    render: (value) => {
+      if (`${value}` === `${Sex.Female}`) {
+        return '女';
+      }
+      if (`${value}` === `${Sex.Male}`) {
+        return '男';
+      }
+      return null;
+    },
+  },
+  {
+    label: '工号',
+    field: 'jobNumber',
+  },
+  {
+    label: '电子邮件',
+    field: 'email',
+  },
+  {
+    label: '手机',
+    field: 'mobilePhone',
+  },
+  {
+    label: '联系电话',
+    field: 'telPhone',
+  },
+  {
+    label: '状态',
+    field: 'isActive',
+    render: (value) => {
+      if (value === true) {
+        return commonTagRender('blue', '正常');
+      } else {
+        return commonTagRender('red', '冻结');
+      }
+    },
+  },
+  {
+    label: '登陆失败后是否被锁定',
+    field: 'lockoutEnabled',
+    render: (value) => {
+      if (value === true) {
+        return commonTagRender('blue', '是');
+      } else {
+        return commonTagRender('red', '否');
+      }
+    },
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    },
+  },
+  {
+    label: '角色',
+    field: 'roles',
+    span: 2,
+    render: (value: any) => {
+      const roleTags = [];
+      for (const roleInfo of value) {
+        const color = roleInfo.status === Status.Valid ? 'blue' : 'red';
+        roleTags.push(commonTagRender(color, roleInfo.realName));
+      }
+      return roleTags;
     },
   },
 ];
