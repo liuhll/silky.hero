@@ -16,5 +16,11 @@ public class Mapper : IRegister
                 dest.CustomOrganizationIds =
                     src.CustomOrganizationDataRanges.Select(p => p.OrganizationId).ToArray();
             });
+        config.ForType<IdentityRole, GetRoleOutput>()
+            .AfterMapping((src, dest) =>
+            {
+                dest.MenuIds = src.Menus.Select(p => p.MenuId).ToArray();
+                dest.CustomOrganizationIds = src.CustomOrganizationDataRanges.Select(p => p.OrganizationId).ToArray();
+            });
     }
 }

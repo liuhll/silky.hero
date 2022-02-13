@@ -56,8 +56,17 @@ public class RoleAppService : IRoleAppService
 
     public async Task<GetRoleOutput> GetAsync(long id)
     {
-        var role = await _roleManager.GetByIdAsync(id);
-        return role.Adapt<GetRoleOutput>();
+        var role = await _roleManager.RoleRepository
+            .AsQueryable(false)
+            .Include(p => p.Menus)
+            .Include(p => p.CustomOrganizationDataRanges)
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), id);
+        }
+        var roleOutput = role.Adapt<GetRoleOutput>();
+        return roleOutput;
     }
 
     public async Task DeleteAsync(long id)
@@ -117,8 +126,8 @@ public class RoleAppService : IRoleAppService
     public async Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id)
     {
         var role = await _roleManager.RoleRepository
+            .AsQueryable(false)
             .Include(p => p.CustomOrganizationDataRanges)
-            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id);
         if (role == null)
         {
