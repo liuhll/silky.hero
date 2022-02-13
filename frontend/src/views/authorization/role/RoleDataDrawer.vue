@@ -9,7 +9,12 @@
   >
     <BasicForm @register="registerForm">
       <template #dataRangeSlot="{ model, field }">
-        <Select v-model:value="model[field]" placeholder="请选择" :options="DataRangeOptions" @change="handleChangeDataRange"/>
+        <Select
+          v-model:value="model[field]"
+          placeholder="请选择"
+          :options="DataRangeOptions"
+          @change="handleChangeDataRange"
+        />
       </template>
     </BasicForm>
   </BasicDrawer>
@@ -22,7 +27,8 @@
   import { roleDataSchemas } from './role.data';
   import { Select } from 'ant-design-vue';
   import { DataRangeOptions, DataRange } from '/@/utils/dataRangeUtil';
-
+  import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
+  import { getRoleDataRange } from '/@/api/role';
   export default defineComponent({
     name: 'RoleDataDrawer',
     components: { BasicDrawer, BasicForm, Select },
@@ -30,19 +36,21 @@
       const getTitle = computed(() => '授权角色数据权限');
       const roleId = ref<number>();
 
-      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (id) => {
         resetFields();
         clearValidate();
-        const treeData = data.orgTreeData;
+        const roleDataRange = await getRoleDataRange(id);
+        debugger;
+        const treeData = await getOrganizationTreeList();
         updateSchema({
           field: 'customOrganizationIds',
           componentProps: {
             'tree-data': treeData,
           },
         });
-        roleId.value = data.roleDataRange.id;
+        roleId.value = id;
         setFieldsValue({
-          ...data.roleDataRange,
+          ...roleDataRange,
         });
         setDrawerProps({ confirmLoading: false });
       });

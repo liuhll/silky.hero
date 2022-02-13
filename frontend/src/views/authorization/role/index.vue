@@ -63,6 +63,7 @@
       @success="handleSuccessAuthorizeRoleData"
       ref="roleDataDrawerRef"
     />
+    <RoleDetailDrawer @register="registerRoleDetailDrawer" ref="roleDetailDrawerRef" />
   </PageWrapper>
 </template>
 
@@ -70,12 +71,8 @@
   import { defineComponent, ref, unref, computed, nextTick } from 'vue';
   import { Tag } from 'ant-design-vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getMenuTreeList2 } from '/@/views/authorization/menu/menu.data';
-  import { getRoleMenuIds } from '/@/api/role';
-  import { treeToList } from '/@/utils/helper/treeHelper';
-  import { arrayEquals } from '/@/utils';
-
   import {
+    getRoleById,
     getRolePageList,
     createRole,
     updateRole,
@@ -89,10 +86,10 @@
   import RoleDrawer from './RoleDrawer.vue';
   import RoleMenuDrawer from './RoleMenuDrawer.vue';
   import RoleDataDrawer from './RoleDataDrawer.vue';
+  import RoleDetailDrawer from './RoleDetailDrawer.vue';
   import { TreeItem } from '/@/components/Tree';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { getOrganizationTreeList } from '/@/views/authorization/organization/organization.data';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'Role',
@@ -104,6 +101,7 @@
       RoleDrawer,
       RoleMenuDrawer,
       RoleDataDrawer,
+      RoleDetailDrawer,
     },
     setup() {
       const searchInfo = ref({});
@@ -127,6 +125,7 @@
       };
       if (
         hasPermission([
+          'Identity.Role.LookDetail',
           'Identity.Role.Create',
           'Identity.Role.Update',
           'Identity.Role.Delete',
@@ -147,9 +146,17 @@
         setMenusTreeData: (treeData: TreeItem[]) => void;
         setCheckAllStateStatus: (indeterminate: boolean, checkAll: boolean) => void;
       }>('roleMenuDrawerRef');
+
+      const roleDetailDrawerRef = ref<{
+        getMenuTree: () => any;
+        setMenusTreeData: (treeData: TreeItem[]) => void;
+        setDataRange: (dataRange) => void;
+      }>('roleDetailDrawerRef');
+
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerRoleMenuDrawer, { openDrawer: openRoleMenuDrawer }] = useDrawer();
       const [registerRoleDataDrawer, { openDrawer: openRoleDataDrawer }] = useDrawer();
+      const [registerRoleDetailDrawer, { openDrawer: openRoleDetailDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
@@ -211,21 +218,11 @@
         });
       }
 
-      function handleView(record: Recordable) {}
-
-      function isCheckedAll(menuTree: TreeItem[], checkedMenuIds: number[]) {
-        const allMenuIds = treeToList(menuTree)
-          .map((item) => item.key)
-          .sort((item1, item2) => {
-            return item1 - item2;
-          });
-
-        return arrayEquals(
-          allMenuIds,
-          checkedMenuIds.sort((item1, item2) => {
-            return item1 - item2;
-          }),
-        );
+      function handleView(record: Recordable) {
+        nextTick(async () => {
+          const roleInfo = await getRoleById(record.id);
+          openRoleDetailDrawer(true, roleInfo);
+        });
       }
 
       function handleAuthorizeMenu(record: Recordable) {
@@ -233,24 +230,12 @@
           openRoleMenuDrawer(true, {
             record,
           });
-          const menuTree = await getMenuTreeList2({});
-          roleMenuDrawerRef.value?.setMenusTreeData(menuTree);
-          const roleMenu = await getRoleMenuIds(record.id);
-          roleMenuDrawerRef.value?.getTree().setCheckedKeys(roleMenu.menuIds);
-          const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
-          const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
-          roleMenuDrawerRef.value?.setCheckAllStateStatus(indeterminate, checkedAll);
         });
       }
 
       function handleAuthorizeDataRange(record: Recordable) {
         nextTick(async () => {
-          const roleDataRange = await getRoleDataRange(record.id);
-          const orgTreeData = await getOrganizationTreeList();
-          openRoleDataDrawer(true, {
-            roleDataRange: roleDataRange,
-            orgTreeData: orgTreeData,
-          });
+          openRoleDataDrawer(true, record.id);
         });
       }
 
@@ -281,6 +266,7 @@
         registerDrawer,
         registerRoleMenuDrawer,
         registerRoleDataDrawer,
+        registerRoleDetailDrawer,
         handleSuccess,
         handleView,
         handleEdit,
@@ -291,6 +277,7 @@
         handleSuccessAuthorizeRoleData,
         searchInfo,
         roleMenuDrawerRef,
+        roleDetailDrawerRef,
         loadingRef,
       };
     },

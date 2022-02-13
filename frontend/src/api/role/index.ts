@@ -1,11 +1,17 @@
 import { defHttp } from '/@/utils/http/axios';
 import { BasicFetchResult } from '/@/api/model/baseModel';
-import { GetRolePageModel } from './model/roleModel';
+import { GetRoleModel, GetRolePageModel } from './model/roleModel';
 
 enum Api {
   GetRolePageList = '/role/page',
   Role = '/role',
 }
+
+export const getRoleById = (id) => {
+  return defHttp.get<GetRoleModel>({
+    url: `/role/${id}`,
+  });
+};
 
 export const getRolePageList = (requestParams) => {
   return defHttp.get<BasicFetchResult<GetRolePageModel>>({
@@ -66,7 +72,6 @@ export const getRoleList = (requestParams) => {
     params: requestParams,
   });
 };
- 
 
 // export const setRoleStatus = (id: number, status: Status) => {
 //   return defHttp.put({

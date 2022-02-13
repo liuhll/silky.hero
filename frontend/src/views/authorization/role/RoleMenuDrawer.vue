@@ -7,7 +7,9 @@
     width="30%"
     @ok="handleSubmit"
   >
-    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="checkeAllMenus">全选</Checkbox>
+    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="checkeAllMenus"
+      >全选</Checkbox
+    >
     <BasicTree
       :tree-data="menusTreeData"
       defaultExpandAll
@@ -27,6 +29,8 @@
   import { Checkbox } from 'ant-design-vue';
   import { treeToList } from '/@/utils/helper/treeHelper';
   import { arrayEquals } from '/@/utils';
+  import { getMenuTreeList2 } from '/@/views/authorization/menu/menu.data';
+  import { getRoleMenuIds } from '/@/api/role';
   export default defineComponent({
     name: 'RoleMenuDrawer',
     components: { BasicDrawer, BasicTree, Checkbox },
@@ -63,8 +67,30 @@
         menusTreeData.value = treeData;
       }
 
+      function isCheckedAll(menuTree: TreeItem[], checkedMenuIds: number[]) {
+        const allMenuIds = treeToList(menuTree)
+          .map((item) => item.key)
+          .sort((item1, item2) => {
+            return item1 - item2;
+          });
+
+        return arrayEquals(
+          allMenuIds,
+          checkedMenuIds.sort((item1, item2) => {
+            return item1 - item2;
+          }),
+        );
+      }
+
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         roleId.value = data.record.id;
+        const menuTree = await getMenuTreeList2({});
+        setMenusTreeData(menuTree);
+        const roleMenu = await getRoleMenuIds(data.record.id);
+        getTree().setCheckedKeys(roleMenu.menuIds);
+        const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
+        const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
+        setCheckAllStateStatus(indeterminate, checkedAll);
         setDrawerProps({ confirmLoading: false });
       });
 

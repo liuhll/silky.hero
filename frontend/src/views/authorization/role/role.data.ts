@@ -7,7 +7,11 @@ import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
 import { Tag } from 'ant-design-vue';
 import { h } from 'vue';
+import { formatToDate } from '/@/utils/dateUtil';
 import { DataRange } from '/@/utils/dataRangeUtil';
+import { DescItem } from '/@/components/Description/index';
+
+const commonTagRender = (color: string, curVal: string) => h(Tag, { color }, () => curVal);
 
 export const columns: BasicColumn[] = [
   {
@@ -192,4 +196,56 @@ export const getRoleOptions = async (query:any) => {
     return prev;
   }, [] as OptionsItem[]);
   return positionOptions;
-}
+};
+
+export const roleDetailSchemas: DescItem[] = [
+  {
+    label: '标识',
+    field: 'name',
+  },
+  {
+    label: '角色名',
+    field: 'realName',
+  },
+  {
+    label: '是否默认',
+    field: 'isDefault',
+    render: (value) => {
+      if (value === true) {
+        return commonTagRender('blue', '是');
+      } else {
+        return commonTagRender('red', '否');
+      }
+    },
+  },
+  {
+    label: '状态',
+    field: 'status',
+    render: (value) => {
+      if (value === Status.Valid) {
+        return commonTagRender('blue', '正常');
+      } else {
+        return commonTagRender('red', '冻结');
+      }
+    },
+  },
+  {
+    label: '备注',
+    field: 'remark',
+    span: 2,
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    },
+  },
+];
