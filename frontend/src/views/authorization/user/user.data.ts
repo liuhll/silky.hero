@@ -16,14 +16,25 @@ export const columns: BasicColumn[] = [
     width: 80,
   },
   {
-    title: '昵称',
-    dataIndex: 'surname',
-    width: 80,
-  },
-  {
     title: '邮箱',
     dataIndex: 'email',
     width: 100,
+  },
+  {
+    title: '手机',
+    dataIndex: 'mobilePhone',
+    width: 80,
+  },
+  {
+    title: '工号',
+    dataIndex: 'jobNumber',
+    width: 80,
+  },
+  {
+    title: '昵称',
+    dataIndex: 'surname',
+    width: 80,
+    defaultHidden: true,
   },
   {
     title: '生日',
@@ -32,6 +43,7 @@ export const columns: BasicColumn[] = [
       return formatToDate(value, 'YYYY-MM-DD');
     },
     width: 80,
+    defaultHidden: true,
   },
   {
     title: '性别',
@@ -47,16 +59,7 @@ export const columns: BasicColumn[] = [
       return null;
     },
     width: 30,
-  },
-  {
-    title: '手机',
-    dataIndex: 'mobilePhone',
-    width: 80,
-  },
-  {
-    title: '工号',
-    dataIndex: 'jobNumber',
-    width: 80,
+    defaultHidden: true,
   },
   {
     title: '部门(职位)',
