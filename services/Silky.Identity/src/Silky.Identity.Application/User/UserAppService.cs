@@ -17,6 +17,7 @@ using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
+using Silky.Identity.Domain.Extensions;
 using Silky.Transaction.Tcc;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
@@ -85,7 +86,10 @@ public class UserAppService : IUserAppService
             throw new UserFriendlyException($"不存在Id为{id}的账号");
         }
 
-        return user.Adapt<GetUserOutput>();
+        var userOutput = user.Adapt<GetUserOutput>();
+        await userOutput.SetUserRoles();
+        await userOutput.SetUserSubsidiaries();
+        return userOutput;
     }
 
     public Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input)

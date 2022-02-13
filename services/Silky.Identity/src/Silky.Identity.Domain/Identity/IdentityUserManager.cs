@@ -216,7 +216,6 @@ public class IdentityUserManager : UserManager<IdentityUser>
         {
             throw new EntityNotFoundException(typeof(IdentityUser), id);
         }
-
         return user;
     }
 

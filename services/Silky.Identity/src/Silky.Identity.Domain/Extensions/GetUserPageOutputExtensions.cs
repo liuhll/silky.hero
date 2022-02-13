@@ -10,11 +10,11 @@ namespace Silky.Identity.Domain.Extensions;
 
 public static class GetUserPageOutputExtensions
 {
-    public static async Task SetUserSubsidiaries(this IEnumerable<GetUserPageOutput> userPageOutputs)
+    public static async Task SetUserSubsidiaries(this IEnumerable<GetUserOutput> userOutputs)
     {
         var positionAppService = EngineContext.Current.Resolve<IPositionAppService>();
         var organizationAppService = EngineContext.Current.Resolve<IOrganizationAppService>();
-        foreach (var userPageOutput in userPageOutputs)
+        foreach (var userPageOutput in userOutputs)
         {
             foreach (var userSubsidiaryOutput in userPageOutput.UserSubsidiaries)
             {
@@ -25,11 +25,24 @@ public static class GetUserPageOutputExtensions
             }
         }
     }
+    
+    public static async Task SetUserSubsidiaries(this GetUserOutput userOutput)
+    {
+        var positionAppService = EngineContext.Current.Resolve<IPositionAppService>();
+        var organizationAppService = EngineContext.Current.Resolve<IOrganizationAppService>();
+        foreach (var userSubsidiaryOutput in userOutput.UserSubsidiaries)
+        {
+            userSubsidiaryOutput.OrganizationName =
+                (await organizationAppService.GetAsync(userSubsidiaryOutput.OrganizationId))?.Name;
+            userSubsidiaryOutput.PositionName =
+                (await positionAppService.GetAsync(userSubsidiaryOutput.PositionId))?.Name;
+        }
+    }
 
-    public static async Task SetUserRoles(this IEnumerable<GetUserPageOutput> userPageOutputs) 
+    public static async Task SetUserRoles(this IEnumerable<GetUserOutput> userOutputs) 
     {
         var roleAppService = EngineContext.Current.Resolve<IRoleAppService>();
-        foreach (var userPageOutput in userPageOutputs) 
+        foreach (var userPageOutput in userOutputs) 
         {
             foreach (var userRolePageOutput in userPageOutput.Roles)
             {
@@ -38,6 +51,18 @@ public static class GetUserPageOutputExtensions
                 userRolePageOutput.RealName = roleInfo.RealName;
                 userRolePageOutput.Status = roleInfo.Status;
             }
+        }
+    }
+    
+    public static async Task SetUserRoles(this GetUserOutput userOutput) 
+    {
+        var roleAppService = EngineContext.Current.Resolve<IRoleAppService>();
+        foreach (var userRolePageOutput in userOutput.Roles)
+        {
+            var roleInfo = (await roleAppService.GetAsync(userRolePageOutput.RoleId));
+            userRolePageOutput.Name = roleInfo.Name;
+            userRolePageOutput.RealName = roleInfo.RealName;
+            userRolePageOutput.Status = roleInfo.Status;
         }
     }
 }

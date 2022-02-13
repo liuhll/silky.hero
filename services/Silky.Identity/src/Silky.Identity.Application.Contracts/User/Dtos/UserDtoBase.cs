@@ -81,6 +81,6 @@ public abstract class UserDtoBase
     /// <summary>
     /// 用户岗位、组织机构信息
     /// </summary>
-    public ICollection<UserSubsidiaryDto> UserSubsidiaries { get; set; }
+    public virtual ICollection<UserSubsidiaryDto> UserSubsidiaries { get; set; }
     
 }
