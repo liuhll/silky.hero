@@ -24,7 +24,14 @@
             :key="index"
             :header="item.methodName"
           >
-            <Description size="middle" :column="2" :data="item" :schema="auditLogActionSchemas" />
+            <Description
+              size="middle"
+              :column="2"
+              :data="item"
+              :schema="auditLogActionSchemas"
+              
+              class="my-4 enter-y"
+            />
           </CollapsePanel>
         </Collapse>
       </TabPane>

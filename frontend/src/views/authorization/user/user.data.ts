@@ -4,7 +4,7 @@ import { sexOptions } from '/@/utils/sex';
 import { formatToDate } from '/@/utils/dateUtil';
 import { Sex } from '/@/utils/sex';
 import { DescItem } from '/@/components/Description/index';
-import { h, render } from 'vue';
+import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { Status } from '../../../utils/status';
 

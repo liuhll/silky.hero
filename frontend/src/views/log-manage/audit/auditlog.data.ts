@@ -3,6 +3,10 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { formatToDate } from '/@/utils/dateUtil';
 import { DescItem } from '/@/components/Description/index';
+import { h } from 'vue';
+import { Tag } from 'ant-design-vue';
+
+const commonTagRender = (color: string, curVal: string) => h(Tag, { color }, () => curVal);
 
 export const columns: BasicColumn[] = [
   {
@@ -208,14 +212,19 @@ export const auditLogDetailSchemas: DescItem[] = [
   {
     field: 'httpStatusCode',
     label: 'http状态码',
+    labelMinWidth: 70,
+    render: (value) => commonTagRender('blue',value),
   },
   {
     field: 'httpMethod',
     label: 'http方法',
+    labelMinWidth: 70,
+    render: (value) => commonTagRender('green',value),
   },
   {
     field: 'url',
     label: 'url',
+    contentMinWidth: 160,
   },
   {
     field: 'requestParameters',
@@ -236,6 +245,7 @@ export const auditLogDetailSchemas: DescItem[] = [
   {
     field: 'executionTime',
     label: '时间',
+    render: (value) => formatToDate(value, 'YYYY-MM-DD HH:mm:ss'),
   },
   {
     field: 'executionDuration',
@@ -255,10 +265,13 @@ export const auditLogActionSchemas: DescItem[] = [
   {
     field: 'hostName',
     label: '所属应用',
+    labelMinWidth: 70,
+    contentMinWidth: 120,
   },
   {
     field: 'hostAddress',
     label: '主机实例地址',
+    labelMinWidth: 80,
   },
   {
     field: 'serviceName',
@@ -279,6 +292,7 @@ export const auditLogActionSchemas: DescItem[] = [
     {
     field: 'executionTime',
     label: '执行时间',
+    render: (value) => formatToDate(value, 'YYYY-MM-DD HH:mm:ss'),
   },
       {
     field: 'executionDuration',
