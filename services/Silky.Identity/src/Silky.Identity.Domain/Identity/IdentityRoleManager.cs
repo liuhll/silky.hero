@@ -228,7 +228,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         return (await RoleMenuRepository.AsQueryable(false).CountAsync(p => menuIds.Contains(p.MenuId))) > 0;
     }
 
-    public async Task<GetRoleOutput> GetRoleOutputByIdAsync(long id)
+    public async Task<GetRoleDetailOutput> GetRoleOutputByIdAsync(long id)
     {
         var role = await RoleRepository
             .AsQueryable(false)
@@ -239,7 +239,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         {
             throw new EntityNotFoundException(typeof(IdentityRole), id);
         }
-        var roleOutput = role.Adapt<GetRoleOutput>();
+        var roleOutput = role.Adapt<GetRoleDetailOutput>();
         var roleMenuIds = role.Menus.Select(p => p.MenuId).ToArray();
         var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
         var frontendMenus = menus.MapFrontendMenus(true);

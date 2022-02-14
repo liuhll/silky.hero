@@ -31,6 +31,7 @@ public interface IRoleAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
@@ -40,9 +41,12 @@ public interface IRoleAppService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
+    [HttpGet("{id:long}/detail")]
+    [GetCachingIntercept("id:detail:{0}")]
     [Authorize(IdentityPermissions.Roles.LookDetail)]
+    Task<GetRoleDetailOutput> GetDetailAsync([CacheKey(0)] long id);
+    
+    [GetCachingIntercept("id:{0}")]
     Task<GetRoleOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -52,6 +56,7 @@ public interface IRoleAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
@@ -65,6 +70,7 @@ public interface IRoleAppService
     [HttpPut("menus")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     Task SetMenusAsync(UpdateRoleMenuInput input);
     
     /// <summary>
@@ -84,6 +90,7 @@ public interface IRoleAppService
     [Authorize(IdentityPermissions.Roles.SetDataRange)]
     [HttpPut("datarange")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
     

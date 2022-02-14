@@ -54,9 +54,14 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
-    public Task<GetRoleOutput> GetAsync(long id)
+    public Task<GetRoleDetailOutput> GetDetailAsync(long id)
     {
         return _roleManager.GetRoleOutputByIdAsync(id);
+    }
+    
+    public async Task<GetRoleOutput> GetAsync(long id)
+    {
+        return (await _roleManager.GetByIdAsync(id)).Adapt<GetRoleOutput>();
     }
 
     public async Task DeleteAsync(long id)
