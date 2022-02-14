@@ -9,11 +9,22 @@ namespace Silky.Log.Domain.AuditLogging.Events.Consumers;
 
 public class AuditLogEventConsumer: IConsumer<AuditLogInfo>
 {
-    
+
+    private readonly IRepository<AuditLog> _auditLogRepository;
+    private static object locker = new();
+
+    public AuditLogEventConsumer()
+    {
+        _auditLogRepository = EngineContext.Current.Resolve<IRepository<AuditLog>>();
+    }
+
     public async Task Consume(ConsumeContext<AuditLogInfo> context)
     {
-        var auditLogRepository = EngineContext.Current.Resolve<IRepository<AuditLog>>();
-        var auditLog = context.Message.Adapt<AuditLog>();
-        await auditLogRepository.InsertNowAsync(auditLog);
+        lock (locker)
+        {
+            var auditLog = context.Message.Adapt<AuditLog>();
+             _auditLogRepository.InsertNow(auditLog);
+        }
+        
     }
 }
