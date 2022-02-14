@@ -54,19 +54,9 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
-    public async Task<GetRoleOutput> GetAsync(long id)
+    public Task<GetRoleOutput> GetAsync(long id)
     {
-        var role = await _roleManager.RoleRepository
-            .AsQueryable(false)
-            .Include(p => p.Menus)
-            .Include(p => p.CustomOrganizationDataRanges)
-            .FirstOrDefaultAsync(p => p.Id == id);
-        if (role == null)
-        {
-            throw new EntityNotFoundException(typeof(IdentityRole), id);
-        }
-        var roleOutput = role.Adapt<GetRoleOutput>();
-        return roleOutput;
+        return _roleManager.GetRoleOutputByIdAsync(id);
     }
 
     public async Task DeleteAsync(long id)

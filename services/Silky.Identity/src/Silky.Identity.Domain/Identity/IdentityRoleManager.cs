@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Identity.Application.Contracts.Role.Dtos;
+using Silky.Identity.Domain.Extensions;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Permission.Application.Contracts.Menu;
@@ -222,5 +226,28 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
     {
         Check.NotNull(menuIds, nameof(menuIds));
         return (await RoleMenuRepository.AsQueryable(false).CountAsync(p => menuIds.Contains(p.MenuId))) > 0;
+    }
+
+    public async Task<GetRoleOutput> GetRoleOutputByIdAsync(long id)
+    {
+        var role = await RoleRepository
+            .AsQueryable(false)
+            .Include(p => p.Menus)
+            .Include(p => p.CustomOrganizationDataRanges)
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (role == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityRole), id);
+        }
+        var roleOutput = role.Adapt<GetRoleOutput>();
+        var roleMenuIds = role.Menus.Select(p => p.MenuId).ToArray();
+        var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
+        var frontendMenus = menus.MapFrontendMenus();
+        roleOutput.Menus = frontendMenus.BuildTree().Adapt<ICollection<GetRoleMenuTreeOutput>>();
+        foreach (var customOrganizationOutput in roleOutput.CustomOrganizationDataRanges)
+        {
+           await customOrganizationOutput.SetOrganizationName();
+        }
+        return roleOutput;
     }
 }

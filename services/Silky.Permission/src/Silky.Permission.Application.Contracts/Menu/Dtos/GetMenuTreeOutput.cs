@@ -12,5 +12,5 @@ public class GetMenuTreeOutput : MenuDtoBase
     /// <summary>
     /// 子菜单
     /// </summary>
-    public ICollection<GetMenuPageOutput> Children { get; set; }
+    public ICollection<GetMenuTreeOutput> Children { get; set; }
 }
