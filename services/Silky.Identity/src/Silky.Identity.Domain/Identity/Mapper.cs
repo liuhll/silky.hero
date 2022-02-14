@@ -18,6 +18,7 @@ public class Mapper : IRegister
                     src.CustomOrganizationDataRanges.Select(p => p.OrganizationId).ToArray();
             });
         config.ForType<FrontendMenu, GetRoleMenuTreeOutput>()
-            .Map(dest => dest.MenuId, src => src.Id);
+            .Map(dest => dest.MenuId, src => src.Id)
+            .Map(dest => dest.Title, src => src.Meta["Title"]);
     }
 }

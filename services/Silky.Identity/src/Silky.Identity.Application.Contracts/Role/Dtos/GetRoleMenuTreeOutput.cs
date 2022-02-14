@@ -8,5 +8,8 @@ public class GetRoleMenuTreeOutput
     
     public string Name { get; set; }
     
-    public ICollection<GetRoleMenuOutput> Children { get; set; }
+    public string Title { get; set; }
+    
+    public ICollection<GetRoleMenuTreeOutput> Children { get; set; }
+    
 }

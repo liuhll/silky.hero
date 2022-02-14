@@ -1,4 +1,5 @@
 ﻿using Silky.Identity.Domain.Shared;
+using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
 
@@ -7,6 +8,7 @@ public class UpdateRoleDataRangeInput
     /// <summary>
     /// 角色Id
     /// </summary>
+    [CacheKey(0)]
     public long Id { get; set; }
 
     /// <summary>

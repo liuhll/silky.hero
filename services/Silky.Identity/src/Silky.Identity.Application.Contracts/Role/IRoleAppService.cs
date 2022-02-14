@@ -83,6 +83,8 @@ public interface IRoleAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.SetDataRange)]
     [HttpPut("datarange")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
     
     /// <summary>

@@ -242,7 +242,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         var roleOutput = role.Adapt<GetRoleOutput>();
         var roleMenuIds = role.Menus.Select(p => p.MenuId).ToArray();
         var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
-        var frontendMenus = menus.MapFrontendMenus();
+        var frontendMenus = menus.MapFrontendMenus(true);
         roleOutput.Menus = frontendMenus.BuildTree().Adapt<ICollection<GetRoleMenuTreeOutput>>();
         foreach (var customOrganizationOutput in roleOutput.CustomOrganizationDataRanges)
         {

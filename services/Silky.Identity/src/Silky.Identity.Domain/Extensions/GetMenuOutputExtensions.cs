@@ -12,7 +12,7 @@ namespace Silky.Identity.Domain.Extensions;
 
 internal static class GetMenuOutputExtensions
 {
-    public static IEnumerable<FrontendMenu> MapFrontendMenus(this IEnumerable<GetMenuOutput> menus)
+    public static ICollection<FrontendMenu> MapFrontendMenus(this IEnumerable<GetMenuOutput> menus, bool includeButton = false)
     {
         string GetRedirect(IEnumerable<GetMenuOutput> menus, GetMenuOutput menu)
         {
@@ -67,6 +67,10 @@ internal static class GetMenuOutputExtensions
 
         string SetName(GetMenuOutput menu)
         {
+            if (menu.Type == MenuType.Button) 
+            {
+                return menu.PermissionCode;
+            }
             if (Regex.IsMatch(menu.Name, RegularExpressionConsts.Http))
             {
                 var routePathName = Regex.Replace(menu.RoutePath, RegularExpressionConsts.Http, "");
@@ -87,17 +91,18 @@ internal static class GetMenuOutputExtensions
             return menu.RoutePath;
         }
 
-        var frontendMenus = menus.Where(p => p.Status == Status.Valid && p.Type != MenuType.Button)
+        var frontendMenus = menus.Where(p => p.Status == Status.Valid)
+            .Where(!includeButton, p=> p.Type != MenuType.Button)
             .Select(m => new FrontendMenu()
             {
                 Id = m.Id,
                 ParentId = m.ParentId,
                 Name = SetName(m),
                 Component = m.Component,
-                Path = SetPath(m),
-                Redirect = GetRedirect(menus, m),
+                Path = m.Type != MenuType.Button ? SetPath(m) : null,
+                Redirect = m.Type != MenuType.Button ? GetRedirect(menus, m) : null,
                 Meta = SetMeta(m),
             });
-        return frontendMenus;
+        return frontendMenus.ToList();
     }
 }

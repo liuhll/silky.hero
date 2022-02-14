@@ -8,7 +8,7 @@ namespace Silky.Permission.Domain.Menu;
 public static class MenuExtensions
 {
     
-    public static IEnumerable<Menu> GetChildrenMenus(this IEnumerable<Menu> menus,
+    public static ICollection<Menu> GetChildrenMenus(this ICollection<Menu> menus,
         long menuId, bool includeSelf = true, bool isAll = true)
     {
         Check.NotNull(menus, nameof(menus));
@@ -32,7 +32,7 @@ public static class MenuExtensions
         return childrenMenus;
     }
     
-    public static ICollection<Menu> BuildTree([NotNull]this IEnumerable<Menu> treeData)
+    public static ICollection<Menu> BuildTree([NotNull]this ICollection<Menu> treeData)
     {
         Check.NotNull(treeData, nameof(treeData));
         var treeResult = new List<Menu>();
@@ -47,7 +47,7 @@ public static class MenuExtensions
     }
 
     private static ICollection<Menu> GetTreeChildren(Menu node,
-        IEnumerable<Menu> treeData)
+        ICollection<Menu> treeData)
     {
         var children = treeData?.Where(p => p.ParentId == node.Id);
         if (children?.Any() == true)

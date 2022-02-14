@@ -7,7 +7,7 @@ namespace Silky.Identity.Domain.Extensions;
 
 public static class FrontendMenuExtensions
 {
-    public static ICollection<FrontendMenu> BuildTree(this IEnumerable<FrontendMenu> frontendMenus) 
+    public static ICollection<FrontendMenu> BuildTree(this ICollection<FrontendMenu> frontendMenus) 
     {
         var treeResult = new List<FrontendMenu>();
         var topNodes = frontendMenus.Where(p => p.ParentId == null);
@@ -21,17 +21,19 @@ public static class FrontendMenuExtensions
     }
 
     private static ICollection<FrontendMenu> GetTreeChildren(FrontendMenu node,
-      IEnumerable<FrontendMenu> treeData)
+        ICollection<FrontendMenu> treeData)
     {
-        var children = treeData.Where(p => p.ParentId == node.Id);
-        if (children.Any())
+        var children = treeData?.Where(p => p.ParentId == node.Id);
+     
+        if (children?.Any() == true)
         {
             foreach (var child in children)
             {
                 child.Children = GetTreeChildren(child, treeData);
             }
+            return children.ToList();
         }
 
-        return children.ToList();
+        return null;
     }
 }
