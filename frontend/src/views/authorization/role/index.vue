@@ -72,13 +72,11 @@
   import { Tag } from 'ant-design-vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import {
-    getRoleById,
     getRolePageList,
     createRole,
     updateRole,
     deleteRole,
     updateRoleMenuIds,
-    getRoleDataRange,
     updateRoleDataRange,
   } from '/@/api/role';
   import { columns, searchFormSchema } from './role.data';
@@ -219,9 +217,8 @@
       }
 
       function handleView(record: Recordable) {
-        nextTick(async () => {
-          const roleInfo = await getRoleById(record.id);
-          openRoleDetailDrawer(true, roleInfo);
+        nextTick(() => {
+          openRoleDetailDrawer(true, record.id);
         });
       }
 

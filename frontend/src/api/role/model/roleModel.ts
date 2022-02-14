@@ -6,7 +6,7 @@ export interface GetRolePageModel {
   isPublic: boolean;
 }
 
-export interface GetRoleModel {
+export interface GetRoleDetailModel {
   name: string;
   realName: string;
   status: number;
@@ -15,7 +15,7 @@ export interface GetRoleModel {
   isDefault: boolean;
   isPublic: boolean;
   id: number;
-  menuIds: number[];
+  menus: any[];
   dataRange: number;
-  customOrganizationIds: number[];
+  customOrganizationDataRanges: any[];
 }

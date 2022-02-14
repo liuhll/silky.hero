@@ -43,6 +43,7 @@
   import { roleDetailSchemas } from './role.data';
   import { DataRange } from '/@/utils/dataRangeUtil';
   import { treeMap } from '/@/utils/helper/treeHelper';
+  import { getRoleDetailById } from '/@/api/role';
 
   export default defineComponent({
     name: 'RoleDetailDrawer',
@@ -95,7 +96,8 @@
         });
       }
 
-      const [registerDrawer] = useDrawerInner(async (data) => {
+      const [registerDrawer] = useDrawerInner(async (id) => {
+        const data = await getRoleDetailById(id);
         getTitle.value = data.realName;
         roleDetail.value = data;
         setMenusTreeData(data.menus);
