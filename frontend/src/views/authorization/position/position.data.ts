@@ -7,6 +7,9 @@ import { h } from 'vue';
 import { OptionsItem } from '/@/utils/model';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { DescItem } from '../../../components/Description/src/typing';
+import { commonTagRender } from '/@/utils/tagUtil';
+import { formatToDate } from '/@/utils/dateUtil';
 
 export const getPositionOptions = async (query: any) => {
   const positionList = await getPositionList(query);
@@ -40,6 +43,11 @@ export const columns: BasicColumn[] = [
       const text = enable ? '启用' : '停用';
       return h(Tag, { color: color }, () => text);
     },
+  },
+  {
+    title: '排序',
+    dataIndex: 'sort',
+    width: 80,
   },
   {
     title: '备注',
@@ -92,5 +100,52 @@ export const positionSchemas: FormSchema[] = [
     field: 'remark',
     component: 'InputTextArea',
     label: '备注',
+  },
+];
+
+export const positionDetailSchemas: DescItem[] = [
+  {
+    field: 'name',
+    label: '名称',
+  },
+  {
+    field: 'sort',
+    label: '排序',
+  },
+  {
+    field: 'remark',
+    label: '备注',
+    span: 2,
+  },
+  {
+    label: '状态',
+    field: 'status',
+    render: (value) => {
+      if (value === Status.Valid) {
+        return commonTagRender('blue', '启用');
+      } else {
+        return commonTagRender('red', '停用');
+      }
+    },
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'updatedTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
   },
 ];

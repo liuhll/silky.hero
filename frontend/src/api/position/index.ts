@@ -34,3 +34,7 @@ export const updatePosition = (requestParams: any) => {
 export const deletePosition = (id: number) => {
   return defHttp.delete({ url: `/position/${id}` });
 };
+
+export const getPositionById = (id: number) => {
+  return defHttp.get({ url: `/position/${id}` });
+};

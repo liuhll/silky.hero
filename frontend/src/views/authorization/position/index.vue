@@ -36,6 +36,7 @@
       </template>
     </BasicTable>
     <PositionDrawer @register="registerDrawer" @success="handleSuccess" />
+    <PositionDetailDrawer @register="registerPositionDetailDrawer" />
   </PageWrapper>
 </template>
 
@@ -51,12 +52,13 @@
   import { columns, searchFormSchema } from './position.data';
   import { PageWrapper } from '/@/components/Page';
   import PositionDrawer from './PositionDrawer.vue';
+  import PositionDetailDrawer from './PositionDetailDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'Position',
-    components: { PageWrapper, BasicTable, TableAction, PositionDrawer },
+    components: { PageWrapper, BasicTable, TableAction, PositionDrawer, PositionDetailDrawer },
     setup() {
       const searchInfo = ref({});
       const loadingRef = ref(false);
@@ -87,6 +89,7 @@
       }
       const [registerTable, { reload }] = useTable(tableConfig);
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerPositionDetailDrawer, {openDrawer: openPositionDetailDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
@@ -117,7 +120,11 @@
           }
         });
       }
-      function handleView(record: Recordable) {}
+      function handleView(record: Recordable) {
+        nextTick(() => {
+          openPositionDetailDrawer(true, record.id);
+        });
+      }
       function handleEdit(record: Recordable) {
         openDrawer(true, {
           isUpdate: true,
@@ -143,6 +150,7 @@
         registerTable,
         handleCreate,
         registerDrawer,
+        registerPositionDetailDrawer,
         handleSuccess,
         handleView,
         handleEdit,
