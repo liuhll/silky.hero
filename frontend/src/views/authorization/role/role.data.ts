@@ -238,14 +238,20 @@ export const roleDetailSchemas: DescItem[] = [
     label: '创建时间',
     field: 'createdTime',
     render: (value) => {
-      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
     },
   },
   {
     label: '最后更新时间',
-    field: 'createdTime',
+    field: 'updatedTime',
     render: (value) => {
-      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
     },
   },
 ];
