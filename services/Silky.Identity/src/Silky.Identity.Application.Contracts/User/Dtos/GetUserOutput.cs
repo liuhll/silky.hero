@@ -32,7 +32,7 @@ public class GetUserOutput
 
     public DateTimeOffset CreatedTime { get; set; }
     
-    public DateTimeOffset UpdatedTime { get; set; }
+    public DateTimeOffset? UpdatedTime { get; set; }
 
     public ICollection<GetUserSubsidiaryOutput> UserSubsidiaries { get; set; }
 
