@@ -1,37 +1,15 @@
-﻿using Silky.Hero.Common.Enums;
+﻿using System;
 
 namespace Silky.Organization.Application.Contracts.Organization.Dtos;
 
-public class GetOrganizationOutput
+public class GetOrganizationOutput : OrganizationDtoBase
 {
     /// <summary>
     /// 主键Id
     /// </summary>
     public long Id { get; set; }
-
-    /// <summary>
-    /// 父机构Id
-    /// </summary>
-    public long? ParentId { get; set; }
     
-    /// <summary>
-    /// 机构名称
-    /// </summary>
-    public string Name { get; set; }
-
+    public DateTimeOffset CreatedTime { get; set; }
     
-    /// <summary>
-    /// 排序
-    /// </summary>
-    public int Sort { get; set; }
-
-    /// <summary>
-    /// 备注
-    /// </summary>
-    public string Remark { get; set; }
-
-    /// <summary>
-    /// 状态
-    /// </summary>
-    public Status Status { get; set; }
+    public DateTimeOffset? UpdatedTime { get; set; }
 }
