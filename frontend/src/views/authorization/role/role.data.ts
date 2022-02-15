@@ -10,8 +10,7 @@ import { h } from 'vue';
 import { formatToDate } from '/@/utils/dateUtil';
 import { DataRange } from '/@/utils/dataRangeUtil';
 import { DescItem } from '/@/components/Description/index';
-
-const commonTagRender = (color: string, curVal: string) => h(Tag, { color }, () => curVal);
+import { commonTagRender } from '/@/utils/tagUtil';
 
 export const columns: BasicColumn[] = [
   {

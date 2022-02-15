@@ -4,12 +4,9 @@ import { sexOptions } from '/@/utils/sex';
 import { formatToDate } from '/@/utils/dateUtil';
 import { Sex } from '/@/utils/sex';
 import { DescItem } from '/@/components/Description/index';
-import { h } from 'vue';
-import { Tag } from 'ant-design-vue';
 import { Status } from '../../../utils/status';
+import { commonTagRender } from '/@/utils/tagUtil';
 
-const commonTagRender = (color: string, curVal: string) => h(Tag, { color }, () => curVal);
-// const commonLinkRender = (text: string) => (href) => h('a', { href, target: '_blank' }, text);
 
 export const columns: BasicColumn[] = [
   {
