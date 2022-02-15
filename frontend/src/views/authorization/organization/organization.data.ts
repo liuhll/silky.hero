@@ -7,6 +7,9 @@ import { Status } from '/@/utils/status';
 import { treeMap } from '/@/utils/helper/treeHelper';
 import { TreeItem } from '/@/components/Tree';
 import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
+import { DescItem } from '../../../components/Description/src/typing';
+import { commonTagRender } from '/@/utils/tagUtil';
+import { formatToDate } from '/@/utils/dateUtil';
 
 export const userColumns: BasicColumn[] = [
   {
@@ -130,3 +133,50 @@ export const getOrganizationTreeList = async (): Promise<TreeItem[]> => {
     },
   });
 };
+
+export const organizationDetailSchemas: DescItem[] = [
+  {
+    field: 'name',
+    label: '名称',
+  },
+  {
+    field: 'sort',
+    label: '排序',
+  },
+  {
+    field: 'remark',
+    label: '备注',
+    span: 2,
+  },
+  {
+    label: '状态',
+    field: 'status',
+    render: (value) => {
+      if (value === Status.Valid) {
+        return commonTagRender('blue', '启用');
+      } else {
+        return commonTagRender('red', '停用');
+      }
+    },
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'updatedTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
+  },
+];

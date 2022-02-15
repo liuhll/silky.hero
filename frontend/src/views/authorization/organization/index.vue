@@ -65,6 +65,7 @@
       @register="registerOrganizationUserDrawer"
       @success="handleAddOrganizationUsers"
     />
+    <OrganizationDetailDrawer @register="registerOrganizationDetailDrawer" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -91,6 +92,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import OrganizationDrawer from './OrganizationDrawer.vue';
   import OrganizationUserDrawer from './OrganizationUserDrawer.vue';
+  import OrganizationDetailDrawer from './OrganizationDetailDrawer.vue';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'OrganizationManagement',
@@ -104,6 +106,7 @@
       TableAction,
       OrganizationDrawer,
       OrganizationUserDrawer,
+      OrganizationDetailDrawer,
     },
     setup() {
       const treeRef = ref<Nullable<TreeActionType>>(null);
@@ -122,6 +125,8 @@
       const { hasPermission } = usePermission();
       const [registerOrganizationDrawer, { openDrawer: openOrganizationDrawer }] = useDrawer();
       const [registerOrganizationUserDrawer, { openDrawer: openOrganizationUserDrawer }] =
+        useDrawer();
+      const [registerOrganizationDetailDrawer, { openDrawer: openOrganizationDetailDrawer }] =
         useDrawer();
       const { createConfirm, notification } = useMessage();
       function getTree() {
@@ -343,6 +348,15 @@
             icon: 'ant-design:delete-outlined',
           });
         }
+        if (hasPermission('Organization.LookDetail')) {
+          rigthMenList.push({
+            label: '查看',
+            handler: () => {
+              openOrganizationDetailDrawer(true, node.eventKey);
+            },
+            icon: 'clarity:info-standard-line',
+          });
+        }
         return rigthMenList;
       }
       return {
@@ -357,6 +371,7 @@
         registerTable,
         registerOrganizationDrawer,
         registerOrganizationUserDrawer,
+        registerOrganizationDetailDrawer,
         handleCreateOrganization,
         handleCreateOrganizationRoot,
         handleAddOrganizationUsersDrawer,
