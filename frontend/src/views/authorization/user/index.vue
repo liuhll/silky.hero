@@ -46,6 +46,12 @@
           {{ role.realName }}
         </Tag>
       </template>
+      <template #isLockout="{ text, record }">
+        <Tag v-if="text" color="red">
+          是（{{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }}）
+        </Tag>
+        <Tag v-if="!text" color="blue"> 否 </Tag>
+      </template>
       <template #toolbar>
         <a-button type="primary" v-auth="'Identity.User.Create'" @click="handleCreate"
           >新增账号</a-button
@@ -120,6 +126,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Status } from '/@/utils/status';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { formatToDate } from '/@/utils/dateUtil';
   export default defineComponent({
     name: 'User',
     components: {
@@ -330,6 +337,7 @@
         registerUserDetailDrawer,
         handleSuccessAuthorizeUserRole,
         setRoleColor,
+        formatToDate,
         positionOptions,
         roleOptions,
         searchInfo,

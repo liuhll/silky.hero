@@ -37,12 +37,21 @@ export const columns: BasicColumn[] = [
   {
     title: '状态',
     dataIndex: 'isActive',
+    align: 'left',
     width: 50,
     format: (value) => {
       const colorValue = value ? 'blue' : 'red';
       const valText = value ? '正常' : '冻结';
       return commonTagRender(colorValue, valText);
     },
+  },
+  {
+    title: '登录锁定',
+    dataIndex: 'isLockout',
+    width: 120,
+    align: 'left',
+    slots: { customRender: 'isLockout' },
+    defaultHidden: true,
   },
   {
     title: '昵称',
@@ -62,6 +71,7 @@ export const columns: BasicColumn[] = [
   {
     title: '性别',
     dataIndex: 'sex',
+    align: 'left',
     format: (value) => {
       if (`${value}` === `${Sex.Female}`) {
         return '女';
@@ -79,6 +89,7 @@ export const columns: BasicColumn[] = [
     title: '部门(职位)',
     dataIndex: 'userSubsidiaries',
     width: 150,
+    align: 'left',
     slots: { customRender: 'userSubsidiaries' },
   },
   {
@@ -412,17 +423,17 @@ export const userDetailSchemas: DescItem[] = [
     },
   },
   {
-    label: '创建时间',
-    field: 'createdTime',
-    render: (value) => {
-      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
-    },
-  },
-  {
-    label: '最后更新时间',
-    field: 'createdTime',
-    render: (value) => {
-      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    label: '登录锁定状态',
+    field: 'isLockout',
+    render: (value, data) => {
+      if (value === true) {
+        return commonTagRender(
+          'red',
+          `是（${formatToDate(data.lockoutEnd, 'YYYY-MM-DD HH:mm:ss')}）`,
+        );
+      } else {
+        return commonTagRender('blue', '否');
+      }
     },
   },
   {
@@ -436,6 +447,20 @@ export const userDetailSchemas: DescItem[] = [
         roleTags.push(commonTagRender(color, roleInfo.realName));
       }
       return roleTags;
+    },
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'createdTime',
+    render: (value) => {
+      return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
     },
   },
 ];
