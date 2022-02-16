@@ -30,6 +30,20 @@ public class GetUserOutput
     
     public bool LockoutEnabled { get; set; }
 
+    public DateTimeOffset? LockoutEnd { get; set; }
+
+    public bool IsLockout {
+        get
+        {
+            if (!LockoutEnd.HasValue)
+            {
+                return false;
+            }
+
+            return DateTimeOffset.Now <= LockoutEnd.Value;
+        }
+    }
+
     public DateTimeOffset CreatedTime { get; set; }
     
     public DateTimeOffset? UpdatedTime { get; set; }
