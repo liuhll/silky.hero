@@ -7,8 +7,8 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core;
 using Silky.Core.Extensions.Collections.Generic;
-using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Domain;
@@ -39,7 +39,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
     
     public string JobNumber { get; set; }
 
-    public bool IsActive { get; protected internal set; }
+    public Status Status { get; set; }
 
     public string SecurityStamp { get; protected internal set; }
     public bool LockoutEnabled { get; protected internal set; }
@@ -96,7 +96,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         MobilePhone = mobilePhone;
         ConcurrencyStamp = Guid.NewGuid().ToString();
         SecurityStamp = Guid.NewGuid().ToString();
-        IsActive = true;
+        Status = Status.Valid;
     }
 
     public virtual void AddRole(long roleId)
@@ -276,11 +276,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         );
     }
 
-    public virtual void SetIsActive(bool isActive)
-    {
-        IsActive = isActive;
-    }
-
+    
     public override string ToString()
     {
         return $"{base.ToString()}, UserName = {UserName}";

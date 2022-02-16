@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Silky.Core.Exceptions;
 using Silky.Core.Runtime.Session;
+using Silky.Hero.Common.Enums;
 using Silky.Jwt;
 
 namespace Silky.Identity.Domain;
@@ -128,9 +129,9 @@ public class IdentitySignInManager
 
     private async Task CanSignInAsync(IdentityUser user)
     {
-        if (!user.IsActive)
+        if (user.Status == Status.Invalid)
         {
-            throw new UserFriendlyException($"账号未被激活");
+            throw new UserFriendlyException($"您的账号已被冻结");
         }
 
         if (Options.SignIn.RequireConfirmedPhoneNumber && !await UserManager.IsPhoneNumberConfirmedAsync(user))

@@ -115,7 +115,8 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
     [Authorize(IdentityPermissions.Users.Lock)]
-    Task LockAsync(long userId, int lockoutSeconds);
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
+    Task LockAsync([CacheKey(0)]long userId, int lockoutSeconds);
     
     /// <summary>
     /// 根据Id解锁用户账号
@@ -124,7 +125,8 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/unlock")]
     [Authorize(IdentityPermissions.Users.UnLock)]
-    Task UnLockAsync(long userId);
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
+    Task UnLockAsync([CacheKey(0)]long userId);
     
     /// <summary>
     /// 修改用户密码

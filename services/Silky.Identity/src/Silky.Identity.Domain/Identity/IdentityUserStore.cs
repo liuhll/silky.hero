@@ -181,7 +181,7 @@ public class IdentityUserStore :
 
         try
         {
-            await UserRepository.UpdateNowAsync(user);
+            await UserRepository.UpdateNowAsync(user,ignoreNullValues:false);
         }
         catch (Exception ex)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.Auditing;
 
@@ -72,6 +73,11 @@ public abstract class UserDtoBase
     [Required(ErrorMessage = "工号不允许为空")]
     [RegularExpression(RegularExpressionConsts.JobNumber, ErrorMessage = "工号格式不正确")]
     public string JobNumber { get; set; }
+    
+    /// <summary>
+    /// 用户状态
+    /// </summary>
+    public Status Status { get; set; }
 
     /// <summary>
     /// 是否支持锁定

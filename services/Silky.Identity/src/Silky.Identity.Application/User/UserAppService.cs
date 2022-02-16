@@ -140,14 +140,13 @@ public class UserAppService : IUserAppService
         var user = await UserManager.GetByIdAsync(userId);
         await UserManager.SetLockoutEnabledAsync(user, true);
         await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.Now.AddSeconds(lockoutSeconds));
-        await UserManager.UpdateAsync(user);
     }
 
     public async Task UnLockAsync(long userId)
     {
         var user = await UserManager.GetByIdAsync(userId);
+        await UserManager.ResetAccessFailedCountAsync(user);
         await UserManager.SetLockoutEndDateAsync(user, null);
-        await UserManager.UpdateAsync(user);
     }
 
     public async Task ChangePasswordAsync(long userId, ChangePasswordInput input)
@@ -205,6 +204,7 @@ public class UserAppService : IUserAppService
         user.Sex = input.Sex;
         user.BirthDay = input.BirthDay;
         user.TelPhone = input.TelPhone;
+        user.Status = input.Status;
 
         if (input.UserSubsidiaries != null)
         {

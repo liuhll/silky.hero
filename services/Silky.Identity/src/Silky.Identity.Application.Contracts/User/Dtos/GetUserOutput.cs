@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.User.Dtos;
@@ -26,7 +27,7 @@ public class GetUserOutput
 
     public string JobNumber { get; set; }
     
-    public bool IsActive { get; set; }
+    public Status Status { get; set; }
     
     public bool LockoutEnabled { get; set; }
 

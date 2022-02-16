@@ -31,9 +31,6 @@ public static class DbContextModelBuilderExtensions
             b.Property(u => u.SecurityStamp).IsRequired().HasMaxLength(IdentityUserConsts.MaxSecurityStampLength)
                 .HasColumnName(nameof(IdentityUser.SecurityStamp));
 
-            b.Property(u => u.LockoutEnabled).HasDefaultValue(false)
-                .HasColumnName(nameof(IdentityUser.LockoutEnabled));
-
             b.Property(u => u.AccessFailedCount)
                 .HasDefaultValue(0)
                 .HasColumnName(nameof(IdentityUser.AccessFailedCount));
@@ -42,8 +39,13 @@ public static class DbContextModelBuilderExtensions
             b.Property(u => u.PhoneNumberConfirmed).HasDefaultValue(false)
                 .HasColumnName(nameof(IdentityUser.PhoneNumberConfirmed));
 
+            b.Property(u => u.Status).HasDefaultValue(Status.Valid)
+                .HasColumnName(nameof(IdentityUser.Status));
+            
             b.Property(u => u.LockoutEnabled).HasDefaultValue(false)
                 .HasColumnName(nameof(IdentityUser.LockoutEnabled));
+            b.Property(u => u.LockoutEnd)
+                .HasColumnName(nameof(IdentityUser.LockoutEnd));
 
             b.HasMany(u => u.Claims).WithOne().HasForeignKey(uc => uc.UserId).IsRequired();
             b.HasMany(u => u.Logins).WithOne().HasForeignKey(ul => ul.UserId).IsRequired();
