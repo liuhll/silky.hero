@@ -3,21 +3,20 @@ import { FormSchema } from '/@/components/Table';
 import { sexOptions } from '/@/utils/sex';
 import { formatToDate } from '/@/utils/dateUtil';
 import { Sex } from '/@/utils/sex';
+import { statusOptions, Status } from '/@/utils/status';
 import { DescItem } from '/@/components/Description/index';
-import { Status } from '../../../utils/status';
 import { commonTagRender } from '/@/utils/tagUtil';
-
 
 export const columns: BasicColumn[] = [
   {
     title: '用户名',
     dataIndex: 'userName',
-    width: 100,
+    width: 60,
   },
   {
     title: '真实姓名',
     dataIndex: 'realName',
-    width: 80,
+    width: 60,
   },
   {
     title: '邮箱',
@@ -27,26 +26,26 @@ export const columns: BasicColumn[] = [
   {
     title: '手机',
     dataIndex: 'mobilePhone',
-    width: 80,
+    width: 100,
   },
   {
     title: '工号',
     dataIndex: 'jobNumber',
-    width: 80,
+    width: 60,
   },
   {
     title: '状态',
-    dataIndex: 'isActive',
+    dataIndex: 'status',
     align: 'left',
     width: 50,
-    format: (value) => {
-      const colorValue = value ? 'blue' : 'red';
-      const valText = value ? '正常' : '冻结';
+    format: (value: Status) => {
+      const colorValue = value === Status.Valid ? 'blue' : 'red';
+      const valText = value === Status.Valid ? '正常' : '冻结';
       return commonTagRender(colorValue, valText);
     },
   },
   {
-    title: '锁定',
+    title: '是否被锁定',
     dataIndex: 'isLockout',
     width: 120,
     align: 'left',
@@ -144,6 +143,29 @@ export const searchFormSchema: FormSchema[] = [
     label: '角色',
     component: 'Select',
     slot: 'roleIdSelect',
+    colProps: { span: 6 },
+  },
+  {
+    field: 'status',
+    label: '状态',
+    component: 'Select',
+    componentProps: {
+      options: statusOptions,
+      style: 'width:100%',
+    },
+    colProps: { span: 6 },
+  },
+  {
+    field: 'isLockout',
+    label: '是否锁定',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '是', value: true },
+        { label: '否', value: false },
+      ],
+      style: 'width:100%',
+    },
     colProps: { span: 6 },
   },
 ];
@@ -322,6 +344,18 @@ export const userSchemas: FormSchema[] = [
     },
   },
   {
+    field: 'status',
+    label: '状态',
+    component: 'RadioButtonGroup',
+    componentProps: {
+      options: statusOptions,
+    },
+    colProps: {
+      span: 12,
+    },
+    defaultValue: Status.Valid,
+  },
+  {
     field: 'lockoutEnabled',
     label: '登录失败后锁定帐户',
     component: 'RadioButtonGroup',
@@ -401,9 +435,9 @@ export const userDetailSchemas: DescItem[] = [
   },
   {
     label: '状态',
-    field: 'isActive',
+    field: 'status',
     render: (value) => {
-      if (value === true) {
+      if (value === Status.Valid) {
         return commonTagRender('blue', '正常');
       } else {
         return commonTagRender('red', '冻结');
@@ -422,7 +456,7 @@ export const userDetailSchemas: DescItem[] = [
     },
   },
   {
-    label: '登录锁定状态',
+    label: '是否被锁定',
     field: 'isLockout',
     render: (value, data) => {
       if (value === true) {

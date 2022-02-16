@@ -65,9 +65,9 @@ export const updateUserRoles = (id: number, roleNames: string[]) => {
   });
 };
 
-export const lockUser = (id: number) => {
+export const lockUser = (id: number, lockoutSeconds: number) => {
   return defHttp.put({
-    url: `/user/${id}`,
+    url: `/user/${id}/lock/${lockoutSeconds}`,
   });
 };
 

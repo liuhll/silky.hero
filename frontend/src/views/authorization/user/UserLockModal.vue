@@ -6,7 +6,7 @@
     useWrapper
     :canFullscreen="false"
     :title="getTitle"
-    :min-height="30"
+    :min-height="25"
     width="400px"
     @ok="handleSubmit"
   >
@@ -30,7 +30,7 @@
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         resetFields();
         clearValidate();
-        userId.value = data.userId;
+        userId.value = data.id;
         realName.value = data.realName;
         setFieldsValue({
           ...data,

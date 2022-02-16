@@ -47,9 +47,10 @@
         </Tag>
       </template>
       <template #isLockout="{ text, record }">
-        <Tag v-if="text" color="red">
-          是（{{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }}）
-        </Tag>
+        <Tag v-if="text" color="error">是</Tag>
+        <Tag v-if="text" color="error"
+          >({{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }})</Tag
+        >
         <Tag v-if="!text" color="blue"> 否 </Tag>
       </template>
       <template #toolbar>
@@ -227,20 +228,23 @@
       }
 
       function handleLock(record: Recordable) {
-        // nextTick(async () => {
-        //   try {
-        //     loadingRef.value = true;
-        //     await lockUser(record.id);
-        //     loadingRef.value = false;
-        //     notification.success({
-        //       message: `冻结用户${record.userName}成功.`,
-        //     });
-        //     reload();
-        //   } catch (err) {
-        //     loadingRef.value = false;
-        //   }
-        // });
         openUserLockModal(true, record);
+      }
+
+      function handleSuccessUserLock(data: any) {
+        nextTick(async () => {
+          try {
+            loadingRef.value = true;
+            await lockUser(data.id, data.lockoutSeconds * 60);
+            loadingRef.value = false;
+            notification.success({
+              message: `锁定用户${data.realName}成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
+        });
       }
 
       function handleUnLock(record: Recordable) {
@@ -250,7 +254,7 @@
             await unLockUser(record.id);
             loadingRef.value = false;
             notification.success({
-              message: `激活用户${record.userName}成功.`,
+              message: `解锁用户${record.realName}成功.`,
             });
             reload();
           } catch (err) {
@@ -374,7 +378,7 @@
         ])
       ) {
         tableConfig.actionColumn = {
-          width: 120,
+          width: 130,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -393,6 +397,7 @@
         handleAuthorizeRole,
         registerDrawer,
         handleSuccess,
+        handleSuccessUserLock,
         registerUserRoleDrawer,
         registerUserDetailDrawer,
         registerUserLockModal,
