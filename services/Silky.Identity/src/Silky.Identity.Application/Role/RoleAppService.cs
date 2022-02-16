@@ -10,13 +10,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Silky.Account.Application.Contracts.Account.Dtos;
+using Silky.Core;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Rpc;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Extensions;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Identity.Domain.Shared;
+using Silky.Transaction.Tcc;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
 
 namespace Silky.Identity.Application.Role;
@@ -155,6 +161,47 @@ public class RoleAppService : IRoleAppService
     public Task<bool> CheckHasMenusAsync(long[] menuIds)
     {
         return _roleManager.CheckHasMenusAsync(menuIds);
+    }
+
+    [TccTransaction(ConfirmMethod = "CreateConfirmSuperRoleAsync",CancelMethod = "CreateCancelSuperRoleAsync")]
+    public async Task<string> CreateSuperRoleAsync(long tenantId, string superRoleName, string superRealName)
+    {
+        UpdateCurrentTenantId(tenantId);
+        var role = new IdentityRole(superRoleName, superRealName, tenantId);
+        role.Status = Status.Invalid;
+        role.SetDataRange(DataRange.Whole);
+        var menuIds = await _roleManager.MenuAppService.GetAllMenuIdsAsync(true);
+        role.AddMenus(menuIds);
+        (await _roleManager.CreateAsync(role)).CheckErrors();
+        return role.Name;
+    }
+    
+    public async Task<string> CreateConfirmSuperRoleAsync(long tenantId, string superRoleName, string superRealName)
+    {
+        UpdateCurrentTenantId(tenantId);
+        var role = await _roleManager.RoleRepository.FirstOrDefaultAsync(p=> p.Name == superRoleName);
+        role.Status = Status.Valid;
+        (await _roleManager.UpdateAsync(role)).CheckErrors();
+        return role.Name;
+    }
+    
+    [UnitOfWork]
+    public async Task<string> CreateCancelSuperRoleAsync(long tenantId, string superRoleName, string superRealName)
+    {
+        UpdateCurrentTenantId(tenantId);
+        var role = await _roleManager.RoleRepository.FirstOrDefaultAsync(p=> p.Name == superRoleName);
+        if (role != null)
+        {
+            (await _roleManager.DeleteAsync(role)).CheckErrors();
+            return role.Name;
+        }
+        return null;
+    }
+    
+    private void UpdateCurrentTenantId(long tenantId)
+    {
+        var currentTenantId = EngineContext.Current.Resolve<ICurrentTenantId>();
+        currentTenantId.SetTenantId(tenantId);
     }
 
     private async Task UpdateRoleByInput(IdentityRole role, RoleDtoBase input)

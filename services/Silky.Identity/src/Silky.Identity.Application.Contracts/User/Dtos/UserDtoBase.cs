@@ -40,7 +40,7 @@ public abstract class UserDtoBase
     /// <summary>
     /// 生日
     /// </summary>
-    public DateTime BirthDay { get; set; }
+    public DateTime? BirthDay { get; set; }
 
     /// <summary>
     /// 性别

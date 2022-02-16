@@ -25,7 +25,7 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
 
     public string Surname { get; set; }
 
-    public DateTime BirthDay { get; set; }
+    public DateTime? BirthDay { get; set; }
 
     public Sex? Sex { get; set; }
 

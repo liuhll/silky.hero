@@ -185,7 +185,7 @@ public class IdentityUserStore :
         }
         catch (Exception ex)
         {
-            Logger.LogWarning(ex.ToString()); //Trigger some AbpHandledException event
+            Logger.LogWarning(ex.ToString()); //Trigger some HandledException event
             return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
         }
 

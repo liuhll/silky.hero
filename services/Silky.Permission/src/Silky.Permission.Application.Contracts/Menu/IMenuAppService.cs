@@ -77,4 +77,7 @@ public interface IMenuAppService
 
     [ProhibitExtranet]
     Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds,bool includeParents = true);
+
+    [ProhibitExtranet]
+    Task<long[]> GetAllMenuIdsAsync(bool onlyValid = true);
 }

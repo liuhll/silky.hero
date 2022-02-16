@@ -24,7 +24,9 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
     public IIdentityRoleRepository RoleRepository { get; }
     public IRepository<IdentityRoleMenu> RoleMenuRepository { get; }
     public IRepository<IdentityRoleOrganization> RoleOrganizationRepository { get; }
-    private readonly IMenuAppService _menuAppService;
+    
+    public IMenuAppService MenuAppService { get; }
+    
     private readonly IOrganizationAppService _organizationAppService;
 
     public IdentityRoleManager(IdentityRoleStore store,
@@ -46,7 +48,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         RoleRepository = roleRepository;
         RoleMenuRepository = roleMenuRepository;
         RoleOrganizationRepository = roleOrganizationRepository;
-        _menuAppService = menuAppService;
+        MenuAppService = menuAppService;
         _organizationAppService = organizationAppService;
     }
 
@@ -98,7 +100,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         Check.NotNull(roleMenus, nameof(roleMenus));
         foreach (var roleMenu in roleMenus)
         {
-            if (!await _menuAppService.HasMenuAsync(roleMenu.MenuId))
+            if (!await MenuAppService.HasMenuAsync(roleMenu.MenuId))
             {
                 return IdentityResult.Failed(new IdentityError()
                 {
@@ -218,7 +220,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
             .Where(p => p.RoleId == roleId)
             .Select(p => p.MenuId)
             .ToListAsync();
-        var permissions = await _menuAppService.GetPermissions(roleMenuIds);
+        var permissions = await MenuAppService.GetPermissions(roleMenuIds);
         return permissions;
     }
 
@@ -241,7 +243,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
         }
         var roleOutput = role.Adapt<GetRoleDetailOutput>();
         var roleMenuIds = role.Menus.Select(p => p.MenuId).ToArray();
-        var menus = await _menuAppService.GetMenusAsync(roleMenuIds);
+        var menus = await MenuAppService.GetMenusAsync(roleMenuIds);
         var frontendMenus = menus.MapFrontendMenus(true);
         roleOutput.Menus = frontendMenus.BuildTree().Adapt<ICollection<GetRoleMenuTreeOutput>>();
         foreach (var customOrganizationOutput in roleOutput.CustomOrganizationDataRanges)

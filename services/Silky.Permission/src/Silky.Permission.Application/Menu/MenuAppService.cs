@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
+using Silky.Hero.Common.Enums;
 using Silky.Permission.Application.Contracts.Menu;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Menu;
@@ -73,5 +74,15 @@ public class MenuAppService : IMenuAppService
     public Task<ICollection<GetMenuOutput>> GetMenusAsync(long[] menuIds, bool includeParents = true)
     {
         return _menuDomainService.GetMenusAsync(menuIds, includeParents);
+    }
+
+    public async Task<long[]> GetAllMenuIdsAsync(bool onlyValid = true)
+    {
+        var menuIds = await _menuDomainService.MenuRepository
+            .AsQueryable(false)
+            .Where(onlyValid, m => m.Status == Status.Valid)
+            .Select(p => p.Id)
+            .ToArrayAsync();
+        return menuIds;
     }
 }

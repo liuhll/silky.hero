@@ -2,7 +2,7 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <SilkyVersion>3.0.8</SilkyVersion>
+    <SilkyVersion>3.0.9-bate.1</SilkyVersion>
 	<MicrosoftPackageVersion>6.0.0</MicrosoftPackageVersion>
   </PropertyGroup>
 </Project>

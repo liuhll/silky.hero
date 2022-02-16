@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Silky.EntityFrameworkCore.Repositories;
-using Silky.Hero.Common.Enums;
 
 namespace Silky.Identity.Domain;
 

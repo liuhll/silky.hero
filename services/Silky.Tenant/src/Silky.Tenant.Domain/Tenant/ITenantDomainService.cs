@@ -7,6 +7,12 @@ namespace Silky.Tenant.Domain;
 public interface ITenantDomainService
 {
     IRepository<Tenant> TenantRepository { get; }
-    Task CreateAsync(CreateTenantInput input);
+    Task CreateTryAsync(CreateTenantInput input);
+   
+    Task CreateConfirmAsync(CreateTenantInput input);
+    
+    Task CreateCancelAsync(CreateTenantInput input);
+    
     Task UpdateAsync(UpdateTenantInput input);
+    
 }

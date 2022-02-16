@@ -11,9 +11,12 @@ using Silky.Core;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Rpc;
 using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore;
+using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Extensions;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
@@ -267,6 +270,45 @@ public class UserAppService : IUserAppService
         var roleOrganizations = await UserManager.RoleOrganizationRepository.AsQueryable(false)
             .Where(p => organizationIds.Contains(p.OrganizationId))
             .ToArrayAsync();
+    }
+
+    [TccTransaction(ConfirmMethod = "CreateConfirmSuperUserAsync",CancelMethod = "CreateCancelSuperUserAsync")]
+    public async Task CreateSuperUserAsync(CreateSuperUserInput input)
+    {
+        UpdateCurrentTenantId(input.TenantId);
+        var user = new IdentityUser(input.UserName, input.Email, input.MobilePhone, input.TenantId);
+        user.Status = Status.Invalid;
+        await UpdateUserByInput(user, input);
+        await UserManager.SetRolesAsync(user,new List<string>(){ input.RoleName });
+        (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
+
+    }
+    
+    public async Task CreateConfirmSuperUserAsync(CreateSuperUserInput input)
+    {
+        UpdateCurrentTenantId(input.TenantId);
+        var user = await UserManager.UserRepository
+            .FirstAsync(p=> p.UserName == input.UserName);
+        user.Status = Status.Valid;
+        (await  UserManager.UpdateAsync(user)).CheckErrors();
+    }
+    
+    public async Task CreateCancelSuperUserAsync(CreateSuperUserInput input)
+    {
+        UpdateCurrentTenantId(input.TenantId);
+        var user = await UserManager.UserRepository
+            .Include(p=> p.Roles)
+            .FirstOrDefaultAsync(p=> p.UserName == input.UserName);
+        if (user != null)
+        {
+            (await UserManager.DeleteAsync(user)).CheckErrors();
+        }
+    }
+    
+    private void UpdateCurrentTenantId(long tenantId)
+    {
+        var currentTenantId = EngineContext.Current.Resolve<ICurrentTenantId>();
+        currentTenantId.SetTenantId(tenantId);
     }
 
     [UnitOfWork]

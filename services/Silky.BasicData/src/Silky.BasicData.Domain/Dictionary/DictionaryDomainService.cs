@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.Extensions.Caching.Distributed;
 using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
-using Silky.Core;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;

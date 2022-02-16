@@ -6,6 +6,7 @@ using Silky.Rpc.Routing;
 using Silky.Rpc.Security;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
 using Silky.Tenant.Domain.Shared;
+using Silky.Transaction;
 
 namespace Silky.Tenant.Application.Contracts.Tenant;
 
@@ -22,7 +23,8 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all")]
-    [Authorize(TenantPermissions.Tenants.Create)]
+    // [Authorize(TenantPermissions.Tenants.Create)]
+    [Transaction]
     Task CreateAsync(CreateTenantInput input);
 
     /// <summary>

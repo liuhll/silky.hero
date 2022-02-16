@@ -15,6 +15,7 @@ public static class DbContextModelCreatingExtensions
         b.Property(u => u.Email).IsRequired().HasMaxLength(IdentityUserConsts.MaxEmailLength).HasColumnName(nameof(IdentityUser.Email));
         b.Property(u => u.RealName).HasMaxLength(IdentityUserConsts.MaxRealNameLength).HasColumnName(nameof(IdentityUser.RealName));
         b.Property(u => u.Surname).HasMaxLength(IdentityUserConsts.MaxSurnameLength).HasColumnName(nameof(IdentityUser.Surname));
+        b.Property(u => u.BirthDay).HasColumnName(nameof(IdentityUser.BirthDay));
         b.Property(u => u.MobilePhone).HasMaxLength(IdentityUserConsts.MaxPhoneNumberLength).HasColumnName(nameof(IdentityUser.MobilePhone));
         b.Property(u => u.TelPhone).HasMaxLength(IdentityUserConsts.MaxPhoneNumberLength).HasColumnName(nameof(IdentityUser.TelPhone));
     }

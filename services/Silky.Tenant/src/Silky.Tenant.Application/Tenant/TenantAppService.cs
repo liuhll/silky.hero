@@ -11,6 +11,7 @@ using Silky.Hero.Common.Enums;
 using Silky.Tenant.Application.Contracts.Tenant;
 using Silky.Tenant.Application.Contracts.Tenant.Dtos;
 using Silky.Tenant.Domain;
+using Silky.Transaction.Tcc;
 
 namespace Silky.Tenant.Application.Tenant;
 
@@ -23,9 +24,20 @@ public class TenantAppService : ITenantAppService
         _tenantDomainService = tenantDomainService;
     }
 
+    [TccTransaction(ConfirmMethod = "CreateConfirmAsync",CancelMethod = "CreateCancelAsync")]
     public Task CreateAsync(CreateTenantInput input)
     {
-        return _tenantDomainService.CreateAsync(input);
+        return _tenantDomainService.CreateTryAsync(input);
+    }
+
+    public Task CreateConfirmAsync(CreateTenantInput input)
+    {
+        return _tenantDomainService.CreateConfirmAsync(input);
+    }
+    
+    public Task CreateCancelAsync(CreateTenantInput input)
+    {
+        return _tenantDomainService.CreateCancelAsync(input);
     }
 
     public Task UpdateAsync(UpdateTenantInput input)

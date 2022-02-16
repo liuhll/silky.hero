@@ -7,6 +7,7 @@ using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
+using Silky.Transaction;
 
 namespace Silky.Identity.Application.Contracts.Role;
 
@@ -118,4 +119,8 @@ public interface IRoleAppService
 
     [ProhibitExtranet]
     Task<bool> CheckHasMenusAsync(long[] menuIds);
+
+    [ProhibitExtranet]
+    [Transaction]
+    Task<string> CreateSuperRoleAsync(long tenantId, string superRoleName, string superRealName);
 }
