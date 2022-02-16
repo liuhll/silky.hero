@@ -21,7 +21,7 @@
     name: 'OrganizationDetailDrawer',
     components: { BasicDrawer, Description },
     setup() {
-      const getTitle = ref('职位');
+      const getTitle = ref('组织机构');
       const organizationDetail = ref();
 
       const [registerDrawer] = useDrawerInner(async (id) => {

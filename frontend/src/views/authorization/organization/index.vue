@@ -45,6 +45,7 @@
                     icon: 'ant-design:delete-outlined',
                     color: 'error',
                     tooltip: '移除此账号',
+                    auth: 'Organization.RemoveUser',
                     popConfirm: {
                       title: '是否确认移除该用户',
                       confirm: handleRemoveUser.bind(null, record),
