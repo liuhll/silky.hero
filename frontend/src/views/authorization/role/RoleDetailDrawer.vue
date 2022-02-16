@@ -1,5 +1,5 @@
 <template>
-  <BasicDrawer v-bind="$attrs" @register="registerDrawer" :title="getTitle" width="50%">
+  <BasicDrawer v-bind="$attrs" @register="registerDrawer" :title="getTitle" width="800px">
     <Card title="基础信息" :bordered="false">
       <Description
         size="middle"
