@@ -42,6 +42,12 @@ export const deleteMenu = (id: number) => {
   });
 };
 
+export const getMenuById = (id: number) => {
+  return defHttp.get({
+    url: `/menu/${id}`,
+  });
+};
+
 // export const setMenuStatus = (id: number, status: Status) => {
 //   return defHttp.put({
 //     url: `/menu/status/${id}/${status}`,

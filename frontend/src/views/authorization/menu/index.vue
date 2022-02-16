@@ -13,11 +13,13 @@
               icon: 'clarity:info-standard-line',
               tooltip: '查看菜单详情',
               onClick: handleView.bind(null, record),
+              auth: 'Permission.Menu.LookDetail',
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑菜单资料',
               onClick: handleEdit.bind(null, record),
+              auth: 'Permission.Menu.Update',
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -26,6 +28,7 @@
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
+                auth: 'Permission.Menu.Delete',
               },
             },
           ]"
@@ -33,6 +36,7 @@
       </template>
     </BasicTable>
     <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <MenuDetailDrawer @register="registerMenuDetailDrawer" @success="handleSuccess" />
   </PageWrapper>
 </template>
 
@@ -43,12 +47,13 @@
   import { columns, searchFormSchema } from './menu.data';
   import { PageWrapper } from '/@/components/Page';
   import MenuDrawer from './MenuDrawer.vue';
+  import MenuDetailDrawer from './MenuDetailDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'Menu',
-    components: { PageWrapper, BasicTable, TableAction, MenuDrawer },
+    components: { PageWrapper, BasicTable, TableAction, MenuDrawer, MenuDetailDrawer },
     setup() {
       const searchInfo = ref({});
       const { notification } = useMessage();
@@ -90,6 +95,7 @@
       }
       const [registerTable, { reload }] = useTable(tableConfig);
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerMenuDetailDrawer, { openDrawer: openMenuDetailDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
@@ -120,7 +126,9 @@
           }
         });
       }
-      function handleView(record: Recordable) {}
+      function handleView(record: Recordable) {
+        openMenuDetailDrawer(true, record.id);
+      }
       function handleEdit(record: Recordable) {
         openDrawer(true, {
           isUpdate: true,
@@ -147,6 +155,7 @@
         registerTable,
         handleCreate,
         registerDrawer,
+        registerMenuDetailDrawer,
         handleSuccess,
         handleView,
         handleEdit,

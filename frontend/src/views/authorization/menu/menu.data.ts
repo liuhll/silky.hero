@@ -9,6 +9,10 @@ import { treeMap } from '/@/utils/helper/treeHelper';
 import { TreeItem } from '/@/components/Tree';
 import { getMenuTree } from '/@/api/menu';
 import { GetMenuTreeModel } from '/@/api/menu/model/menuModel';
+import { DescItem } from '/@/components/Description';
+import { commonTagRender } from '/@/utils/tagUtil';
+import { cp } from 'fs';
+import { formatToDate } from '/@/utils/dateUtil';
 
 const isDir = (type: number) => type === 0;
 const isMenu = (type: number) => type === 1;
@@ -26,22 +30,23 @@ export const columns: BasicColumn[] = [
     dataIndex: 'type',
     width: 50,
     customRender: ({ record }) => {
+      let text = '';
+      let color = '';
       if (isDir(record.type)) {
-        const text = '目录';
-        const color = 'green';
-        return h(Tag, { color: color }, () => text);
+        text = '目录';
+        color = 'green';
+        return commonTagRender(color, text);
       }
       if (isMenu(record.type)) {
-        const text = '菜单';
-        const color = 'blue';
-        return h(Tag, { color: color }, () => text);
+        text = '菜单';
+        color = 'blue';
+        return commonTagRender(color, text);
       }
       if (isButton(record.type)) {
-        const text = '按钮';
-        const color = 'purple';
-        return h(Tag, { color: color }, () => text);
+        text = '按钮';
+        color = 'purple';
       }
-      return '';
+      return commonTagRender(color, text);
     },
   },
   {
@@ -68,14 +73,15 @@ export const columns: BasicColumn[] = [
     align: 'left',
   },
   {
-    title: '外链',
-    dataIndex: 'externalLink',
-    width: 50,
-  },
-  {
     title: '路由地址',
     dataIndex: 'routePath',
     width: 160,
+    align: 'left',
+  },
+  {
+    title: '排序',
+    dataIndex: 'sort',
+    width: 50,
     align: 'left',
   },
   {
@@ -85,7 +91,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       const enable = record.status === Status.Valid;
       const color = enable ? 'green' : 'red';
-      const text = enable ? '启用' : '停用';
+      const text = enable ? '有效' : '无效';
       return h(Tag, { color: color }, () => text);
     },
   },
@@ -122,7 +128,6 @@ export const menuSchemas: FormSchema[] = [
     component: 'Input',
     required: true,
   },
-
   {
     field: 'parentId',
     label: '上级菜单',
@@ -136,7 +141,6 @@ export const menuSchemas: FormSchema[] = [
       getPopupContainer: () => document.body,
     },
   },
-
   {
     field: 'sort',
     label: '排序',
@@ -208,7 +212,7 @@ export const menuSchemas: FormSchema[] = [
     field: 'keepAlive',
     label: '是否缓存',
     component: 'RadioButtonGroup',
-    defaultValue: true,
+    defaultValue: false,
     componentProps: {
       options: [
         { label: '否', value: false },
@@ -289,3 +293,154 @@ export const getMenuTreeList2 = async (requestParams: any): Promise<TreeItem[]> 
     },
   });
 };
+
+export const getMenuDetailSchemas = (menuData): DescItem[] => [
+  {
+    field: 'name',
+    label: '名称',
+  },
+  {
+    field: 'type',
+    label: '类型',
+    render: (value) => {
+      if (isDir(value)) {
+        return commonTagRender('green', '目录');
+      }
+      if (isMenu(value)) {
+        return commonTagRender('blue', '菜单');
+      }
+      if (isButton(value)) {
+        return commonTagRender('purple', '按钮');
+      }
+      return null;
+    },
+  },
+  {
+    field: 'sort',
+    label: '排序',
+  },
+  {
+    field: 'icon',
+    label: '图标',
+    show: () => {
+      return !isButton(menuData.type);
+    },
+  },
+
+  {
+    field: 'routePath',
+    label: '路由地址',
+    show: () => !isButton(menuData.type),
+  },
+  {
+    field: 'component',
+    label: '组件',
+    show: () => !isButton(menuData.type),
+  },
+  {
+    field: 'permissionCode',
+    label: '权限标识',
+    show: () => !isDir(menuData.type),
+  },
+  {
+    field: 'status',
+    label: '状态',
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value ? 'blue' : 'red', value ? '有效' : '无效');
+    },
+  },
+  {
+    field: 'externalLink',
+    label: '是否外链',
+    show: () => isMenu(menuData.type),
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value === true ? 'red' : 'blue', value ? '是' : '否');
+    },
+  },
+  {
+    field: 'externalLinkType',
+    label: '外链类型',
+    show: () => isMenu(menuData.type) && menuData.externalLink === true,
+    render: (value) => {
+      if (value == null) {
+        return null;
+      }
+      return commonTagRender(value === 0 ? 'blue' : 'green', value ? '内嵌' : '外部');
+    },
+  },
+  {
+    field: 'keepAlive',
+    label: '是否缓存',
+    show: () => isMenu(menuData.type),
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value ? 'red' : 'blue', value ? '是' : '否');
+    },
+  },
+  {
+    field: 'display',
+    label: '是否显示',
+    show: () => !isButton(menuData.type),
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value ? 'blue' : 'red', value ? '是' : '否');
+    },
+  },
+  {
+    field: 'hideChildrenInMenu',
+    label: '隐藏子菜单',
+    show: () => isDir(menuData.type),
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value ? 'red' : 'blue', value ? '是' : '否');
+    },
+  },
+  {
+    field: 'currentActiveMenu',
+    label: '当前活动菜单',
+    show: () => isMenu(menuData.type) && menuData.display === false,
+  },
+  {
+    field: 'hideBreadcrumb',
+    label: '隐藏面包屑',
+    show: () => !isButton(menuData.type),
+    render: (value) => {
+      if (value === null) {
+        return null;
+      }
+      return commonTagRender(value ? 'red' : 'blue', value ? '是' : '否');
+    },
+  },
+  {
+    label: '创建时间',
+    field: 'createdTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
+  },
+  {
+    label: '最后更新时间',
+    field: 'updatedTime',
+    render: (value) => {
+      if (value) {
+        return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
+      }
+      return null;
+    },
+  },
+];
