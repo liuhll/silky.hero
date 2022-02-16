@@ -46,12 +46,11 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '登录锁定',
+    title: '锁定',
     dataIndex: 'isLockout',
     width: 120,
     align: 'left',
     slots: { customRender: 'isLockout' },
-    defaultHidden: true,
   },
   {
     title: '昵称',
@@ -462,5 +461,33 @@ export const userDetailSchemas: DescItem[] = [
     render: (value) => {
       return formatToDate(value, 'YYYY-MM-DD HH:MM:ss');
     },
+  },
+];
+
+export const userLockSchemas: FormSchema[] = [
+  {
+    field: 'lockoutSeconds',
+    label: '锁定时长(分)',
+    component: 'InputNumber',
+    componentProps: {
+      style: 'width: 100%',
+    },
+    rules: [
+      {
+        required: true,
+        message: '锁定时长不允许为空',
+      },
+      {
+        type: 'method',
+        validator: (rule, value: number) => {
+          if (value > 0) {
+            return Promise.resolve();
+          }
+          return Promise.reject();
+        },
+        validateTrigger: ['change', 'blur'],
+        message: '锁定时长不允许小于0',
+      },
+    ],
   },
 ];

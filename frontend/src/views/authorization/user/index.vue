@@ -79,6 +79,24 @@
               auth: 'Identity.User.SetRoles',
             },
             {
+              icon: 'akar-icons:lock-on',
+              color: 'error',
+              tooltip: '锁定账号一段时间',
+              onClick: handleLock.bind(null, record),
+              ifShow: !record.isLockout,
+              auth: 'Identity.User.Lock',
+            },
+            {
+              icon: 'akar-icons:lock-off',
+              tooltip: '解锁',
+              popConfirm: {
+                title: '是否解锁该用户?',
+                confirm: handleUnLock.bind(null, record),
+              },
+              ifShow: record.isLockout,
+              auth: 'Identity.User.UnLock',
+            },
+            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               tooltip: '删除此账号',
@@ -94,6 +112,7 @@
     </BasicTable>
     <UserDrawer @register="registerDrawer" @success="handleSuccess" />
     <UserRoleDrawer @register="registerUserRoleDrawer" @success="handleSuccessAuthorizeUserRole" />
+    <UserLockModal @register="registerUserLockModal" @success="handleSuccessUserLock" />
     <UserDetailDrawer @register="registerUserDetailDrawer" />
   </PageWrapper>
 </template>
@@ -109,6 +128,8 @@
     deleteUser,
     getUserRoles,
     updateUserRoles,
+    lockUser,
+    unLockUser,
   } from '/@/api/user';
   import { getRoleList } from '/@/api/role';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -119,7 +140,9 @@
   import UserDrawer from './UserDrawer.vue';
   import UserRoleDrawer from './UserRoleDrawer.vue';
   import UserDetailDrawer from './UserDetailDrawer.vue';
+  import UserLockModal from './UserLockModal.vue';
   import { useDrawer } from '/@/components/Drawer';
+  import { useModal } from '/@/components/Modal';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { getRoleOptions } from '/@/views/authorization/role/role.data';
   import { OptionsItem } from '/@/utils/model';
@@ -139,6 +162,7 @@
       UserDrawer,
       UserRoleDrawer,
       UserDetailDrawer,
+      UserLockModal,
     },
     setup() {
       const searchInfo = ref({});
@@ -151,6 +175,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerUserRoleDrawer, { openDrawer: openUserRoleDrawer }] = useDrawer();
       const [registerUserDetailDrawer, { openDrawer: openUserDetailDrawer }] = useDrawer();
+      const [registerUserLockModal, { openModal: openUserLockModal }] = useModal();
       const { notification } = useMessage();
       const { hasPermission } = usePermission();
       const loadingRef = ref(false);
@@ -193,6 +218,39 @@
             loadingRef.value = false;
             notification.success({
               message: `删除用户${record.userName}成功.`,
+            });
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
+        });
+      }
+
+      function handleLock(record: Recordable) {
+        // nextTick(async () => {
+        //   try {
+        //     loadingRef.value = true;
+        //     await lockUser(record.id);
+        //     loadingRef.value = false;
+        //     notification.success({
+        //       message: `冻结用户${record.userName}成功.`,
+        //     });
+        //     reload();
+        //   } catch (err) {
+        //     loadingRef.value = false;
+        //   }
+        // });
+        openUserLockModal(true, record);
+      }
+
+      function handleUnLock(record: Recordable) {
+        nextTick(async () => {
+          try {
+            loadingRef.value = true;
+            await unLockUser(record.id);
+            loadingRef.value = false;
+            notification.success({
+              message: `激活用户${record.userName}成功.`,
             });
             reload();
           } catch (err) {
@@ -309,6 +367,8 @@
         hasPermission([
           'Identity.User.LookDetail',
           'Identity.User.Update',
+          'Identity.User.Lock',
+          'Identity.User.UnLock',
           'Identity.User.Delete',
           'Identity.User.SetUsers',
         ])
@@ -335,9 +395,12 @@
         handleSuccess,
         registerUserRoleDrawer,
         registerUserDetailDrawer,
+        registerUserLockModal,
         handleSuccessAuthorizeUserRole,
         setRoleColor,
         formatToDate,
+        handleUnLock,
+        handleLock,
         positionOptions,
         roleOptions,
         searchInfo,

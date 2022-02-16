@@ -58,10 +58,21 @@ export const getUserRoles = (id: number) => {
   });
 };
 
-
 export const updateUserRoles = (id: number, roleNames: string[]) => {
   return defHttp.put({
     url: `/user/${id}/roles`,
-    params: roleNames
+    params: roleNames,
+  });
+};
+
+export const lockUser = (id: number) => {
+  return defHttp.put({
+    url: `/user/${id}`,
+  });
+};
+
+export const unLockUser = (id: number) => {
+  return defHttp.put({
+    url: `/user/${id}/unlock`,
   });
 };
