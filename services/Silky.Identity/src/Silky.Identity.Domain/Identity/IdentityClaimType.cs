@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Silky.Core;
-using Silky.Core.Extensions;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Identity.Domain.Shared;
 

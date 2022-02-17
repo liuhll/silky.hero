@@ -20,12 +20,9 @@ using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Extensions;
-using Silky.Identity.Domain.Identity;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Permission.Application.Contracts.Menu;
-using Silky.Permission.Application.Contracts.Menu.Dtos;
-using Silky.Permission.Domain.Shared.Menu;
 using Silky.Position.Application.Contracts.Position;
 
 namespace Silky.Identity.Domain;

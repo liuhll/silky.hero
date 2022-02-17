@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
