@@ -124,7 +124,6 @@
       if (
         hasPermission([
           'Identity.Role.LookDetail',
-          'Identity.Role.Create',
           'Identity.Role.Update',
           'Identity.Role.Delete',
           'Identity.Role.SetMenus',

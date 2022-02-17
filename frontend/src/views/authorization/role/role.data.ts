@@ -36,6 +36,11 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '排序',
+    dataIndex: 'sort',
+    width: 50,
+  },
+  {
     title: '备注',
     dataIndex: 'remark',
     width: 120,
