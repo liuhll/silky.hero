@@ -7,14 +7,18 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE ${rpc_port} ${ws_port}
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /
+WORKDIR /src
 COPY common.props .
-COPY src /src
-RUN dotnet restore /src/Silky.LogHost/Silky.LogHost.csproj --disable-parallel && \
-    dotnet build --no-restore -c Release /src/Silky.LogHost/Silky.LogHost.csproj
+COPY NuGet.Config .
+COPY Common Common
+COPY Silky.Log Silky.Log
+COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
+COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+RUN dotnet restore /src/Silky.Log/src/Silky.LogHost/Silky.LogHost.csproj --disable-parallel && \
+    dotnet build --no-restore -c Release /src/Silky.Log/src/Silky.LogHost/Silky.LogHost.csproj
 
 FROM build AS publish
-WORKDIR /src/Silky.LogHost
+WORKDIR /src/Silky.Log/src/Silky.LogHost
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final

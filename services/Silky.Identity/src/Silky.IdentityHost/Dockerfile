@@ -7,14 +7,23 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE ${rpc_port} ${ws_port}
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /
+WORKDIR /src
 COPY common.props .
-COPY src /src
-RUN dotnet restore /src/Silky.IdentityHost/Silky.IdentityHost.csproj --disable-parallel && \
-    dotnet build --no-restore -c Release /src/Silky.IdentityHost/Silky.IdentityHost.csproj
+COPY NuGet.Config .
+COPY Common Common
+COPY Silky.Identity Silky.Identity
+COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
+COPY Silky.Organization/src/Silky.Organization.Application.Contracts Silky.Organization/src/Silky.Organization.Application.Contracts
+COPY Silky.Organization/src/Silky.Organization.Domain.Shared Silky.Organization/src/Silky.Organization.Domain.Shared
+COPY Silky.Permission/src/Silky.Permission.Application.Contracts Silky.Permission/src/Silky.Permission.Application.Contracts
+COPY Silky.Permission/src/Silky.Permission.Domain.Shared Silky.Permission/src/Silky.Permission.Domain.Shared
+COPY Silky.Position/src/Silky.Position.Application.Contracts Silky.Position/src/Silky.Position.Application.Contracts
+COPY Silky.Position/src/Silky.Position.Domain.Shared Silky.Position/src/Silky.Position.Domain.Shared
+RUN dotnet restore /src/Silky.Identity/src/Silky.IdentityHost/Silky.IdentityHost.csproj --disable-parallel && \
+    dotnet build --no-restore -c Release /src/Silky.Identity/src/Silky.IdentityHost/Silky.IdentityHost.csproj
 
 FROM build AS publish
-WORKDIR /src/Silky.IdentityHost
+WORKDIR /src/Silky.Identity/src/Silky.IdentityHost
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
