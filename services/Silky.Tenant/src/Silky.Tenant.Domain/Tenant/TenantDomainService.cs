@@ -37,7 +37,7 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
         }
         var tenant = input.Adapt<Tenant>();
         var tenantEntry = await TenantRepository.InsertNowAsync(tenant);
-        var roleName = await _roleAppService.CreateSuperRoleAsync(tenantEntry.Entity.Id, input.SuperRoleName, input.SuperRealName);
+        var roleName = await _roleAppService.CreateSuperRoleAsync(tenantEntry.Entity.Id, input.SuperRoleName, input.SuperRoleRealName);
         var superUserInput = new CreateSuperUserInput()
         {
             TenantId = tenantEntry.Entity.Id,

@@ -23,7 +23,7 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
-    // [Authorize(TenantPermissions.Tenants.Create)]
+    [Authorize(TenantPermissions.Tenants.Create)]
     [Transaction]
     Task CreateAsync(CreateTenantInput input);
 

@@ -12,7 +12,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core;
 using Silky.Core.Extensions;
-using Silky.Core.Runtime.Rpc;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
