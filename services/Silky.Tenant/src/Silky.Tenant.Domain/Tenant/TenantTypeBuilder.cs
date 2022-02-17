@@ -20,7 +20,6 @@ public class TenantTypeBuilder : IEntityTypeBuilder<Tenant>
             .HasColumnName(nameof(Tenant.Name));
         
         builder.Property(o => o.Remark)
-            .IsRequired()
             .HasMaxLength(TenantConsts.MaxRemarkLength)
             .HasColumnName(nameof(Tenant.Remark));
         
