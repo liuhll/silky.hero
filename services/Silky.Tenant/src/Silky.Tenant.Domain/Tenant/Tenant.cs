@@ -23,6 +23,8 @@ public class Tenant : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeleted
     public string Name { get; set; }
 
     public Status Status { get; set; }
+    
+    public int Sort { get; set; }
 
     public string Remark { get; set; }
     public long? CreatedBy { get; set; }

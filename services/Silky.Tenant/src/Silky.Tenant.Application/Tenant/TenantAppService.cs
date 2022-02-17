@@ -70,9 +70,10 @@ public class TenantAppService : ITenantAppService
     public async Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input)
     {
         return await _tenantDomainService.TenantRepository
+            .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(), p => p.Name == input.Name)
             .Where(input.Status.HasValue, p => p.Status == input.Status)
-            .AsNoTracking()
+            .OrderByDescending(p=> p.Sort)
             .ProjectToType<GetTenantPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
@@ -80,8 +81,9 @@ public class TenantAppService : ITenantAppService
     public async Task<ICollection<GetTenantOutput>> GetAllAsync()
     {
         return await _tenantDomainService.TenantRepository
+            .AsQueryable(false)
             .Where(p => p.Status == Status.Valid)
-            .AsNoTracking()
+            .OrderByDescending(p=> p.Sort)
             .ProjectToType<GetTenantOutput>()
             .ToListAsync();
     }

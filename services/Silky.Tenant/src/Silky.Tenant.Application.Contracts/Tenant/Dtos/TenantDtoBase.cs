@@ -17,6 +17,11 @@ public abstract class TenantDtoBase
     public Status Status { get; set; }
 
     /// <summary>
+    /// 排序
+    /// </summary>
+    public int Sort { get; set; }
+
+    /// <summary>
     /// 备注
     /// </summary>
     public string Remark { get; set; }

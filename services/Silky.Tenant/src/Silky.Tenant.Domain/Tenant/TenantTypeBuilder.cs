@@ -24,6 +24,11 @@ public class TenantTypeBuilder : IEntityTypeBuilder<Tenant>
             .HasMaxLength(TenantConsts.MaxRemarkLength)
             .HasColumnName(nameof(Tenant.Remark));
         
+        builder.Property(o => o.Sort)
+            .IsRequired()
+            .HasDefaultValue(0)
+            .HasColumnName(nameof(Tenant.Sort));
+        
         builder.Property(o => o.Status)
             .IsRequired()
             .HasDefaultValue(Status.Valid)
