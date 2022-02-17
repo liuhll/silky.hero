@@ -47,11 +47,11 @@
         </Tag>
       </template>
       <template #isLockout="{ text, record }">
-        <Tag v-if="text" color="error">是</Tag>
-        <Tag v-if="text" color="error"
+        <Tag v-if="text" color="error" style="margin: 3px">是</Tag>
+        <Tag v-if="text" color="error" style="margin: 3px"
           >({{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }})</Tag
         >
-        <Tag v-if="!text" color="blue"> 否 </Tag>
+        <Tag v-if="!text" color="blue" style="margin: 3px"> 否 </Tag>
       </template>
       <template #toolbar>
         <a-button type="primary" v-auth="'Identity.User.Create'" @click="handleCreate"
