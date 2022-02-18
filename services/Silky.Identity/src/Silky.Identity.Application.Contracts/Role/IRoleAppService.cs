@@ -72,6 +72,7 @@ public interface IRoleAppService
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
+    [Governance(TimeoutMillSeconds = 10000)]
     Task SetMenusAsync(UpdateRoleMenuInput input);
     
     /// <summary>

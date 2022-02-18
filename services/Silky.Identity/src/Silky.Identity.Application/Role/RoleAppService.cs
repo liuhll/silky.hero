@@ -76,6 +76,7 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
+    [UnitOfWork]
     public async Task SetMenusAsync(UpdateRoleMenuInput input)
     {
         var role = await _roleManager.RoleRepository

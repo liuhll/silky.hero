@@ -107,7 +107,6 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
                 });
             }
         }
-
         var currentRoleMenus = await GetCurrentRoleMenusAsync(role);
         var result = await RemoveFromRoleMenusAsync(role, currentRoleMenus.Except(roleMenus).Distinct());
         if (!result.Succeeded)
