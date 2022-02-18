@@ -14,6 +14,7 @@ COPY Common Common
 COPY Silky.Tenant Silky.Tenant
 COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
 COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+COPY Silky.Identity/src/Silky.Identity.Application.Contracts Silky.Identity/src/Silky.Identity.Application.Contracts
 RUN dotnet restore /src/Silky.Tenant/src/Silky.TenantHost/Silky.TenantHost.csproj --disable-parallel && \
     dotnet build --no-restore -c Release /src/Silky.Tenant/src/Silky.TenantHost/Silky.TenantHost.csproj
 
