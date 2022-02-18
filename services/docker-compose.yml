@@ -16,7 +16,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__account:-server=silky.mysql;port=3306;database=silky.account;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -36,7 +36,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__basicdata:-server=silky.mysql;port=3306;database=silky.basicdata;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -56,7 +56,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__identity:-server=silky.mysql;port=3306;database=silky.identity;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -76,7 +76,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__log:-server=silky.mysql;port=3306;database=silky.log;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
       rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
       rabbitMq__port: ${rabbitMq__host:-5672}
@@ -101,7 +101,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__organization:-server=silky.mysql;port=3306;database=silky.organization;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -121,7 +121,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__permission:-server=silky.mysql;port=3306;database=silky.permission;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -141,7 +141,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__position:-server=silky.mysql;port=3306;database=silky.position;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
@@ -161,7 +161,7 @@ services:
       registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
       distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
-      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      connectionStrings__default:  ${connectionStrings__tenant:-server=silky.mysql;port=3306;database=silky.tenant;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
