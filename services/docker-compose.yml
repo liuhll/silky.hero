@@ -40,6 +40,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+    
   silky.identity:
     image: silky.identity:${TAG:-latest}
     build:
@@ -59,6 +60,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+    
   silky.log:
     image: silky.log:${TAG:-latest}
     build:
@@ -76,8 +78,14 @@ services:
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
       connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
+      rabbitMq__port: ${rabbitMq__host:-5672}
+      rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
+      rabbitMq__password: ${rabbitMq__password:-rabbitmq}
+      rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
     networks: 
       - silky_service_net
+      
   silky.organization:
     image: silky.organization:${TAG:-latest}
     build:
@@ -97,6 +105,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+      
   silky.permission:
     image: silky.permission:${TAG:-latest}
     build:
@@ -116,6 +125,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+    
   silky.position:
     image: silky.position:${TAG:-latest}
     build:
@@ -135,6 +145,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+    
   silky.tenant:
     image: silky.tenant:${TAG:-latest}
     build:
@@ -154,6 +165,7 @@ services:
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
     networks: 
       - silky_service_net
+    
   silky.gateway:
     image: silky.gateway:${TAG:-latest}
     build:
@@ -171,6 +183,11 @@ services:
       distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
       connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
       skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
+      rabbitMq__port: ${rabbitMq__host:-5672}
+      rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
+      rabbitMq__password: ${rabbitMq__password:-rabbitmq}
+      rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
     networks: 
       - silky_service_net
 networks:
