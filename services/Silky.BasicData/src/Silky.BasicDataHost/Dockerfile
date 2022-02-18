@@ -9,10 +9,17 @@ EXPOSE ${rpc_port} ${ws_port}
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY common.props .
+COPY pfx.props .
 COPY NuGet.Config .
 COPY Common Common
-COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+COPY Shared Shared
 COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
+COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+COPY Silky.Identity/src/Silky.Identity.Application.Contracts Silky.Identity/src/Silky.Identity.Application.Contracts
+COPY Silky.Organization/src/Silky.Organization.Application.Contracts Silky.Organization/src/Silky.Organization.Application.Contracts
+COPY Silky.Organization/src/Silky.Organization.Domain.Shared Silky.Organization/src/Silky.Organization.Domain.Shared
+COPY Silky.Position/src/Silky.Position.Application.Contracts Silky.Position/src/Silky.Position.Application.Contracts
+COPY Silky.Position/src/Silky.Position.Domain.Shared Silky.Position/src/Silky.Position.Domain.Shared
 COPY Silky.BasicData Silky.BasicData
 RUN dotnet restore /src/Silky.BasicData/src/Silky.BasicDataHost/Silky.BasicDataHost.csproj --disable-parallel && \
     dotnet build --no-restore -c Release /src/Silky.BasicData/src/Silky.BasicDataHost/Silky.BasicDataHost.csproj

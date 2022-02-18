@@ -9,8 +9,10 @@ EXPOSE ${rpc_port} ${ws_port}
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY common.props .
+COPY pfx.props .
 COPY NuGet.Config .
 COPY Common Common
+COPY Shared Shared
 COPY Silky.Gateway Silky.Gateway
 COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
 COPY Silky.Organization/src/Silky.Organization.Application.Contracts Silky.Organization/src/Silky.Organization.Application.Contracts
