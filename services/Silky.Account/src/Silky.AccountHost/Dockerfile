@@ -14,6 +14,12 @@ COPY Silky.Identity/src/Silky.Identity.Database.Migrations Silky.Identity/src/Si
 COPY Silky.Identity/src/Silky.Identity.EntityFrameworkCore Silky.Identity/src/Silky.Identity.EntityFrameworkCore
 COPY Silky.Identity/src/Silky.Identity.Domain Silky.Identity/src/Silky.Identity.Domain
 COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+COPY Silky.Organization/src/Silky.Organization.Application.Contracts Silky.Organization/src/Silky.Organization.Application.Contracts
+COPY Silky.Organization/src/Silky.Organization.Domain.Shared Silky.Organization/src/Silky.Organization.Domain.Shared
+COPY Silky.Permission/src/Silky.Permission.Application.Contracts Silky.Permission/src/Silky.Permission.Application.Contracts
+COPY Silky.Permission/src/Silky.Permission.Domain.Shared Silky.Permission/src/Silky.Permission.Domain.Shared
+COPY Silky.Position/src/Silky.Position.Application.Contracts Silky.Position/src/Silky.Position.Application.Contracts
+COPY Silky.Position/src/Silky.Position.Domain.Shared Silky.Position/src/Silky.Position.Domain.Shared
 
 RUN dotnet restore /src/Silky.Account/src/Silky.AccountHost/Silky.AccountHost.csproj --disable-parallel && \
     dotnet build --no-restore -c Release /src/Silky.Account/src/Silky.AccountHost/Silky.AccountHost.csproj
