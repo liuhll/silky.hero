@@ -188,6 +188,8 @@ services:
       rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
       rabbitMq__password: ${rabbitMq__password:-rabbitmq}
       rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
+      healthChecksUI__healthChecks__0__name: silkyrpc
+      healthChecksUI__healthChecks__0__uri: http://silky.gateway/silkyrpc/healthz
     networks: 
       - silky_service_net
     ports:
