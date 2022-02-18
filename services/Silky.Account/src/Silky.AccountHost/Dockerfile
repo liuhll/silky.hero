@@ -9,6 +9,8 @@ EXPOSE ${rpc_port} ${ws_port}
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY common.props .
+COPY NuGet.Config .
+COPY Common Common
 COPY Silky.Account Silky.Account
 COPY Silky.Identity/src/Silky.Identity.Database.Migrations Silky.Identity/src/Silky.Identity.Database.Migrations
 COPY Silky.Identity/src/Silky.Identity.EntityFrameworkCore Silky.Identity/src/Silky.Identity.EntityFrameworkCore
