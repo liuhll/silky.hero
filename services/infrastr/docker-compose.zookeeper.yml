@@ -74,10 +74,6 @@ services:
       - silky_service_net      
       
 networks:
-  silky_service_net: 
-    driver: bridge
-    name: silky_service_net
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.22.0.1/16 
+  silky_service_net:
+    external:
+      name: silky_service_net
