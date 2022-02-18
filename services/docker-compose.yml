@@ -190,6 +190,8 @@ services:
       rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
     networks: 
       - silky_service_net
+    ports:
+      - 8080:80
 networks:
   silky_service_net: 
     external:
