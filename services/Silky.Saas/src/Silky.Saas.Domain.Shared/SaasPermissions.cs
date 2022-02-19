@@ -1,11 +1,10 @@
 ﻿namespace Silky.Saas.Domain.Shared;
 
-public class TenantPermissions
+public class SaasPermissions
 {
-    private const string GroupName = "Tenant";
-
     public static class Tenants
     {
+        private const string GroupName = "Tenant";
         public const string Default = GroupName + ".Default";
         public const string Create = GroupName + ".Create";
         public const string Update = GroupName + ".Update";

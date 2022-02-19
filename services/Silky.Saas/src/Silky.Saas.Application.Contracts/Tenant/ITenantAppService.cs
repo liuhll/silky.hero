@@ -23,7 +23,7 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
-    [Authorize(TenantPermissions.Tenants.Create)]
+    [Authorize(SaasPermissions.Tenants.Create)]
     [Transaction]
     Task CreateAsync(CreateTenantInput input);
 
@@ -34,7 +34,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
-    [Authorize(TenantPermissions.Tenants.Update)]
+    [Authorize(SaasPermissions.Tenants.Update)]
     Task UpdateAsync(UpdateTenantInput input);
 
     /// <summary>
@@ -44,7 +44,7 @@ public interface ITenantAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{0}", IgnoreMultiTenancy = true)]
-    [Authorize(TenantPermissions.Tenants.LookDetail)]
+    [Authorize(SaasPermissions.Tenants.LookDetail)]
     Task<GetTenantOutput> GetAsync([CacheKey(0)] long id);
 
     /// <summary>
@@ -55,7 +55,7 @@ public interface ITenantAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
-    [Authorize(TenantPermissions.Tenants.Delete)]
+    [Authorize(SaasPermissions.Tenants.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
