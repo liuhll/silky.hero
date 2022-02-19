@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Entities.Configures;
 using Silky.Hero.Common.EntityFrameworkCore.Modeling;
 using Silky.Hero.Common.Enums;
-using Silky.Saas.Domain.Shared.Tenant;
+using Silky.Saas.Domain.Shared;
 
 namespace Silky.Saas.Domain;
 
@@ -16,11 +16,11 @@ public class TenantTypeBuilder : IEntityTypeBuilder<Tenant>
         builder.ConfigureByConvention();
         builder.Property(o => o.Name)
             .IsRequired()
-            .HasMaxLength(TenantConsts.MaxNameLength)
+            .HasMaxLength(SaasConsts.MaxNameLength)
             .HasColumnName(nameof(Tenant.Name));
         
         builder.Property(o => o.Remark)
-            .HasMaxLength(TenantConsts.MaxRemarkLength)
+            .HasMaxLength(SaasConsts.MaxRemarkLength)
             .HasColumnName(nameof(Tenant.Remark));
         
         builder.Property(o => o.Sort)
@@ -32,5 +32,9 @@ public class TenantTypeBuilder : IEntityTypeBuilder<Tenant>
             .IsRequired()
             .HasDefaultValue(Status.Valid)
             .HasColumnName(nameof(Tenant.Status));
+
+        builder.Property(p => p.EditionId)
+            .IsRequired()
+            .HasColumnName(nameof(Tenant.EditionId));
     }
 }

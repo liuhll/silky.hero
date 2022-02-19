@@ -11,8 +11,6 @@ namespace Silky.Saas.EntityFrameworkCore.DbContexts
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
         {
         }
-
-        public DbSet<Tenant> Tenants { get; set; }
         
     }
 }
