@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\..\common.props" />
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Silky.ObjectMapper.Mapster" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
+        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
+        <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
+        <ProjectReference Include="..\Silky.Saas.Application.Contracts\Silky.Saas.Application.Contracts.csproj" />
+        <ProjectReference Include="..\Silky.Saas.Domain.Shared\Silky.Saas.Domain.Shared.csproj" />
+    </ItemGroup>
+</Project>

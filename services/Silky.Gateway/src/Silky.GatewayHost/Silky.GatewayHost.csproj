@@ -39,7 +39,7 @@
       <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\..\Silky.Permission\src\Silky.Permission.Application.Contracts\Silky.Permission.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\..\Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Tenant\src\Silky.Tenant.Application.Contracts\Silky.Tenant.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Silky.Saas\src\Silky.Saas.Application.Contracts\Silky.Saas.Application.Contracts.csproj" />
     </ItemGroup>
 
 
