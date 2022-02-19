@@ -105,7 +105,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                     FeatureType = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Metas = table.Column<string>(type: "longtext", nullable: true)
+                    Options = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
@@ -135,8 +135,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EditionId = table.Column<long>(type: "bigint", nullable: false),
                     FeatureId = table.Column<long>(type: "bigint", nullable: false),
-                    FeatureValue = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FeatureValue = table.Column<int>(type: "int", maxLength: 50, nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
@@ -177,17 +176,19 @@ namespace Silky.Saas.Database.Migrations.Migrations
                 {
                     { 1L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "身份标识", null, null },
                     { 2L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "审计日志", null, null },
-                    { 3L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "权限管理", null, null }
+                    { 3L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "权限管理", null, null },
+                    { 4L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, false, "Saas", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Features",
-                columns: new[] { "Id", "Code", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Description", "FeatureCatalogId", "FeatureType", "IsDeleted", "Metas", "Name", "UpdatedBy", "UpdatedTime" },
+                columns: new[] { "Id", "Code", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Description", "FeatureCatalogId", "FeatureType", "IsDeleted", "Name", "Options", "UpdatedBy", "UpdatedTime" },
                 values: new object[,]
                 {
-                    { 1L, "AllowMaxUserCount", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "0 = 无限制", 1L, 1, false, null, "最大用户数", null, null },
-                    { 2L, "EnabledAuditingLog", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "在应用程序中启用审计日志页面.", 2L, 2, false, null, "启用审计日志", null, null },
-                    { 3L, "EnabledMenuManage", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "在应用层序中启动菜单管理.", 3L, 2, false, null, "启用菜单管理", null, null }
+                    { 1L, "AllowMaxUserCount", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "0 = 无限制", 1L, 0, false, "最大用户数", null, null, null },
+                    { 2L, "EnabledAuditingLog", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "在应用程序中启用审计日志页面.", 2L, 1, false, "启用审计日志", null, null, null },
+                    { 3L, "EnabledMenuManage", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "在应用程序中启动菜单管理.", 3L, 1, false, "启用菜单管理", null, null, null },
+                    { 4L, "EnabledSaasManage", null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), null, null, "在应用程序中启动Saas管理.", 4L, 1, false, "启用Saas管理", null, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -204,15 +205,18 @@ namespace Silky.Saas.Database.Migrations.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedTime", "EditionId", "FeatureId", "FeatureValue", "UpdatedBy", "UpdatedTime" },
                 values: new object[,]
                 {
-                    { 1L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 1L, "20", null, null },
-                    { 2L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 2L, "0", null, null },
-                    { 3L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 3L, "0", null, null },
-                    { 4L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 1L, "50", null, null },
-                    { 5L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 2L, "1", null, null },
-                    { 6L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 3L, "0", null, null },
-                    { 7L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 3L, 1L, "0", null, null },
-                    { 8L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 2L, "1", null, null },
-                    { 9L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 3L, "1", null, null }
+                    { 1L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 1L, 20, null, null },
+                    { 2L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 2L, 0, null, null },
+                    { 3L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 3L, 0, null, null },
+                    { 4L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 4L, 0, null, null },
+                    { 5L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 1L, 50, null, null },
+                    { 6L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 2L, 1, null, null },
+                    { 7L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 3L, 0, null, null },
+                    { 8L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 4L, 0, null, null },
+                    { 9L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 3L, 1L, 1, null, null },
+                    { 10L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 2L, 1, null, null },
+                    { 11L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2L, 3L, 1, null, null },
+                    { 12L, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1L, 4L, 1, null, null }
                 });
 
             migrationBuilder.CreateIndex(

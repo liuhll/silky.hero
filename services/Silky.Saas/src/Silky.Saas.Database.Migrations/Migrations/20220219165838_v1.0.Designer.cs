@@ -11,7 +11,7 @@ using Silky.Saas.EntityFrameworkCore.DbContexts;
 namespace Silky.Saas.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20220219141115_v1.0")]
+    [Migration("20220219165838_v1.0")]
     partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,10 +106,9 @@ namespace Silky.Saas.Database.Migrations.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("FeatureId");
 
-                    b.Property<string>("FeatureValue")
-                        .IsRequired()
+                    b.Property<int>("FeatureValue")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("int")
                         .HasColumnName("FeatureValue");
 
                     b.Property<long?>("UpdatedBy")
@@ -133,7 +132,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 1L,
                             FeatureId = 1L,
-                            FeatureValue = "20"
+                            FeatureValue = 20
                         },
                         new
                         {
@@ -141,7 +140,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 1L,
                             FeatureId = 2L,
-                            FeatureValue = "0"
+                            FeatureValue = 0
                         },
                         new
                         {
@@ -149,55 +148,79 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 1L,
                             FeatureId = 3L,
-                            FeatureValue = "0"
+                            FeatureValue = 0
                         },
                         new
                         {
                             Id = 4L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            EditionId = 2L,
-                            FeatureId = 1L,
-                            FeatureValue = "50"
+                            EditionId = 1L,
+                            FeatureId = 4L,
+                            FeatureValue = 0
                         },
                         new
                         {
                             Id = 5L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 2L,
-                            FeatureId = 2L,
-                            FeatureValue = "1"
+                            FeatureId = 1L,
+                            FeatureValue = 50
                         },
                         new
                         {
                             Id = 6L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 2L,
-                            FeatureId = 3L,
-                            FeatureValue = "0"
+                            FeatureId = 2L,
+                            FeatureValue = 1
                         },
                         new
                         {
                             Id = 7L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            EditionId = 3L,
-                            FeatureId = 1L,
-                            FeatureValue = "0"
+                            EditionId = 2L,
+                            FeatureId = 3L,
+                            FeatureValue = 0
                         },
                         new
                         {
                             Id = 8L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            EditionId = 2L,
-                            FeatureId = 2L,
-                            FeatureValue = "1"
+                            EditionId = 1L,
+                            FeatureId = 4L,
+                            FeatureValue = 0
                         },
                         new
                         {
                             Id = 9L,
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EditionId = 3L,
+                            FeatureId = 1L,
+                            FeatureValue = 1
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EditionId = 2L,
+                            FeatureId = 2L,
+                            FeatureValue = 1
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EditionId = 2L,
                             FeatureId = 3L,
-                            FeatureValue = "1"
+                            FeatureValue = 1
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EditionId = 1L,
+                            FeatureId = 4L,
+                            FeatureValue = 1
                         });
                 });
 
@@ -240,15 +263,15 @@ namespace Silky.Saas.Database.Migrations.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Metas")
-                        .HasColumnType("longtext")
-                        .HasColumnName("Metas");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)")
                         .HasColumnName("Name");
+
+                    b.Property<string>("Options")
+                        .HasColumnType("longtext")
+                        .HasColumnName("Options");
 
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
@@ -270,7 +293,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Description = "0 = 无限制",
                             FeatureCatalogId = 1L,
-                            FeatureType = 1,
+                            FeatureType = 0,
                             IsDeleted = false,
                             Name = "最大用户数"
                         },
@@ -281,7 +304,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Description = "在应用程序中启用审计日志页面.",
                             FeatureCatalogId = 2L,
-                            FeatureType = 2,
+                            FeatureType = 1,
                             IsDeleted = false,
                             Name = "启用审计日志"
                         },
@@ -290,11 +313,22 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             Id = 3L,
                             Code = "EnabledMenuManage",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "在应用层序中启动菜单管理.",
+                            Description = "在应用程序中启动菜单管理.",
                             FeatureCatalogId = 3L,
-                            FeatureType = 2,
+                            FeatureType = 1,
                             IsDeleted = false,
                             Name = "启用菜单管理"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Code = "EnabledSaasManage",
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "在应用程序中启动Saas管理.",
+                            FeatureCatalogId = 4L,
+                            FeatureType = 1,
+                            IsDeleted = false,
+                            Name = "启用Saas管理"
                         });
                 });
 
@@ -356,6 +390,13 @@ namespace Silky.Saas.Database.Migrations.Migrations
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "权限管理"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Name = "Saas"
                         });
                 });
 

@@ -11,7 +11,7 @@ public class Feature : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public Feature()
     {
-        Metas = new Dictionary<string, object>();
+       // Options = new List<FeatureOption>();
     }
 
     public long FeatureCatalogId { get; set; }
@@ -23,7 +23,7 @@ public class Feature : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public string Description { get; set; }
 
-    public IDictionary<string, object> Metas { get; set; }
+    public ICollection<FeatureOption> Options { get; set; }
 
     public virtual FeatureCatalog FeatureCatalog { get; set; }
 
