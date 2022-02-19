@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Log", "Log", "{2BF2AFBD-595
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Organization", "Organization", "{ECBC77D2-01A4-4A19-B8E2-AB67901F65FF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tenant", "Tenant", "{0795812A-8DE4-4CFD-B77B-E5BB14A6605D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saas", "Saas", "{0795812A-8DE4-4CFD-B77B-E5BB14A6605D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.BasicData.Application", "Silky.BasicData\src\Silky.BasicData.Application\Silky.BasicData.Application.csproj", "{1B6E643F-EFA1-4783-8D21-784C045B73D5}"
 EndProject
@@ -73,19 +73,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Organization.Applicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Organization.Application", "Silky.Organization\src\Silky.Organization.Application\Silky.Organization.Application.csproj", "{2072AD8F-568F-47A6-84E1-4078C58CDE31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.TenantHost", "Silky.Tenant\src\Silky.TenantHost\Silky.TenantHost.csproj", "{0C8DE424-1B55-4A12-9EF0-B3CABDA6D6EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.SaasHost", "Silky.Saas\src\Silky.SaasHost\Silky.SaasHost.csproj", "{0C8DE424-1B55-4A12-9EF0-B3CABDA6D6EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.Application", "Silky.Tenant\src\Silky.Tenant.Application\Silky.Tenant.Application.csproj", "{E4D5FC37-41D7-4674-B6D8-9B5F43FA1AD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.Application", "Silky.Saas\src\Silky.Saas.Application\Silky.Saas.Application.csproj", "{E4D5FC37-41D7-4674-B6D8-9B5F43FA1AD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.Application.Contracts", "Silky.Tenant\src\Silky.Tenant.Application.Contracts\Silky.Tenant.Application.Contracts.csproj", "{5361576A-D3E1-465E-A0E1-49D130F7F86F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.Application.Contracts", "Silky.Saas\src\Silky.Saas.Application.Contracts\Silky.Saas.Application.Contracts.csproj", "{5361576A-D3E1-465E-A0E1-49D130F7F86F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.Database.Migrations", "Silky.Tenant\src\Silky.Tenant.Database.Migrations\Silky.Tenant.Database.Migrations.csproj", "{77348B19-8F23-43B8-82AB-4515E0CA7163}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.Database.Migrations", "Silky.Saas\src\Silky.Saas.Database.Migrations\Silky.Saas.Database.Migrations.csproj", "{77348B19-8F23-43B8-82AB-4515E0CA7163}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.Domain", "Silky.Tenant\src\Silky.Tenant.Domain\Silky.Tenant.Domain.csproj", "{D1621FEC-640B-40FE-A5A0-54C525325C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.Domain", "Silky.Saas\src\Silky.Saas.Domain\Silky.Saas.Domain.csproj", "{D1621FEC-640B-40FE-A5A0-54C525325C6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.EntityFrameworkCore", "Silky.Tenant\src\Silky.Tenant.EntityFrameworkCore\Silky.Tenant.EntityFrameworkCore.csproj", "{EB3B43B7-E30C-4F0C-9086-C42045F68FD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.EntityFrameworkCore", "Silky.Saas\src\Silky.Saas.EntityFrameworkCore\Silky.Saas.EntityFrameworkCore.csproj", "{EB3B43B7-E30C-4F0C-9086-C42045F68FD2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Tenant.Domain.Shared", "Silky.Tenant\src\Silky.Tenant.Domain.Shared\Silky.Tenant.Domain.Shared.csproj", "{66FA721F-8382-4D8A-B684-D57F6A8C2205}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silky.Saas.Domain.Shared", "Silky.Saas\src\Silky.Saas.Domain.Shared\Silky.Saas.Domain.Shared.csproj", "{66FA721F-8382-4D8A-B684-D57F6A8C2205}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Account", "Account", "{3B64DB6F-B21E-4CAC-B22A-90DD8B0D6B6E}"
 EndProject
