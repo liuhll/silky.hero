@@ -8,6 +8,12 @@ namespace Silky.Saas.Domain;
 
 public class Feature : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeletedObject
 {
+
+    public Feature()
+    {
+        Metas = new Dictionary<string, object>();
+    }
+
     public long FeatureCatalogId { get; set; }
     public string Name { get; set; }
 
