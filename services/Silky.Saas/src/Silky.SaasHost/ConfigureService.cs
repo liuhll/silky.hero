@@ -10,6 +10,7 @@ namespace Silky.SaasHost
         {
             services.AddSilkyCaching()
                 .AddSilkySkyApm()
+                .AddObjectMapper()
                 .AddMessagePackCodec();
             
             services.AddDatabaseAccessor(

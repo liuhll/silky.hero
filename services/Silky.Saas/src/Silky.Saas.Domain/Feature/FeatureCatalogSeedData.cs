@@ -26,6 +26,12 @@ public class FeatureCatalogSeedData : IEntitySeedData<FeatureCatalog>
             Id = 3,
             Name = "权限管理"
         });
+        
+        initData.Add(new FeatureCatalog()
+        {
+            Id = 4,
+            Name = "Saas"
+        });
         return initData;
     }
 }

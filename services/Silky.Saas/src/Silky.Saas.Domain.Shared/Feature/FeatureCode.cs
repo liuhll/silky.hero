@@ -7,4 +7,6 @@ public static class FeatureCode
     public const string EnabledAuditingLog = "EnabledAuditingLog";
 
     public const string EnabledMenuManage = "EnabledMenuManage";
+    
+    public const string EnabledSaasManage = "EnabledSaasManage";
 }

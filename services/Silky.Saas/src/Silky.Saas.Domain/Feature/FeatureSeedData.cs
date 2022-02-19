@@ -36,9 +36,19 @@ public class FeatureSeedData : IEntitySeedData<Feature>
             Id = 3,
             FeatureCatalogId = 3,
             Name = "启用菜单管理",
-            Description = "在应用层序中启动菜单管理.",
+            Description = "在应用程序中启动菜单管理.",
             FeatureType = FeatureType.Boolen,
             Code = FeatureCode.EnabledMenuManage,
+        });
+        
+        initData.Add(new Feature()
+        {
+            Id = 4,
+            FeatureCatalogId = 4,
+            Name = "启用Saas管理",
+            Description = "在应用程序中启动Saas管理.",
+            FeatureType = FeatureType.Boolen,
+            Code = FeatureCode.EnabledSaasManage,
         });
         return initData;
     }

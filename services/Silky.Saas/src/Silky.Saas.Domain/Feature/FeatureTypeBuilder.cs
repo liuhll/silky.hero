@@ -34,11 +34,11 @@ public class FeatureTypeBuilder : IEntityTypeBuilder<Feature>
             .IsRequired()
             .HasColumnName(nameof(Feature.FeatureType));
         
-        builder.Property(o => o.Metas)
+        builder.Property(o => o.Options)
             .HasConversion(
                 u => u.ToJsonString(false, false), 
-                u => u.FromJsonString<IDictionary<string, object>>())
-            .HasColumnName(nameof(Feature.Metas));
+                u => u.FromJsonString<ICollection<FeatureOption>>())
+            .HasColumnName(nameof(Feature.Options));
         
         builder.HasMany(p => p.EditionFeatures)
             .WithOne(p => p.Feature)
