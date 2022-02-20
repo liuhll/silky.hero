@@ -1,6 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
 
-import { GetFeatureCatalogModel, GetFeatureModel, GetEditionModel } from './model/editionModel';
+import { GetEditionFeatureModel, GetEditionModel } from './model/editionModel';
 import { BasicFetchResult } from '../model/baseModel';
 
 enum Api {
@@ -28,5 +28,9 @@ export const deleteEdition = (id: number) => {
 };
 
 export const getEditionById = (id: number) => {
-  return defHttp.get<GetFeatureCatalogModel>({ url: `/edition/${id}` });
+  return defHttp.get<GetEditionFeatureModel>({ url: `/edition/${id}` });
+};
+
+export const setEditionFeatures = (id: number, requestParams: any[]) => {
+  return defHttp.put({ url: `/edition/${id}/features`, params: requestParams });
 };

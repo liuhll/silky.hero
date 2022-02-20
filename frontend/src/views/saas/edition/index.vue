@@ -8,10 +8,10 @@
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看版本详情',
-              onClick: handleView.bind(null, record),
-              auth: 'Edition.LookDetail',
+              icon: 'ic:outline-featured-play-list',
+              tooltip: '设置版本功能',
+              onClick: handleSetEditionFeatures.bind(null, record),
+              auth: 'Edition.SetFeatures',
             },
             {
               icon: 'clarity:note-edit-line',
@@ -34,16 +34,27 @@
       </template>
     </BasicTable>
     <EditionDrawer @register="registerDrawer" @success="handleSuccess" />
+    <EditionFeatureDrawer
+      @register="registerEditionFeatureDrawer"
+      @success="handleSuccessSetFeatures"
+    />
   </PageWrapper>
 </template>
 
 <script lang="ts">
   import { defineComponent, ref, unref, computed, nextTick } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getEditionPageList, createEdition, updateEdition, deleteEdition } from '/@/api/edition';
+  import {
+    getEditionPageList,
+    createEdition,
+    updateEdition,
+    deleteEdition,
+    setEditionFeatures,
+  } from '/@/api/edition';
   import { columns, searchFormSchema } from './edition.data';
   import { PageWrapper } from '/@/components/Page';
   import EditionDrawer from './EditionDrawer.vue';
+  import EditionFeatureDrawer from './EditionFeatureDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
@@ -54,6 +65,7 @@
       BasicTable,
       TableAction,
       EditionDrawer,
+      EditionFeatureDrawer,
     },
     setup() {
       const searchInfo = ref({});
@@ -86,7 +98,7 @@
       const [registerTable, { reload }] = useTable(tableConfig);
 
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerEditionDetailDrawer, { openDrawer: openEditionDetailDrawer }] = useDrawer();
+      const [registerEditionFeatureDrawer, { openDrawer: openEditionFeatureDrawer }] = useDrawer();
       function handleCreate() {
         openDrawer(true, {
           isUpdate: false,
@@ -118,16 +130,30 @@
         });
       }
 
-      function handleView(record: Recordable) {
-        nextTick(() => {
-          openEditionDetailDrawer(true, record.id);
+      function handleSuccessSetFeatures(data) {
+        nextTick(async () => {
+          try {
+            loadingRef.value = true;
+            await setEditionFeatures(data.id, data.features);
+             notification.success({
+              message: `设置版本${data.name}功能成功.`,
+            });
+            loadingRef.value = false;
+            reload();
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
+
       function handleEdit(record: Recordable) {
         openDrawer(true, {
           isUpdate: true,
           record,
         });
+      }
+      function handleSetEditionFeatures(record: Recordable) {
+        openEditionFeatureDrawer(true, record.id);
       }
       function handleDelete(record: Recordable) {
         nextTick(async () => {
@@ -148,10 +174,12 @@
         registerTable,
         handleCreate,
         registerDrawer,
+        registerEditionFeatureDrawer,
         handleSuccess,
-        handleView,
         handleEdit,
         handleDelete,
+        handleSetEditionFeatures,
+        handleSuccessSetFeatures,
         searchInfo,
         loadingRef,
       };

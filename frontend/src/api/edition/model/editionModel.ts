@@ -1,3 +1,9 @@
+export interface GetEditionFeatureModel {
+  id: number;
+  name: string;
+  featureCatalogs: GetFeatureCatalogModel[];
+}
+
 export interface GetFeatureCatalogModel {
   name: string;
   features: GetFeatureModel[];

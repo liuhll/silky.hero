@@ -1,14 +1,9 @@
-import { omit } from 'lodash-es';
-import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
-import { Tag } from 'ant-design-vue';
-import { h } from 'vue';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
-import { ComponentProps } from '../../../components/Tree/src/TreeIcon';
 
 export const columns: BasicColumn[] = [
   {
