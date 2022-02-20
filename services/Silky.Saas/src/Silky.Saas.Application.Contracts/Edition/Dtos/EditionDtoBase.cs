@@ -16,5 +16,15 @@ public abstract class EditionDtoBase
     /// 版本价格
     /// </summary>
     public decimal? Price { get; set; }
-    
+
+    /// <summary>
+    /// 排序
+    /// </summary>
+    public int Sort { get; set; }
+
+    /// <summary>
+    /// 备注
+    /// </summary>
+    public string Remark { get; set; }
+
 }

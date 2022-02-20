@@ -22,6 +22,13 @@ public class EditionTypeBuilder : IEntityTypeBuilder<Edition>
         builder.Property(o => o.Price)
             .HasColumnName(nameof(Edition.Price));
         
+        builder.Property(o => o.Sort)
+            .HasColumnName(nameof(Edition.Sort));
+        
+        builder.Property(o => o.Remark)
+            .HasMaxLength(SaasConsts.MaxRemarkLength)
+            .HasColumnName(nameof(Edition.Remark));
+        
         builder.HasMany(p => p.EditionFeatures)
             .WithOne(p => p.Edition)
             .HasForeignKey(p => p.EditionId);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Saas.Application.Contracts.Edition.Dtos;
@@ -15,4 +16,6 @@ public interface IEditionDomainService
     Task DeleteAsync(long id);
     
     Task<GetEditionEditOutput> GetAsync(long id);
+    
+    Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> editionFeatures);
 }

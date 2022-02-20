@@ -22,6 +22,10 @@ public class Edition : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public string Name { get; set; }
     public decimal? Price { get; set; }
+    
+    public int Sort { get; set; }
+    
+    public string Remark { get; set; }
     public long? CreatedBy { get; set; }
     public long? UpdatedBy { get; set; }
     public bool IsDeleted { get; set; }
