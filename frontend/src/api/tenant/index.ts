@@ -1,6 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
 
-import { GetTennantModel, GetTennantPageModel } from './model/tenantModel';
+import { GetTenantModel, GetTenantPageModel } from './model/tenantModel';
 import { BasicFetchResult } from '../model/baseModel';
 
 enum Api {
@@ -11,18 +11,18 @@ enum Api {
 }
 
 export function getAllTenants() {
-  return defHttp.get<GetTennantModel[]>({ url: Api.getAllTenant }, { errorMessageMode: 'none' });
+  return defHttp.get<GetTenantModel[]>({ url: Api.getAllTenant }, { errorMessageMode: 'none' });
 }
 
 export const getTenantList = (query: any) => {
-  return defHttp.get<GetTennantModel[]>({
+  return defHttp.get<GetTenantModel[]>({
     url: Api.GetTenantList,
     params: { name: query.name },
   });
 };
 
 export const getTenantPageList = (requestParams: any) => {
-  return defHttp.get<BasicFetchResult<GetTennantPageModel>>({
+  return defHttp.get<BasicFetchResult<GetTenantPageModel>>({
     url: Api.GetTenantPage,
     params: requestParams,
   });

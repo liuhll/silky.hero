@@ -22,6 +22,10 @@ public class Edition : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public string Name { get; set; }
     public decimal? Price { get; set; }
+    
+    public int Sort { get; set; }
+    
+    public string Remark { get; set; }
     public long? CreatedBy { get; set; }
     public long? UpdatedBy { get; set; }
     public bool IsDeleted { get; set; }
@@ -30,7 +34,7 @@ public class Edition : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public void SetEditionFeature(long featureId, int featureValue)
     {
-        if (EditionFeatures.Any(p => p.FeatureId == featureId))
+        if (EditionFeatures.Any(p => p.FeatureId == featureId && p.EditionId == Id))
         {
             EditionFeatures.Single(p => p.FeatureId == featureId && p.EditionId == Id).FeatureValue = featureValue;
         }

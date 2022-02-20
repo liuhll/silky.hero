@@ -62,7 +62,7 @@ public class EditionFeatureSeedData : IEntitySeedData<EditionFeature>
         initData.Add(new ()
         {
             Id = 8,
-            EditionId = 1,
+            EditionId = 2,
             FeatureId = 4,
             FeatureValue = 0
         });
@@ -76,21 +76,21 @@ public class EditionFeatureSeedData : IEntitySeedData<EditionFeature>
         initData.Add(new ()
         {
             Id = 10,
-            EditionId = 2,
+            EditionId = 3,
             FeatureId = 2,
             FeatureValue = 1
         });
         initData.Add(new ()
         {
             Id = 11,
-            EditionId = 2,
+            EditionId = 3,
             FeatureId = 3,
             FeatureValue = 1
         });
         initData.Add(new ()
         {
             Id = 12,
-            EditionId = 1,
+            EditionId = 3,
             FeatureId = 4,
             FeatureValue = 1
         });

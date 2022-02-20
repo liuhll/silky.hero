@@ -42,9 +42,15 @@ public class EditionAppService : IEditionAppService
         var pageOutputs = await _editionDomainService.EditionRepository
             .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(), p => p.Name.Contains(input.Name))
+            .OrderByDescending(p=> p.Sort)
             .ProjectToType<GetEditionPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return pageOutputs;
+    }
+
+    public Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> inputs)
+    {
+        return _editionDomainService.SetFeaturesAsync(id, inputs);
     }
 
     public Task<GetEditionEditOutput> GetAsync(long id)
