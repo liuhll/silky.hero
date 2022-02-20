@@ -34,7 +34,7 @@ public class Edition : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
 
     public void SetEditionFeature(long featureId, int featureValue)
     {
-        if (EditionFeatures.Any(p => p.FeatureId == featureId))
+        if (EditionFeatures.Any(p => p.FeatureId == featureId && p.EditionId == Id))
         {
             EditionFeatures.Single(p => p.FeatureId == featureId && p.EditionId == Id).FeatureValue = featureValue;
         }
