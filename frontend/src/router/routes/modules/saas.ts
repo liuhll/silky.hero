@@ -22,6 +22,14 @@ const saas: AppRouteModule = {
         title: '租户管理',
       },
     },
+    {
+      path: 'edition',
+      name: 'Edition',
+      component: () => import('/@/views/saas/edition/index.vue'),
+      meta: {
+        title: '版本管理',
+      },
+    },
   ],
 };
 
