@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Security;
 using Silky.Saas.Application.Contracts.Edition.Dtos;
@@ -18,16 +19,19 @@ public interface IEditionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(SaasPermissions.Editions.Create)]
+    [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task CreateAsync(CreateEditionInput input);
-    
+
     /// <summary>
     /// 更新版本
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(SaasPermissions.Editions.Update)]
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task UpdateAsync(UpdateEditionInput input);
-    
+
     /// <summary>
     /// 删除版本信息
     /// </summary>
@@ -35,6 +39,8 @@ public interface IEditionAppService
     /// <returns></returns>
     [Authorize(SaasPermissions.Editions.Delete)]
     [HttpDelete("{id:long}")]
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task DeleteAsync(long id);
 
     /// <summary>
@@ -52,7 +58,9 @@ public interface IEditionAppService
     /// <returns></returns>
     [HttpPut("{id:long}/features")]
     [Authorize(SaasPermissions.Editions.SetFeatures)]
-    Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> inputs);
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
+    Task SetFeaturesAsync([CacheKey(0)]long id, ICollection<EditionFeatureDto> inputs);
 
     /// <summary>
     /// 通过Id获取版本信息
@@ -60,5 +68,14 @@ public interface IEditionAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    Task<GetEditionEditOutput> GetAsync(long id);
+    [GetCachingIntercept("id:{0}", IgnoreMultiTenancy = true)]
+    Task<GetEditionEditOutput> GetAsync([CacheKey(0)] long id);
+
+    /// <summary>
+    /// 获取版本列表
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("list")]
+    [GetCachingIntercept("list", IgnoreMultiTenancy = true)]
+    Task<ICollection<GetEditionOutput>> GetListAsync();
 }

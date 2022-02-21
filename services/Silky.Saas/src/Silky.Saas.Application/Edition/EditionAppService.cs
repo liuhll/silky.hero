@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
@@ -56,5 +57,14 @@ public class EditionAppService : IEditionAppService
     public Task<GetEditionEditOutput> GetAsync(long id)
     {
         return _editionDomainService.GetAsync(id);
+    }
+
+    public async Task<ICollection<GetEditionOutput>> GetListAsync()
+    {
+        return await _editionDomainService
+            .EditionRepository
+            .AsQueryable(false)
+            .ProjectToType<GetEditionOutput>()
+            .ToListAsync();
     }
 }
