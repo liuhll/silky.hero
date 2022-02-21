@@ -24,6 +24,8 @@ using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Permission.Application.Contracts.Menu;
 using Silky.Position.Application.Contracts.Position;
+using Silky.Saas.Application.Contracts.Edition;
+using Silky.Saas.Domain.Shared.Feature;
 
 namespace Silky.Identity.Domain;
 
@@ -39,6 +41,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
     private readonly IOrganizationAppService _organizationAppService;
     private readonly IPositionAppService _positionAppService;
     private readonly IMenuAppService _menuAppService;
+    private readonly IEditionAppService _editionAppService;
     private readonly ISession _session;
 
     public IdentityUserManager(IdentityUserStore store,
@@ -58,7 +61,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IRepository<IdentityClaimType> claimTypeRepository,
         IRepository<IdentityRoleOrganization> roleOrganizationRepository,
         IRepository<IdentityRoleMenu> roleMenuRepository,
-        IMenuAppService menuAppService)
+        IMenuAppService menuAppService, 
+        IEditionAppService editionAppService)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -78,6 +82,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         RoleOrganizationRepository = roleOrganizationRepository;
         _roleMenuRepository = roleMenuRepository;
         _menuAppService = menuAppService;
+        _editionAppService = editionAppService;
         _session = NullSession.Instance;
     }
 
@@ -553,5 +558,20 @@ public class IdentityUserManager : UserManager<IdentityUser>
         ThrowIfDisposed();
         await ((IdentityUserStore)Store).SetJobNumberAsync(user, jobNumber, CancellationToken);
         return await UpdateUserAsync(user);
+    }
+
+    public async Task<IdentityResult> CheckAllowUserMaxCount(IdentityUser user)
+    {
+        var userCount = await UserRepository.AsQueryable(false).CountAsync();
+        var allowUserCountFeature = await _editionAppService.GetEditionFeatureAsync(FeatureCode.AllowMaxUserCount);
+        if (allowUserCountFeature?.FeatureValue != 0 && userCount > allowUserCountFeature?.FeatureValue)
+        {
+            return IdentityResult.Failed(new IdentityError()
+            {
+                Code = "ExceededAllowMaxUserCount",
+                Description = $"超过最允许的添加的最大用户量({allowUserCountFeature.FeatureValue})",
+            });
+        }
+        return IdentityResult.Success;
     }
 }

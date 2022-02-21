@@ -44,6 +44,7 @@ public class UserAppService : IUserAppService
     {
         var user = new IdentityUser(input.UserName, input.Email, input.MobilePhone, _session.TenantId);
         await UpdateUserByInput(user, input);
+        (await UserManager.CheckAllowUserMaxCount(user)).CheckErrors();
         (await UserManager.SetDefaultRolesAsync(user)).CheckErrors();
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
     }
@@ -79,7 +80,7 @@ public class UserAppService : IUserAppService
         (await UserManager.DeleteAsync(user)).CheckErrors();
         await RemoveUserCacheAsync(id);
     }
-    
+
     public async Task<GetUserOutput> GetAsync(long id)
     {
         var user = await UserManager.GetByIdAsync(id, true);
@@ -271,39 +272,38 @@ public class UserAppService : IUserAppService
             .ToArrayAsync();
     }
 
-    [TccTransaction(ConfirmMethod = "CreateConfirmSuperUserAsync",CancelMethod = "CreateCancelSuperUserAsync")]
+    [TccTransaction(ConfirmMethod = "CreateConfirmSuperUserAsync", CancelMethod = "CreateCancelSuperUserAsync")]
     public async Task CreateSuperUserAsync(CreateSuperUserInput input)
     {
         UpdateCurrentTenantId(input.TenantId);
         var user = new IdentityUser(input.UserName, input.Email, input.MobilePhone, input.TenantId);
         user.Status = Status.Invalid;
         await UpdateUserByInput(user, input);
-        await UserManager.SetRolesAsync(user,new List<string>(){ input.RoleName });
+        await UserManager.SetRolesAsync(user, new List<string>() { input.RoleName });
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
-
     }
-    
+
     public async Task CreateConfirmSuperUserAsync(CreateSuperUserInput input)
     {
         UpdateCurrentTenantId(input.TenantId);
         var user = await UserManager.UserRepository
-            .FirstAsync(p=> p.UserName == input.UserName);
+            .FirstAsync(p => p.UserName == input.UserName);
         user.Status = Status.Valid;
-        (await  UserManager.UpdateAsync(user)).CheckErrors();
+        (await UserManager.UpdateAsync(user)).CheckErrors();
     }
-    
+
     public async Task CreateCancelSuperUserAsync(CreateSuperUserInput input)
     {
         UpdateCurrentTenantId(input.TenantId);
         var user = await UserManager.UserRepository
-            .Include(p=> p.Roles)
-            .FirstOrDefaultAsync(p=> p.UserName == input.UserName);
+            .Include(p => p.Roles)
+            .FirstOrDefaultAsync(p => p.UserName == input.UserName);
         if (user != null)
         {
             (await UserManager.DeleteAsync(user)).CheckErrors();
         }
     }
-    
+
     private void UpdateCurrentTenantId(long tenantId)
     {
         var currentTenantId = EngineContext.Current.Resolve<ICurrentTenantId>();
@@ -328,7 +328,7 @@ public class UserAppService : IUserAppService
     {
     }
 
-    
+
     [UnitOfWork]
     public async Task RemoveOrganizationUsers(long organizationId, long[] userIds)
     {
@@ -344,7 +344,8 @@ public class UserAppService : IUserAppService
         await _distributedCache.RemoveAsync(CacheKeyConsts.CurrentUserCacheName,
             string.Format(CacheKeyConsts.CurrentUserCacheKey, userId));
         await _distributedCache.RemoveAsync(typeof(GetCurrentUserDataRange), $"CurrentUserDataRange:userId:{userId}");
-        await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>), $"CurrentUserMenus:userId:{userId}");
+        await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>),
+            $"CurrentUserMenus:userId:{userId}");
         await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissioncodes:userId:{userId}");
     }
 
