@@ -9,6 +9,8 @@ public interface IEditionDomainService
 {
     IRepository<Edition> EditionRepository { get; }
     
+    IRepository<EditionFeature> EditionFeatureRepository { get; }
+    
     Task CreateAsync(CreateEditionInput input);
     
     Task UpdateAsync(UpdateEditionInput input);
@@ -18,4 +20,5 @@ public interface IEditionDomainService
     Task<GetEditionEditOutput> GetAsync(long id);
     
     Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> editionFeatures);
+    Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode);
 }

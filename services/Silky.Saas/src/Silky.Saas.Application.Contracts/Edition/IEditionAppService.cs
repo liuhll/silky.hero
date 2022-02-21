@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 using Silky.Saas.Application.Contracts.Edition.Dtos;
 using Silky.Saas.Domain.Shared;
@@ -78,4 +79,13 @@ public interface IEditionAppService
     [HttpGet("list")]
     [GetCachingIntercept("list", IgnoreMultiTenancy = true)]
     Task<ICollection<GetEditionOutput>> GetListAsync();
+
+    /// <summary>
+    /// 根据功能编码获取当前租户的功能特性
+    /// </summary>
+    /// <param name="featureCode"></param>
+    /// <returns></returns>
+   // [ProhibitExtranet]
+    [GetCachingIntercept("featureCode:{0}")]
+    Task<GetEditionFeatureOutput> GetEditionFeatureAsync([CacheKey(0)]string featureCode);
 }

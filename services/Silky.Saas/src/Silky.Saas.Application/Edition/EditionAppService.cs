@@ -32,7 +32,7 @@ public class EditionAppService : IEditionAppService
     {
         return _editionDomainService.UpdateAsync(input);
     }
-    
+
     public Task DeleteAsync(long id)
     {
         return _editionDomainService.DeleteAsync(id);
@@ -43,7 +43,7 @@ public class EditionAppService : IEditionAppService
         var pageOutputs = await _editionDomainService.EditionRepository
             .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(), p => p.Name.Contains(input.Name))
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetEditionPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
         return pageOutputs;
@@ -64,8 +64,13 @@ public class EditionAppService : IEditionAppService
         return await _editionDomainService
             .EditionRepository
             .AsQueryable(false)
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetEditionOutput>()
             .ToListAsync();
+    }
+
+    public Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode)
+    {
+        return _editionDomainService.GetEditionFeatureAsync(featureCode);
     }
 }

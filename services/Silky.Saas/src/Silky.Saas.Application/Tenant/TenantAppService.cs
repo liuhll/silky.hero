@@ -4,10 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Silky.Caching;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Enums;
+using Silky.Hero.Common.Extensions;
+using Silky.Saas.Application.Contracts.Edition.Dtos;
 using Silky.Saas.Application.Contracts.Tenant;
 using Silky.Saas.Application.Contracts.Tenant.Dtos;
 using Silky.Saas.Domain;
@@ -18,10 +22,15 @@ namespace Silky.Saas.Application.Tenant;
 public class TenantAppService : ITenantAppService
 {
     private readonly ITenantDomainService _tenantDomainService;
+    private readonly IDistributedCache _cache;
+    private readonly IDistributedCacheKeyNormalizer _distributedCacheKeyNormalizer;
 
-    public TenantAppService(ITenantDomainService tenantDomainService)
+    public TenantAppService(ITenantDomainService tenantDomainService, IDistributedCache cache,
+        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer)
     {
         _tenantDomainService = tenantDomainService;
+        _cache = cache;
+        _distributedCacheKeyNormalizer = distributedCacheKeyNormalizer;
     }
 
     [TccTransaction(ConfirmMethod = "CreateConfirmAsync", CancelMethod = "CreateCancelAsync")]
@@ -40,9 +49,10 @@ public class TenantAppService : ITenantAppService
         return _tenantDomainService.CreateCancelAsync(input);
     }
 
-    public Task UpdateAsync(UpdateTenantInput input)
+    public async Task UpdateAsync(UpdateTenantInput input)
     {
-        return _tenantDomainService.UpdateAsync(input);
+        await RemoveTenantFeatureCacheAsync(input.Id);
+        await _tenantDomainService.UpdateAsync(input);
     }
 
     public async Task<GetTenantOutput> GetAsync(long id)
@@ -67,6 +77,7 @@ public class TenantAppService : ITenantAppService
         }
 
         await _tenantDomainService.TenantRepository.DeleteAsync(tenant);
+        await RemoveTenantFeatureCacheAsync(tenant.Id);
     }
 
     public async Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input)
@@ -95,5 +106,13 @@ public class TenantAppService : ITenantAppService
             .OrderByDescending(p => p.Sort)
             .ProjectToType<GetTenantOutput>()
             .ToListAsync();
+    }
+
+    private async Task RemoveTenantFeatureCacheAsync(long tenantId)
+    {
+        await _cache.RemoveMatchKeyAsync(typeof(GetEditionFeatureOutput),
+            _distributedCacheKeyNormalizer.NormalizeTenantKey("featureCode:*",
+                typeof(GetEditionFeatureOutput).FullName,
+                tenantId));
     }
 }

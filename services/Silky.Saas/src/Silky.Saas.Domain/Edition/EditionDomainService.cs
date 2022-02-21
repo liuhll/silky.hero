@@ -3,9 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Silky.Caching;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Extensions;
 using Silky.Saas.Application.Contracts.Edition.Dtos;
 
 namespace Silky.Saas.Domain;
@@ -13,13 +18,27 @@ namespace Silky.Saas.Domain;
 public class EditionDomainService : IScopedDependency, IEditionDomainService
 {
     public IRepository<Edition> EditionRepository { get; }
+    public IRepository<EditionFeature> EditionFeatureRepository { get; }
     private readonly IRepository<FeatureCatalog> _featureCatalogRepository;
+    private readonly IRepository<Tenant> _tenantRepository;
+    private readonly IDistributedCache _cache;
+    private readonly IDistributedCacheKeyNormalizer _distributedCacheKeyNormalizer;
+    private readonly ISession _session;
 
     public EditionDomainService(IRepository<Edition> editionRepository,
-        IRepository<FeatureCatalog> featureCatalogRepository)
+        IRepository<FeatureCatalog> featureCatalogRepository,
+        IRepository<EditionFeature> editionFeatureRepository,
+        IRepository<Tenant> tenantRepository,
+        IDistributedCache cache,
+        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer)
     {
         EditionRepository = editionRepository;
+        EditionFeatureRepository = editionFeatureRepository;
+        _tenantRepository = tenantRepository;
+        _cache = cache;
+        _distributedCacheKeyNormalizer = distributedCacheKeyNormalizer;
         _featureCatalogRepository = featureCatalogRepository;
+        _session = NullSession.Instance;
     }
 
     public async Task CreateAsync(CreateEditionInput input)
@@ -44,6 +63,7 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
 
         edition = input.Adapt(edition);
         await EditionRepository.UpdateAsync(edition);
+        await RemoveEditionFeatureCache(edition.Id);
     }
 
     public async Task DeleteAsync(long id)
@@ -63,6 +83,7 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
         }
 
         await EditionRepository.DeleteAsync(edition);
+        await RemoveEditionFeatureCache(edition.Id);
     }
 
     public async Task<GetEditionEditOutput> GetAsync(long id)
@@ -98,7 +119,44 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
         }
 
         await EditionRepository.UpdateAsync(edition);
+        await RemoveEditionFeatureCache(edition.Id);
     }
+
+    public async Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode)
+    {
+        var tenant = await _tenantRepository.FindAsync(_session.TenantId.To<long>());
+        var editionFeature =
+            await EditionFeatureRepository
+                .AsQueryable(false)
+                .Include(p => p.Feature)
+                .FirstOrDefaultAsync(p =>
+                    p.EditionId == tenant.EditionId && p.Feature.Code == featureCode);
+        if (editionFeature == null)
+        {
+            return null;
+        }
+
+        var editionFeatureOutput = new GetEditionFeatureOutput()
+        {
+            FeatureId = editionFeature.Feature.Id,
+            Code = editionFeature.Feature.Code,
+            FeatureValue = editionFeature.FeatureValue
+        };
+        return editionFeatureOutput;
+    }
+
+    private async Task RemoveEditionFeatureCache(long editionId)
+    {
+        var editionTenants =
+            await _tenantRepository.AsQueryable(false).Where(p => p.EditionId == editionId).ToArrayAsync();
+        foreach (var tenant in editionTenants)
+        {
+            await _cache.RemoveMatchKeyAsync(typeof(GetEditionFeatureOutput),
+                _distributedCacheKeyNormalizer.NormalizeTenantKey("featureCode:*",
+                    typeof(GetEditionFeatureOutput).FullName, tenant.Id));
+        }
+    }
+
 
     private ICollection<GetFeatureCatalogEditOutput> SetFeatureCatalogs(List<FeatureCatalog> featureCatalogs,
         ICollection<EditionFeature> editionEditionFeatures)
