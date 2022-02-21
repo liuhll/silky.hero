@@ -6,7 +6,7 @@ using Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
 using Silky.EntityFrameworkCore.Repositories;
-using Silky.Hero.Common.Extensions;
+using Silky.Caching;
 
 namespace Silky.BasicData.Domain.Dictionary;
 
