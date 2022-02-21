@@ -129,12 +129,8 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
             await EditionFeatureRepository
                 .AsQueryable(false)
                 .Include(p => p.Feature)
-                .FirstOrDefaultAsync(p =>
+                .FirstAsync(p =>
                     p.EditionId == tenant.EditionId && p.Feature.Code == featureCode);
-        if (editionFeature == null)
-        {
-            return null;
-        }
 
         var editionFeatureOutput = new GetEditionFeatureOutput()
         {

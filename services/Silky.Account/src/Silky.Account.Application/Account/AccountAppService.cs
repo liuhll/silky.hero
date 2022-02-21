@@ -5,7 +5,6 @@ using Silky.Account.Application.Contracts.Account;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
-using Silky.Hero.Common.Dtos;
 using Silky.Identity.Domain;
 
 namespace Silky.Account.Application.Account;

@@ -85,7 +85,6 @@ public interface IEditionAppService
     /// </summary>
     /// <param name="featureCode"></param>
     /// <returns></returns>
-   // [ProhibitExtranet]
     [GetCachingIntercept("featureCode:{0}")]
     [ProhibitExtranet]
     Task<GetEditionFeatureOutput> GetEditionFeatureAsync([CacheKey(0)]string featureCode);

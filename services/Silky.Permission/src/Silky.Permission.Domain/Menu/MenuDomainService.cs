@@ -12,17 +12,23 @@ using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Permission.Application.Contracts.Menu.Dtos;
 using Silky.Permission.Domain.Shared.Menu;
+using Silky.Saas.Application.Contracts.Edition;
+using Silky.Saas.Domain.Shared.Feature;
 
 namespace Silky.Permission.Domain.Menu;
 
 public class MenuDomainService : IMenuDomainService, IScopedDependency
 {
     private readonly IRoleAppService _roleAppService;
-    public MenuDomainService(IRepository<Menu> menuRepository, 
-        IRoleAppService roleAppService)
+    private readonly IEditionAppService _editionAppService;
+
+    public MenuDomainService(IRepository<Menu> menuRepository,
+        IRoleAppService roleAppService,
+        IEditionAppService editionAppService)
     {
         MenuRepository = menuRepository;
         _roleAppService = roleAppService;
+        _editionAppService = editionAppService;
     }
 
     public IRepository<Menu> MenuRepository { get; }
@@ -75,9 +81,11 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     public async Task<ICollection<Menu>> GetTreeAsync(string name)
     {
         var menus = await MenuRepository.AsQueryable(false)
-            .Where(!name.IsNullOrEmpty(), p=> p.Name.Contains(name))
-            .OrderByDescending(p=> p.Sort)
+            .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+            .GetCurrentTenantMenus()
+            .OrderByDescending(p => p.Sort)
             .ToListAsync();
+
         return menus.BuildTree();
     }
 
@@ -97,11 +105,12 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
         await MenuRepository.DeleteAsync(childrenMenus);
     }
-    
+
     public async Task<IEnumerable<Menu>> GetChildrenMenusAsync(long menuId,
         bool includeSelf = true)
     {
-        var menus = await MenuRepository.AsQueryable()
+        var menus = await MenuRepository
+            .AsQueryable()
             .OrderByDescending(p => p.Sort).ToListAsync();
         return menus.GetChildrenMenus(menuId, includeSelf);
     }
@@ -144,7 +153,8 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             }
         }
 
-        if (!input.PermissionCode.IsNullOrEmpty() && (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
+        if (!input.PermissionCode.IsNullOrEmpty() &&
+            (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
         {
             var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
             if (exsitMenu != null)
@@ -175,7 +185,8 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             }
         }
 
-        if (!input.PermissionCode.IsNullOrEmpty() && (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
+        if (!input.PermissionCode.IsNullOrEmpty() &&
+            (menu == null || !input.PermissionCode.Equals(menu?.PermissionCode)))
         {
             var exsitMenu = await MenuRepository.FirstOrDefaultAsync(p => p.PermissionCode == input.PermissionCode);
             if (exsitMenu != null)
@@ -189,31 +200,42 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     {
         if (!includeParents)
         {
-            return await MenuRepository.AsQueryable(false).Where(p => menuIds.Contains(p.Id)).ProjectToType<GetMenuOutput>().ToListAsync();
+            return await MenuRepository
+                .AsQueryable(false)
+                .GetCurrentTenantMenus()
+                .Where(p => menuIds.Contains(p.Id))
+                .ProjectToType<GetMenuOutput>().ToListAsync();
         }
-        else 
+        else
         {
-            var allMenus = await MenuRepository.AsQueryable(false).ProjectToType<GetMenuOutput>().ToArrayAsync();
+            var allMenus = await MenuRepository
+                .AsQueryable(false)
+                .GetCurrentTenantMenus()
+                .ProjectToType<GetMenuOutput>()
+                .ToArrayAsync();
             var menus = allMenus.Where(p => menuIds.Contains(p.Id));
             var parentIds = menus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
             return GetMenusIncludeParents(allMenus, menus, parentIds)
                 .Distinct()
-                .OrderByDescending(p=> p.Sort)
+                .OrderByDescending(p => p.Sort)
                 .ToList();
         }
     }
 
-    private ICollection<GetMenuOutput> GetMenusIncludeParents(GetMenuOutput[] allMenus, IEnumerable<GetMenuOutput> menus, long[] parnetIds)
+    private ICollection<GetMenuOutput> GetMenusIncludeParents(GetMenuOutput[] allMenus,
+        IEnumerable<GetMenuOutput> menus, long[] parnetIds)
     {
         var includeParentMenus = new List<GetMenuOutput>();
         includeParentMenus.AddRange(menus);
-        if (parnetIds != null && parnetIds.Any()) 
+        if (parnetIds != null && parnetIds.Any())
         {
             var parnetMenus = allMenus.Where(p => parnetIds.Contains(p.Id));
             includeParentMenus.AddRange(parnetMenus);
-            var parnetMenuParentIds = parnetMenus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
+            var parnetMenuParentIds =
+                parnetMenus.Where(p => p.ParentId.HasValue).Select(p => p.ParentId.Value).ToArray();
             return GetMenusIncludeParents(allMenus, includeParentMenus, parnetMenuParentIds);
         }
+
         return includeParentMenus;
     }
 }

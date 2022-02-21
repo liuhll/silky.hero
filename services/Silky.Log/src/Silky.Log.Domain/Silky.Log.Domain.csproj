@@ -11,6 +11,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
+        <ProjectReference Include="..\..\..\Silky.Saas\src\Silky.Saas.Application.Contracts\Silky.Saas.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Log.Application.Contracts\Silky.Log.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Log.Domain.Shared\Silky.Log.Domain.Shared.csproj" />
     </ItemGroup>

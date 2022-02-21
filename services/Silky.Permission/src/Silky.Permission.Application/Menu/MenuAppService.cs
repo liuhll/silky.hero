@@ -45,7 +45,7 @@ public class MenuAppService : IMenuAppService
     {
         await _menuDomainService.DeleteAsync(id);
     }
-    
+
     public async Task<ICollection<GetMenuTreeOutput>> GetTreeAsync(string name)
     {
         var menuTree = await _menuDomainService.GetTreeAsync(name);
@@ -61,8 +61,10 @@ public class MenuAppService : IMenuAppService
 
     public async Task<ICollection<string>> GetPermissions(List<long> menuIds)
     {
-        var permissionCodes = await _menuDomainService.MenuRepository
+        var permissionCodes = await _menuDomainService
+            .MenuRepository
             .AsQueryable(false)
+            .GetCurrentTenantMenus()
             .Where(p => menuIds.Contains(p.Id))
             .Where(p => p.PermissionCode != null)
             .Select(p => p.PermissionCode)
