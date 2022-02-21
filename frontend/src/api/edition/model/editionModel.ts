@@ -23,3 +23,7 @@ export interface GetEditionModel {
   name: string;
   price: null;
 }
+export interface GetEditionListModel {
+  id: number;
+  name: string;
+}

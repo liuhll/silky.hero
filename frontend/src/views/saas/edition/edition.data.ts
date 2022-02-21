@@ -4,6 +4,9 @@ import { FormSchema } from '/@/components/Table';
 import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
+import { getEditionList } from '/@/api/edition';
+import { omit } from 'lodash-es';
+import { OptionsItem } from '/@/utils/model';
 
 export const columns: BasicColumn[] = [
   {
@@ -133,3 +136,18 @@ export const editionDetailSchemas: DescItem[] = [
     },
   },
 ];
+
+export const getEditionOptions = async () => {
+  const editionList = await getEditionList();
+  const editionOptions = editionList.reduce((prev, next: Recordable) => {
+    if (next) {
+      prev.push({
+        ...omit(next, ['name', 'id']),
+        label: next['name'],
+        value: next['id'],
+      });
+    }
+    return prev;
+  }, [] as OptionsItem[]);
+  return editionOptions;
+};

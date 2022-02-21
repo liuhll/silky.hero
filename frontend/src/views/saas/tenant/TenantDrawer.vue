@@ -16,7 +16,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { getTenantSchemas } from './tenant.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { useMessage } from '/@/hooks/web/useMessage';
+  import { getEditionOptions } from '../edition/edition.data';
 
   export default defineComponent({
     name: 'TenantDrawer',
@@ -26,17 +26,19 @@
 
       const tenantId = ref<Nullable<number>>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增租户' : '编辑租户'));
-      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, setProps }] =
-        useForm({
-          labelWidth: 140,
-          schemas: getTenantSchemas(unref(isUpdate)),
-          showActionButtonGroup: false,
-        });
-      const { notification } = useMessage();
-
+      const [
+        registerForm,
+        { setFieldsValue, resetFields, validate, clearValidate, setProps, updateSchema },
+      ] = useForm({
+        labelWidth: 140,
+        schemas: getTenantSchemas(unref(isUpdate)),
+        showActionButtonGroup: false,
+      });
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         isUpdate.value = !!data?.isUpdate;
         setProps({ schemas: getTenantSchemas(unref(isUpdate)) });
+        const editionListOptions = await getEditionOptions();
+        updateSchema({ field: 'editionId', componentProps: { options: editionListOptions } });
         resetFields();
         clearValidate();
         if (unref(isUpdate)) {

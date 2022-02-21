@@ -32,6 +32,11 @@ export const columns: BasicColumn[] = [
     width: 50,
   },
   {
+    title: '版本',
+    dataIndex: 'editionName',
+    width: 80,
+  },
+  {
     title: '备注',
     dataIndex: 'remark',
     width: 120,
@@ -86,6 +91,14 @@ export const getTenantSchemas = (isUpdate: boolean): FormSchema[] => {
       field: 'sort',
       component: 'InputNumber',
       label: '排序',
+      componentProps: {
+        style: 'width: 100%',
+      },
+    },
+    {
+      field: 'editionId',
+      label: '版本',
+      component: 'Select',
     },
     {
       field: 'status',
@@ -311,6 +324,10 @@ export const tenantDetailSchemas: DescItem[] = [
         return commonTagRender('red', '停用');
       }
     },
+  },
+  {
+    field: 'editionName',
+    label: '版本',
   },
   {
     field: 'remark',

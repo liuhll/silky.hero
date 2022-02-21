@@ -1,11 +1,12 @@
 import { defHttp } from '/@/utils/http/axios';
 
-import { GetEditionFeatureModel, GetEditionModel } from './model/editionModel';
+import { GetEditionFeatureModel, GetEditionListModel, GetEditionModel } from './model/editionModel';
 import { BasicFetchResult } from '../model/baseModel';
 
 enum Api {
   GetEditionPage = '/edition/page',
   Edition = '/edition',
+  GetEditionList = '/edition/list',
 }
 
 export const getEditionPageList = (requestParams: any) => {
@@ -33,4 +34,8 @@ export const getEditionById = (id: number) => {
 
 export const setEditionFeatures = (id: number, requestParams: any[]) => {
   return defHttp.put({ url: `/edition/${id}/features`, params: requestParams });
+};
+
+export const getEditionList = () => {
+  return defHttp.get<GetEditionListModel[]>({ url: Api.GetEditionList });
 };
