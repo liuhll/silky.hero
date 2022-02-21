@@ -61,10 +61,10 @@ public class MenuAppService : IMenuAppService
 
     public async Task<ICollection<string>> GetPermissions(List<long> menuIds)
     {
-        var permissionCodes = await _menuDomainService
-            .MenuRepository
-            .AsQueryable(false)
-            .GetCurrentTenantMenus()
+        var permissionCodes = await (
+                await _menuDomainService
+                    .MenuRepository
+                    .GetCurrentTenantMenus())
             .Where(p => menuIds.Contains(p.Id))
             .Where(p => p.PermissionCode != null)
             .Select(p => p.PermissionCode)

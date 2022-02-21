@@ -80,9 +80,8 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
     public async Task<ICollection<Menu>> GetTreeAsync(string name)
     {
-        var menus = await MenuRepository.AsQueryable(false)
+        var menus = await (await MenuRepository.GetCurrentTenantMenus())
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
-            .GetCurrentTenantMenus()
             .OrderByDescending(p => p.Sort)
             .ToListAsync();
 
@@ -200,17 +199,13 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     {
         if (!includeParents)
         {
-            return await MenuRepository
-                .AsQueryable(false)
-                .GetCurrentTenantMenus()
+            return await (await MenuRepository.GetCurrentTenantMenus())
                 .Where(p => menuIds.Contains(p.Id))
                 .ProjectToType<GetMenuOutput>().ToListAsync();
         }
         else
         {
-            var allMenus = await MenuRepository
-                .AsQueryable(false)
-                .GetCurrentTenantMenus()
+            var allMenus = await (await MenuRepository.GetCurrentTenantMenus())
                 .ProjectToType<GetMenuOutput>()
                 .ToArrayAsync();
             var menus = allMenus.Where(p => menuIds.Contains(p.Id));

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Silky.Core;
 using Silky.Core.Extensions;
+using Silky.EntityFrameworkCore.Repositories;
 using Silky.Permission.Domain.Shared.Menu;
 using Silky.Saas.Application.Contracts.Edition;
 using Silky.Saas.Application.Contracts.Edition.Dtos;
@@ -11,22 +12,23 @@ namespace Silky.Permission.Domain.Menu;
 
 public static class MenuRepositoryExtensions
 {
-    public static IQueryable<Menu> GetCurrentTenantMenus(this IQueryable<Menu> menuQueryable)
+    public static async Task<IQueryable<Menu>> GetCurrentTenantMenus(this IRepository<Menu> menuRepository)
     {
-        var enabledAuditingLog = GetEditionFeatureAsync(FeatureCode.EnabledAuditingLog).GetAwaiter().GetResult();
-        var enabledMenuManage = GetEditionFeatureAsync(FeatureCode.EnabledMenuManage).GetAwaiter().GetResult();
-        var enabledSaasManage = GetEditionFeatureAsync(FeatureCode.EnabledSaasManage).GetAwaiter().GetResult();
+        var enabledAuditingLog = await GetEditionFeatureAsync(FeatureCode.EnabledAuditingLog);
+        var enabledMenuManage = await GetEditionFeatureAsync(FeatureCode.EnabledMenuManage);
+        var enabledSaasManage = await GetEditionFeatureAsync(FeatureCode.EnabledSaasManage);
 
-        return menuQueryable.Where(enabledAuditingLog?.FeatureValue.To<bool>() == false,
-                p => p.Name != MenuConsts.AuditLogMenuName)
-            .Where(enabledMenuManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.MenuMenuName)
-            .Where(enabledSaasManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.SaasMenuName);
+        return menuRepository.AsQueryable(false)
+                .Where(enabledAuditingLog?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.AuditLogMenuName)
+                .Where(enabledMenuManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.MenuMenuName)
+                .Where(enabledSaasManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.SaasMenuName)
+            ;
     }
 
     private static async Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode)
     {
         var editionAppService = EngineContext.Current.Resolve<IEditionAppService>();
-        var editionFeatureOutput = await editionAppService.GetEditionFeatureAsync(FeatureCode.EnabledAuditingLog);
+        var editionFeatureOutput = await editionAppService.GetEditionFeatureAsync(featureCode);
         return editionFeatureOutput;
     }
 }
