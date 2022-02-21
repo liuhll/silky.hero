@@ -25,8 +25,8 @@ COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Id
 COPY Silky.Identity/src/Silky.Identity.Application.Contracts Silky.Identity/src/Silky.Identity.Application.Contracts
 COPY Silky.Log/src/Silky.Log.Domain.Shared Silky.Log/src/Silky.Log.Domain.Shared
 COPY Silky.Log/src/Silky.Log.Application.Contracts Silky.Log/src/Silky.Log.Application.Contracts
-COPY Silky.Tenant/src/Silky.Tenant.Domain.Shared Silky.Tenant/src/Silky.Tenant.Domain.Shared
-COPY Silky.Tenant/src/Silky.Tenant.Application.Contracts Silky.Tenant/src/Silky.Tenant.Application.Contracts
+COPY Silky.Saas/src/Silky.Saas.Domain.Shared Silky.Saas/src/Silky.Saas.Domain.Shared
+COPY Silky.Saas/src/Silky.Saas.Application.Contracts Silky.Saas/src/Silky.Saas.Application.Contracts
 COPY Silky.BasicData/src/Silky.BasicData.Domain.Shared Silky.BasicData/src/Silky.BasicData.Domain.Shared
 COPY Silky.BasicData/src/Silky.BasicData.Application.Contracts Silky.BasicData/src/Silky.BasicData.Application.Contracts
 
