@@ -64,6 +64,7 @@ public class EditionAppService : IEditionAppService
         return await _editionDomainService
             .EditionRepository
             .AsQueryable(false)
+            .OrderByDescending(p=> p.Sort)
             .ProjectToType<GetEditionOutput>()
             .ToListAsync();
     }

@@ -24,7 +24,7 @@ public class TenantAppService : ITenantAppService
         _tenantDomainService = tenantDomainService;
     }
 
-    [TccTransaction(ConfirmMethod = "CreateConfirmAsync",CancelMethod = "CreateCancelAsync")]
+    [TccTransaction(ConfirmMethod = "CreateConfirmAsync", CancelMethod = "CreateCancelAsync")]
     public Task CreateAsync(CreateTenantInput input)
     {
         return _tenantDomainService.CreateTryAsync(input);
@@ -34,7 +34,7 @@ public class TenantAppService : ITenantAppService
     {
         return _tenantDomainService.CreateConfirmAsync(input);
     }
-    
+
     public Task CreateCancelAsync(CreateTenantInput input)
     {
         return _tenantDomainService.CreateCancelAsync(input);
@@ -53,7 +53,9 @@ public class TenantAppService : ITenantAppService
             throw new UserFriendlyException($"不存在Id为{id}的租户信息");
         }
 
-        return tenant.Adapt<GetTenantOutput>();
+        var tenantOutput = tenant.Adapt<GetTenantOutput>();
+        await tenantOutput.SetEditionName();
+        return tenantOutput;
     }
 
     public async Task DeleteAsync(long id)
@@ -69,13 +71,20 @@ public class TenantAppService : ITenantAppService
 
     public async Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input)
     {
-        return await _tenantDomainService.TenantRepository
+        var page = await _tenantDomainService.TenantRepository
             .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(), p => p.Name == input.Name)
             .Where(input.Status.HasValue, p => p.Status == input.Status)
-            .OrderByDescending(p=> p.Sort)
+            .Where(input.EditionId.HasValue, p => p.EditionId == input.EditionId)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetTenantPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
+        foreach (var item in page.Items)
+        {
+            await item.SetEditionName();
+        }
+
+        return page;
     }
 
     public async Task<ICollection<GetTenantOutput>> GetAllAsync()
@@ -83,7 +92,7 @@ public class TenantAppService : ITenantAppService
         return await _tenantDomainService.TenantRepository
             .AsQueryable(false)
             .Where(p => p.Status == Status.Valid)
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetTenantOutput>()
             .ToListAsync();
     }

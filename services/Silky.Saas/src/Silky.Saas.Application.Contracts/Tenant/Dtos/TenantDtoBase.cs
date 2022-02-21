@@ -5,6 +5,7 @@ namespace Silky.Saas.Application.Contracts.Tenant.Dtos;
 
 public abstract class TenantDtoBase
 {
+    
     /// <summary>
     /// 租户名称
     /// </summary>
@@ -25,4 +26,10 @@ public abstract class TenantDtoBase
     /// 备注
     /// </summary>
     public string Remark { get; set; }
+    
+    /// <summary>
+    /// 版本Id
+    /// </summary>
+    public long EditionId { get; set; }
+    
 }
