@@ -4,68 +4,36 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="40%"
+    width="30%"
     @ok="handleSubmit"
   >
-    <!-- <BasicTree
+    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="checkeAllMenus"
+      >全选</Checkbox
+    >
+    <BasicTree
       :tree-data="menusTreeData"
       defaultExpandAll
       checkable
       multiple
       ref="treeRef"
       @change="handleCheckedMenus"
-    /> -->
-    <Checkbox
-      v-model:checked="checkAll"
-      @change="checkeAllMenus"
-      style="margin-left: 30px; margin-bottom: 20px"
-      >全选</Checkbox
-    >
-    <Tabs tab-position="left">
-      <TabPane
-        v-for="(menusTree, index) in menusTreeData"
-        :key="`${index}`"
-        :tab="`${menusTree.title}`"
-      >
-        <!-- <PageWrapper>
-          <Row :gutter="[16, 16]">
-            <Col :span="16">
-              
-            </Col>
-          </Row>
-        </PageWrapper> -->
-        <Checkbox
-          v-model:checked="checkAll"
-          @change="checkeAllMenus"
-          style="margin-left: 20px; margin-bottom: 10px"
-          >全选</Checkbox
-        >
-        <BasicTree
-          :tree-data="menusTree.children"
-          defaultExpandAll
-          checkable
-          multiple
-          style="height: 100%"
-        />
-      </TabPane>
-    </Tabs>
+    />
   </BasicDrawer>
 </template>
 
 <script lang="ts">
   import { defineComponent, ref, computed, unref, reactive, toRefs } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { PageWrapper } from '/@/components/Page';
   import { BasicTree, TreeActionType } from '/@/components/Tree/index';
   import { TreeItem } from '/@/components/Tree';
-  import { Checkbox, Tabs, TabPane, Row, Col } from 'ant-design-vue';
+  import { Checkbox } from 'ant-design-vue';
   import { treeToList } from '/@/utils/helper/treeHelper';
   import { arrayEquals } from '/@/utils';
   import { getMenuTreeList2 } from '/@/views/authorization/menu/menu.data';
   import { getRoleMenuIds } from '/@/api/role';
   export default defineComponent({
     name: 'RoleMenuDrawer',
-    components: { BasicDrawer, BasicTree, Checkbox, Tabs, TabPane, Row, Col, PageWrapper },
+    components: { BasicDrawer, BasicTree, Checkbox },
     setup(_, { emit }) {
       const getTitle = computed(() => '授权角色菜单');
       const menusTreeData = ref<TreeItem[]>([]);
@@ -94,6 +62,11 @@
         checkAllState.indeterminate = false;
         getTree().checkAll(e.target.checked);
       }
+
+      function setMenusTreeData(treeData: TreeItem[]) {
+        menusTreeData.value = treeData;
+      }
+
       function isCheckedAll(menuTree: TreeItem[], checkedMenuIds: number[]) {
         const allMenuIds = treeToList(menuTree)
           .map((item) => item.key)
@@ -112,12 +85,12 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         roleId.value = data.record.id;
         const menuTree = await getMenuTreeList2({});
-        menusTreeData.value = menuTree;
-        // const roleMenu = await getRoleMenuIds(data.record.id);
-        // getTree().setCheckedKeys(roleMenu.menuIds);
-        // const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
-        // const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
-        // setCheckAllStateStatus(indeterminate, checkedAll);
+        setMenusTreeData(menuTree);
+        const roleMenu = await getRoleMenuIds(data.record.id);
+        getTree().setCheckedKeys(roleMenu.menuIds);
+        const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
+        const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
+        setCheckAllStateStatus(indeterminate, checkedAll);
         setDrawerProps({ confirmLoading: false });
       });
 
@@ -152,15 +125,10 @@
         handleSubmit,
         registerDrawer,
         getTree,
+        setMenusTreeData,
         checkeAllMenus,
         handleCheckedMenus,
       };
     },
   });
 </script>
-
-<style>
-  .ant-tabs-content {
-    height: 100%;
-  }
-</style>
