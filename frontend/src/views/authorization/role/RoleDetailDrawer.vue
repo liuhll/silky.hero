@@ -1,68 +1,76 @@
 <template>
-  <BasicDrawer v-bind="$attrs" @register="registerDrawer" :title="getTitle" width="800px">
-    <Card title="基础信息" :bordered="false">
-      <Description
-        size="middle"
-        :column="2"
-        :data="roleDetail"
-        :schema="roleDetailSchemas"
-        class="enter-y"
-      />
-    </Card>
-    <Card title="授权信息" :bordered="false">
-      <Row :gutter="24">
-        <Col :span="12">
-          <div>菜单权限</div>
-          <BasicTree :tree-data="menusTreeData" ref="menuTreeRef" />
-        </Col>
-        <Col :span="12">
-          <div>数据权限: {{ dataRangeText }}</div>
-          <List
-            v-if="showCustomOrganizationDataRanges"
-            :data-source="roleDetail.customOrganizationDataRanges"
-            bordered
-            style="margin-top: 10px"
-          >
-            <template #renderItem="{ item }">
-              <ListItem>{{ item.name }}</ListItem>
-            </template>
-          </List>
-        </Col>
-      </Row>
-    </Card>
+  <BasicDrawer
+    v-bind="$attrs"
+    @register="registerDrawer"
+    :title="getTitle"
+    width="800px"
+    destroyOnClose
+  >
+    <Tabs>
+      <TabPane key="1" tab="基础信息">
+        <Description
+          size="middle"
+          :column="2"
+          :data="roleDetail"
+          :schema="roleDetailSchemas"
+          class="enter-y"
+        />
+      </TabPane>
+      <TabPane key="2" tab="菜单权限">
+        <Empty v-if="menusTreeData.length <= 0" />
+        <AuthorizationMenu
+          v-if="menusTreeData.length > 0"
+          :checkable="false"
+          :tree-items="menusTreeData"
+        />
+      </TabPane>
+      <TabPane key="3" tab="数据权限">
+        <div style="margin-left: 20px; margin-top: 5px">数据权限: {{ dataRangeText }}</div>
+        <List
+          v-if="showCustomOrganizationDataRanges"
+          :data-source="roleDetail.customOrganizationDataRanges"
+          bordered
+          style="margin-left: 20px; margin-top: 15px"
+        >
+          <template #renderItem="{ item }">
+            <ListItem>{{ item.name }}</ListItem>
+          </template>
+        </List>
+      </TabPane>
+    </Tabs>
   </BasicDrawer>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicTree, TreeActionType } from '/@/components/Tree/index';
-  import { Card, Row, Col, List, ListItem } from 'ant-design-vue';
+  import { Tabs, TabPane, List, ListItem, Empty } from 'ant-design-vue';
   import { Description } from '/@/components/Description/index';
-  import { TreeItem } from '/@/components/Tree';
   import { roleDetailSchemas } from './role.data';
   import { DataRange } from '/@/utils/dataRangeUtil';
   import { treeMap } from '/@/utils/helper/treeHelper';
   import { getRoleDetailById } from '/@/api/role';
+  import { AuthorizationMenu } from '../components/AuthorizationMenu/index';
+  import { TreeItem } from '/@/components/Tree';
 
   export default defineComponent({
     name: 'RoleDetailDrawer',
-    components: { BasicDrawer, Card, Description, Row, Col, BasicTree, List, ListItem },
+    components: {
+      BasicDrawer,
+      Description,
+      Tabs,
+      TabPane,
+      AuthorizationMenu,
+      List,
+      ListItem,
+      Empty,
+    },
     setup() {
       const getTitle = ref('角色');
       const roleDetail = ref();
-      const menuTreeRef = ref<Nullable<TreeActionType>>(null);
-      const menusTreeData = ref<TreeItem[]>([]);
       const dataRangeText = ref<string>();
       const showCustomOrganizationDataRanges = ref<boolean>(false);
-
-      function getMenuTree() {
-        const tree = unref(menuTreeRef);
-        if (!tree) {
-          throw new Error('tree is null!');
-        }
-        return tree;
-      }
+      const menusTreeData = ref<TreeItem[]>([]);
 
       function setDataRange(dataRange: DataRange) {
         showCustomOrganizationDataRanges.value = dataRange === DataRange.CustomOrganization;
@@ -83,9 +91,11 @@
         }
         dataRangeText.value = text;
       }
-
-      function setMenusTreeData(menus: any[]) {
-        menusTreeData.value = treeMap(menus, {
+      const [registerDrawer] = useDrawerInner(async (id) => {
+        const data = await getRoleDetailById(id);
+        getTitle.value = data.realName;
+        roleDetail.value = data;
+        menusTreeData.value = treeMap(data.menus, {
           conversion: (node: any) => {
             return {
               title: node.title,
@@ -94,25 +104,24 @@
             };
           },
         });
-      }
-
-      const [registerDrawer] = useDrawerInner(async (id) => {
-        const data = await getRoleDetailById(id);
-        getTitle.value = data.realName;
-        roleDetail.value = data;
-        setMenusTreeData(data.menus);
         setDataRange(data.dataRange);
       });
       return {
+        registerDrawer,
         getTitle,
         roleDetail,
         roleDetailSchemas,
-        menuTreeRef,
         menusTreeData,
-        dataRangeText,
         showCustomOrganizationDataRanges,
-        registerDrawer,
+        dataRangeText,
       };
     },
   });
 </script>
+
+<style>
+  .ant-tabs-content {
+    height: 100%;
+    min-height: 200px;
+  }
+</style>

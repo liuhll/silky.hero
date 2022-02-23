@@ -63,7 +63,7 @@
       @success="handleSuccessAuthorizeRoleData"
       ref="roleDataDrawerRef"
     />
-    <RoleDetailDrawer @register="registerRoleDetailDrawer" ref="roleDetailDrawerRef" />
+    <RoleDetailDrawer @register="registerRoleDetailDrawer" />
   </PageWrapper>
 </template>
 
@@ -143,12 +143,6 @@
         setMenusTreeData: (treeData: TreeItem[]) => void;
         setCheckAllStateStatus: (indeterminate: boolean, checkAll: boolean) => void;
       }>('roleMenuDrawerRef');
-
-      const roleDetailDrawerRef = ref<{
-        getMenuTree: () => any;
-        setMenusTreeData: (treeData: TreeItem[]) => void;
-        setDataRange: (dataRange) => void;
-      }>('roleDetailDrawerRef');
 
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerRoleMenuDrawer, { openDrawer: openRoleMenuDrawer }] = useDrawer();
@@ -273,7 +267,6 @@
         handleSuccessAuthorizeRoleData,
         searchInfo,
         roleMenuDrawerRef,
-        roleDetailDrawerRef,
         loadingRef,
       };
     },
