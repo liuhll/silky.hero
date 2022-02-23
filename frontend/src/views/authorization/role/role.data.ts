@@ -11,6 +11,7 @@ import { formatToDate } from '/@/utils/dateUtil';
 import { DataRange } from '/@/utils/dataRangeUtil';
 import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
+import { DataNode } from 'ant-design-vue/lib/tree';
 
 export const columns: BasicColumn[] = [
   {
@@ -259,3 +260,12 @@ export const roleDetailSchemas: DescItem[] = [
     },
   },
 ];
+
+export type RoleItem = {
+  group: String;
+  checkNum: Number;
+  checkAll: Boolean;
+  indeterminate: Boolean;
+  treeData: DataNode[] | undefined;
+  checkedMenuIds: Number[];
+};

@@ -7,45 +7,36 @@
     width="40%"
     @ok="handleSubmit"
   >
-    <!-- <BasicTree
-      :tree-data="menusTreeData"
-      defaultExpandAll
-      checkable
-      multiple
-      ref="treeRef"
-      @change="handleCheckedMenus"
-    /> -->
     <Checkbox
       v-model:checked="checkAll"
-      @change="checkeAllMenus"
+      :indeterminate="indeterminate"
+      @change="handldCheckAllMenus"
       style="margin-left: 30px; margin-bottom: 20px"
       >全选</Checkbox
     >
     <Tabs tab-position="left">
       <TabPane
-        v-for="(menusTree, index) in menusTreeData"
+        v-for="(roleItem, index) in roleItems"
         :key="`${index}`"
-        :tab="`${menusTree.title}`"
+        :tab="`${roleItem.group}(${roleItem.checkNum})`"
       >
-        <!-- <PageWrapper>
-          <Row :gutter="[16, 16]">
-            <Col :span="16">
-              
-            </Col>
-          </Row>
-        </PageWrapper> -->
         <Checkbox
-          v-model:checked="checkAll"
-          @change="checkeAllMenus"
+          v-model:checked="roleItem.checkAll"
+          :indeterminate="roleItem.indeterminate"
           style="margin-left: 20px; margin-bottom: 10px"
+          @change="handldCheckGroupMenus(roleItem)"
           >全选</Checkbox
         >
         <BasicTree
-          :tree-data="menusTree.children"
+          :tree-data="roleItem.treeData"
+          :checkedKeys="roleItem.checkedMenuIds"
+          :ref="`treeRef${index}`"
+          @check="(k, e) => handleCheckMenus(k, e, roleItem)"
           defaultExpandAll
+          :clickRowToExpand="false"
           checkable
+          :selectable="false"
           multiple
-          style="height: 100%"
         />
       </TabPane>
     </Tabs>
@@ -55,89 +46,118 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref, reactive, toRefs } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { PageWrapper } from '/@/components/Page';
-  import { BasicTree, TreeActionType } from '/@/components/Tree/index';
+  import { BasicTree } from '/@/components/Tree/index';
   import { TreeItem } from '/@/components/Tree';
-  import { Checkbox, Tabs, TabPane, Row, Col } from 'ant-design-vue';
+  import { Checkbox, Tabs, TabPane } from 'ant-design-vue';
   import { treeToList } from '/@/utils/helper/treeHelper';
-  import { arrayEquals } from '/@/utils';
   import { getMenuTreeList2 } from '/@/views/authorization/menu/menu.data';
   import { getRoleMenuIds } from '/@/api/role';
+  import { RoleItem } from './role.data';
+  import { DataNode } from 'ant-design-vue/lib/tree';
   export default defineComponent({
     name: 'RoleMenuDrawer',
-    components: { BasicDrawer, BasicTree, Checkbox, Tabs, TabPane, Row, Col, PageWrapper },
+    components: { BasicDrawer, BasicTree, Checkbox, Tabs, TabPane },
     setup(_, { emit }) {
       const getTitle = computed(() => '授权角色菜单');
-      const menusTreeData = ref<TreeItem[]>([]);
-      const treeRef = ref<Nullable<TreeActionType>>(null);
+      // const menusTreeData = ref<TreeItem[]>([]);
       const roleId = ref<Nullable<number>>();
-
+      const roleItems = ref<RoleItem[]>([]);
       const checkAllState = reactive({
         indeterminate: false,
         checkAll: false,
       });
 
-      function getTree() {
-        const tree = unref(treeRef);
-        if (!tree) {
-          throw new Error('tree is null!');
-        }
-        return tree;
-      }
-
-      function setCheckAllStateStatus(indeterminate: boolean, checkAll: boolean) {
+  
+      function setCheckAllStateStatus() {
+        const checkAll =
+          unref(roleItems).filter((item) => item.checkAll === true).length ===
+          unref(roleItems).length;
+        const indeterminate =
+          !checkAll && unref(roleItems).filter((item) => item.checkAll === true).length > 0;
         checkAllState.indeterminate = indeterminate;
         checkAllState.checkAll = checkAll;
       }
 
-      function checkeAllMenus(e: any) {
-        checkAllState.indeterminate = false;
-        getTree().checkAll(e.target.checked);
-      }
-      function isCheckedAll(menuTree: TreeItem[], checkedMenuIds: number[]) {
-        const allMenuIds = treeToList(menuTree)
-          .map((item) => item.key)
-          .sort((item1, item2) => {
-            return item1 - item2;
-          });
+      function handldCheckAllMenus(e: any) {
+        debugger
+        if (e.target.isChecked) {
+          for(const roleItem in roleItems.value) {
 
-        return arrayEquals(
-          allMenuIds,
-          checkedMenuIds.sort((item1, item2) => {
-            return item1 - item2;
-          }),
-        );
+          }
+        }
+      }
+
+      function getRoleCheckedMenuInfo(dataNode: DataNode[], menuIds: Number[]) {
+        const roleCheckedMenuInfo: any = {};
+        const dataNodeList = treeToList(dataNode);
+        roleCheckedMenuInfo.menuIds = dataNodeList
+          .filter((item) => menuIds.indexOf(item.key) > 0)
+          .map((item) => item.key);
+        roleCheckedMenuInfo.checkAll = roleCheckedMenuInfo.menuIds.length === dataNodeList.length;
+        roleCheckedMenuInfo.indeterminate =
+          roleCheckedMenuInfo.menuIds.length > 0 && roleCheckedMenuInfo.checkAll !== true;
+        roleCheckedMenuInfo.checkNum = roleCheckedMenuInfo.menuIds.length;
+        return roleCheckedMenuInfo;
+      }
+
+      function createRoleItem(menuTree: TreeItem, menuIds: Number[]) {
+        let roleItem: RoleItem = {
+          group: menuTree.title,
+          treeData: menuTree.children,
+        };
+        const roleCheckedMenuInfo: any = getRoleCheckedMenuInfo(menuTree.children, menuIds);
+        roleItem.checkNum = roleCheckedMenuInfo.checkNum;
+        roleItem.indeterminate = roleCheckedMenuInfo.indeterminate;
+        roleItem.checkAll = roleCheckedMenuInfo.checkAll;
+        roleItem.checkedMenuIds = roleCheckedMenuInfo.menuIds;
+        return roleItem;
+      }
+
+      function createRoleItems(menuTrees: TreeItem[], menuIds: Number[]) {
+        const roleItems: RoleItem[] = [];
+        for (const menuTree of menuTrees) {
+          const roleItem: RoleItem = createRoleItem(menuTree, menuIds);
+          roleItems.push(roleItem);
+        }
+        return roleItems;
+      }
+
+      function handldCheckGroupMenus(roleItem: RoleItem) {
+        if (roleItem.checkAll) {
+          roleItem.checkedMenuIds = treeToList(roleItem.treeData).map((item) => item.key);
+        } else {
+          roleItem.checkedMenuIds = [];
+        }
+        roleItem.checkNum = roleItem.checkedMenuIds.length;
+        roleItem.indeterminate = roleItem.checkedMenuIds.length > 0 && roleItem.checkAll !== true;
+        setCheckAllStateStatus();
+      }
+
+      function handleCheckMenus(
+        checkedKeys,
+        e: { checked: Boolean; checkedNodes; node; event },
+        roleItem,
+      ) {
+        roleItem.checkedMenuIds = checkedKeys;
+        roleItem.checkNum = roleItem.checkedMenuIds.length;
+        roleItem.checkAll = roleItem.checkNum === treeToList(roleItem.treeData).length;
+        roleItem.indeterminate = roleItem.checkedMenuIds.length > 0 && roleItem.checkAll !== true;
+        setCheckAllStateStatus();
       }
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         roleId.value = data.record.id;
         const menuTree = await getMenuTreeList2({});
-        menusTreeData.value = menuTree;
-        // const roleMenu = await getRoleMenuIds(data.record.id);
-        // getTree().setCheckedKeys(roleMenu.menuIds);
-        // const checkedAll = isCheckedAll(menuTree, roleMenu.menuIds);
-        // const indeterminate = !checkedAll && roleMenu.menuIds.length > 0;
-        // setCheckAllStateStatus(indeterminate, checkedAll);
+        const roleMenu = await getRoleMenuIds(data.record.id);
+        roleItems.value = createRoleItems(menuTree, roleMenu.menuIds);
+        setCheckAllStateStatus();
         setDrawerProps({ confirmLoading: false });
       });
-
-      function handleCheckedMenus(keys: number[]) {
-        const allMenuIds = treeToList(unref(menusTreeData))
-          .map((item) => item.key)
-          .sort((item1, item2) => item1 - item2);
-        const isCheckedAll = arrayEquals(
-          allMenuIds,
-          keys.sort((item1, item2) => item1 - item2),
-        );
-        checkAllState.checkAll = isCheckedAll;
-        checkAllState.indeterminate = !isCheckedAll && keys.length > 0;
-      }
 
       async function handleSubmit() {
         try {
           setDrawerProps({ confirmLoading: true });
-          const checkedMenuIds = getTree().getCheckedKeys();
-          emit('success', { id: unref(roleId), menuIds: checkedMenuIds });
+        //  emit('success', { id: unref(roleId), menuIds: checkedMenuIds });
           closeDrawer();
         } finally {
           setDrawerProps({ confirmLoading: false });
@@ -145,15 +165,15 @@
       }
       return {
         getTitle,
-        menusTreeData,
-        treeRef,
+        roleItems,
         setCheckAllStateStatus,
+        handldCheckGroupMenus,
+        handleCheckMenus,
+        handldCheckAllMenus,
         ...toRefs(checkAllState),
         handleSubmit,
         registerDrawer,
-        getTree,
         checkeAllMenus,
-        handleCheckedMenus,
       };
     },
   });
