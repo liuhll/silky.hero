@@ -260,12 +260,3 @@ export const roleDetailSchemas: DescItem[] = [
     },
   },
 ];
-
-export type RoleItem = {
-  group: String;
-  checkNum: Number;
-  checkAll: Boolean;
-  indeterminate: Boolean;
-  treeData: DataNode[] | undefined;
-  checkedMenuIds: Number[];
-};
