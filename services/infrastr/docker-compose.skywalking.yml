@@ -5,7 +5,7 @@ services:
     container_name: elasticsearch
     restart: always
     ports:
-      - 9200:9200
+      - 9201:9200
     environment:
       discovery.type: single-node
       TZ: Asia/Shanghai
