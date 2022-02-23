@@ -8,6 +8,7 @@
     :title="getTitle"
     :min-height="25"
     width="400px"
+    destroyOnClose
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />

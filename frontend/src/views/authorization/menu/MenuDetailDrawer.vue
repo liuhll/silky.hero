@@ -1,5 +1,11 @@
 <template>
-  <BasicDrawer v-bind="$attrs" @register="registerDrawer" :title="getTitle" width="700px">
+  <BasicDrawer
+    v-bind="$attrs"
+    @register="registerDrawer"
+    :title="getTitle"
+    width="700px"
+    destroyOnClose
+  >
     <Description
       size="middle"
       :column="2"

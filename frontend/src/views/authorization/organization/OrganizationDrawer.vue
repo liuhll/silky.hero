@@ -6,6 +6,7 @@
     @ok="handleSubmit"
     showFooter
     width="600px"
+    destroyOnClose
   >
     <BasicForm @register="registerForm" />
   </BasicDrawer>

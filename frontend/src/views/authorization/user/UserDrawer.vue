@@ -5,6 +5,7 @@
     showFooter
     :title="getTitle"
     width="40%"
+    destroyOnClose
     @ok="handleSubmit"
   >
     <Card title="基础信息" :bordered="false">

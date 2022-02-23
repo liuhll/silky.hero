@@ -1,5 +1,11 @@
 <template>
-  <BasicDrawer v-bind="$attrs" @register="registerDrawer" :title="getTitle" width="50%">
+  <BasicDrawer
+    v-bind="$attrs"
+    @register="registerDrawer"
+    :title="getTitle"
+    width="50%"
+    destroyOnClose
+  >
     <Tabs>
       <TabPane key="1" tab="详情">
         <Card title="基础信息" :bordered="false">

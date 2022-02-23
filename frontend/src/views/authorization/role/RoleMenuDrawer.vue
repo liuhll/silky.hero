@@ -5,6 +5,7 @@
     showFooter
     :title="getTitle"
     width="40%"
+    destroyOnClose
     @ok="handleSubmit"
   >
     <AuthorizationMenu :checkable="true" ref="menuRef" />

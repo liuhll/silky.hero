@@ -6,6 +6,7 @@
     @ok="handleSubmit"
     showFooter
     :width="800"
+    destroyOnClose
   >
     <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="650">
       <template #position="{ record }">

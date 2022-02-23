@@ -6,6 +6,7 @@
     :title="getTitle"
     width="30%"
     @ok="handleSubmit"
+    destroyOnClose
   >
     <BasicForm @register="registerForm" />
   </BasicDrawer>
