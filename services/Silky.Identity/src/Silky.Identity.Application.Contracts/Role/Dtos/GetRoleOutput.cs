@@ -10,4 +10,5 @@ public class GetRoleOutput : RoleDtoBase
     /// 数据权限范围
     /// </summary>
     public DataRange DataRange { get; set; }
+    
 }

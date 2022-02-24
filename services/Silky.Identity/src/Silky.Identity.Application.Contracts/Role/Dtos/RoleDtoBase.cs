@@ -43,4 +43,9 @@ public abstract class RoleDtoBase
     /// 是否公共角色
     /// </summary>
     public bool IsPublic { get; set; }
+    
+    /// <summary>
+    /// 是否静态角色
+    /// </summary>
+    public bool IsStatic { get; set; }
 }

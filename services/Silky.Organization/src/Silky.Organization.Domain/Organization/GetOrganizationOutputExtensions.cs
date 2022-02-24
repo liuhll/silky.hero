@@ -17,6 +17,7 @@ public static class GetOrganizationOutputExtensions
             roleOutput.RealName = roleInfo.RealName;
             roleOutput.Status = roleInfo.Status;
             roleOutput.IsDefault = roleInfo.IsDefault;
+            roleOutput.IsStatic = roleInfo.IsStatic;
             roleOutput.IsPublic = roleInfo.IsPublic;
         }
     }

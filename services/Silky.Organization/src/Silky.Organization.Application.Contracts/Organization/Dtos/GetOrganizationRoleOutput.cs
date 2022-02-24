@@ -12,4 +12,5 @@ public class GetOrganizationRoleOutput
     public Status Status { get; set; }
     public bool IsDefault { get; set; }
     public bool IsPublic { get; set; }
+    public bool IsStatic { get; set; }
 }
