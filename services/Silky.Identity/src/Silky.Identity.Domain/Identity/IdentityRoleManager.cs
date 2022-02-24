@@ -86,7 +86,7 @@ public class IdentityRoleManager : RoleManager<IdentityRole>
     {
         if (role.IsStatic)
         {
-            throw new BusinessException("静态角色名称不允许删除");
+            throw new BusinessException("静态角色不允许删除");
         }
 
         return await base.DeleteAsync(role);
