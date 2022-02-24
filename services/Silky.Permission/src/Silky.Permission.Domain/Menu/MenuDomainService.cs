@@ -35,6 +35,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
 
     public async Task CreateAsync(CreateMenuInput input)
     {
+        await CheckHasMenuPermissionAsync();
         switch (input.Type)
         {
             case MenuType.Catalog:
@@ -61,6 +62,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
             throw new UserFriendlyException($"不存在Id为{input.Id}菜单");
         }
 
+        await CheckHasMenuPermissionAsync();
         switch (input.Type)
         {
             case MenuType.Catalog:
@@ -95,7 +97,7 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         {
             throw new UserFriendlyException($"不存在Id为{id}的菜单信息");
         }
-
+        await CheckHasMenuPermissionAsync();
         var childrenMenus = await GetChildrenMenusAsync(id);
         if (await _roleAppService.CheckHasMenusAsync(childrenMenus.Select(p => p.Id).ToArray()))
         {
@@ -232,5 +234,14 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
         }
 
         return includeParentMenus;
+    }
+
+    private async Task CheckHasMenuPermissionAsync()
+    {
+        var editionFeature = await _editionAppService.GetEditionFeatureAsync(FeatureCode.EnabledMenuManage);
+        if (editionFeature?.FeatureValue.To<bool>() == false)
+        {
+            throw new BusinessException("您没有管理菜单的权限");
+        }
     }
 }
