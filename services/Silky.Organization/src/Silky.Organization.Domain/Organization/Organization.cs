@@ -16,6 +16,7 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
         ConcurrencyStamp = Guid.NewGuid().ToString();
         Children = new List<Organization>();
         OrganizationRoles = new List<OrganizationRole>();
+        OrganizationPositions = new List<OrganizationPosition>();
     }
 
     public long? ParentId { get; set; }
@@ -35,6 +36,8 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
     public virtual ICollection<Organization> Children { get; set; }
 
     public virtual ICollection<OrganizationRole> OrganizationRoles { get; set; }
+    
+    public virtual ICollection<OrganizationPosition> OrganizationPositions { get; set; }
 
     public void SetRoles(params long[] roleIds)
     {
@@ -51,4 +54,20 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
             });
         }
     }
+    
+    public void SetPositions(params long[] positionIds)
+        {
+            foreach (var positionId in positionIds)
+            {
+                if (OrganizationPositions.Any(p=> p.PositionId == positionId))
+                {
+                    continue;
+                }
+                OrganizationPositions.Add(new OrganizationPosition()
+                {
+                    OrganizationId = Id,
+                    PositionId = positionId
+                });
+            }
+        }
 }

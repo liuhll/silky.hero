@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Organization.EntityFrameworkCore.DbContexts;
 
@@ -10,9 +11,10 @@ using Silky.Organization.EntityFrameworkCore.DbContexts;
 namespace Silky.Organization.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20220224091216_v1.11")]
+    partial class v111
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +102,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "453e2dc3-1f53-4569-898d-1921f056f0ee",
+                            ConcurrencyStamp = "026508bb-feb1-4e96-972b-1b7a02fdd7af",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero社区",
@@ -111,7 +113,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "9faffd89-61c2-4bfb-9c87-d6a44ea9655d",
+                            ConcurrencyStamp = "4e773015-de56-4374-8a57-19a2e2f7ccf4",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero开发部",
@@ -124,7 +126,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "53b179af-17e0-40f8-aefb-aafa83e10bbe",
+                            ConcurrencyStamp = "36489d84-fe2e-4a03-a11f-3bba1f71a5da",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero后端开发部",
@@ -137,7 +139,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 4L,
-                            ConcurrencyStamp = "2ee639ef-a240-4081-8bdb-4f1ecee598ba",
+                            ConcurrencyStamp = "49c871c9-cc47-46f7-a4f4-fe59d3e9e23c",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero前端开发部",
@@ -150,7 +152,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 5L,
-                            ConcurrencyStamp = "6b1ef995-dd72-4516-9f2a-ca468c279e42",
+                            ConcurrencyStamp = "9e7d55cf-00bf-4850-811d-08da44be5c71",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero测试部",
@@ -163,7 +165,7 @@ namespace Silky.Organization.Database.Migrations.Migrations
                         new
                         {
                             Id = 6L,
-                            ConcurrencyStamp = "d1b47f77-d3bf-4745-9c25-9383de07c42b",
+                            ConcurrencyStamp = "3db43494-ba6d-4429-9e87-5eb415d7eb6a",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Name = "Silky.Hero产品部",
