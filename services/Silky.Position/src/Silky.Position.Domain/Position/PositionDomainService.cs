@@ -61,12 +61,16 @@ public class PositionDomainService : IPositionDomainService
         {
             throw new UserFriendlyException($"不存在id为{id}的职位信息");
         }
+        if (position.IsStatic)
+        {
+            throw new UserFriendlyException($"静态职位不允许删除");
+        }
 
         if (await _userAppService.HasPositionUsersAsync(id))
         {
             throw new UserFriendlyException($"该职位存在用户,无法删除");
         }
-
+        
         await PositionRepository.DeleteAsync(position);
     }
 }
