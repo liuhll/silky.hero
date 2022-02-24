@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
-using Silky.EntityFrameworkCore.Extensions;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
@@ -14,6 +12,8 @@ using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain;
+using Silky.Position.Application.Contracts.Position;
+using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Transaction.Tcc;
 
 namespace Silky.Organization.Application.Organization;
@@ -23,18 +23,21 @@ public class OrganizationAppService : IOrganizationAppService
     private readonly IOrganizationDomainService _organizationDomainService;
     private readonly IUserAppService _userAppService;
     private readonly IRoleAppService _roleAppService;
+    private readonly IPositionAppService _positionAppService;
     private readonly IRepository<OrganizationRole> _organizationRoleRepository;
 
     public OrganizationAppService(
         IOrganizationDomainService organizationDomainService,
         IUserAppService userAppService,
         IRoleAppService roleAppService,
+        IPositionAppService positionAppService,
         IRepository<OrganizationRole> organizationRoleRepository)
     {
         _organizationDomainService = organizationDomainService;
         _userAppService = userAppService;
         _roleAppService = roleAppService;
         _organizationRoleRepository = organizationRoleRepository;
+        _positionAppService = positionAppService;
     }
 
     public Task CreateAsync(CreateOrganizationInput input)
@@ -113,7 +116,7 @@ public class OrganizationAppService : IOrganizationAppService
     {
         return _roleAppService.GetAllocationOrganizationRoleListAsync();
     }
-
+    
     public async Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds)
     {
         return await _organizationRoleRepository
@@ -122,12 +125,12 @@ public class OrganizationAppService : IOrganizationAppService
             .Select(p => p.RoleId)
             .ToArrayAsync();
     }
-
-    public async Task SetAllocationRoleListAsync(long id, long[] roleIds)
+    
+    public Task SetAllocationRoleListAsync(long id, long[] roleIds)
     {
-        await _organizationDomainService.SetAllocationRoleListAsync(id, roleIds);
+        return _organizationDomainService.SetAllocationRoleListAsync(id, roleIds);
     }
-
+    
     public Task<PagedList<GetOrganizationUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
     {
         return _userAppService.GetOrganizationUserPageAsync(id, input);

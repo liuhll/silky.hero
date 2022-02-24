@@ -107,7 +107,7 @@ public interface IRoleAppService
     [HttpGet("datarange/{id:long}")]
     Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id);
 
-   // Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name);
+    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name);
 
     /// <summary>
     /// 分页查询角色信息

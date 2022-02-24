@@ -19,8 +19,6 @@ public class Position : FullAuditedEntity, IHasConcurrencyStamp
     public string Remark { get; set; }
 
     public virtual bool IsStatic { get; set; }
-
-    public virtual bool IsPublic { get; set; }
     
     public Status Status { get; set; }
     

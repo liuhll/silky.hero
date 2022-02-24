@@ -140,6 +140,18 @@ public class RoleAppService : IRoleAppService
         return role.Adapt<GetRoleDataRangeOutput>();
     }
 
+    public async Task<ICollection<GetRoleOutput>> GetListAsync(string realName, string name)
+    {
+        return await _roleManager.RoleRepository
+            .AsQueryable(false)
+            .Where(!name.IsNullOrEmpty(),p => p.Name.Contains(name))
+            .Where(!realName.IsNullOrEmpty(),p => p.RealName.Contains(realName))
+            .OrderByDescending(p => p.Sort)
+            .ThenByDescending(p => p.CreatedTime)
+            .ProjectToType<GetRoleOutput>()
+            .ToListAsync();
+    }
+
     public async Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input)
     {
         var pageRoles = await _roleManager.RoleRepository
@@ -244,16 +256,4 @@ public class RoleAppService : IRoleAppService
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
         }
     }
-
-    // public async Task<ICollection<GetRoleOutput>> GetListAsync(string realName, string name)
-    // {
-    //     var roleOutputPage = await _roleManager
-    //         .RoleRepository
-    //         .AsQueryable(false)
-    //         .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
-    //         .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
-    //         .ProjectToType<GetRoleOutput>()
-    //         .ToListAsync();
-    //     return roleOutputPage;
-    // }
 }

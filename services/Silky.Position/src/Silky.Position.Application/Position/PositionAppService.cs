@@ -7,6 +7,7 @@ using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Enums;
+using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Position.Domain;
@@ -16,6 +17,7 @@ namespace Silky.Position.Application.Position;
 public class PositionAppService : IPositionAppService
 {
     private readonly IPositionDomainService _positionDomainService;
+    private readonly IOrganizationAppService _organizationAppService;
 
     public PositionAppService(IPositionDomainService positionDomainService)
     {
@@ -54,7 +56,7 @@ public class PositionAppService : IPositionAppService
             .AsQueryable(false)
             .Where(!input.Name.IsNullOrEmpty(), p => p.Name.Contains(input.Name))
             .Where(input.Status.HasValue, p => p.Status == input.Status)
-            .OrderByDescending(p=> p.Sort)
+            .OrderByDescending(p => p.Sort)
             .ProjectToType<GetPositionPageOutput>()
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
@@ -69,7 +71,6 @@ public class PositionAppService : IPositionAppService
         return await _positionDomainService.PositionRepository
             .AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
-            //.Where(p => p.Status == Status.Valid)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }

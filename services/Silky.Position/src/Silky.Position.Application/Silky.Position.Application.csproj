@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
     <ProjectReference Include="..\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />
     <ProjectReference Include="..\Silky.Position.Domain\Silky.Position.Domain.csproj" />
   </ItemGroup>

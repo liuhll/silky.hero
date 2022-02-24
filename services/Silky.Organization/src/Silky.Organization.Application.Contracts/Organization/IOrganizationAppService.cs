@@ -5,6 +5,7 @@ using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain.Shared;
+using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
@@ -128,7 +129,7 @@ public interface IOrganizationAppService
     [HttpPut("{id:long}/role")]
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     Task SetAllocationRoleListAsync(long id, long[] roleIds);
-
+    
     /// <summary>
     /// 判断是否存在组织机构
     /// </summary>
@@ -151,11 +152,12 @@ public interface IOrganizationAppService
     /// 获取用于分配组织机构的角色列表
     /// </summary>
     /// <returns></returns>
-    [HttpGet("role/list")]
+    [HttpGet("role/allocation/list")]
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     [GetCachingIntercept("allocationOrganizationRoleList")]
     Task<ICollection<GetRoleOutput>> GetAllocationRoleListAsync();
     
     [ProhibitExtranet]
     Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds);
+
 }

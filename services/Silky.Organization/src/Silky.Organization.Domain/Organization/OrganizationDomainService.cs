@@ -145,4 +145,5 @@ public class OrganizationDomainService : IOrganizationDomainService
         organization.SetRoles(roleIds);
         await OrganizationRepository.UpdateAsync(organization);
     }
+    
 }

@@ -27,12 +27,7 @@ public abstract class PositionDtoBase
     /// 是否静态职位
     /// </summary>
     public virtual bool IsStatic { get; set; }
-
-    /// <summary>
-    /// 是否是公共职位
-    /// </summary>
-    public virtual bool IsPublic { get; set; }
-
+    
     /// <summary>
     /// 状态
     /// </summary>

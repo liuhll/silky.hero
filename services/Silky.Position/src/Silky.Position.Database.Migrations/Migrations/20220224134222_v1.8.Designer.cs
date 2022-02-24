@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Position.EntityFrameworkCore.DbContexts;
 
@@ -10,9 +11,10 @@ using Silky.Position.EntityFrameworkCore.DbContexts;
 namespace Silky.Position.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20220224134222_v1.8")]
+    partial class v18
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +52,12 @@ namespace Silky.Position.Database.Migrations.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("IsDeleted");
+
+                    b.Property<bool>("IsPublic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsPublic");
 
                     b.Property<bool>("IsStatic")
                         .ValueGeneratedOnAdd()
@@ -100,9 +108,10 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "c8c35735-1ce4-429f-a55f-d2b040ef8e8c",
+                            ConcurrencyStamp = "761b4ddf-02b9-4262-9f61-4e6d3c87d1cf",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
+                            IsPublic = false,
                             IsStatic = false,
                             Name = "总经理",
                             Sort = 99,
@@ -112,9 +121,10 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "db187c06-b626-4b11-af7a-cbd7bb5af9bc",
+                            ConcurrencyStamp = "8b52ce7a-54d3-475c-b0ab-5dc6a52f7528",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
+                            IsPublic = false,
                             IsStatic = false,
                             Name = "技术总监",
                             Sort = 98,
@@ -124,9 +134,10 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "963aaf9c-b939-4fc5-91b6-7b5b7b44d363",
+                            ConcurrencyStamp = "21b03c4a-48de-49d7-af44-be5abd350eba",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
+                            IsPublic = false,
                             IsStatic = false,
                             Name = "后台组长",
                             Sort = 97,
@@ -136,9 +147,10 @@ namespace Silky.Position.Database.Migrations.Migrations
                         new
                         {
                             Id = 4L,
-                            ConcurrencyStamp = "f6578d39-9566-4cd7-8013-b794e51d9c20",
+                            ConcurrencyStamp = "6f7a174c-69df-48f3-b642-4c0bfa947f0f",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
+                            IsPublic = false,
                             IsStatic = false,
                             Name = "前台组长",
                             Sort = 96,

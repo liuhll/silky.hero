@@ -26,11 +26,6 @@ public class PositionTypeBuilder : IEntityTypeBuilder<Position>
             .HasMaxLength(PositionConsts.MaxRemarkLength)
             .HasColumnName(nameof(Position.Remark));
         
-        entityBuilder.Property(o => o.IsPublic)
-            .IsRequired()
-            .HasDefaultValue(false)
-            .HasColumnName(nameof(Position.IsPublic));
-        
         entityBuilder.Property(o => o.IsStatic)
             .IsRequired()
             .HasDefaultValue(false)
