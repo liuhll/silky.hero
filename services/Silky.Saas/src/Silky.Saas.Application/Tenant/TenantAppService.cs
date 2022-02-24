@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -10,8 +9,6 @@ using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Enums;
-using Silky.Hero.Common.Extensions;
-using Silky.Saas.Application.Contracts.Edition.Dtos;
 using Silky.Saas.Application.Contracts.Tenant;
 using Silky.Saas.Application.Contracts.Tenant.Dtos;
 using Silky.Saas.Domain;
@@ -22,15 +19,10 @@ namespace Silky.Saas.Application.Tenant;
 public class TenantAppService : ITenantAppService
 {
     private readonly ITenantDomainService _tenantDomainService;
-    private readonly IDistributedCache _cache;
-    private readonly IDistributedCacheKeyNormalizer _distributedCacheKeyNormalizer;
 
-    public TenantAppService(ITenantDomainService tenantDomainService, IDistributedCache cache,
-        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer)
+    public TenantAppService(ITenantDomainService tenantDomainService)
     {
         _tenantDomainService = tenantDomainService;
-        _cache = cache;
-        _distributedCacheKeyNormalizer = distributedCacheKeyNormalizer;
     }
 
     [TccTransaction(ConfirmMethod = "CreateConfirmAsync", CancelMethod = "CreateCancelAsync")]
@@ -51,7 +43,6 @@ public class TenantAppService : ITenantAppService
 
     public async Task UpdateAsync(UpdateTenantInput input)
     {
-        await RemoveTenantFeatureCacheAsync(input.Id);
         await _tenantDomainService.UpdateAsync(input);
     }
 
@@ -68,16 +59,9 @@ public class TenantAppService : ITenantAppService
         return tenantOutput;
     }
 
-    public async Task DeleteAsync(long id)
+    public Task DeleteAsync(long id)
     {
-        var tenant = await _tenantDomainService.TenantRepository.FindOrDefaultAsync(id);
-        if (tenant == null)
-        {
-            throw new UserFriendlyException($"不存在Id为{id}的租户信息");
-        }
-
-        await _tenantDomainService.TenantRepository.DeleteAsync(tenant);
-        await RemoveTenantFeatureCacheAsync(tenant.Id);
+        return _tenantDomainService.DeleteAsync(id);
     }
 
     public async Task<PagedList<GetTenantPageOutput>> GetPageAsync(GetTenantPageInput input)
@@ -107,12 +91,5 @@ public class TenantAppService : ITenantAppService
             .ProjectToType<GetTenantOutput>()
             .ToListAsync();
     }
-
-    private async Task RemoveTenantFeatureCacheAsync(long tenantId)
-    {
-        await _cache.RemoveMatchKeyAsync(typeof(GetEditionFeatureOutput),
-            _distributedCacheKeyNormalizer.NormalizeTenantKey("featureCode:*",
-                typeof(GetEditionFeatureOutput).FullName,
-                tenantId));
-    }
+    
 }

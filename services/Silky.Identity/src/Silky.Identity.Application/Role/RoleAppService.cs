@@ -225,7 +225,7 @@ public class RoleAppService : IRoleAppService
             await _distributedCache.RemoveAsync(typeof(ICollection<long>), $"roleIds:userId:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(GetCurrentUserDataRange), $"CurrentUserDataRange:userId:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>), $"CurrentUserMenus:userId:{userRole.UserId}");
-            await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissioncodes:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissionCodes:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
         }

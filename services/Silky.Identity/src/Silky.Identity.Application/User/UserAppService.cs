@@ -346,7 +346,7 @@ public class UserAppService : IUserAppService
         await _distributedCache.RemoveAsync(typeof(GetCurrentUserDataRange), $"CurrentUserDataRange:userId:{userId}");
         await _distributedCache.RemoveAsync(typeof(ICollection<GetCurrentUserMenuOutput>),
             $"CurrentUserMenus:userId:{userId}");
-        await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissioncodes:userId:{userId}");
+        await _distributedCache.RemoveAsync(typeof(string[]), $"CurrentUserPermissionCodes:userId:{userId}");
     }
 
     //public async Task<GetUserPositionOutput> GetUserPositionInfo(long userId, long organizationId)

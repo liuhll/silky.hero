@@ -15,5 +15,6 @@ public interface ITenantDomainService
     Task CreateCancelAsync(CreateTenantInput input);
     
     Task UpdateAsync(UpdateTenantInput input);
-    
+
+    Task DeleteAsync(long id);
 }

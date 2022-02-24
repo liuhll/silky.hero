@@ -1,14 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mapster;
+using Microsoft.Extensions.Caching.Distributed;
+using Silky.Caching;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
-using Silky.Core.Extensions;
-using Silky.Core.Runtime.Rpc;
 using Silky.EntityFrameworkCore.Repositories;
-using Silky.Hero.Common.Enums;
+using Silky.Hero.Common.Extensions;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
+using Silky.Saas.Application.Contracts.Edition.Dtos;
 using Silky.Saas.Application.Contracts.Tenant.Dtos;
 
 namespace Silky.Saas.Domain;
@@ -17,13 +19,19 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
 {
     private readonly IUserAppService _userAppService;
     private readonly IRoleAppService _roleAppService;
+    private readonly IDistributedCache _distributedCache;
+    private readonly IDistributedCacheKeyNormalizer _distributedCacheKeyNormalizer;
     public TenantDomainService(IRepository<Tenant> tenantRepository, 
         IUserAppService userAppService, 
-        IRoleAppService roleAppService)
+        IRoleAppService roleAppService, 
+        IDistributedCache distributedCache, 
+        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer)
     {
         TenantRepository = tenantRepository;
         _userAppService = userAppService;
         _roleAppService = roleAppService;
+        _distributedCache = distributedCache;
+        _distributedCacheKeyNormalizer = distributedCacheKeyNormalizer;
     }
 
     public IRepository<Tenant> TenantRepository { get; }
@@ -89,5 +97,28 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
 
         tenant = input.Adapt(tenant);
         await TenantRepository.UpdateAsync(tenant);
+        await RemoveCacheAsync(tenant.Id);
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var tenant = await TenantRepository.FindOrDefaultAsync(id);
+        if (tenant == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的租户信息");
+        }
+
+        await TenantRepository.DeleteAsync(tenant);
+        await RemoveCacheAsync(tenant.Id);
+    }
+
+    private async Task RemoveCacheAsync(long tenantId)
+    {
+        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserMenus:*");
+        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserPermissionCodes:*");
+        await _distributedCache.RemoveMatchKeyAsync(typeof(GetEditionFeatureOutput),
+            _distributedCacheKeyNormalizer.NormalizeTenantKey("featureCode:*",
+                typeof(GetEditionFeatureOutput).FullName,
+                tenantId));
     }
 }

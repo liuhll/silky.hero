@@ -38,7 +38,7 @@ public interface IAccountAppService
 
     [Authorize]
     [HttpGet("permissioncodes")]
-    [GetCachingIntercept("CurrentUserPermissioncodes", OnlyCurrentUserData = true)]
+    [GetCachingIntercept("CurrentUserPermissionCodes", OnlyCurrentUserData = true)]
     Task<string[]> GetCurrentUserPermissionCodesAsync();
 
     [Authorize]
