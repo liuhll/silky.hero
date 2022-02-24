@@ -182,7 +182,7 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid)
+            .Where(p => p.Status == Status.Valid && !p.IsPublic)
             .ProjectToType<GetRoleOutput>().ToListAsync();
     }
 
