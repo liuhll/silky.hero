@@ -7,10 +7,10 @@ import {
   CreateOrgizationModel,
 } from './model/organizationModel';
 import { BasicFetchResult } from '/@/api/model/baseModel';
-
 enum Api {
   GetOrganizationTree = '/organization/tree',
   Organization = '/organization',
+  GetAllocationOrganizationRoles = 'organization/role/allocation/list',
 }
 
 export const getOrganizationTree = () => {
@@ -70,5 +70,18 @@ export const removeOrganizationUsers = (organizationUserId: number, userIds: num
   return defHttp.delete({
     url: `/organization/${organizationUserId}/users`,
     params: userIds,
+  });
+};
+
+export const getAllocationOrganizationRoles = () => {
+  return defHttp.get({
+    url: Api.GetAllocationOrganizationRoles,
+  });
+};
+
+export const setAllocationOrganizationRoles = (organizationId:number, roleIds: number[]) => {
+  return defHttp.put({
+    url: `/organization/${organizationId}/role`,
+    params: roleIds,
   });
 };

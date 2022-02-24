@@ -377,10 +377,7 @@ export const userRoleSchemas: FormSchema[] = [
     field: 'roleNames',
     label: '角色',
     component: 'Select',
-    componentProps: {
-      mode: 'multiple',
-      allowClear: true,
-    },
+    slot: 'roleNamesSlot',
   },
 ];
 

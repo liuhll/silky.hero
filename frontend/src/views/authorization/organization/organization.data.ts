@@ -2,7 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 
-import { getOrganizationTree } from '/@/api/organization';
+import { getAllocationOrganizationRoles, getOrganizationTree } from '/@/api/organization';
 import { Status } from '/@/utils/status';
 import { treeMap } from '/@/utils/helper/treeHelper';
 import { TreeItem } from '/@/components/Tree';
@@ -10,6 +10,8 @@ import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationMo
 import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
+import { omit } from 'lodash-es';
+import { OptionsItem } from '/@/utils/model';
 
 export const userColumns: BasicColumn[] = [
   {
@@ -178,5 +180,30 @@ export const organizationDetailSchemas: DescItem[] = [
       }
       return null;
     },
+  },
+];
+
+export const getOrganizationRolesOptions = async () => {
+  const roleList = await getAllocationOrganizationRoles();
+  const roleOptions = roleList.reduce((prev, next: Recordable) => {
+    if (next) {
+      prev.push({
+        ...omit(next),
+        label: next['realName'],
+        value: next['id'],
+        disabled: next['status'] === Status.Invalid,
+      });
+    }
+    return prev;
+  }, [] as OptionsItem[]);
+  return roleOptions;
+};
+
+export const organizationRoleSchemas: FormSchema[] = [
+  {
+    field: 'roleIds',
+    label: '角色',
+    component: 'Select',
+    slot: 'roleNamesSlot',
   },
 ];

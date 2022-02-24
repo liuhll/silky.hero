@@ -66,6 +66,10 @@
       @register="registerOrganizationUserDrawer"
       @success="handleAddOrganizationUsers"
     />
+    <OrganizationRoleDrawer
+      @register="registerOrganizationRoleDrawer"
+      @success="handleAllocationOrganizationRoles"
+    />
     <OrganizationDetailDrawer @register="registerOrganizationDetailDrawer" />
   </PageWrapper>
 </template>
@@ -86,14 +90,16 @@
     deleteOrganization,
     addOrganizationUsers,
     removeOrganizationUsers,
+    setAllocationOrganizationRoles,
   } from '/@/api/organization';
   import { treeMap } from '/@/utils/helper/treeHelper';
   import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
-  import { userColumns } from './organization.data';
+  import { getOrganizationRolesOptions, userColumns } from './organization.data';
   import { useDrawer } from '/@/components/Drawer';
   import OrganizationDrawer from './OrganizationDrawer.vue';
   import OrganizationUserDrawer from './OrganizationUserDrawer.vue';
   import OrganizationDetailDrawer from './OrganizationDetailDrawer.vue';
+  import OrganizationRoleDrawer from './OrganizationRoleDrawer.vue';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'OrganizationManagement',
@@ -108,6 +114,7 @@
       OrganizationDrawer,
       OrganizationUserDrawer,
       OrganizationDetailDrawer,
+      OrganizationRoleDrawer,
     },
     setup() {
       const treeRef = ref<Nullable<TreeActionType>>(null);
@@ -128,6 +135,8 @@
       const [registerOrganizationUserDrawer, { openDrawer: openOrganizationUserDrawer }] =
         useDrawer();
       const [registerOrganizationDetailDrawer, { openDrawer: openOrganizationDetailDrawer }] =
+        useDrawer();
+      const [registerOrganizationRoleDrawer, { openDrawer: openOrganizationRoleDrawer }] =
         useDrawer();
       const { createConfirm, notification } = useMessage();
       function getTree() {
@@ -276,6 +285,16 @@
           }
         });
       }
+      function handleAllocationOrganizationRoles(data: any) {
+        nextTick(async () => {
+          loadingRef.value = true;
+          await setAllocationOrganizationRoles(data.id, data.roleIds);
+          loadingRef.value = false;
+          notification.warning({
+            message: `分配组织机构${data.organizationName}的角色成功`,
+          });
+        });
+      }
 
       function handleRemoveUser(record: Recordable) {
         nextTick(async () => {
@@ -293,7 +312,8 @@
         });
       }
 
-      function getRightMenuList(node: any): ContextMenuItem[] {
+      async function getRightMenuList(node: any): ContextMenuItem[] {
+        const organizationInfo = await getOrganizationById(node.eventKey);
         let rigthMenList: ContextMenuItem[] = [];
         if (hasPermission('Organization.Update')) {
           rigthMenList.push({
@@ -317,6 +337,25 @@
               });
             },
             icon: 'bi:plus',
+          });
+        }
+        if (
+          hasPermission('Organization.AllocationRole') &&
+          organizationInfo.status === Status.Valid
+        ) {
+          rigthMenList.push({
+            label: '分配角色',
+            handler: () => {
+              nextTick(async () => {
+                const roleOptions = await getOrganizationRolesOptions();
+                openOrganizationRoleDrawer(true, {
+                  roleOptions: roleOptions,
+                  organizationId: organizationInfo.id,
+                  organizationName: organizationInfo.name,
+                });
+              });
+            },
+            icon: 'carbon:user-role',
           });
         }
         if (hasPermission('Organization.Delete')) {
@@ -373,10 +412,12 @@
         registerOrganizationDrawer,
         registerOrganizationUserDrawer,
         registerOrganizationDetailDrawer,
+        registerOrganizationRoleDrawer,
         handleCreateOrganization,
         handleCreateOrganizationRoot,
         handleAddOrganizationUsersDrawer,
         handleAddOrganizationUsers,
+        handleAllocationOrganizationRoles,
         handleRemoveUser,
       };
     },

@@ -76,3 +76,9 @@ export const unLockUser = (id: number) => {
     url: `/user/${id}/unlock`,
   });
 };
+
+export const getUserRoleList = (id: number) => {
+  return defHttp.get({
+    url: `/user/${id}/role/list`,
+  });
+};

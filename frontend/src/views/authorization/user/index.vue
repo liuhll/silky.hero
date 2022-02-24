@@ -132,7 +132,6 @@
     lockUser,
     unLockUser,
   } from '/@/api/user';
-  import { getRoleList } from '/@/api/role';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { columns, searchFormSchema } from './user.data';
@@ -145,7 +144,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
-  import { getRoleOptions } from '/@/views/authorization/role/role.data';
+  import { getRoleOptions, getUserRoleOptions } from '/@/views/authorization/role/role.data';
   import { OptionsItem } from '/@/utils/model';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Status } from '/@/utils/status';
@@ -265,14 +264,7 @@
 
       function handleAuthorizeRole(record: Recordable) {
         nextTick(async () => {
-          const roleList = await getRoleList({});
-          const roleOptions = roleList.map((item) => {
-            return {
-              label: item.realName,
-              value: item.name,
-              disabled: item.status === Status.Invalid,
-            };
-          });
+          const roleOptions = await getUserRoleOptions(record.id);
           const userRoleInfo = await getUserRoles(record.id);
           openUserRoleDrawer(true, {
             roleOptions: roleOptions,

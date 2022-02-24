@@ -231,6 +231,7 @@ public class RoleAppService : IRoleAppService
     {
         role.IsDefault = input.IsDefault;
         role.IsPublic = input.IsPublic;
+        role.IsStatic = input.IsStatic;
         role.Sort = input.Sort;
         role.Status = input.Status;
         role.Remark = input.Remark;

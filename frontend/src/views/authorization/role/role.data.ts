@@ -11,7 +11,7 @@ import { formatToDate } from '/@/utils/dateUtil';
 import { DataRange } from '/@/utils/dataRangeUtil';
 import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
-import { DataNode } from 'ant-design-vue/lib/tree';
+import { getUserRoleList } from '/@/api/user';
 
 export const columns: BasicColumn[] = [
   {
@@ -69,6 +69,9 @@ export const roleSchemas: FormSchema[] = [
     component: 'Input',
     label: '角色标识',
     helpMessage: '英文字符和数字组合,不允许超过50个字符',
+    colProps: {
+      span: 12,
+    },
     rules: [
       {
         required: true,
@@ -91,6 +94,9 @@ export const roleSchemas: FormSchema[] = [
     field: 'realName',
     component: 'Input',
     label: '角色名称',
+    colProps: {
+      span: 12,
+    },
     rules: [
       {
         required: true,
@@ -110,6 +116,9 @@ export const roleSchemas: FormSchema[] = [
       style: { width: '100%' },
     },
     label: '排序',
+    colProps: {
+      span: 12,
+    },
   },
   {
     field: 'isDefault',
@@ -122,10 +131,13 @@ export const roleSchemas: FormSchema[] = [
       ],
     },
     defaultValue: false,
+    colProps: {
+      span: 12,
+    },
   },
   {
     field: 'isPublic',
-    label: '公开',
+    label: '公共',
     component: 'RadioButtonGroup',
     componentProps: {
       options: [
@@ -134,6 +146,24 @@ export const roleSchemas: FormSchema[] = [
       ],
     },
     defaultValue: false,
+    colProps: {
+      span: 12,
+    },
+  },
+  {
+    field: 'isStatic',
+    label: '静态',
+    component: 'RadioButtonGroup',
+    componentProps: {
+      options: [
+        { label: '否', value: false },
+        { label: '是', value: true },
+      ],
+    },
+    defaultValue: false,
+    colProps: {
+      span: 12,
+    },
   },
   {
     field: 'status',
@@ -143,6 +173,9 @@ export const roleSchemas: FormSchema[] = [
       options: statusOptions,
     },
     defaultValue: Status.Valid,
+    colProps: {
+      span: 12,
+    },
   },
   {
     field: 'remark',
@@ -187,9 +220,9 @@ export const roleDataSchemas: FormSchema[] = [
   },
 ];
 
-export const getRoleOptions = async (query:any) => {
+export const getRoleOptions = async (query: any) => {
   const roleList = await getRoleList(query);
-  const positionOptions = roleList.reduce((prev, next: Recordable) => {
+  const roleOptions = roleList.reduce((prev, next: Recordable) => {
     if (next) {
       prev.push({
         ...omit(next, ['realName', 'id']),
@@ -200,7 +233,23 @@ export const getRoleOptions = async (query:any) => {
     }
     return prev;
   }, [] as OptionsItem[]);
-  return positionOptions;
+  return roleOptions;
+};
+
+export const getUserRoleOptions = async (userId: number) => {
+  const roleList = await getUserRoleList(userId);
+  const roleOptions = roleList.reduce((prev, next: Recordable) => {
+    if (next) {
+      prev.push({
+        ...omit(next),
+        label: next['realName'],
+        value: next['name'],
+        disabled: next['status'] === Status.Invalid,
+      });
+    }
+    return prev;
+  }, [] as OptionsItem[]);
+  return roleOptions;
 };
 
 export const roleDetailSchemas: DescItem[] = [
@@ -215,6 +264,28 @@ export const roleDetailSchemas: DescItem[] = [
   {
     label: '是否默认',
     field: 'isDefault',
+    render: (value) => {
+      if (value === true) {
+        return commonTagRender('blue', '是');
+      } else {
+        return commonTagRender('red', '否');
+      }
+    },
+  },
+  {
+    label: '是否公共',
+    field: 'isPublic',
+    render: (value) => {
+      if (value === true) {
+        return commonTagRender('blue', '是');
+      } else {
+        return commonTagRender('red', '否');
+      }
+    },
+  },
+  {
+    label: '是否静态',
+    field: 'isStatic',
     render: (value) => {
       if (value === true) {
         return commonTagRender('blue', '是');
