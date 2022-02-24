@@ -15,12 +15,13 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
     {
         ConcurrencyStamp = Guid.NewGuid().ToString();
         Children = new List<Organization>();
+        OrganizationRoles = new List<OrganizationRole>();
     }
 
     public long? ParentId { get; set; }
 
     [NotNull] public string Name { get; set; }
-    
+
     public int Sort { get; set; }
 
     public string Remark { get; set; }
@@ -33,5 +34,21 @@ public class Organization : FullAuditedEntity, IHasConcurrencyStamp
 
     public virtual ICollection<Organization> Children { get; set; }
 
+    public virtual ICollection<OrganizationRole> OrganizationRoles { get; set; }
 
+    public void SetRoles(params long[] roleIds)
+    {
+        foreach (var roleId in roleIds)
+        {
+            if (OrganizationRoles.Any(p=> p.RoleId == roleId))
+            {
+                continue;
+            }
+            OrganizationRoles.Add(new OrganizationRole()
+            {
+                OrganizationId = Id,
+                RoleId = roleId
+            });
+        }
+    }
 }

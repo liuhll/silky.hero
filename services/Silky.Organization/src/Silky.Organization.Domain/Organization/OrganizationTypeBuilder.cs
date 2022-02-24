@@ -32,5 +32,9 @@ public class OrganizationTypeBuilder : IEntityTypeBuilder<Organization>
         builder.HasMany(o => o.Children)
             .WithOne(o => o.Parent)
             .HasForeignKey(o => o.ParentId);
+
+        builder.HasMany(p => p.OrganizationRoles)
+            .WithOne(p => p.Organization)
+            .HasForeignKey(or => or.OrganizationId);
     }
 }

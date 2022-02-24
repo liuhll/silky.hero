@@ -34,6 +34,7 @@ public interface IRoleAppService
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
 
@@ -59,6 +60,7 @@ public interface IRoleAppService
     [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
     [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -105,7 +107,7 @@ public interface IRoleAppService
     [HttpGet("datarange/{id:long}")]
     Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id);
 
-    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name);
+   // Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name);
 
     /// <summary>
     /// 分页查询角色信息
@@ -124,4 +126,9 @@ public interface IRoleAppService
     [ProhibitExtranet]
     [Transaction]
     Task<string> CreateSuperRoleAsync(long tenantId, string superRoleName, string superRealName);
+
+    [GetCachingIntercept("allocationOrganizationRoleList")]
+    [ProhibitExtranet]
+    Task<ICollection<GetRoleOutput>> GetAllocationOrganizationRoleListAsync();
+    
 }

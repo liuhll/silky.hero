@@ -18,6 +18,7 @@ using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Session;
+using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Extensions;
 using Silky.Identity.Domain.Shared;
@@ -32,6 +33,9 @@ namespace Silky.Identity.Domain;
 public class IdentityUserManager : UserManager<IdentityUser>
 {
     public IIdentityUserRepository UserRepository { get; }
+
+    public IIdentityRoleRepository RoleRepository { get; }
+
     public IRepository<UserSubsidiary> UserSubsidiaryRepository { get; }
     public IRepository<IdentityUserClaim> UserClaimRepository { get; }
     public IRepository<IdentityClaimType> ClaimTypeRepository { get; }
@@ -61,8 +65,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
         IRepository<IdentityClaimType> claimTypeRepository,
         IRepository<IdentityRoleOrganization> roleOrganizationRepository,
         IRepository<IdentityRoleMenu> roleMenuRepository,
-        IMenuAppService menuAppService, 
-        IEditionAppService editionAppService)
+        IMenuAppService menuAppService,
+        IEditionAppService editionAppService,
+        IIdentityRoleRepository roleRepository)
         : base(store,
             optionsAccessor,
             passwordHasher,
@@ -80,6 +85,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         UserClaimRepository = userClaimRepository;
         ClaimTypeRepository = claimTypeRepository;
         RoleOrganizationRepository = roleOrganizationRepository;
+        RoleRepository = roleRepository;
         _roleMenuRepository = roleMenuRepository;
         _menuAppService = menuAppService;
         _editionAppService = editionAppService;
@@ -122,7 +128,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         return frontendMenus.BuildTree().Adapt<ICollection<GetCurrentUserMenuOutput>>();
     }
 
-    
+
     public async Task<IdentityUser> GetByIdAsync(long id)
     {
         var user = await Store.FindByIdAsync(id.ToString(), CancellationToken);
@@ -130,6 +136,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         {
             throw new EntityNotFoundException(typeof(IdentityUser), id);
         }
+
         return user;
     }
 
@@ -176,7 +183,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         var currentUserSubsidiaries = await GetUserOrganizationsAsync(user);
 
         var result =
-            await  RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
+            await RemoveFromUserSubsidiariesAsync(user, currentUserSubsidiaries.Except(userSubsidiaries).Distinct());
         if (!result.Succeeded)
         {
             return result;
@@ -220,7 +227,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(p => p.UserId == user.Id);
         return await userSubsidiaries.ToListAsync();
     }
-    
+
     public async Task<IdentityResult> AddToUserSubsidiariesAsync(IdentityUser user,
         params UserSubsidiary[] userSubsidiaries)
     {
@@ -333,9 +340,9 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(!input.JobNumber.IsNullOrEmpty(), p => p.JobNumber.Contains(input.JobNumber))
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
-            .Where(input.Status.HasValue, p=> p.Status == input.Status)
-            .Where(input.IsLockout == true, p=> p.LockoutEnd >= DateTimeOffset.Now)
-            .Where(input.IsLockout == false, p=> p.LockoutEnd < DateTimeOffset.Now || p.LockoutEnd == null)
+            .Where(input.Status.HasValue, p => p.Status == input.Status)
+            .Where(input.IsLockout == true, p => p.LockoutEnd >= DateTimeOffset.Now)
+            .Where(input.IsLockout == false, p => p.LockoutEnd < DateTimeOffset.Now || p.LockoutEnd == null)
             .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),
                 p => p.UserSubsidiaries.Any(q => input.OrganizationIds.Contains(q.OrganizationId)))
             .Where(input.PositionIds != null && input.PositionIds.Any(),
@@ -547,7 +554,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
 
         return await ((IdentityUserStore)Store).GetJobNumberAsync(user, CancellationToken);
     }
-    
+
     public Task<IdentityUser> FindByJobNumberAsync(string jobNumber)
     {
         return ((IdentityUserStore)Store).FindByJobNumberAsync(jobNumber);
@@ -572,6 +579,35 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 Description = $"超过最允许的添加的最大用户量({allowUserCountFeature.FeatureValue})",
             });
         }
+
         return IdentityResult.Success;
+    }
+
+    public async Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, string realName, string name)
+    {
+        var user = await UserRepository
+            .AsQueryable(false)
+            .Include(p => p.UserSubsidiaries)
+            .FirstOrDefaultAsync(p => p.Id == userId);
+        if (user == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{userId}的账号");
+        }
+
+        var userOrganizationRoleIds = Array.Empty<long>();
+
+        if (user.UserSubsidiaries.Any())
+        {
+            userOrganizationRoleIds = await _organizationAppService.GetOrganizationRoleIdsAsync(
+                user.UserSubsidiaries.Select(p => p.OrganizationId).ToArray());
+        }
+
+        return await RoleRepository
+            .AsQueryable(false)
+            .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
+            .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+            .Where(p => p.IsPublic || p.IsDefault || userOrganizationRoleIds.Contains(p.Id))
+            .ProjectToType<GetRoleOutput>()
+            .ToArrayAsync();
     }
 }

@@ -16,6 +16,7 @@ using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.EntityFrameworkCore;
 using Silky.Hero.Common.Enums;
 using Silky.Hero.Common.Session;
+using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
@@ -158,6 +159,11 @@ public class UserAppService : IUserAppService
         (await UserManager.RemovePasswordAsync(user)).CheckErrors();
         (await UserManager.AddPasswordAsync(user, input.NewPassword)).CheckErrors();
         await UserManager.UpdateAsync(user);
+    }
+
+    public  Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, string realName, string name)
+    {
+        return UserManager.GetUserRoleListAsync(userId, realName, name);
     }
 
     public Task<ICollection<GetUserOutput>> GetOrganizationUsersAsync(long organizationId)

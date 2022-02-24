@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Domain.Shared;
@@ -137,6 +138,17 @@ public interface IUserAppService
     [HttpPut("{userId:long}/password")]
     [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
+    
+    /// <summary>
+    /// 获取该用户可用于分配的角色列表
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="realName"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    [HttpGet("{userId:long}/role/list")]
+    [Authorize(IdentityPermissions.Users.SetRoles)]
+    Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, [FromQuery] string realName, [FromQuery] string name);
     
     /// <summary>
     /// 获取指定组织机构的用户

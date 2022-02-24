@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EFCore.BulkExtensions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.DbContext.UnitOfWork;
@@ -21,7 +20,7 @@ public class OrganizationDomainService : IOrganizationDomainService
     private readonly ISerializer _serializer;
 
     public OrganizationDomainService(IRepository<Organization> organizationRepository,
-        IUserAppService userAppService, 
+        IUserAppService userAppService,
         ISerializer serializer)
     {
         OrganizationRepository = organizationRepository;
@@ -52,7 +51,9 @@ public class OrganizationDomainService : IOrganizationDomainService
 
         if (!input.Name.Equals(organization.Name))
         {
-            var exsitOrganization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Name == input.Name && p.ParentId == input.ParentId);
+            var exsitOrganization =
+                await OrganizationRepository.FirstOrDefaultAsync(p =>
+                    p.Name == input.Name && p.ParentId == input.ParentId);
             if (exsitOrganization != null)
             {
                 throw new UserFriendlyException($"已经存在名称为{input.Name}的机构");
@@ -90,23 +91,27 @@ public class OrganizationDomainService : IOrganizationDomainService
 
     public async Task DeleteTryAsync(long id)
     {
-
         var organization = await OrganizationRepository.FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
             throw new UserFriendlyException($"不存在Id为{id}的机构");
         }
-        var organizationAndChildrenIds = (await GetChildrenOrganizationsAsync(id)).ToArray().Select(p=> p.Id).ToArray();
-        RpcContext.Context.SetInvokeAttachment("organizationAndChildrenIds",_serializer.Serialize(organizationAndChildrenIds));
+
+        var organizationAndChildrenIds =
+            (await GetChildrenOrganizationsAsync(id)).ToArray().Select(p => p.Id).ToArray();
+        RpcContext.Context.SetInvokeAttachment("organizationAndChildrenIds",
+            _serializer.Serialize(organizationAndChildrenIds));
         await _userAppService.RemoveOrganizationLinkedDataAsync(organizationAndChildrenIds);
-        
     }
 
     [UnitOfWork]
     public async Task DeleteConfirmAsync(long id)
     {
-        var organizationAndChildrenIds = _serializer.Deserialize<long[]>(RpcContext.Context.GetInvokeAttachment("organizationAndChildrenIds").ToString());
-        var organizations =  await OrganizationRepository.Where(p => organizationAndChildrenIds.Contains(p.Id)).ToArrayAsync();
+        var organizationAndChildrenIds =
+            _serializer.Deserialize<long[]>(RpcContext.Context.GetInvokeAttachment("organizationAndChildrenIds")
+                .ToString());
+        var organizations = await OrganizationRepository.Where(p => organizationAndChildrenIds.Contains(p.Id))
+            .ToArrayAsync();
         await OrganizationRepository.DeleteAsync(organizations);
     }
 
@@ -124,5 +129,20 @@ public class OrganizationDomainService : IOrganizationDomainService
         var organizations = await OrganizationRepository.AsQueryable(false)
             .OrderByDescending(p => p.Sort).ToListAsync();
         return organizations.GetChildrenOrganizations(organizationId, includeSelf);
+    }
+
+    public async Task SetAllocationRoleListAsync(long id, long[] roleIds)
+    {
+        var organization = await OrganizationRepository
+            .Include(p => p.OrganizationRoles)
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (organization == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的机构");
+        }
+
+        organization.OrganizationRoles.Clear();
+        organization.SetRoles(roleIds);
+        await OrganizationRepository.UpdateAsync(organization);
     }
 }
