@@ -194,7 +194,6 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid)
             .ProjectToType<GetRoleOutput>().ToListAsync();
     }
 
@@ -202,7 +201,7 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid && p.IsPublic)
+            .Where(p => p.IsPublic)
             .ProjectToType<GetRoleOutput>().ToListAsync();
     }
 
