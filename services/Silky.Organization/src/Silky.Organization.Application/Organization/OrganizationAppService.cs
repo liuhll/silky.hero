@@ -13,7 +13,6 @@ using Silky.Organization.Application.Contracts.Organization;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 using Silky.Organization.Domain;
 using Silky.Position.Application.Contracts.Position;
-using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Transaction.Tcc;
 
 namespace Silky.Organization.Application.Organization;
@@ -131,7 +130,12 @@ public class OrganizationAppService : IOrganizationAppService
     {
         return _organizationDomainService.SetAllocationRoleListAsync(id, roleIds);
     }
-    
+
+    public Task SetAllocationPositionListAsync(long id, long[] positionIds)
+    {
+        return _organizationDomainService.SetAllocationPositionListAsync(id, positionIds);
+    }
+
     public Task<PagedList<GetOrganizationUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
     {
         return _userAppService.GetOrganizationUserPageAsync(id, input);

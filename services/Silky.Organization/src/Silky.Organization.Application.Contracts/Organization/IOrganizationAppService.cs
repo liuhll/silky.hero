@@ -130,6 +130,17 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     Task SetAllocationRoleListAsync(long id, long[] roleIds);
     
+    
+    /// <summary>
+    /// 设置某个组织机构可分配的职位
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="positionIds"></param>
+    /// <returns></returns>
+    [HttpPut("{id:long}/position")]
+    [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
+    Task SetAllocationPositionListAsync(long id, long[] positionIds);
+    
     /// <summary>
     /// 判断是否存在组织机构
     /// </summary>
