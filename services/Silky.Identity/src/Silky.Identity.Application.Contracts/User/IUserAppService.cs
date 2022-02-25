@@ -195,8 +195,7 @@ public interface IUserAppService
     [ProhibitExtranet]
     [Transaction]
     Task RemoveOrganizationLinkedDataAsync(long[] organizationIds);
-
-
+    
     [ProhibitExtranet]
     [Transaction]
     Task CreateSuperUserAsync(CreateSuperUserInput superUserInput);

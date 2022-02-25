@@ -606,7 +606,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .AsQueryable(false)
             .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
-            .Where(p => p.IsPublic || p.IsDefault || userOrganizationRoleIds.Contains(p.Id))
+            .Where(p => p.IsPublic || userOrganizationRoleIds.Contains(p.Id))
             .ProjectToType<GetRoleOutput>()
             .ToArrayAsync();
     }
