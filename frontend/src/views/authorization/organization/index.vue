@@ -389,6 +389,7 @@
                     loadingRef.value = false;
                   }
                 },
+                iconType: 'warning',
               });
             },
             icon: 'ant-design:delete-outlined',
