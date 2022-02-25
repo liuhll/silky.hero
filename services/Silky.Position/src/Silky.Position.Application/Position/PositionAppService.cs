@@ -74,4 +74,14 @@ public class PositionAppService : IPositionAppService
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }
+
+    public async Task<ICollection<GetPositionOutput>> GetAllocationOrganizationPositionListAsync()
+    {
+        return await _positionDomainService
+            .PositionRepository
+            .AsQueryable(false)
+            .Where(p => p.Status == Status.Valid)
+            .ProjectToType<GetPositionOutput>()
+            .ToListAsync();
+    }
 }

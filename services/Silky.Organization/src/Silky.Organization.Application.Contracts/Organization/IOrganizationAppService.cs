@@ -167,6 +167,15 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     [GetCachingIntercept("allocationOrganizationRoleList")]
     Task<ICollection<GetRoleOutput>> GetAllocationRoleListAsync();
+
+    /// <summary>
+    /// 获取用于分配组织机构职位列表
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("position/allocation/list")]
+    [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
+    [GetCachingIntercept("allocationOrganizationPositionList")]
+    Task<ICollection<GetPositionOutput>> GetAllocationPositionListAsync();
     
     [ProhibitExtranet]
     Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds);
