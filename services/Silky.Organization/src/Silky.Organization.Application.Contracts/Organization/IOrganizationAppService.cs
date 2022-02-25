@@ -139,7 +139,9 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpPut("{id:long}/position")]
     [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
-    Task SetAllocationPositionListAsync(long id, long[] positionIds);
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>),"getOrganizationPositionList:{0}")]
+    [RemoveCachingIntercept(typeof(long[]),"getOrganizationPositionIds:{0}")]
+    Task SetAllocationPositionListAsync([CacheKey(0)]long id, long[] positionIds);
     
     /// <summary>
     /// 判断是否存在组织机构
@@ -180,4 +182,7 @@ public interface IOrganizationAppService
     [ProhibitExtranet]
     Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds);
 
+    [ProhibitExtranet]
+    [GetCachingIntercept("getOrganizationPositionIds:{0}")]
+    Task<long[]> GetOrganizationPositionIdsAsync([CacheKey(0)]long organizationId);
 }

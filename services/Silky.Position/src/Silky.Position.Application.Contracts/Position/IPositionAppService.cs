@@ -65,13 +65,15 @@ public interface IPositionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
-
-    // /// <summary>
-    // /// 不分页查询职位信息
-    // /// </summary>
-    // /// <param name="name"></param>
-    // /// <returns></returns>
-    // Task<ICollection<GetPositionOutput>> GetOrganizationListAsync([FromQuery]string name);
+    
+    /// <summary>
+    /// 通过组织id获取可用于分配的岗位列表
+    /// </summary>
+    /// <param name="organizationId"></param>
+    /// <returns></returns>
+    [GetCachingIntercept("getOrganizationPositionList:{0}")]
+    [HttpGet("{organizationId:long}/list")]
+    Task<ICollection<GetPositionOutput>> GetPositionListAsync([CacheKey(0)]long organizationId);
 
     /// <summary>
     /// 判断是否存在职位
