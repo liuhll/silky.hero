@@ -35,6 +35,7 @@ public interface IRoleAppService
     [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
 
@@ -61,6 +62,7 @@ public interface IRoleAppService
     [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
     [Authorize(IdentityPermissions.Roles.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -130,5 +132,9 @@ public interface IRoleAppService
     [GetCachingIntercept("allocationOrganizationRoleList")]
     [ProhibitExtranet]
     Task<ICollection<GetRoleOutput>> GetAllocationOrganizationRoleListAsync();
+
+    [GetCachingIntercept("getPublicRoleList")] 
+    [ProhibitExtranet]
+    Task<ICollection<GetRoleOutput>> GetPublicRoleListAsync();
     
 }

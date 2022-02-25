@@ -77,8 +77,9 @@ public class OrganizationAppService : IOrganizationAppService
             throw new UserFriendlyException($"不存在Id为{id}的组织机构");
         }
 
+        var publicRoles = await _roleAppService.GetPublicRoleListAsync();
         var organizationOutput = organization.Adapt<GetOrganizationOutput>();
-        await organizationOutput.SetRoleInfo();
+        await organizationOutput.SetRoleInfo(publicRoles);
         return organizationOutput;
     }
 
