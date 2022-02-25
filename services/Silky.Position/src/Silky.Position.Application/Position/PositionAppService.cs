@@ -92,7 +92,16 @@ public class PositionAppService : IPositionAppService
         return await _positionDomainService
             .PositionRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid)
+            .ProjectToType<GetPositionOutput>()
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<GetPositionOutput>> GetPublicPositionListAsync()
+    {
+        return await _positionDomainService
+            .PositionRepository
+            .AsQueryable(false)
+            .Where(p => p.IsPublic)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }

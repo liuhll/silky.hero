@@ -73,6 +73,7 @@ public class OrganizationAppService : IOrganizationAppService
             .OrganizationRepository
             .AsQueryable(false)
             .Include(p => p.OrganizationRoles)
+            .Include(p=> p.OrganizationPositions)
             .FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
@@ -80,8 +81,10 @@ public class OrganizationAppService : IOrganizationAppService
         }
 
         var publicRoles = await _roleAppService.GetPublicRoleListAsync();
+        var publicPositions = await _positionAppService.GetPublicPositionListAsync();
         var organizationOutput = organization.Adapt<GetOrganizationOutput>();
-        await organizationOutput.SetRoleInfo(publicRoles);
+        await organizationOutput.SetRolesInfo(publicRoles);
+        await organizationOutput.SetPositionsInfo(publicPositions);
         return organizationOutput;
     }
 

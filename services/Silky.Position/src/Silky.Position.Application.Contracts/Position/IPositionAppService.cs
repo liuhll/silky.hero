@@ -34,6 +34,7 @@ public interface IPositionAppService
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "allocationOrganizationPositionList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getPublicPositionList")]
     [Authorize(PositionPermissions.Positions.Update)]
     Task UpdateAsync(UpdatePositionInput input);
 
@@ -56,6 +57,7 @@ public interface IPositionAppService
     [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
     [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "allocationOrganizationPositionList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getPublicPositionList")]
     [Authorize(PositionPermissions.Positions.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -90,4 +92,8 @@ public interface IPositionAppService
     [GetCachingIntercept("allocationOrganizationPositionList")]
     [ProhibitExtranet]
     Task<ICollection<GetPositionOutput>> GetAllocationOrganizationPositionListAsync();
+
+    [GetCachingIntercept("getPublicPositionList")]
+    [ProhibitExtranet]
+    Task<ICollection<GetPositionOutput>> GetPublicPositionListAsync();
 }

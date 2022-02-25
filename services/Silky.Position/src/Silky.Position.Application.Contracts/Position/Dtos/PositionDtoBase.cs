@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Silky.Hero.Common.Enums;
-using Silky.Rpc.CachingInterceptor;
 
 namespace Silky.Position.Application.Contracts.Position.Dtos;
 
