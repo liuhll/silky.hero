@@ -288,11 +288,15 @@
       function handleAllocationOrganizationRoles(data: any) {
         nextTick(async () => {
           loadingRef.value = true;
-          await setAllocationOrganizationRoles(data.id, data.roleIds);
-          loadingRef.value = false;
-          notification.warning({
-            message: `分配组织机构${data.organizationName}的角色成功`,
-          });
+          try {
+            await setAllocationOrganizationRoles(data.id, data.roleIds);
+            loadingRef.value = false;
+            notification.success({
+              message: `分配组织机构${data.organizationName}的角色成功`,
+            });
+          } catch (err) {
+            loadingRef.value = false;
+          }
         });
       }
 
@@ -348,10 +352,12 @@
             handler: () => {
               nextTick(async () => {
                 const roleOptions = await getOrganizationRolesOptions();
+                const roleIds = organizationInfo.organizationRoles.map((item) => item.roleId);
                 openOrganizationRoleDrawer(true, {
                   roleOptions: roleOptions,
                   organizationId: organizationInfo.id,
                   organizationName: organizationInfo.name,
+                  roleIds: roleIds,
                 });
               });
             },

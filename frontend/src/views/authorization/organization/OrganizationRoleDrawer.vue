@@ -16,7 +16,12 @@
           allowClear
           placeholder="请选择要分配的角色"
         >
-          <SelectOption v-for="(item, index) in roleOptions" :key="index" :disabled="item.disabled" :value="item.id">
+          <SelectOption
+            v-for="(item, index) in roleOptions"
+            :key="index"
+            :disabled="item.disabled"
+            :value="item.id"
+          >
             <span role="img" aria-label="China">{{ item.label }}</span>
             <Tag color="green" v-if="item.isDefault">默认</Tag>
             <!-- <Tag color="cyan" v-if="item.isStatic" style="margin-left: 3px">静态</Tag> -->
@@ -49,7 +54,6 @@
         organizationName.value = data.organizationName;
         getTitle.value = `分配${unref(organizationName)}机构角色`;
         roleOptions.value = data.roleOptions;
-        debugger;
         setFieldsValue({
           ...data,
         });

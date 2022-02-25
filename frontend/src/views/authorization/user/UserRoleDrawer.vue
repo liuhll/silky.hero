@@ -22,10 +22,10 @@
             :disabled="item.disabled"
             :value="item.value"
           >
-            <span role="img" aria-label="China">{{ item.label }}</span>
+            <span>{{ item.label }}</span>
+            <Tag color="blue" v-if="item.isPublic">公共</Tag>
             <Tag color="green" v-if="item.isDefault">默认</Tag>
             <!-- <Tag color="cyan" v-if="item.isStatic" style="margin-left: 3px">静态</Tag> -->
-            <Tag color="blue" v-if="item.isPublic">公共</Tag>
           </SelectOption>
         </Select>
       </template>

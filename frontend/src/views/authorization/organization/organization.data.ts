@@ -12,6 +12,7 @@ import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
 import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
+import { h } from 'vue';
 
 export const userColumns: BasicColumn[] = [
   {
@@ -146,11 +147,6 @@ export const organizationDetailSchemas: DescItem[] = [
     label: '排序',
   },
   {
-    field: 'remark',
-    label: '备注',
-    span: 2,
-  },
-  {
     label: '状态',
     field: 'status',
     render: (value) => {
@@ -160,6 +156,26 @@ export const organizationDetailSchemas: DescItem[] = [
         return commonTagRender('red', '停用');
       }
     },
+  },
+  {
+    label: '分配角色',
+    field: 'organizationRoles',
+    render: (value) => {
+      const labels = [];
+      for (const item of value) {
+        let text: any = h('span', { style: 'margin:3px 5px;' }, item.realName);
+        if (item.isPublic) {
+          text = commonTagRender('blue', item.realName);
+        }
+        labels.push(text);
+      }
+      return labels;
+    },
+  },
+  {
+    field: 'remark',
+    label: '备注',
+    span: 2,
   },
   {
     label: '创建时间',
@@ -191,7 +207,7 @@ export const getOrganizationRolesOptions = async () => {
         ...omit(next),
         label: next['realName'],
         value: next['id'],
-        disabled: next['status'] === Status.Invalid,
+        disabled: next['status'] === Status.Invalid || next['isPublic'] === true,
       });
     }
     return prev;

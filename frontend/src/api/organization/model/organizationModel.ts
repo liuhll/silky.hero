@@ -23,12 +23,23 @@ export interface GetOrgizationUserModel {
 }
 
 export interface GetOrgizationModel {
+  organizationRoles: any;
   id: number;
   parentId: number;
   name: string;
   sort: number;
   remark: string;
   status: number;
+}
+
+export interface OrgizationRoleModel {
+  roleId: number;
+  name: string;
+  realName: string;
+  status: number;
+  isDefault: boolean;
+  isPublic: boolean;
+  isStatic: boolean;
 }
 
 export interface UpdateOrgizationModel {
