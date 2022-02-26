@@ -5,7 +5,7 @@
     :title="getTitle"
     @ok="handleSubmit"
     showFooter
-    width="600px"
+    width="30%"
     destroyOnClose
   >
     <BasicForm @register="registerForm" />

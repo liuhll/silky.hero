@@ -4,8 +4,8 @@
       <template #realName="{ text, record }">
         {{ text }}
         <Tag color="green" v-if="record.isDefault" style="margin-left: 3px">默认</Tag>
-        <Tag color="cyan" v-if="record.isStatic" style="margin-left: 3px">静态</Tag>
         <Tag color="blue" v-if="record.isPublic" style="margin-left: 3px">公共</Tag>
+        <Tag color="cyan" v-if="record.isStatic" style="margin-left: 3px">静态</Tag>
       </template>
       <template #toolbar>
         <a-button type="primary" v-auth="'Identity.Role.Create'" @click="handleCreate"

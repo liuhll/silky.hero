@@ -144,8 +144,8 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(!name.IsNullOrEmpty(),p => p.Name.Contains(name))
-            .Where(!realName.IsNullOrEmpty(),p => p.RealName.Contains(realName))
+            .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+            .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
             .OrderByDescending(p => p.Sort)
             .ThenByDescending(p => p.CreatedTime)
             .ProjectToType<GetRoleOutput>()
@@ -194,7 +194,6 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid)
             .ProjectToType<GetRoleOutput>().ToListAsync();
     }
 
@@ -202,7 +201,7 @@ public class RoleAppService : IRoleAppService
     {
         return await _roleManager.RoleRepository
             .AsQueryable(false)
-            .Where(p => p.Status == Status.Valid && p.IsPublic)
+            .Where(p => p.IsPublic)
             .ProjectToType<GetRoleOutput>().ToListAsync();
     }
 

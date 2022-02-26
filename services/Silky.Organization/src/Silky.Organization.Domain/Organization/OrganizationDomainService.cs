@@ -145,5 +145,19 @@ public class OrganizationDomainService : IOrganizationDomainService
         organization.SetRoles(roleIds);
         await OrganizationRepository.UpdateAsync(organization);
     }
-    
+
+    public async Task SetAllocationPositionListAsync(long id, long[] positionIds)
+    {
+        var organization = await OrganizationRepository
+            .Include(p => p.OrganizationPositions)
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (organization == null)
+        {
+            throw new UserFriendlyException($"不存在Id为{id}的机构");
+        }
+
+        organization.OrganizationPositions.Clear();
+        organization.SetPositions(positionIds);
+        await OrganizationRepository.UpdateAsync(organization);
+    }
 }

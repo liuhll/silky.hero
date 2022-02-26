@@ -43,7 +43,7 @@
         getDataSource: () => any;
         setTableData: (data: any[]) => void;
         setOrganizaionTreeList: () => void;
-        setPositionOptions: () => void;
+        setPositionOptions: (id: Nullable<number>) => void;
       } | null>(null);
       const getTitle = ref('用户');
       const userDetail = ref();
@@ -52,7 +52,7 @@
         getTitle.value = data.realName;
         userDetail.value = data;
         await userSubsidiaryTableRef.value?.setOrganizaionTreeList();
-        await userSubsidiaryTableRef.value?.setPositionOptions();
+        await userSubsidiaryTableRef.value?.setPositionOptions(null);
         userSubsidiaryTableRef.value?.setTableData(data.userSubsidiaries);
       });
       return {

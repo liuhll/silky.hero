@@ -19,9 +19,11 @@ public class PositionAppService : IPositionAppService
     private readonly IPositionDomainService _positionDomainService;
     private readonly IOrganizationAppService _organizationAppService;
 
-    public PositionAppService(IPositionDomainService positionDomainService)
+    public PositionAppService(IPositionDomainService positionDomainService,
+        IOrganizationAppService organizationAppService)
     {
         _positionDomainService = positionDomainService;
+        _organizationAppService = organizationAppService;
     }
 
     public Task CreateAsync(CreatePositionInput input)
@@ -61,6 +63,16 @@ public class PositionAppService : IPositionAppService
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 
+    public async Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId)
+    {
+        var organizationPositionIds = await _organizationAppService.GetOrganizationPositionIdsAsync(organizationId);
+        return await _positionDomainService.PositionRepository
+            .AsQueryable(false)
+            .Where(p => organizationPositionIds.Contains(p.Id) || p.IsPublic)
+            .ProjectToType<GetPositionOutput>()
+            .ToListAsync();
+    }
+
     public async Task<bool> HasPositionAsync(long positionId)
     {
         return await _positionDomainService.PositionRepository.FindOrDefaultAsync(positionId) != null;
@@ -71,6 +83,25 @@ public class PositionAppService : IPositionAppService
         return await _positionDomainService.PositionRepository
             .AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+            .ProjectToType<GetPositionOutput>()
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<GetPositionOutput>> GetAllocationOrganizationPositionListAsync()
+    {
+        return await _positionDomainService
+            .PositionRepository
+            .AsQueryable(false)
+            .ProjectToType<GetPositionOutput>()
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<GetPositionOutput>> GetPublicPositionListAsync()
+    {
+        return await _positionDomainService
+            .PositionRepository
+            .AsQueryable(false)
+            .Where(p => p.IsPublic)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }

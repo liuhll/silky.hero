@@ -38,3 +38,7 @@ export const deletePosition = (id: number) => {
 export const getPositionById = (id: number) => {
   return defHttp.get({ url: `/position/${id}` });
 };
+
+export const getOrganizationPositionList = (id: number) => {
+  return defHttp.get({ url: `/position/${id}/list` });
+};

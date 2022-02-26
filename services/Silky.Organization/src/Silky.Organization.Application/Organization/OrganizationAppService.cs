@@ -25,18 +25,20 @@ public class OrganizationAppService : IOrganizationAppService
     private readonly IRoleAppService _roleAppService;
     private readonly IPositionAppService _positionAppService;
     private readonly IRepository<OrganizationRole> _organizationRoleRepository;
-
+    private readonly IRepository<OrganizationPosition> _organizationPositionRepository;
     public OrganizationAppService(
         IOrganizationDomainService organizationDomainService,
         IUserAppService userAppService,
         IRoleAppService roleAppService,
         IPositionAppService positionAppService,
-        IRepository<OrganizationRole> organizationRoleRepository)
+        IRepository<OrganizationRole> organizationRoleRepository, 
+        IRepository<OrganizationPosition> organizationPositionRepository)
     {
         _organizationDomainService = organizationDomainService;
         _userAppService = userAppService;
         _roleAppService = roleAppService;
         _organizationRoleRepository = organizationRoleRepository;
+        _organizationPositionRepository = organizationPositionRepository;
         _positionAppService = positionAppService;
     }
 
@@ -71,6 +73,7 @@ public class OrganizationAppService : IOrganizationAppService
             .OrganizationRepository
             .AsQueryable(false)
             .Include(p => p.OrganizationRoles)
+            .Include(p=> p.OrganizationPositions)
             .FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
@@ -78,8 +81,10 @@ public class OrganizationAppService : IOrganizationAppService
         }
 
         var publicRoles = await _roleAppService.GetPublicRoleListAsync();
+        var publicPositions = await _positionAppService.GetPublicPositionListAsync();
         var organizationOutput = organization.Adapt<GetOrganizationOutput>();
-        await organizationOutput.SetRoleInfo(publicRoles);
+        await organizationOutput.SetRolesInfo(publicRoles);
+        await organizationOutput.SetPositionsInfo(publicPositions);
         return organizationOutput;
     }
 
@@ -117,6 +122,11 @@ public class OrganizationAppService : IOrganizationAppService
     {
         return _roleAppService.GetAllocationOrganizationRoleListAsync();
     }
+
+    public Task<ICollection<GetPositionOutput>> GetAllocationPositionListAsync()
+    {
+        return _positionAppService.GetAllocationOrganizationPositionListAsync();
+    }
     
     public async Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds)
     {
@@ -126,12 +136,26 @@ public class OrganizationAppService : IOrganizationAppService
             .Select(p => p.RoleId)
             .ToArrayAsync();
     }
-    
+
+    public async Task<long[]> GetOrganizationPositionIdsAsync(long organizationId)
+    {
+        return await _organizationPositionRepository
+            .AsQueryable(false)
+            .Where(p => p.OrganizationId == organizationId)
+            .Select(p => p.PositionId)
+            .ToArrayAsync();
+    }
+
     public Task SetAllocationRoleListAsync(long id, long[] roleIds)
     {
         return _organizationDomainService.SetAllocationRoleListAsync(id, roleIds);
     }
-    
+
+    public Task SetAllocationPositionListAsync(long id, long[] positionIds)
+    {
+        return _organizationDomainService.SetAllocationPositionListAsync(id, positionIds);
+    }
+
     public Task<PagedList<GetOrganizationUserPageOutput>> GetUserPageAsync(long id, GetOrganizationUserPageInput input)
     {
         return _userAppService.GetOrganizationUserPageAsync(id, input);

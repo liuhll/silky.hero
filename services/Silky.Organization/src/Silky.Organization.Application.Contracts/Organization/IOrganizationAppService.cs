@@ -130,6 +130,20 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     Task SetAllocationRoleListAsync(long id, long[] roleIds);
     
+    
+    /// <summary>
+    /// 设置某个组织机构可分配的职位
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="positionIds"></param>
+    /// <returns></returns>
+    [HttpPut("{id:long}/position")]
+    [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>),"getOrganizationPositionList:{0}")]
+    [RemoveCachingIntercept(typeof(long[]),"getOrganizationPositionIds:{0}")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
+    Task SetAllocationPositionListAsync([CacheKey(0)]long id, long[] positionIds);
+    
     /// <summary>
     /// 判断是否存在组织机构
     /// </summary>
@@ -156,8 +170,20 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     [GetCachingIntercept("allocationOrganizationRoleList")]
     Task<ICollection<GetRoleOutput>> GetAllocationRoleListAsync();
+
+    /// <summary>
+    /// 获取用于分配组织机构职位列表
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("position/allocation/list")]
+    [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
+    [GetCachingIntercept("allocationOrganizationPositionList")]
+    Task<ICollection<GetPositionOutput>> GetAllocationPositionListAsync();
     
     [ProhibitExtranet]
     Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds);
 
+    [ProhibitExtranet]
+    [GetCachingIntercept("getOrganizationPositionIds:{0}")]
+    Task<long[]> GetOrganizationPositionIdsAsync([CacheKey(0)]long organizationId);
 }

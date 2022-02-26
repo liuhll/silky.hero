@@ -2,7 +2,11 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 
-import { getAllocationOrganizationRoles, getOrganizationTree } from '/@/api/organization';
+import {
+  getAllocationOrganizationRoles,
+  getOrganizationTree,
+  getOrganizationPositions,
+} from '/@/api/organization';
 import { Status } from '/@/utils/status';
 import { treeMap } from '/@/utils/helper/treeHelper';
 import { TreeItem } from '/@/components/Tree';
@@ -83,12 +87,16 @@ export const organizationFormSchema: FormSchema[] = [
         message: '请输入用户名',
       },
     ],
+    colProps: { span: 12 },
   },
   {
     field: 'sort',
     label: '排序',
     component: 'InputNumber',
-    helpMessage: ['请输入排序'],
+    componentProps: {
+      style: 'width:100%',
+    },
+    colProps: { span: 12 },
   },
   {
     field: 'status',
@@ -98,13 +106,13 @@ export const organizationFormSchema: FormSchema[] = [
     componentProps: {
       options: statusOptions,
     },
-    helpMessage: ['请选择状态'],
+    colProps: { span: 12 },
   },
   {
     field: 'remark',
     label: '备注',
-    component: 'Input',
-    helpMessage: ['请输入备注'],
+    component: 'InputTextArea',
+    colProps: { span: 24 },
   },
 ];
 
@@ -173,6 +181,21 @@ export const organizationDetailSchemas: DescItem[] = [
     },
   },
   {
+    label: '分配职位',
+    field: 'organizationPositions',
+    render: (value) => {
+      const labels = [];
+      for (const item of value) {
+        let text: any = h('span', { style: 'margin:3px 5px;' }, item.name);
+        if (item.isPublic) {
+          text = commonTagRender('blue', item.name);
+        }
+        labels.push(text);
+      }
+      return labels;
+    },
+  },  
+  {
     field: 'remark',
     label: '备注',
     span: 2,
@@ -215,11 +238,36 @@ export const getOrganizationRolesOptions = async () => {
   return roleOptions;
 };
 
+export const getOrganizationPositionsOptions = async () => {
+  const positionList = await  getOrganizationPositions();
+  const positionOptions = positionList.reduce((prev, next: Recordable) => {
+    if (next) {
+      prev.push({
+        ...omit(next),
+        label: next['name'],
+        value: next['id'],
+        disabled: next['status'] === Status.Invalid || next['isPublic'] === true,
+      });
+    }
+    return prev;
+  }, [] as OptionsItem[]);
+  return positionOptions;
+};
+
 export const organizationRoleSchemas: FormSchema[] = [
   {
     field: 'roleIds',
     label: '角色',
     component: 'Select',
     slot: 'roleNamesSlot',
+  },
+];
+
+export const organizationPositionSchemas: FormSchema[] = [
+  {
+    field: 'positionIds',
+    label: '职位',
+    component: 'Select',
+    slot: 'positionNamesSlot',
   },
 ];
