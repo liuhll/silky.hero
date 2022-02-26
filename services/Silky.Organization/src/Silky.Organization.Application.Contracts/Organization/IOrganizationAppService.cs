@@ -141,6 +141,7 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>),"getOrganizationPositionList:{0}")]
     [RemoveCachingIntercept(typeof(long[]),"getOrganizationPositionIds:{0}")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
     Task SetAllocationPositionListAsync([CacheKey(0)]long id, long[] positionIds);
     
     /// <summary>

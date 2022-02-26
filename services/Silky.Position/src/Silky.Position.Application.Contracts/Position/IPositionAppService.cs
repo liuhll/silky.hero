@@ -24,6 +24,8 @@ public interface IPositionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(PositionPermissions.Positions.Create)]
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "allocationOrganizationPositionList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getPublicPositionList")]
     Task CreateAsync(CreatePositionInput input);
 
     /// <summary>
@@ -73,9 +75,8 @@ public interface IPositionAppService
     /// </summary>
     /// <param name="organizationId"></param>
     /// <returns></returns>
-    [GetCachingIntercept("getOrganizationPositionList:{0}")]
     [HttpGet("{organizationId:long}/list")]
-    Task<ICollection<GetPositionOutput>> GetPositionListAsync([CacheKey(0)]long organizationId);
+    Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId);
 
     /// <summary>
     /// 判断是否存在职位

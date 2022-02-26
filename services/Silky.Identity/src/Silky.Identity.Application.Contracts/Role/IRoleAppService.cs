@@ -24,6 +24,8 @@ public interface IRoleAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.Create)]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
     Task CreateAsync(CreateRoleInput input);
     
     /// <summary>
