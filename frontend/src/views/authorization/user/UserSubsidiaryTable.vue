@@ -81,7 +81,15 @@
         { getDataSource, setTableData, getRawDataSource, getColumns, setProps },
       ] = useTable(tableConfig);
 
-      function handleEdit(record: EditRecordRow) {
+      async function handleEdit(record: EditRecordRow) {
+        await setPositionOptions(record.organizationId);
+        if (
+          unref(positionOptions)
+            .map((item) => item.value)
+            .indexOf(record.positionId) < 0
+        ) {
+          record.positionId = null;
+        }
         record.onEdit?.(true);
       }
 
@@ -95,8 +103,18 @@
         });
       }
 
-      async function setPositionOptions() {
-        positionOptions.value = await getPositionOptions({});
+      async function setPositionOptions(id: Nullable<Number>) {
+        positionOptions.value = await getPositionOptions(id);
+        const tableColumns = getColumns();
+        const positionColumn = tableColumns.find((col) => col.dataIndex === 'positionId');
+        positionColumn.editComponentProps.options = unref(positionOptions);
+        setProps({
+          columns: tableColumns,
+        });
+      }
+
+      function clearPositionOptions() {
+        positionOptions.value = [];
         const tableColumns = getColumns();
         const positionColumn = tableColumns.find((col) => col.dataIndex === 'positionId');
         positionColumn.editComponentProps.options = unref(positionOptions);
@@ -106,12 +124,25 @@
       }
 
       function handleCancel(record: EditRecordRow) {
-        record.onEdit?.(false);
         if (record.isNew) {
           const data = getDataSource();
           const index = data.findIndex((item) => item.key === record.key);
           data.splice(index, 1);
+        } else {
+          if (!record.organizationId) {
+            notification.error({
+              message: '请选择用户所属部门',
+            });
+            throw new Error('请选择用户所属部门');
+          }
+          if (!record.positionId) {
+            notification.error({
+              message: '请选择用户所属岗位',
+            });
+            throw new Error('请选择用户所属岗位');
+          }
         }
+        record.onEdit?.(false);
       }
 
       function handleSave(record: EditRecordRow) {
@@ -142,7 +173,7 @@
         return exsitOrganizations.length > 1;
       }
 
-      function handleEditChange(data: Recordable) {
+      async function handleEditChange(data: Recordable) {
         if (data.column.dataIndex == 'positionId') {
           data.record.positionId = data.value;
         }
@@ -150,7 +181,11 @@
           if (hasOrganization(data.value)) {
             throw new Error('用户所属部门不允许重复');
           }
+          if (data.record.organizationId != data.value) {
+            data.record.positionId = null;
+          }
           data.record.organizationId = data.value;
+          await setPositionOptions(data.record.organizationId);
         }
       }
 
@@ -173,6 +208,7 @@
           key: `${Date.now()}`,
         };
         data.push(addRow);
+        clearPositionOptions();
       }
 
       function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {

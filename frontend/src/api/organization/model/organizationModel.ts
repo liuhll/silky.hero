@@ -24,6 +24,7 @@ export interface GetOrgizationUserModel {
 
 export interface GetOrgizationModel {
   organizationRoles: any;
+  organizationPositions: any;
   id: number;
   parentId: number;
   name: string;

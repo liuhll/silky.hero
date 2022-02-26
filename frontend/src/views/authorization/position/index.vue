@@ -6,6 +6,11 @@
           >新增岗位</a-button
         >
       </template>
+      <template #name="{ text, record }">
+        {{ text }}
+        <Tag color="blue" v-if="record.isPublic" style="margin-left: 3px">公共</Tag>
+        <Tag color="cyan" v-if="record.isStatic" style="margin-left: 3px">静态</Tag>
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -56,9 +61,10 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { Tag } from 'ant-design-vue';
   export default defineComponent({
     name: 'Position',
-    components: { PageWrapper, BasicTable, TableAction, PositionDrawer, PositionDetailDrawer },
+    components: { PageWrapper, BasicTable, TableAction, PositionDrawer, PositionDetailDrawer, Tag },
     setup() {
       const searchInfo = ref({});
       const loadingRef = ref(false);
