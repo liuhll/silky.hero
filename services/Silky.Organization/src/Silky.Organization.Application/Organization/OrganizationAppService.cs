@@ -52,10 +52,18 @@ public class OrganizationAppService : IOrganizationAppService
         return _organizationDomainService.CreateAsync(input);
     }
 
-    public Task CheckAsync(CheckOrganizationInput input)
+    public Task<bool> CheckAsync(CheckOrganizationInput input)
     {
-        return _organizationDomainService.OrganizationRepository.AnyAsync(p =>
-            p.ParentId == input.ParentId && p.Name == input.Name);
+        return _organizationDomainService
+            .OrganizationRepository
+            .AnyAsync(p =>
+                p.ParentId == input.ParentId && p.Name == input.Name && p.Id != input.Id);
+    }
+
+    public async Task<bool> CheckHasDataRangeAsync(long organizationId)
+    {
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
+        return currentUserDataRange.IsAllData || currentUserDataRange.OrganizationIds.Any(p => p == organizationId);
     }
 
     public Task UpdateAsync(UpdateOrganizationInput input)
@@ -156,7 +164,7 @@ public class OrganizationAppService : IOrganizationAppService
             .Select(p => p.PositionId)
             .ToArrayAsync();
     }
-
+    
     public async Task<ICollection<GetOrganizationOutput>> GetCurrentOrganizationListAsync()
     {
         var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();

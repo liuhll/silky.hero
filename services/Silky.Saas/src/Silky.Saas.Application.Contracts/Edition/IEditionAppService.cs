@@ -47,10 +47,10 @@ public interface IEditionAppService
     /// <summary>
     /// 实现检查版本是否存在接口
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost("check/{name}")]
-    Task<bool> CheckAsync(string name);
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckEditionInput input);
 
     /// <summary>
     /// 分页查询版本信息

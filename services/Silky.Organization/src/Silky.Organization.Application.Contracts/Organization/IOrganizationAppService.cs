@@ -36,8 +36,16 @@ public interface IOrganizationAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost]
-    Task CheckAsync(CheckOrganizationInput input);
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckOrganizationInput input);
+
+    /// <summary>
+    /// 检查是否数据权限
+    /// </summary>
+    /// <param name="organizationId"></param>
+    /// <returns></returns>
+    [HttpPost("check/datarange/{organizationId:long}")]
+    Task<bool> CheckHasDataRangeAsync(long organizationId);
 
     /// <summary>
     /// 更新组织机构

@@ -72,10 +72,10 @@ public interface IRoleAppService
     /// <summary>
     /// 检查角色是否存在
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost("check/{name}")]
-    Task<bool> CheckAsync(string name);
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckRoleInput input);
 
     /// <summary>
     /// 授权角色菜单

@@ -57,17 +57,22 @@ public class UserAppService : IUserAppService
         switch (input.AccountType)
         {
             case AccountType.UserName:
-                exsit = await UserManager.UserRepository.AnyAsync(p => p.NormalizedUserName == input.Account.ToUpper(), false);
+                exsit = await UserManager.UserRepository.AnyAsync(
+                    p => p.Id != input.Id && p.NormalizedUserName == input.Account.ToUpper(), false);
                 break;
             case AccountType.Email:
-                exsit = await UserManager.UserRepository.AnyAsync(p => p.NormalizedEmail == input.Account.ToUpper(), false);
+                exsit = await UserManager.UserRepository.AnyAsync(
+                    p => p.Id != input.Id && p.NormalizedEmail == input.Account.ToUpper(),
+                    false);
                 break;
             case AccountType.MobilePhone:
-                exsit = await UserManager.UserRepository.AnyAsync(p => p.MobilePhone == input.Account, false);
+                exsit = await UserManager.UserRepository.AnyAsync(
+                    p => p.Id != input.Id && p.MobilePhone == input.Account, false);
                 break;
             default:
                 throw new UserFriendlyException("账号类型不正确");
         }
+
         return exsit;
     }
 

@@ -46,9 +46,9 @@ public class TenantAppService : ITenantAppService
         await _tenantDomainService.UpdateAsync(input);
     }
 
-    public Task<bool> CheckAsync(string name)
+    public Task<bool> CheckAsync(CheckTenantInput input)
     {
-        return _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == name);
+        return _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id,false);
     }
 
     public async Task<GetTenantOutput> GetAsync(long id)

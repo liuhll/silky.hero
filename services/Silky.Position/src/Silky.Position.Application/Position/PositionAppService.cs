@@ -5,8 +5,10 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Enums;
+using Silky.Hero.Common.Session;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
@@ -18,12 +20,14 @@ public class PositionAppService : IPositionAppService
 {
     private readonly IPositionDomainService _positionDomainService;
     private readonly IOrganizationAppService _organizationAppService;
+    private readonly ISession _session;
 
     public PositionAppService(IPositionDomainService positionDomainService,
         IOrganizationAppService organizationAppService)
     {
         _positionDomainService = positionDomainService;
         _organizationAppService = organizationAppService;
+        _session = NullSession.Instance;
     }
 
     public Task CreateAsync(CreatePositionInput input)
@@ -73,9 +77,15 @@ public class PositionAppService : IPositionAppService
             .ToListAsync();
     }
 
-    public Task<bool> CheckAsync(string name)
+    public Task<bool> CheckAsync(CheckPositionInput input)
     {
-        return _positionDomainService.PositionRepository.AnyAsync(p => p.Name == name, false);
+        return _positionDomainService.PositionRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id, false);
+    }
+
+    public async  Task<bool> CheckHasDataRangeAsync(long organizationId, long positionId)
+    {
+        var organizationPositionIds = await _organizationAppService.GetOrganizationPositionIdsAsync(organizationId);
+        return organizationPositionIds.Any(p => p == positionId);
     }
 
     public async Task<bool> HasPositionAsync(long positionId)

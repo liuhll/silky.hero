@@ -40,10 +40,10 @@ public interface ITenantAppService
     /// <summary>
     /// 检查租户是否存在
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost("check/{name}")]
-    Task<bool> CheckAsync(string name);
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckTenantInput input);
 
     /// <summary>
     /// 通过Id获取租户信息

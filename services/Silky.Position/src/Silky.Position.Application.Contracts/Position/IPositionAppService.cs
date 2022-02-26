@@ -82,10 +82,13 @@ public interface IPositionAppService
     /// <summary>
     /// 判断是否存在某个职位
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="input"></param>
     /// <returns></returns>
-    [HttpPost("check/{name}")]
-    Task<bool> CheckAsync(string name);
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckPositionInput input);
+    
+    [HttpPost("check/datarange/{organizationId:long}/{positionId:long}")]
+    Task<bool> CheckHasDataRangeAsync(long organizationId, long positionId);
 
     /// <summary>
     /// 判断是否存在职位

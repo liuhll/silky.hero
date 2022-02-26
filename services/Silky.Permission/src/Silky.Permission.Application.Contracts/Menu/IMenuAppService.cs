@@ -30,6 +30,7 @@ public interface IMenuAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
+    [HttpPost("check")]
     Task<bool> CheckAsync(CheckMenuInput input);
 
     /// <summary>

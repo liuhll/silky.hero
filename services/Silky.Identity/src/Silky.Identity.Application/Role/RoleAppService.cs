@@ -78,9 +78,9 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
-    public Task<bool> CheckAsync(string name)
+    public Task<bool> CheckAsync(CheckRoleInput input)
     {
-        return _roleManager.RoleRepository.AnyAsync(p => p.NormalizedName == name.ToUpper());
+        return _roleManager.RoleRepository.AnyAsync(p => p.NormalizedName == input.Name.ToUpper() && p.Id != input.Id,false);
     }
 
     [UnitOfWork]
