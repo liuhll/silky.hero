@@ -27,6 +27,14 @@ public interface IUserAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Users.Create)]
     Task CreateAsync(CreateUserInput input);
+    
+    /// <summary>
+    /// 判断是否存在某个账号
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpPost("check")]
+    Task<bool> CheckAsync(CheckAccountInput input);
 
     /// <summary>
     /// 更新用户

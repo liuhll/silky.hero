@@ -21,6 +21,7 @@ using Silky.Identity.Application.Contracts.User;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain;
 using Silky.Identity.Domain.Extensions;
+using Silky.Identity.Domain.Shared;
 using Silky.Transaction.Tcc;
 using IdentityUser = Silky.Identity.Domain.IdentityUser;
 
@@ -48,6 +49,26 @@ public class UserAppService : IUserAppService
         (await UserManager.CheckAllowUserMaxCount(user)).CheckErrors();
         (await UserManager.SetDefaultRolesAsync(user)).CheckErrors();
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
+    }
+
+    public async Task<bool> CheckAsync(CheckAccountInput input)
+    {
+        var exsit = false;
+        switch (input.AccountType)
+        {
+            case AccountType.UserName:
+                exsit = await UserManager.UserRepository.AnyAsync(p => p.NormalizedUserName == input.Account.ToUpper(), false);
+                break;
+            case AccountType.Email:
+                exsit = await UserManager.UserRepository.AnyAsync(p => p.NormalizedEmail == input.Account.ToUpper(), false);
+                break;
+            case AccountType.MobilePhone:
+                exsit = await UserManager.UserRepository.AnyAsync(p => p.MobilePhone == input.Account, false);
+                break;
+            default:
+                throw new UserFriendlyException("账号类型不正确");
+        }
+        return exsit;
     }
 
     public async Task UpdateAsync(UpdateUserInput input)
@@ -161,7 +182,7 @@ public class UserAppService : IUserAppService
         await UserManager.UpdateAsync(user);
     }
 
-    public  Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, string realName, string name)
+    public Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, string realName, string name)
     {
         return UserManager.GetUserRoleListAsync(userId, realName, name);
     }
