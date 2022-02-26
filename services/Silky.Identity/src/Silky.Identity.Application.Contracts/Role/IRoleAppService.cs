@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -119,7 +120,7 @@ public interface IRoleAppService
     [HttpGet("datarange/{id:long}")]
     Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id);
 
-    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name);
+    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name,[FromQuery] Status? status);
 
     /// <summary>
     /// 分页查询角色信息

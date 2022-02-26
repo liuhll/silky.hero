@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
+using Silky.Hero.Common.Enums;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
@@ -67,7 +68,7 @@ public class PositionAppService : IPositionAppService
         var organizationPositionIds = await _organizationAppService.GetOrganizationPositionIdsAsync(organizationId);
         return await _positionDomainService.PositionRepository
             .AsQueryable(false)
-            .Where(p => organizationPositionIds.Contains(p.Id) || p.IsPublic)
+            .Where(p => (organizationPositionIds.Contains(p.Id) || p.IsPublic) && p.Status == Status.Valid)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }
@@ -82,11 +83,12 @@ public class PositionAppService : IPositionAppService
         return await _positionDomainService.PositionRepository.FindOrDefaultAsync(positionId) != null;
     }
 
-    public async Task<ICollection<GetPositionOutput>> GetListAsync(string name)
+    public async Task<ICollection<GetPositionOutput>> GetListAsync(string name, Status? status)
     {
         return await _positionDomainService.PositionRepository
             .AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
+            .Where(status.HasValue, p => p.Status == status)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Silky.Hero.Common.Enums;
 using Silky.Position.Application.Contracts.Position.Dtos;
 using Silky.Position.Domain.Shared;
 using Silky.Rpc.CachingInterceptor;
@@ -69,7 +70,7 @@ public interface IPositionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<PagedList<GetPositionPageOutput>> GetPageAsync(GetPositionPageInput input);
-    
+
     /// <summary>
     /// 通过组织id获取可用于分配的岗位列表
     /// </summary>
@@ -77,7 +78,7 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpGet("{organizationId:long}/list")]
     Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId);
-    
+
     /// <summary>
     /// 判断是否存在某个职位
     /// </summary>
@@ -96,7 +97,7 @@ public interface IPositionAppService
     Task<bool> HasPositionAsync([CacheKey(0)] long positionId);
 
     [HttpGet("list")]
-    Task<ICollection<GetPositionOutput>> GetListAsync([FromQuery] string name);
+    Task<ICollection<GetPositionOutput>> GetListAsync([FromQuery] string name, [FromQuery] Status? status);
 
     [GetCachingIntercept("allocationOrganizationPositionList")]
     [ProhibitExtranet]
