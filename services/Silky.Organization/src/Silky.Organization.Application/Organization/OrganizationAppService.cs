@@ -47,6 +47,12 @@ public class OrganizationAppService : IOrganizationAppService
         return _organizationDomainService.CreateAsync(input);
     }
 
+    public Task CheckAsync(CheckOrganizationInput input)
+    {
+        return _organizationDomainService.OrganizationRepository.AnyAsync(p =>
+            p.ParentId == input.ParentId && p.Name == input.Name);
+    }
+
     public Task UpdateAsync(UpdateOrganizationInput input)
     {
         return _organizationDomainService.UpdateAsync(input);

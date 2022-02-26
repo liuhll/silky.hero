@@ -30,6 +30,14 @@ public interface IOrganizationAppService
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
     [Authorize(OrganizationPermissions.Organizations.Create)]
     Task CreateAsync(CreateOrganizationInput input);
+    
+    /// <summary>
+    /// 检查是否存在某个组织机构
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpPost]
+    Task CheckAsync(CheckOrganizationInput input);
 
     /// <summary>
     /// 更新组织机构
