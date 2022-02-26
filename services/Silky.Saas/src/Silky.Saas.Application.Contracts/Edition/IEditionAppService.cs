@@ -43,6 +43,14 @@ public interface IEditionAppService
     [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task DeleteAsync(long id);
+    
+    /// <summary>
+    /// 实现检查版本是否存在接口
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    [HttpPost("check/{name}")]
+    Task<bool> CheckAsync(string name);
 
     /// <summary>
     /// 分页查询版本信息

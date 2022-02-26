@@ -38,6 +38,11 @@ public class EditionAppService : IEditionAppService
         return _editionDomainService.DeleteAsync(id);
     }
 
+    public Task<bool> CheckAsync(string name)
+    {
+        return _editionDomainService.EditionRepository.AnyAsync(p => p.Name == name);
+    }
+
     public async Task<PagedList<GetEditionPageOutput>> GetPageAsync(GetEditionPageInput input)
     {
         var pageOutputs = await _editionDomainService.EditionRepository
