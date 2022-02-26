@@ -24,6 +24,13 @@ public interface IMenuAppService
     /// <returns></returns>
     [Authorize(PermissionPermissions.Menus.Create)]
     Task CreateAsync(CreateMenuInput input);
+    
+    /// <summary>
+    /// 检查菜单是否存在
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<bool> CheckAsync(CheckMenuInput input);
 
     /// <summary>
     /// 更新菜单
