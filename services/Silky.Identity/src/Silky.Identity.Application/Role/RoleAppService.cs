@@ -78,6 +78,11 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
+    public Task<bool> CheckAsync(string name)
+    {
+        return _roleManager.RoleRepository.AnyAsync(p => p.NormalizedName == name.ToUpper());
+    }
+
     [UnitOfWork]
     public async Task SetMenusAsync(UpdateRoleMenuInput input)
     {

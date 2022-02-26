@@ -69,6 +69,14 @@ public interface IRoleAppService
     Task DeleteAsync([CacheKey(0)] long id);
 
     /// <summary>
+    /// 检查角色是否存在
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    [HttpPost("check/{name}")]
+    Task<bool> CheckAsync(string name);
+
+    /// <summary>
     /// 授权角色菜单
     /// </summary>
     /// <param name="input"></param>
