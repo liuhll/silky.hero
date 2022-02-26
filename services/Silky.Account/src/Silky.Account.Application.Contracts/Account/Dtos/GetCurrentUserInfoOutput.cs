@@ -61,5 +61,8 @@ public class GetCurrentUserInfoOutput
     /// </summary>
     public ICollection<string> Roles { get; set; }
 
-
+    /// <summary>
+    /// 当前登陆用户的数据权限范围
+    /// </summary>
+    public GetCurrentUserDataRangeOutput DataRange { get; set; }
 }

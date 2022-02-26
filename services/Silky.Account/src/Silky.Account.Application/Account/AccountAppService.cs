@@ -35,6 +35,7 @@ public class AccountAppService : IAccountAppService
         var user = await UserManager.GetByIdAsync(long.Parse(_session.UserId.ToString()));
         var currentUser = user.Adapt<GetCurrentUserInfoOutput>();
         currentUser.Roles = await UserManager.GetRolesAsync(user);
+        currentUser.DataRange = (await GetCurrentUserDataRangeAsync()).Adapt<GetCurrentUserDataRangeOutput>();
         return currentUser;
     }
 
