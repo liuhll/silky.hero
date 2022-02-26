@@ -30,7 +30,7 @@ public interface IOrganizationAppService
     [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
     [Authorize(OrganizationPermissions.Organizations.Create)]
     Task CreateAsync(CreateOrganizationInput input);
-    
+
     /// <summary>
     /// 检查是否存在某个组织机构
     /// </summary>
@@ -80,7 +80,7 @@ public interface IOrganizationAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-   // Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input);
+    // Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input);
 
     /// <summary>
     /// 获取某个组织机构的用户列表
@@ -127,7 +127,7 @@ public interface IOrganizationAppService
     [HttpGet]
     [GetCachingIntercept("tree")]
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
-    
+
     /// <summary>
     /// 设置某个组织机构可分配的角色权限
     /// </summary>
@@ -137,8 +137,8 @@ public interface IOrganizationAppService
     [HttpPut("{id:long}/role")]
     [Authorize(OrganizationPermissions.Organizations.AllocationRole)]
     Task SetAllocationRoleListAsync(long id, long[] roleIds);
-    
-    
+
+
     /// <summary>
     /// 设置某个组织机构可分配的职位
     /// </summary>
@@ -147,11 +147,18 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpPut("{id:long}/position")]
     [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
-    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>),"getOrganizationPositionList:{0}")]
-    [RemoveCachingIntercept(typeof(long[]),"getOrganizationPositionIds:{0}")]
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput),"id:{0}")]
-    Task SetAllocationPositionListAsync([CacheKey(0)]long id, long[] positionIds);
-    
+    [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getOrganizationPositionList:{0}")]
+    [RemoveCachingIntercept(typeof(long[]), "getOrganizationPositionIds:{0}")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
+    Task SetAllocationPositionListAsync([CacheKey(0)] long id, long[] positionIds);
+
+    /// <summary>
+    /// 获取当前登陆用户所拥有的组织机构
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("currentuser/list")]
+    Task<ICollection<GetOrganizationOutput>> GetCurrentOrganizationListAsync();
+
     /// <summary>
     /// 判断是否存在组织机构
     /// </summary>
@@ -187,11 +194,11 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
     [GetCachingIntercept("allocationOrganizationPositionList")]
     Task<ICollection<GetPositionOutput>> GetAllocationPositionListAsync();
-    
+
     [ProhibitExtranet]
     Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds);
 
     [ProhibitExtranet]
     [GetCachingIntercept("getOrganizationPositionIds:{0}")]
-    Task<long[]> GetOrganizationPositionIdsAsync([CacheKey(0)]long organizationId);
+    Task<long[]> GetOrganizationPositionIdsAsync([CacheKey(0)] long organizationId);
 }

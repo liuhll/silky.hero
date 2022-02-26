@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Application.Contracts.User;
@@ -26,12 +28,14 @@ public class OrganizationAppService : IOrganizationAppService
     private readonly IPositionAppService _positionAppService;
     private readonly IRepository<OrganizationRole> _organizationRoleRepository;
     private readonly IRepository<OrganizationPosition> _organizationPositionRepository;
+    private readonly ISession _session;
+
     public OrganizationAppService(
         IOrganizationDomainService organizationDomainService,
         IUserAppService userAppService,
         IRoleAppService roleAppService,
         IPositionAppService positionAppService,
-        IRepository<OrganizationRole> organizationRoleRepository, 
+        IRepository<OrganizationRole> organizationRoleRepository,
         IRepository<OrganizationPosition> organizationPositionRepository)
     {
         _organizationDomainService = organizationDomainService;
@@ -40,6 +44,7 @@ public class OrganizationAppService : IOrganizationAppService
         _organizationRoleRepository = organizationRoleRepository;
         _organizationPositionRepository = organizationPositionRepository;
         _positionAppService = positionAppService;
+        _session = NullSession.Instance;
     }
 
     public Task CreateAsync(CreateOrganizationInput input)
@@ -79,7 +84,7 @@ public class OrganizationAppService : IOrganizationAppService
             .OrganizationRepository
             .AsQueryable(false)
             .Include(p => p.OrganizationRoles)
-            .Include(p=> p.OrganizationPositions)
+            .Include(p => p.OrganizationPositions)
             .FirstOrDefaultAsync(p => p.Id == id);
         if (organization == null)
         {
@@ -133,7 +138,7 @@ public class OrganizationAppService : IOrganizationAppService
     {
         return _positionAppService.GetAllocationOrganizationPositionListAsync();
     }
-    
+
     public async Task<long[]> GetOrganizationRoleIdsAsync(long[] organizationIds)
     {
         return await _organizationRoleRepository
@@ -150,6 +155,17 @@ public class OrganizationAppService : IOrganizationAppService
             .Where(p => p.OrganizationId == organizationId)
             .Select(p => p.PositionId)
             .ToArrayAsync();
+    }
+
+    public async Task<ICollection<GetOrganizationOutput>> GetCurrentOrganizationListAsync()
+    {
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
+        return await _organizationPositionRepository
+            .AsQueryable(false)
+            .Where(!currentUserDataRange.IsAllData,
+                p => currentUserDataRange.OrganizationIds.Contains(p.OrganizationId))
+            .ProjectToType<GetOrganizationOutput>()
+            .ToListAsync();
     }
 
     public Task SetAllocationRoleListAsync(long id, long[] roleIds)
