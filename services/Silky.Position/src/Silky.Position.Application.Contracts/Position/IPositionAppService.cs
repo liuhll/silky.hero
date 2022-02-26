@@ -77,6 +77,14 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpGet("{organizationId:long}/list")]
     Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId);
+    
+    /// <summary>
+    /// 判断是否存在某个职位
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    [HttpPost("check/{name}")]
+    Task<bool> CheckAsync(string name);
 
     /// <summary>
     /// 判断是否存在职位

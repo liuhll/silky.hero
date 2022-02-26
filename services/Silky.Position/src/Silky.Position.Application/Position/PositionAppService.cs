@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions;
 using Silky.EntityFrameworkCore.Extensions;
-using Silky.Hero.Common.Enums;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;
@@ -71,6 +70,11 @@ public class PositionAppService : IPositionAppService
             .Where(p => organizationPositionIds.Contains(p.Id) || p.IsPublic)
             .ProjectToType<GetPositionOutput>()
             .ToListAsync();
+    }
+
+    public Task<bool> CheckAsync(string name)
+    {
+        return _positionDomainService.PositionRepository.AnyAsync(p => p.Name == name, false);
     }
 
     public async Task<bool> HasPositionAsync(long positionId)
