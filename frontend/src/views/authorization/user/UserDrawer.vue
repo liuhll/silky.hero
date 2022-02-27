@@ -20,7 +20,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { userSchemas } from './user.data';
+  import { getMobilePhoneRules, getEmailRules, getUserNameRules, userSchemas } from './user.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Card } from 'ant-design-vue';
   import UserSubsidiaryTable from './UserSubsidiaryTable.vue';
@@ -50,7 +50,6 @@
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
-        clearValidate();
         await userSubsidiaryTableRef.value?.setOrganizaionTreeList();
         await userSubsidiaryTableRef.value?.setPositionOptions(null);
         isUpdate.value = !!data?.isUpdate;
@@ -61,10 +60,17 @@
           userId.value = data.record.id;
           updateSchema({ field: 'password', show: false });
           userSubsidiaryTableRef.value?.setTableData(data.record.userSubsidiaries);
+          updateSchema({ field: 'userName', rules: getUserNameRules(data.record.id) });
+          updateSchema({ field: 'email', rules: getEmailRules(data.record.id) });
+          updateSchema({ field: 'mobilePhone', rules: getMobilePhoneRules(data.record.id) });
         } else {
           updateSchema({ field: 'password', show: true });
           userSubsidiaryTableRef.value?.setTableData([]);
+          updateSchema({ field: 'userName', rules: getUserNameRules(null) });
+          updateSchema({ field: 'email', rules: getEmailRules(null) });
+          updateSchema({ field: 'mobilePhone', rules: getMobilePhoneRules(null) });
         }
+        clearValidate();
         setDrawerProps({ confirmLoading: false });
       });
 
@@ -101,3 +107,8 @@
     },
   });
 </script>
+
+function getEmailRules(id: any): import("/@/components/Form/index").Rule[]|undefined { throw new
+Error('Function not implemented.'); } function getEmailRules(id: any):
+import("/@/components/Form/index").Rule[]|undefined { throw new Error('Function not implemented.');
+}

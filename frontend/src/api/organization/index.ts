@@ -102,3 +102,9 @@ export const setAllocationOrganizationPositions = (
     params: positionIds,
   });
 };
+
+export const checkOrganizationDataRange = (organizationId: number) => {
+  return defHttp.post({
+    url: `/organization/check/datarange/${organizationId}`,
+  });
+};

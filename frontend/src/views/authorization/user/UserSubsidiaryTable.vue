@@ -27,6 +27,8 @@
     ActionItem,
     EditRecordRow,
   } from '/@/components/Table';
+  import { checkOrganizationDataRange } from '/@/api/organization';
+  import { checkPositionDataRange } from '/@/api/position';
 
   export default defineComponent({
     components: { BasicTable, TableAction },
@@ -44,6 +46,23 @@
           title: '所属部门',
           dataIndex: 'organizationId',
           editRow: true,
+          editRule: async (text, record) => {
+            if (!text) {
+              notification.error({
+                message: '请选择用户所属部门',
+              });
+              return Promise.reject('请选择用户所属部门');
+            }
+            if (!(await checkOrganizationDataRange(Number(text)))) {
+              notification.error({
+                message: '您没有新增该部门用户的权限',
+              });
+              record.positionId = null;
+              await setPositionOptions(text);
+              return Promise.reject('您没有新增该部门用户的权限');
+            }
+            return Promise.resolve('');
+          },
           editComponent: 'TreeSelect',
           editComponentProps: {
             treeData: unref(organizaionTreeList),
@@ -56,6 +75,21 @@
           dataIndex: 'positionId',
           editRow: true,
           editComponent: 'Select',
+          editRule: async (text, record) => {
+            if (!text) {
+              notification.error({
+                message: '请选择用户所属岗位',
+              });
+              return Promise.reject('请选择用户所属岗位');
+            }
+            if (!(await checkPositionDataRange(Number(record.organizationId), Number(text)))) {
+              notification.error({
+                message: `没有分配该岗位的权限`,
+              });
+              return Promise.reject(`没有分配该岗位的权限`);
+            }
+            return Promise.resolve('');
+          },
           editComponentProps: {
             options: unref(positionOptions),
             placeholder: '请选择所属岗位',
@@ -82,7 +116,6 @@
       ] = useTable(tableConfig);
 
       async function handleEdit(record: EditRecordRow) {
-        await setPositionOptions(record.organizationId);
         if (
           unref(positionOptions)
             .map((item) => item.value)
@@ -90,6 +123,7 @@
         ) {
           record.positionId = null;
         }
+        await setPositionOptions(record.organizationId);
         record.onEdit?.(true);
       }
 
@@ -104,7 +138,7 @@
       }
 
       async function setPositionOptions(id: Nullable<Number>) {
-        positionOptions.value = await getPositionOptions(id);
+        positionOptions.value = await getPositionOptions(id, true);
         const tableColumns = getColumns();
         const positionColumn = tableColumns.find((col) => col.dataIndex === 'positionId');
         positionColumn.editComponentProps.options = unref(positionOptions);
@@ -181,11 +215,11 @@
           if (hasOrganization(data.value)) {
             throw new Error('用户所属部门不允许重复');
           }
-          if (data.record.organizationId != data.value) {
+          if (data.record.organizationId !== data.value) {
             data.record.positionId = null;
+            await setPositionOptions(data.value);
           }
           data.record.organizationId = data.value;
-          await setPositionOptions(data.record.organizationId);
         }
       }
 
@@ -208,7 +242,6 @@
           key: `${Date.now()}`,
         };
         data.push(addRow);
-        clearPositionOptions();
       }
 
       function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {

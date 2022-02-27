@@ -5,6 +5,7 @@ export interface GetOrgizationTreeModel {
   code: string;
   remark: string;
   status: number;
+  isBelong: boolean;
   children: GetOrgizationTreeModel[] | undefined;
 }
 
@@ -31,6 +32,7 @@ export interface GetOrgizationModel {
   sort: number;
   remark: string;
   status: number;
+  isBelong: boolean;
 }
 
 export interface OrgizationRoleModel {

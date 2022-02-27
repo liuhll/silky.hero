@@ -41,7 +41,6 @@
         resetFields();
         clearValidate();
         const roleDataRange = await getRoleDataRange(id);
-        debugger;
         const treeData = await getOrganizationTreeList();
         updateSchema({
           field: 'customOrganizationIds',

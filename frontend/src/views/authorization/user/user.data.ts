@@ -6,6 +6,15 @@ import { Sex } from '/@/utils/sex';
 import { statusOptions, Status } from '/@/utils/status';
 import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
+import { checkAccount } from '/@/api/user';
+import RuleObject from 'ant-design-vue/lib/form/interface';
+import { Rule } from '/@/components/Form';
+
+enum AccountType {
+  UserName = 0,
+  MobilePhone = 1,
+  Email = 2,
+}
 
 export const columns: BasicColumn[] = [
   {
@@ -170,6 +179,102 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
+const checkAccountRule = async (value: string, id: Nullable<number>, accountType: AccountType) => {
+  if (value) {
+    const exist = await checkAccount({
+      id: id,
+      account: value,
+      accountType: accountType,
+    });
+    if (exist) {
+      let accountTypeText = '';
+      switch (accountType) {
+        case AccountType.Email:
+          accountTypeText = '电子邮件';
+          break;
+        case AccountType.MobilePhone:
+          accountTypeText = '手机';
+          break;
+        case AccountType.UserName:
+          accountTypeText = '用户名';
+          break;
+      }
+      return Promise.reject(`已经存在${value}的${accountTypeText}`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getUserNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '用户名不允许为空',
+    },
+    {
+      max: 50,
+      message: '用户名长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      pattern: new RegExp('^\\w+$'),
+      message: '用户名格式不正确',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkAccountRule(value, id, AccountType.UserName);
+      },
+    },
+  ];
+};
+
+export const getEmailRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '电子邮件格式不允许为空',
+    },
+    {
+      type: 'email',
+      message: '电子邮件格式不正确',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkAccountRule(value, id, AccountType.Email);
+      },
+    },
+  ];
+};
+
+export const getMobilePhoneRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '手机号码不允许为空',
+    },
+    {
+      type: 'string',
+      pattern: new RegExp('^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$'),
+      message: '手机格式不正确',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkAccountRule(value, id, AccountType.MobilePhone);
+      },
+    },
+  ];
+};
+
 export const userSchemas: FormSchema[] = [
   {
     field: 'userName',
@@ -179,23 +284,6 @@ export const userSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '用户名不允许为空',
-      },
-      {
-        max: 50,
-        message: '用户名长度不允许超过50个字符',
-        validateTrigger: ['change', 'blur'],
-      },
-      {
-        type: 'string',
-        pattern: new RegExp('^\\w+$'),
-        message: '用户名格式不正确',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'realName',
@@ -245,17 +333,6 @@ export const userSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '电子邮件格式不允许为空',
-      },
-      {
-        type: 'email',
-        message: '电子邮件格式不正确',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'mobilePhone',
@@ -264,18 +341,6 @@ export const userSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '手机号码不允许为空',
-      },
-      {
-        type: 'string',
-        pattern: new RegExp('^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$'),
-        message: '手机格式不正确',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'telPhone',
@@ -510,6 +575,7 @@ export const userLockSchemas: FormSchema[] = [
       },
       {
         type: 'method',
+        required: true,
         validator: (rule, value: number) => {
           if (value > 0) {
             return Promise.resolve();

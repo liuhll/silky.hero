@@ -82,3 +82,10 @@ export const getUserRoleList = (id: number) => {
     url: `/user/${id}/role/list`,
   });
 };
+
+export const checkAccount = (requestParams: any) => {
+  return defHttp.post({
+    url: `/user/check`,
+    params: requestParams,
+  });
+};

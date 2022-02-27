@@ -135,11 +135,14 @@ export const getOrganizationTreeList = async (): Promise<TreeItem[]> => {
   const organizationTreeList = await getOrganizationTree();
   return treeMap(organizationTreeList, {
     conversion: (node: GetOrgizationTreeModel) => {
+      const orgIcon =
+        node.status == Status.Valid ? 'ant-design:folder-outlined' : 'ant-design:folder-filled';
       return {
         title: node.name,
         key: node.id,
         value: node.id,
-        disabled: node.status == Status.Invalid,
+        disabled: node.status == Status.Invalid || node.isBelong === false,
+        icon: orgIcon,
       };
     },
   });

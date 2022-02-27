@@ -12,10 +12,10 @@ import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
 import { GetPositionModel } from '../../../api/position/model/positionModel';
 
-export const getPositionOptions = async (id: Nullable<Number>) => {
+export const getPositionOptions = async (id: Nullable<Number>, isAll: boolean) => {
   let positionList: GetPositionModel[] = [];
   if (id) {
-    positionList = await getOrganizationPositionList(id);
+    positionList = await getOrganizationPositionList(id, isAll);
   } else {
     positionList = await getPositionList({});
   }
@@ -25,7 +25,7 @@ export const getPositionOptions = async (id: Nullable<Number>) => {
         ...omit(next, ['name', 'id']),
         label: next['name'],
         value: next['id'],
-        disabled: next['status'] === Status.Invalid,
+        disabled: next['status'] === Status.Invalid || next['isBelong'] == false,
       });
     }
     return prev;

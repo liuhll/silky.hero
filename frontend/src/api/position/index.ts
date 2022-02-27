@@ -39,6 +39,12 @@ export const getPositionById = (id: number) => {
   return defHttp.get({ url: `/position/${id}` });
 };
 
-export const getOrganizationPositionList = (id: number) => {
-  return defHttp.get({ url: `/position/${id}/list` });
+export const getOrganizationPositionList = (id: number, isAll: boolean) => {
+  return defHttp.get({ url: `/position/${id}/list`, params: { isAll: isAll } });
+};
+
+export const checkPositionDataRange = (organizationId: number, positionId: number) => {
+  return defHttp.post({
+    url: `/position/check/datarange/${organizationId}/${positionId}`,
+  });
 };

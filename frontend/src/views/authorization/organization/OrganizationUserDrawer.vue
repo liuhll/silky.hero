@@ -95,7 +95,7 @@
           var organizationUserIds = await getOrganizationUserIds(data.id);
           selectedOrganizationUserIds.value = organizationUserIds;
           setSelectedRowKeys(organizationUserIds);
-          positionOptions.value = await getPositionOptions(data.id);
+          positionOptions.value = await getPositionOptions(data.id, false);
           reload();
         },
       );
