@@ -22,6 +22,8 @@ using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User.Dtos;
 using Silky.Identity.Domain.Shared;
 using Silky.Organization.Application.Contracts.Organization;
+using Silky.Organization.Application.Contracts.Organization.Dtos;
+using Silky.Rpc.CachingInterceptor;
 using Silky.Transaction.Tcc;
 using IdentityRole = Silky.Identity.Domain.IdentityRole;
 
@@ -266,8 +268,10 @@ public class RoleAppService : IRoleAppService
                 $"CurrentUserMenus:userId:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(string[]),
                 $"CurrentUserPermissionCodes:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(ICollection<GetOrganizationTreeOutput>), "tree");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
+            
         }
     }
 }
