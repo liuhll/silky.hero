@@ -4,9 +4,10 @@ import { FormSchema } from '/@/components/Table';
 import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
-import { getEditionList } from '/@/api/edition';
+import { checkEdition, getEditionList } from '/@/api/edition';
 import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
+import { Rule } from '/@/components/Form';
 
 export const columns: BasicColumn[] = [
   {
@@ -52,17 +53,6 @@ export const editionSchemas = [
     field: 'name',
     component: 'Input',
     label: '名称',
-    rules: [
-      {
-        required: true,
-        message: '版本名称不允许为空',
-      },
-      {
-        max: 50,
-        message: '版本长度不允许超过50个字符',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'price',
@@ -150,4 +140,38 @@ export const getEditionOptions = async () => {
     return prev;
   }, [] as OptionsItem[]);
   return editionOptions;
+};
+
+const checkEditionRule = async (value: string, id: Nullable<number>) => {
+  if (value) {
+    const exist = await checkEdition({
+      id: id,
+      name: value,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的职位`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '版本名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '版本长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkEditionRule(value, id);
+      },
+    },
+  ];
 };

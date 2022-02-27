@@ -39,3 +39,7 @@ export const setEditionFeatures = (id: number, requestParams: any[]) => {
 export const getEditionList = () => {
   return defHttp.get<GetEditionListModel[]>({ url: Api.GetEditionList });
 };
+
+export const checkEdition = (requestParams) => {
+  return defHttp.post({ url: `/edition/check`, params: requestParams });
+};
