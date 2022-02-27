@@ -15,7 +15,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { positionSchemas } from './position.data';
+  import { getNameRules, positionSchemas } from './position.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   export default defineComponent({
@@ -25,22 +25,26 @@
       const isUpdate = ref(false);
       const positionId = ref<Nullable<number>>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
-      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate }] = useForm({
-        labelWidth: 140,
-        schemas: positionSchemas,
-        showActionButtonGroup: false,
-      });
+      const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
+        useForm({
+          labelWidth: 140,
+          schemas: positionSchemas,
+          showActionButtonGroup: false,
+        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
-        clearValidate();
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
           });
           positionId.value = data.record.id;
+          updateSchema({ field: 'name', rules: getNameRules(data.record.id) });
+        } else {
+          updateSchema({ field: 'name', rules: getNameRules(null) });
         }
+        clearValidate();
         setDrawerProps({ confirmLoading: false });
       });
 

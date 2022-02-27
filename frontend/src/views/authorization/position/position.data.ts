@@ -1,5 +1,5 @@
 import { omit } from 'lodash-es';
-import { getPositionList, getOrganizationPositionList } from '/@/api/position';
+import { getPositionList, getOrganizationPositionList, checkPosition } from '/@/api/position';
 import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
 import { Tag } from 'ant-design-vue';
@@ -11,6 +11,7 @@ import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
 import { GetPositionModel } from '../../../api/position/model/positionModel';
+import { Rule } from '/@/components/Form';
 
 export const getPositionOptions = async (id: Nullable<Number>, isAll: boolean) => {
   let positionList: GetPositionModel[] = [];
@@ -77,17 +78,6 @@ export const positionSchemas: FormSchema[] = [
     field: 'name',
     component: 'Input',
     label: '名称',
-    rules: [
-      {
-        required: true,
-        message: '岗位标示不允许为空',
-      },
-      {
-        max: 50,
-        message: '岗位标示长度不允许超过50个字符',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
     colProps: {
       span: 12,
     },
@@ -201,3 +191,37 @@ export const positionDetailSchemas: DescItem[] = [
     },
   },
 ];
+
+const checkPositionRule = async (value: string, id: Nullable<number>) => {
+  if (value) {
+    const exist = await checkPosition({
+      id: id,
+      name: value,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的职位`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '岗位名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '岗位名称长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkPositionRule(value, id);
+      },
+    },
+  ];
+};
