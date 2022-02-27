@@ -2,6 +2,7 @@ import { defHttp } from '/@/utils/http/axios';
 
 import { GetTenantModel, GetTenantPageModel } from './model/tenantModel';
 import { BasicFetchResult } from '../model/baseModel';
+import { requestParams } from '../../../mock/_util';
 
 enum Api {
   getAllTenant = '/tenant/all',
@@ -42,4 +43,8 @@ export const deleteTenant = (id: number) => {
 
 export const getTenantById = (id: number) => {
   return defHttp.get({ url: `/tenant/${id}` });
+};
+
+export const checkTenant = (requestParams) => {
+  return defHttp.post({ url: `/tenant/check`, params: requestParams });
 };

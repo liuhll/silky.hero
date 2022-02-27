@@ -8,6 +8,8 @@ import { FormSchema } from '/@/components/Table';
 import { DescItem } from '../../../components/Description/src/typing';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { formatToDate } from '/@/utils/dateUtil';
+import { Rule } from '/@/components/Form';
+import { checkTenant } from '/@/api/tenant';
 
 export const columns: BasicColumn[] = [
   {
@@ -75,17 +77,6 @@ export const getTenantSchemas = (isUpdate: boolean): FormSchema[] => {
       field: 'name',
       component: 'Input',
       label: '名称',
-      rules: [
-        {
-          required: true,
-          message: '租户名称不允许为空',
-        },
-        {
-          max: 50,
-          message: '租户长度不允许超过50个字符',
-          validateTrigger: ['change', 'blur'],
-        },
-      ],
     },
     {
       field: 'sort',
@@ -355,3 +346,37 @@ export const tenantDetailSchemas: DescItem[] = [
     },
   },
 ];
+
+const checkTenantRule = async (value: string, id: Nullable<number>) => {
+  if (value) {
+    const exist = await checkTenant({
+      id: id,
+      name: value,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的职位`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '租户名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '租户长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkTenantRule(value, id);
+      },
+    },
+  ];
+};

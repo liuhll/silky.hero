@@ -15,7 +15,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { getTenantSchemas } from './tenant.data';
+  import { getNameRules, getTenantSchemas } from './tenant.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { getEditionOptions } from '../edition/edition.data';
 
@@ -41,13 +41,16 @@
         const editionListOptions = await getEditionOptions();
         updateSchema({ field: 'editionId', componentProps: { options: editionListOptions } });
         resetFields();
-        clearValidate();
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
           });
           tenantId.value = data.record.id;
+          updateSchema({ field: 'name', rules: getNameRules(data.record.id) });
+        } else {
+          updateSchema({ field: 'name', rules: getNameRules(null) });
         }
+        clearValidate();
         setDrawerProps({ confirmLoading: false });
       });
 
