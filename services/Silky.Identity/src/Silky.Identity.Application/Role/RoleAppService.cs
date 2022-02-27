@@ -284,6 +284,7 @@ public class RoleAppService : IRoleAppService
             await _distributedCache.RemoveAsync(typeof(ICollection<GetOrganizationTreeOutput>), "tree");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
+            await _distributedCache.RemoveMatchKeyAsync(typeof(GetOrganizationOutput), "id:*");
         }
     }
 }
