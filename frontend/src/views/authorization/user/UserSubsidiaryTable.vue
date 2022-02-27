@@ -128,7 +128,7 @@
       }
 
       async function setOrganizaionTreeList() {
-        organizaionTreeList.value = await getOrganizationTreeList();
+        organizaionTreeList.value = await getOrganizationTreeList(true);
         const tableColumns = getColumns();
         const organizationColumn = tableColumns.find((col) => col.dataIndex === 'organizationId');
         organizationColumn.editComponentProps.treeData = unref(organizaionTreeList);

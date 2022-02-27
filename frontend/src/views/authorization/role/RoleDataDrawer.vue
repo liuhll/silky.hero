@@ -41,11 +41,12 @@
         resetFields();
         clearValidate();
         const roleDataRange = await getRoleDataRange(id);
-        const treeData = await getOrganizationTreeList();
+        const treeData = await getOrganizationTreeList(false);
         updateSchema({
           field: 'customOrganizationIds',
           componentProps: {
             'tree-data': treeData,
+            defaultExpandAll: true,
           },
         });
         roleId.value = id;

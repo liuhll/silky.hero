@@ -131,17 +131,21 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
-export const getOrganizationTreeList = async (): Promise<TreeItem[]> => {
+export const getOrganizationTreeList = async (isOnlyBelong: boolean): Promise<TreeItem[]> => {
   const organizationTreeList = await getOrganizationTree();
   return treeMap(organizationTreeList, {
     conversion: (node: GetOrgizationTreeModel) => {
       const orgIcon =
         node.status == Status.Valid ? 'ant-design:folder-outlined' : 'ant-design:folder-filled';
+      let disabled = node.status == Status.Invalid;
+      if (isOnlyBelong) {
+        disabled = disabled || node.isBelong === false;
+      }
       return {
         title: node.name,
         key: node.id,
         value: node.id,
-        disabled: node.status == Status.Invalid || node.isBelong === false,
+        disabled: disabled,
         icon: orgIcon,
       };
     },
@@ -197,7 +201,7 @@ export const organizationDetailSchemas: DescItem[] = [
       }
       return labels;
     },
-  },  
+  },
   {
     field: 'remark',
     label: '备注',

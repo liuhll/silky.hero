@@ -181,7 +181,7 @@
       const loadingRef = ref(false);
       const showSearchForm = computed(() => hasPermission('Identity.User.Search'));
       onMounted(async () => {
-        treeData.value = await getOrganizationTreeList();
+        treeData.value = await getOrganizationTreeList(true);
         positionOptions.value = await getPositionOptions(null, true);
         roleOptions.value = await getRoleOptions({});
       });

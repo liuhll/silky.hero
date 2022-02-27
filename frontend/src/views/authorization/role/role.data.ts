@@ -199,6 +199,7 @@ export const roleDataSchemas: FormSchema[] = [
     componentProps: {
       checkable: true,
       multiple: true,
+      defaultExpandAll: true,
     },
     rules: [
       {

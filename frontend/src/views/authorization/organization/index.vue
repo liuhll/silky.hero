@@ -111,7 +111,7 @@
   import OrganizationRoleDrawer from './OrganizationRoleDrawer.vue';
   import OrganizationPositionDrawer from './OrganizationPositionDrawer.vue';
   import { usePermission } from '/@/hooks/web/usePermission';
-import { getOrganizationTreeList } from './organization.data';
+  import { getOrganizationTreeList } from './organization.data';
   export default defineComponent({
     name: 'OrganizationManagement',
     components: {
@@ -242,7 +242,7 @@ import { getOrganizationTreeList } from './organization.data';
 
       async function loadOrganizationTreeData() {
        // const organizationTreeList = await getOrganizationTree();
-        treeData.value = await getOrganizationTreeList();
+        treeData.value = await getOrganizationTreeList(true);
       }
       function handleCreateOrganization(data: any) {
         nextTick(async () => {
