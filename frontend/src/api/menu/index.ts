@@ -48,6 +48,13 @@ export const getMenuById = (id: number) => {
   });
 };
 
+export const checkMenu = (requestParams) => {
+  return defHttp.post({
+    url: `/menu/check`,
+    params: requestParams,
+  });
+};
+
 // export const setMenuStatus = (id: number, status: Status) => {
 //   return defHttp.put({
 //     url: `/menu/status/${id}/${status}`,

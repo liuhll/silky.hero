@@ -7,12 +7,13 @@ import { Icon } from '/@/components/Icon';
 import { h } from 'vue';
 import { treeMap } from '/@/utils/helper/treeHelper';
 import { TreeItem } from '/@/components/Tree';
-import { getMenuTree } from '/@/api/menu';
+import { checkMenu, getMenuTree } from '/@/api/menu';
 import { GetMenuTreeModel } from '/@/api/menu/model/menuModel';
 import { DescItem } from '/@/components/Description';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { cp } from 'fs';
 import { formatToDate } from '/@/utils/dateUtil';
+import { Rule } from '/@/components/Form';
 
 const isDir = (type: number) => type === 0;
 const isMenu = (type: number) => type === 1;
@@ -444,3 +445,38 @@ export const getMenuDetailSchemas = (menuData): DescItem[] => [
     },
   },
 ];
+
+const checkMenuRule = async (value: string, id: Nullable<number>, parentId: Nullable<number>) => {
+  if (value) {
+    const exist = await checkMenu({
+      id: id,
+      parentId: parentId,
+      name: value,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的菜单`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>, parentId: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '名称长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkMenuRule(value, id, parentId);
+      },
+    },
+  ];
+};

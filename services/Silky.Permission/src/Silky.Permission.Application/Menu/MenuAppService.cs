@@ -27,7 +27,7 @@ public class MenuAppService : IMenuAppService
 
     public Task<bool> CheckAsync(CheckMenuInput input)
     {
-        return _menuDomainService.MenuRepository.AnyAsync(p => p.ParentId == input.ParentId && p.Name == input.Name);
+        return _menuDomainService.MenuRepository.AnyAsync(p => p.Id != input.Id && p.ParentId == input.ParentId && p.Name == input.Name);
     }
 
     public Task UpdateAsync(UpdateMenuInput input)
