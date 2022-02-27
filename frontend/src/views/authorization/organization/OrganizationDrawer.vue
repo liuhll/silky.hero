@@ -16,7 +16,7 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { organizationFormSchema } from './organization.data';
+  import { getNameRules, organizationFormSchema } from './organization.data';
   import { getOrganizationById } from '/@/api/organization';
 
   export default defineComponent({
@@ -29,14 +29,15 @@
       const id = ref<number | undefined>(undefined);
       const parentId = ref<number | undefined>(undefined);
 
-      const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
-        labelWidth: 100,
-        schemas: organizationFormSchema,
-        showActionButtonGroup: false,
-        actionColOptions: {
-          span: 23,
-        },
-      });
+      const [registerForm, { setFieldsValue, resetFields, validate, updateSchema, clearValidate }] =
+        useForm({
+          labelWidth: 100,
+          schemas: organizationFormSchema,
+          showActionButtonGroup: false,
+          actionColOptions: {
+            span: 23,
+          },
+        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
@@ -48,9 +49,15 @@
           setFieldsValue({
             ...organizationModel,
           });
+          updateSchema({
+            field: 'name',
+            rules: getNameRules(unref(id), unref(parentId)),
+          });
         } else {
           parentId.value = data.id;
+          updateSchema({ field: 'name', rules: getNameRules(null, unref(parentId)) });
         }
+        clearValidate();
       });
 
       async function handleSubmit() {

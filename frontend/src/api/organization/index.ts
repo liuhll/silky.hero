@@ -7,6 +7,7 @@ import {
   CreateOrgizationModel,
 } from './model/organizationModel';
 import { BasicFetchResult } from '/@/api/model/baseModel';
+import { requestParams } from '../../../mock/_util';
 enum Api {
   GetOrganizationTree = '/organization/tree',
   Organization = '/organization',
@@ -106,5 +107,12 @@ export const setAllocationOrganizationPositions = (
 export const checkOrganizationDataRange = (organizationId: number) => {
   return defHttp.post({
     url: `/organization/check/datarange/${organizationId}`,
+  });
+};
+
+export const checkOrganization = (requestParams) => {
+  return defHttp.post({
+    url: `/organization/check`,
+    params: requestParams,
   });
 };

@@ -6,6 +6,7 @@ import {
   getAllocationOrganizationRoles,
   getOrganizationTree,
   getOrganizationPositions,
+  checkOrganization,
 } from '/@/api/organization';
 import { Status } from '/@/utils/status';
 import { treeMap } from '/@/utils/helper/treeHelper';
@@ -17,6 +18,7 @@ import { formatToDate } from '/@/utils/dateUtil';
 import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
 import { h } from 'vue';
+import { Rule } from '/@/components/Form';
 
 export const userColumns: BasicColumn[] = [
   {
@@ -278,3 +280,42 @@ export const organizationPositionSchemas: FormSchema[] = [
     slot: 'positionNamesSlot',
   },
 ];
+
+const checkOrganizationRule = async (
+  value: string,
+  id: Nullable<number>,
+  parentId: Nullable<number>,
+) => {
+  if (value) {
+    const exist = await checkOrganization({
+      id: id,
+      parentId: parentId,
+      name: value,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的组织机构`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>, parentId: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '组织机构名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '组织机构名称长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkOrganizationRule(value, id, parentId);
+      },
+    },
+  ];
+};
