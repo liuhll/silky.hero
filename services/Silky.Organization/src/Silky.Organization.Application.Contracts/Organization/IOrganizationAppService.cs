@@ -27,7 +27,7 @@ public interface IOrganizationAppService
     /// <remarks>如果Id为null，则表示新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree", OnlyCurrentUserData = true)]
     [Authorize(OrganizationPermissions.Organizations.Create)]
     Task CreateAsync(CreateOrganizationInput input);
 
@@ -52,8 +52,8 @@ public interface IOrganizationAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}", OnlyCurrentUserData = true)]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree", OnlyCurrentUserData = true)]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<long>), "GetSelfAndChildrenOrganizationIds:{0}")]
     [Authorize(OrganizationPermissions.Organizations.Update)]
@@ -65,8 +65,8 @@ public interface IOrganizationAppService
     /// <param name="id">主键Id</param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}", OnlyCurrentUserData = true)]
+    [RemoveCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>), "tree", OnlyCurrentUserData = true)]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{0}")]
     [RemoveCachingIntercept(typeof(ICollection<long>), "GetSelfAndChildrenOrganizationIds:{0}")]
     [Authorize(OrganizationPermissions.Organizations.Delete)]
@@ -79,7 +79,7 @@ public interface IOrganizationAppService
     /// <param name="id">主键Id</param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
+    [GetCachingIntercept("id:{0}", OnlyCurrentUserData = true)]
     // [Authorize(OrganizationPermissions.Organizations.LookDetail)]
     Task<GetOrganizationOutput> GetAsync([CacheKey(0)] long id);
 
@@ -133,7 +133,7 @@ public interface IOrganizationAppService
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [GetCachingIntercept("tree")]
+    [GetCachingIntercept("tree", OnlyCurrentUserData = true)]
     Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync();
 
     /// <summary>
@@ -157,7 +157,7 @@ public interface IOrganizationAppService
     [Authorize(OrganizationPermissions.Organizations.AllocationPosition)]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getOrganizationPositionList:{0}")]
     [RemoveCachingIntercept(typeof(long[]), "getOrganizationPositionIds:{0}")]
-    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}")]
+    [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{0}", OnlyCurrentUserData = true)]
     Task SetAllocationPositionListAsync([CacheKey(0)] long id, long[] positionIds);
 
     /// <summary>
