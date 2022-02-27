@@ -73,6 +73,12 @@ export const getRoleList = (requestParams) => {
   });
 };
 
+export const checkRole = (requestParams) => {
+  return defHttp.post({
+    url: `/role/check`,
+    params: requestParams,
+  });
+};
 
 // export const setRoleStatus = (id: number, status: Status) => {
 //   return defHttp.put({

@@ -2,7 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
-import { getRoleList } from '/@/api/role';
+import { getRoleList, checkRole } from '/@/api/role';
 import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
 import { Tag } from 'ant-design-vue';
@@ -12,6 +12,12 @@ import { DataRange } from '/@/utils/dataRangeUtil';
 import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { getUserRoleList } from '/@/api/user';
+import { Rule } from '/@/components/Form';
+
+export enum RoleNameType {
+  Name = 0,
+  RealName = 1,
+}
 
 export const columns: BasicColumn[] = [
   {
@@ -72,23 +78,6 @@ export const roleSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '角色不允许为空',
-      },
-      {
-        max: 50,
-        message: '角色标识长度不允许超过50个字符',
-        validateTrigger: ['change', 'blur'],
-      },
-      {
-        type: 'string',
-        pattern: new RegExp('^\\w+$'),
-        message: '角色格式不正确',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'realName',
@@ -97,17 +86,6 @@ export const roleSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '角色名称不允许为空',
-      },
-      {
-        max: 50,
-        message: '角色名称长度不允许超过50个字符',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'sort',
@@ -183,6 +161,68 @@ export const roleSchemas: FormSchema[] = [
     label: '备注',
   },
 ];
+
+const checkRoleRule = async (value: string, id: Nullable<number>, roleNameType: RoleNameType) => {
+  if (value) {
+    const exist = await checkRole({
+      id: id,
+      name: value,
+      roleNameType: roleNameType,
+    });
+    if (exist) {
+      return Promise.reject(`已经存在${value}的角色`);
+    }
+  }
+  return Promise.resolve();
+};
+
+export const getNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '角色不允许为空',
+    },
+    {
+      max: 50,
+      message: '角色标识长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      pattern: new RegExp('^\\w+$'),
+      message: '角色格式不正确',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkRoleRule(value, id, RoleNameType.Name);
+      },
+    },
+  ];
+};
+
+export const getRealNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '角色名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '角色名称长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkRoleRule(value, id, RoleNameType.RealName);
+      },
+    },
+  ];
+};
 
 export const roleDataSchemas: FormSchema[] = [
   {
