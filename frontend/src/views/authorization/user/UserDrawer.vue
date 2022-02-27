@@ -20,7 +20,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { getMobilePhoneRules, getEmailRules, getUserNameRules, userSchemas } from './user.data';
+  import { getMobilePhoneRules, getEmailRules, getUserNameRules, userSchemas, getJobNumberRules } from './user.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Card } from 'ant-design-vue';
   import UserSubsidiaryTable from './UserSubsidiaryTable.vue';
@@ -63,12 +63,14 @@
           updateSchema({ field: 'userName', rules: getUserNameRules(data.record.id) });
           updateSchema({ field: 'email', rules: getEmailRules(data.record.id) });
           updateSchema({ field: 'mobilePhone', rules: getMobilePhoneRules(data.record.id) });
+          updateSchema({ field: 'jobNumber', rules: getJobNumberRules(data.record.id) });
         } else {
           updateSchema({ field: 'password', show: true });
           userSubsidiaryTableRef.value?.setTableData([]);
           updateSchema({ field: 'userName', rules: getUserNameRules(null) });
           updateSchema({ field: 'email', rules: getEmailRules(null) });
           updateSchema({ field: 'mobilePhone', rules: getMobilePhoneRules(null) });
+          updateSchema({ field: 'jobNumber', rules: getJobNumberRules(data.record.id) });
         }
         clearValidate();
         setDrawerProps({ confirmLoading: false });

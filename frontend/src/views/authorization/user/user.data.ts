@@ -14,6 +14,7 @@ enum AccountType {
   UserName = 0,
   MobilePhone = 1,
   Email = 2,
+  JobNumber = 3,
 }
 
 export const columns: BasicColumn[] = [
@@ -198,6 +199,9 @@ const checkAccountRule = async (value: string, id: Nullable<number>, accountType
         case AccountType.UserName:
           accountTypeText = '用户名';
           break;
+        case AccountType.JobNumber:
+          accountTypeText = '工号';
+          break;
       }
       return Promise.reject(`已经存在${value}的${accountTypeText}`);
     }
@@ -270,6 +274,28 @@ export const getMobilePhoneRules = (id: Nullable<number>): Rule[] => {
       validateTrigger: ['change', 'blur'],
       validator: (rules, value) => {
         return checkAccountRule(value, id, AccountType.MobilePhone);
+      },
+    },
+  ];
+};
+
+export const getJobNumberRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '工号不允许为空',
+    },
+    {
+      type: 'string',
+      pattern: new RegExp('^\\w+$'),
+      message: '工号格式不正确',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkAccountRule(value, id, AccountType.JobNumber);
       },
     },
   ];
@@ -365,18 +391,6 @@ export const userSchemas: FormSchema[] = [
     colProps: {
       span: 12,
     },
-    rules: [
-      {
-        required: true,
-        message: '工号不允许为空',
-      },
-      {
-        type: 'string',
-        pattern: new RegExp('^\\w+$'),
-        message: '工号格式不正确',
-        validateTrigger: ['change', 'blur'],
-      },
-    ],
   },
   {
     field: 'surname',
