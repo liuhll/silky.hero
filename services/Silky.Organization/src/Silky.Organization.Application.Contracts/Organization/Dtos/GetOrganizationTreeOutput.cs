@@ -15,6 +15,8 @@ public class GetOrganizationTreeOutput
     public string Remark { get; set; }
 
     public Status Status { get; set; }
+    
+    public bool IsBelong { get; set; }
 
     public virtual ICollection<GetOrganizationTreeOutput> Children { get; set; }
 }

@@ -16,6 +16,8 @@ public class GetOrganizationOutput : OrganizationDtoBase
     
     public ICollection<GetOrganizationPositionOutput> OrganizationPositions { get; set; }
 
+    public bool IsBelong { get; set; }
+
     public DateTimeOffset CreatedTime { get; set; }
     
     public DateTimeOffset? UpdatedTime { get; set; }

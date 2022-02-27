@@ -104,6 +104,7 @@ public class OrganizationAppService : IOrganizationAppService
         var organizationOutput = organization.Adapt<GetOrganizationOutput>();
         await organizationOutput.SetRolesInfo(publicRoles);
         await organizationOutput.SetPositionsInfo(publicPositions);
+        await organizationOutput.SetIsBelong(_session);
         return organizationOutput;
     }
 

@@ -67,14 +67,22 @@ public class PositionAppService : IPositionAppService
             .ToPagedListAsync(input.PageIndex, input.PageSize);
     }
 
-    public async Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId)
+    public async Task<ICollection<GetAllocationOrganizationPositionOutput>> GetPositionListAsync(long organizationId, bool? isAll)
     {
         var organizationPositionIds = await _organizationAppService.GetOrganizationPositionIdsAsync(organizationId);
-        return await _positionDomainService.PositionRepository
+        var outputList = await _positionDomainService.PositionRepository
             .AsQueryable(false)
-            .Where(p => (organizationPositionIds.Contains(p.Id) || p.IsPublic) && p.Status == Status.Valid)
-            .ProjectToType<GetPositionOutput>()
+            .Where(isAll == false,
+                p => (organizationPositionIds.Contains(p.Id) || p.IsPublic) && p.Status == Status.Valid)
+            .Where(isAll == true || isAll == null, p=> p.Status == Status.Valid)
+            .ProjectToType<GetAllocationOrganizationPositionOutput>()
             .ToListAsync();
+        foreach (var output in outputList)
+        {
+            output.IsBelong = organizationPositionIds.Any(p => p == output.Id);
+        }
+
+        return outputList.OrderByDescending(p=> p.IsBelong).ToList();
     }
 
     public Task<bool> CheckAsync(CheckPositionInput input)
@@ -82,7 +90,7 @@ public class PositionAppService : IPositionAppService
         return _positionDomainService.PositionRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id, false);
     }
 
-    public async  Task<bool> CheckHasDataRangeAsync(long organizationId, long positionId)
+    public async Task<bool> CheckHasDataRangeAsync(long organizationId, long positionId)
     {
         var organizationPositionIds = await _organizationAppService.GetOrganizationPositionIdsAsync(organizationId);
         return organizationPositionIds.Any(p => p == positionId);

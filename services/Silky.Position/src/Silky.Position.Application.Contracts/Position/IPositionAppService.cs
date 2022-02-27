@@ -75,9 +75,10 @@ public interface IPositionAppService
     /// 通过组织id获取可用于分配的岗位列表
     /// </summary>
     /// <param name="organizationId"></param>
+    /// <param name="isAll"></param>
     /// <returns></returns>
     [HttpGet("{organizationId:long}/list")]
-    Task<ICollection<GetPositionOutput>> GetPositionListAsync(long organizationId);
+    Task<ICollection<GetAllocationOrganizationPositionOutput>> GetPositionListAsync(long organizationId,bool? isAll);
 
     /// <summary>
     /// 判断是否存在某个职位

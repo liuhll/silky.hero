@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Silky.Core;
+using Silky.Core.Runtime.Session;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.Role;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
@@ -46,6 +48,19 @@ public static class GetOrganizationOutputExtensions
                 IsPublic = publicRole.IsPublic,
             };
             organizationOutput.OrganizationRoles.Add(roleOutput);
+        }
+    }
+
+    public static async Task SetIsBelong(this GetOrganizationOutput organizationOutput, ISession session)
+    {
+        var currentUserDataRange = await session.GetCurrentUserDataRangeAsync();
+        if (currentUserDataRange.IsAllData)
+        {
+            organizationOutput.IsBelong = true;
+        }
+        else
+        {
+            organizationOutput.IsBelong = currentUserDataRange.OrganizationIds.Any(p => p == organizationOutput.Id);
         }
     }
 

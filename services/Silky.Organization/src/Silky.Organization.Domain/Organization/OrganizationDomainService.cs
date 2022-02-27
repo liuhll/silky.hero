@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Silky.Core.DbContext.UnitOfWork;
 using Silky.Core.Exceptions;
 using Silky.Core.Runtime.Rpc;
+using Silky.Core.Runtime.Session;
 using Silky.Core.Serialization;
 using Silky.EntityFrameworkCore.Repositories;
+using Silky.Hero.Common.Session;
 using Silky.Identity.Application.Contracts.User;
 using Silky.Organization.Application.Contracts.Organization.Dtos;
 
@@ -18,6 +20,7 @@ public class OrganizationDomainService : IOrganizationDomainService
     public IRepository<Organization> OrganizationRepository { get; }
     private readonly IUserAppService _userAppService;
     private readonly ISerializer _serializer;
+    private readonly ISession _session;
 
     public OrganizationDomainService(IRepository<Organization> organizationRepository,
         IUserAppService userAppService,
@@ -26,6 +29,7 @@ public class OrganizationDomainService : IOrganizationDomainService
         OrganizationRepository = organizationRepository;
         _userAppService = userAppService;
         _serializer = serializer;
+        _session = NullSession.Instance;
     }
 
     public async Task CreateAsync(CreateOrganizationInput input)
@@ -120,6 +124,11 @@ public class OrganizationDomainService : IOrganizationDomainService
         var organizations = await OrganizationRepository.AsQueryable(false)
             .OrderByDescending(p => p.Sort)
             .ProjectToType<GetOrganizationTreeOutput>().ToListAsync();
+        var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();
+        foreach (var organizationTreeOutput in organizations)
+        {
+            organizationTreeOutput.IsBelong = currentUserDataRange.IsAllData || currentUserDataRange.OrganizationIds.Any(p => p == organizationTreeOutput.Id);
+        }
         return organizations.BuildTree();
     }
 
