@@ -80,9 +80,22 @@ public class RoleAppService : IRoleAppService
         await RemoveUserRoleCacheAsync(role.Id);
     }
 
-    public Task<bool> CheckAsync(CheckRoleInput input)
+    public async Task<bool> CheckAsync(CheckRoleInput input)
     {
-        return _roleManager.RoleRepository.AnyAsync(p => p.NormalizedName == input.Name.ToUpper() && p.Id != input.Id,false);
+        var exsit = false;
+        switch (input.RoleNameType)
+        {
+            case RoleNameType.Name:
+                exsit = await _roleManager.RoleRepository.AnyAsync(p => p.NormalizedName == input.Name.ToUpper() && p.Id != input.Id,
+                    false);
+                break;
+            case RoleNameType.RealName:
+                exsit = await _roleManager.RoleRepository.AnyAsync(p => p.RealName == input.Name && p.Id != input.Id,
+                    false);
+                break;
+        }
+
+        return exsit;
     }
 
     [UnitOfWork]
@@ -271,7 +284,6 @@ public class RoleAppService : IRoleAppService
             await _distributedCache.RemoveAsync(typeof(ICollection<GetOrganizationTreeOutput>), "tree");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
-            
         }
     }
 }
