@@ -69,6 +69,10 @@ public class UserAppService : IUserAppService
                 exsit = await UserManager.UserRepository.AnyAsync(
                     p => p.Id != input.Id && p.MobilePhone == input.Account, false);
                 break;
+            case AccountType.JobNumber:
+                exsit = await UserManager.UserRepository.AnyAsync(
+                    p => p.Id != input.Id && p.JobNumber == input.Account, false);
+                break;
             default:
                 throw new UserFriendlyException("账号类型不正确");
         }

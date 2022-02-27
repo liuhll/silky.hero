@@ -6,5 +6,7 @@ public enum AccountType
     
     MobilePhone,
     
-    Email
+    Email,
+    
+    JobNumber,
 }
