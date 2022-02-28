@@ -242,7 +242,7 @@
 
       async function loadOrganizationTreeData() {
        // const organizationTreeList = await getOrganizationTree();
-        treeData.value = await getOrganizationTreeList(true);
+        treeData.value = await getOrganizationTreeList(true, false);
       }
       function handleCreateOrganization(data: any) {
         nextTick(async () => {
@@ -348,7 +348,11 @@
             icon: 'clarity:note-edit-line',
           });
         }
-        if (hasPermission('Organization.Create') && organizationInfo.isBelong) {
+        if (
+          hasPermission('Organization.Create') &&
+          organizationInfo.status === Status.Valid &&
+          organizationInfo.isBelong
+        ) {
           rigthMenList.push({
             label: '添加子机构',
             handler: () => {

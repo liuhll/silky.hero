@@ -133,13 +133,16 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
-export const getOrganizationTreeList = async (isOnlyBelong: boolean): Promise<TreeItem[]> => {
+export const getOrganizationTreeList = async (
+  isOnlyBelong: boolean,
+  onlyValid: boolean = true,
+): Promise<TreeItem[]> => {
   const organizationTreeList = await getOrganizationTree();
   return treeMap(organizationTreeList, {
     conversion: (node: GetOrgizationTreeModel) => {
       const orgIcon =
         node.status == Status.Valid ? 'ant-design:folder-outlined' : 'ant-design:folder-filled';
-      let disabled = node.status == Status.Invalid;
+      let disabled = node.status == Status.Invalid && onlyValid;
       if (isOnlyBelong) {
         disabled = disabled || node.isBelong === false;
       }
