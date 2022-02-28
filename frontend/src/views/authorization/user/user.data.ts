@@ -7,7 +7,6 @@ import { statusOptions, Status } from '/@/utils/status';
 import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { checkAccount } from '/@/api/user';
-import RuleObject from 'ant-design-vue/lib/form/interface';
 import { Rule } from '/@/components/Form';
 
 enum AccountType {
