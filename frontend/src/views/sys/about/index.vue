@@ -4,8 +4,7 @@
       <div class="flex justify-between items-center">
         <span class="flex-1">
           <a :href="GITHUB_URL" target="_blank">{{ name }}</a>
-          是一个基于Vue3.0、Vite、 Ant-Design-Vue 、TypeScript
-          的后台解决方案，目标是为中大型项目开发,提供现成的开箱解决方案及丰富的示例,原则上不会限制任何代码用于商用。
+          是一个以.net为基础平台开发的权限管理系统,可以作为后台服务管理系统的基础。在此基础上,开发者可以很方便的添加自己需要的服务。服务端基于Silky微服务开发框架,前端基于Vben。
         </span>
       </div>
     </template>
