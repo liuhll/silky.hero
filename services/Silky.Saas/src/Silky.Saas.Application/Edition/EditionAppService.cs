@@ -78,4 +78,10 @@ public class EditionAppService : IEditionAppService
     {
         return _editionDomainService.GetEditionFeatureAsync(featureCode);
     }
+
+    public Task<GetEditionFeatureOutput> GetTenantEditionFeatureAsync(string featureCode, long tenantId)
+    {
+        return _editionDomainService.GetEditionFeatureAsync(featureCode, tenantId);
+    }
+    
 }

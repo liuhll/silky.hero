@@ -20,5 +20,5 @@ public interface IEditionDomainService
     Task<GetEditionEditOutput> GetAsync(long id);
     
     Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> editionFeatures);
-    Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode);
+    Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode, long? tenantId = null);
 }

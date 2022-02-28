@@ -16,30 +16,33 @@ public class AuditLogEventConsumer : IConsumer<AuditLogInfo>
 {
     private readonly IRepository<AuditLog> _auditLogRepository;
     private readonly IEditionAppService _editionAppService;
-    private readonly ISession _session;
+    private readonly ICurrentRpcToken _currentRpcToken;
     private static object locker = new();
 
     public AuditLogEventConsumer()
     {
         _auditLogRepository = EngineContext.Current.Resolve<IRepository<AuditLog>>();
         _editionAppService = EngineContext.Current.Resolve<IEditionAppService>();
-        _session = NullSession.Instance;
+        _currentRpcToken =  EngineContext.Current.Resolve<ICurrentRpcToken>();
     }
 
     public async Task Consume(ConsumeContext<AuditLogInfo> context)
     {
+        if (context.Message.TenantId == null)
+        {
+            return;
+        }
+        _currentRpcToken.SetRpcToken();
+        var enabledAuditingLog = await _editionAppService
+            .GetTenantEditionFeatureAsync(FeatureCode.EnabledAuditingLog,
+            context.Message.TenantId.To<long>());
+        if (enabledAuditingLog?.FeatureValue.To<bool>() == false)
+        {
+            return;
+        }
+
         lock (locker)
         {
-            if (!_session.IsLogin())
-            {
-                return;
-            }
-
-            var enabledAuditingLog = _editionAppService.GetEditionFeatureAsync(FeatureCode.EnabledAuditingLog).GetAwaiter().GetResult();
-            if (enabledAuditingLog?.FeatureValue.To<bool>() == false)
-            {
-                return;
-            }
             var auditLog = context.Message.Adapt<AuditLog>();
             _auditLogRepository.InsertNow(auditLog);
         }

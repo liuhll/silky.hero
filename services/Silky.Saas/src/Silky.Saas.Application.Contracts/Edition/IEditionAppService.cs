@@ -96,4 +96,8 @@ public interface IEditionAppService
     [GetCachingIntercept("featureCode:{0}")]
     [ProhibitExtranet]
     Task<GetEditionFeatureOutput> GetEditionFeatureAsync([CacheKey(0)]string featureCode);
+    
+    [GetCachingIntercept("featureCode:{0}:tenantId:{1}")]
+    [ProhibitExtranet]
+    Task<GetEditionFeatureOutput> GetTenantEditionFeatureAsync([CacheKey(0)]string featureCode,[CacheKey(1)]long tenantId);
 }
