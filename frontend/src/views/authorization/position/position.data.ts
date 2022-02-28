@@ -26,7 +26,9 @@ export const getPositionOptions = async (id: Nullable<Number>, isAll: boolean) =
         ...omit(next, ['name', 'id']),
         label: next['name'],
         value: next['id'],
-        disabled: next['status'] === Status.Invalid || next['isBelong'] == false,
+        disabled:
+          next['status'] === Status.Invalid ||
+          (next['isBelong'] == false && next['isPublic'] === false),
       });
     }
     return prev;
