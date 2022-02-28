@@ -19,6 +19,8 @@ COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Id
 COPY Silky.Identity/src/Silky.Identity.Application.Contracts Silky.Identity/src/Silky.Identity.Application.Contracts
 COPY Silky.Position/src/Silky.Position.Domain.Shared Silky.Position/src/Silky.Position.Domain.Shared
 COPY Silky.Position/src/Silky.Position.Application.Contracts Silky.Position/src/Silky.Position.Application.Contracts
+COPY Silky.Saas/src/Silky.Saas.Application.Contracts Silky.Saas/src/Silky.Saas.Application.Contracts
+COPY Silky.Saas/src/Silky.Saas.Domain.Shared Silky.Saas/src/Silky.Saas.Domain.Shared
 
 RUN dotnet restore /src/Silky.Organization/src/Silky.OrganizationHost/Silky.OrganizationHost.csproj --disable-parallel && \
     dotnet build --no-restore -c Release /src/Silky.Organization/src/Silky.OrganizationHost/Silky.OrganizationHost.csproj

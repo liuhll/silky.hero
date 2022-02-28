@@ -16,6 +16,8 @@ COPY Shared Shared
 COPY Silky.Log Silky.Log
 COPY Silky.Account/src/Silky.Account.Application.Contracts Silky.Account/src/Silky.Account.Application.Contracts
 COPY Silky.Identity/src/Silky.Identity.Domain.Shared Silky.Identity/src/Silky.Identity.Domain.Shared
+COPY Silky.Saas/src/Silky.Saas.Application.Contracts Silky.Saas/src/Silky.Saas.Application.Contracts
+COPY Silky.Saas/src/Silky.Saas.Domain.Shared Silky.Saas/src/Silky.Saas.Domain.Shared
 RUN dotnet restore /src/Silky.Log/src/Silky.LogHost/Silky.LogHost.csproj --disable-parallel && \
     dotnet build --no-restore -c Release /src/Silky.Log/src/Silky.LogHost/Silky.LogHost.csproj
 
