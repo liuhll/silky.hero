@@ -108,18 +108,6 @@ public class OrganizationAppService : IOrganizationAppService
         return organizationOutput;
     }
 
-    // public async Task<PagedList<GetOrganizationPageOutput>> GetPageAsync(GetOrganizationPageInput input)
-    // {
-    //     var organizations = await _organizationDomainService.OrganizationRepository
-    //         .Where(input.Id.HasValue, o => o.Id == input.Id || o.ParentId == input.Id)
-    //         .Where(!input.Name.IsNullOrEmpty(), o => o.Name.Contains(input.Name))
-    //         .Where(input.Status.HasValue, o => o.Status == input.Status)
-    //         .OrderByDescending(p => p.Sort)
-    //         .ProjectToType<GetOrganizationPageOutput>()
-    //         .ToPagedListAsync(input.PageIndex, input.PageSize);
-    //     return organizations;
-    // }
-
     public async Task<ICollection<GetOrganizationTreeOutput>> GetTreeAsync()
     {
         var organizations = await _organizationDomainService.GetTreeAsync();

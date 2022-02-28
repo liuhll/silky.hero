@@ -281,7 +281,7 @@ public class RoleAppService : IRoleAppService
                 $"CurrentUserMenus:userId:{userRole.UserId}");
             await _distributedCache.RemoveAsync(typeof(string[]),
                 $"CurrentUserPermissionCodes:userId:{userRole.UserId}");
-            await _distributedCache.RemoveAsync(typeof(ICollection<GetOrganizationTreeOutput>), $"tree:userId:{userRole.UserId}");
+            await _distributedCache.RemoveAsync(typeof(ICollection<GetOrganizationTreeOutput>), $"OrganizationTree:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"permissionName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(bool), $"roleName:*:userId:{userRole.UserId}");
             await _distributedCache.RemoveMatchKeyAsync(typeof(GetOrganizationOutput), "id:*");
