@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   silky.account:
-    image: silky.account:${TAG:-latest}
+    image: silkyhero/account:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Account/src/Silky.AccountHost/Dockerfile
@@ -22,7 +22,7 @@ services:
       - silky_service_net
 
   silky.basicdata:
-    image: silky.basicdata:${TAG:-latest}
+    image: silkyhero/basicdata:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.BasicData/src/Silky.BasicDataHost/Dockerfile
@@ -42,7 +42,7 @@ services:
       - silky_service_net
     
   silky.identity:
-    image: silky.identity:${TAG:-latest}
+    image: silkyhero/identity:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Identity/src/Silky.IdentityHost/Dockerfile
@@ -62,7 +62,7 @@ services:
       - silky_service_net
     
   silky.log:
-    image: silky.log:${TAG:-latest}
+    image: silkyhero/log:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Log/src/Silky.LogHost/Dockerfile
@@ -87,7 +87,7 @@ services:
       - silky_service_net
       
   silky.organization:
-    image: silky.organization:${TAG:-latest}
+    image: silkyhero/organization:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Organization/src/Silky.OrganizationHost/Dockerfile
@@ -107,7 +107,7 @@ services:
       - silky_service_net
       
   silky.permission:
-    image: silky.permission:${TAG:-latest}
+    image: silkyhero/permission:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Permission/src/Silky.PermissionHost/Dockerfile
@@ -127,7 +127,7 @@ services:
       - silky_service_net
     
   silky.position:
-    image: silky.position:${TAG:-latest}
+    image: silkyhero/position:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Position/src/Silky.PositionHost/Dockerfile
@@ -147,7 +147,7 @@ services:
       - silky_service_net
     
   silky.saas:
-    image: silky.saas:${TAG:-latest}
+    image: silkyhero/saas:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Saas/src/Silky.SaasHost/Dockerfile
@@ -167,7 +167,7 @@ services:
       - silky_service_net
     
   silky.gateway:
-    image: silky.gateway:${TAG:-latest}
+    image: silkyhero/gateway:${TAG:-latest}
     build:
       context: .
       dockerfile: Silky.Gateway/src/Silky.GatewayHost/Dockerfile
