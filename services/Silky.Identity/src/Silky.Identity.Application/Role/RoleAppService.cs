@@ -166,7 +166,7 @@ public class RoleAppService : IRoleAppService
             .AsQueryable(false)
             .Where(!name.IsNullOrEmpty(), p => p.Name.Contains(name))
             .Where(!realName.IsNullOrEmpty(), p => p.RealName.Contains(realName))
-            .Where(p => status.HasValue, p => p.Status == status)
+            .Where(status.HasValue, p => p.Status == status)
             .OrderByDescending(p => p.Sort)
             .ThenByDescending(p => p.CreatedTime)
             .ProjectToType<GetRoleOutput>()
