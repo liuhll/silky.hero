@@ -19,7 +19,8 @@ public static class MenuRepositoryExtensions
         var enabledSaasManage = await GetEditionFeatureAsync(FeatureCode.EnabledSaasManage);
 
         return menuRepository.AsQueryable(false)
-                .Where(enabledAuditingLog?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.AuditLogMenuName)
+                .Where(enabledAuditingLog?.FeatureValue.To<bool>() == false,
+                    p => p.Name != MenuConsts.AuditLogMenuName && p.Name != MenuConsts.LogMangeMenuName)
                 .Where(enabledMenuManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.MenuMenuName)
                 .Where(enabledSaasManage?.FeatureValue.To<bool>() == false, p => p.Name != MenuConsts.SaasMenuName)
             ;
