@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Silky.Core;
+using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
+using Silky.Hero.Common;
 using Silky.Http.Identity.Authorization.Handlers;
 using Silky.Http.Identity.Authorization.Requirements;
 using Silky.Permission.Application.Contracts.Permission;
@@ -25,6 +30,12 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
     {
         if (requirement is PermissionRequirement permissionRequirement)
         {
+            if (EngineContext.Current.HostEnvironment.EnvironmentName == SilkyHeroConsts.DemoEnvironment &&
+                httpContext.Request.Method != "GET")
+            {
+                throw new UserFriendlyException("演示环境不允许修改数据");
+            }
+
             return await _permissionAppService.CheckPermissionAsync(permissionRequirement.PermissionName);
         }
 
@@ -36,7 +47,7 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
         var serviceEntry = httpContext.GetServiceEntry();
         var roles = serviceEntry
             .AuthorizeData
-            .Where(p => !p.Roles.IsNullOrEmpty())
+            .Where(p => !CollectionExtensions.IsNullOrEmpty((IEnumerable)p.Roles))
             .SelectMany(p => p.Roles?.Split(","))
             .ToList();
         foreach (var role in roles)
