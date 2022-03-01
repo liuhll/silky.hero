@@ -22,7 +22,7 @@ export const getUserById = (id) => {
 
 export const getOrganizationUserPage = (requestParams) => {
   return defHttp.get<GetUserPositionModel>({
-    url: `user/${requestParams.id}/organizationuser/page`,
+    url: `/user/${requestParams.id}/organizationuser/page`,
     params: {
       pageIndex: requestParams.pageIndex,
       pageSize: requestParams.pageSize,

@@ -7,7 +7,7 @@ enum Api {
   Login = '/account/login',
   GetUserInfo = '/account/currentuserinfo',
   GetUserMenus = '/account/menus',
-  GetPermCode = 'account/permissioncodes',
+  GetPermCode = '/account/permissioncodes',
 }
 
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
