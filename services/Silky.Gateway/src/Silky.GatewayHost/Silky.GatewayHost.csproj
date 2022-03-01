@@ -11,6 +11,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.2" />
         <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Http.Auditing" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.Http.CorsAccessor" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.HealthChecks.Rpc" Version="$(SilkyVersion)" />
         <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />

@@ -32,6 +32,8 @@ namespace Silky.GatewayHost
                 .AddSilkyMiniProfiler()
                 .AddSwaggerDocuments()
                 .AddAuditing<HeroAuditingStore>();
+
+            services.AddCorsAccessor();
             
             services.AddHealthChecks()
                 .AddSilkyRpc();
@@ -53,6 +55,7 @@ namespace Silky.GatewayHost
             app.UseSilkyRpcHealthCheck()
                 .UseHealthChecksPrometheusExporter("/metrics");
             app.UseRouting();
+            app.UseCorsAccessor();
             app.UseResponseCaching();
             app.UseSilkyWebSocketsProxy();
             app.UseSilkyWrapperResponse();
