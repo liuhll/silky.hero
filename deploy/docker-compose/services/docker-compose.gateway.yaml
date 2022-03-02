@@ -1,0 +1,61 @@
+version: '3.7'
+
+services:
+  silky.gateway1:
+    image: silkyhero/gateway:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/gateway1:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
+      rabbitMq__port: ${rabbitMq__host:-5672}
+      rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
+      rabbitMq__password: ${rabbitMq__password:-rabbitmq}
+      rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
+      healthChecksUI__healthChecks__0__name: silkyrpc
+      healthChecksUI__healthChecks__0__uri: ${healthChecksUI__healthChecks__0__uri:-http://silky.gateway/silkyrpc/healthz}
+      gateway__jwtSecret: ${gateway__jwtSecret:-jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW}
+    networks:
+      - silky_service_net
+    ports:
+      - 8081:80
+
+  silky.gateway2:
+    image: silkyhero/gateway:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/gateway2:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__order:-server=silky.mysql;port=3306;database=order;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
+      rabbitMq__port: ${rabbitMq__host:-5672}
+      rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
+      rabbitMq__password: ${rabbitMq__password:-rabbitmq}
+      rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
+      healthChecksUI__healthChecks__0__name: silkyrpc
+      healthChecksUI__healthChecks__0__uri: ${healthChecksUI__healthChecks__0__uri:-http://silky.gateway/silkyrpc/healthz}
+      gateway__jwtSecret: ${gateway__jwtSecret:-jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW}
+    networks:
+      - silky_service_net
+    ports:
+      - 8082:80
+
+networks:
+  silky_service_net:
+    external:
+      name: silky_service_net

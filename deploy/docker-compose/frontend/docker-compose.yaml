@@ -1,0 +1,6 @@
+version: '3.7'
+services:
+  silky.dashboard:
+    image: silkyhero/dashboard:${TAG:-latest}
+    ports:
+      - 8070:80

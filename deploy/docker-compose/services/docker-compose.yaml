@@ -1,0 +1,149 @@
+version: '3.7'
+
+services:
+  silky.account:
+    image: silkyhero/account:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/account:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__account:-server=silky.mysql;port=3306;database=silky.account;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      jwtSettings__secret: ${jwtSettings__secret:-jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW}
+    networks:
+      - silky_service_net
+
+  silky.basicdata:
+    image: silkyhero/basicdata:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/basicdata:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__basicdata:-server=silky.mysql;port=3306;database=silky.basicdata;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+  silky.identity:
+    image: silkyhero/identity:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/identity:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__identity:-server=silky.mysql;port=3306;database=silky.identity;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+  silky.log:
+    image: silkyhero/log:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/log:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__log:-server=silky.mysql;port=3306;database=silky.log;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+      rabbitMq__host: ${rabbitMq__host:-silky.rabbitmq}
+      rabbitMq__port: ${rabbitMq__host:-5672}
+      rabbitMq__userName: ${rabbitMq__userName:-rabbitmq}
+      rabbitMq__password: ${rabbitMq__password:-rabbitmq}
+      rabbitMq__virtualHost: ${rabbitMq__virtualHost:-/}
+    networks:
+      - silky_service_net
+
+  silky.organization:
+    image: silkyhero/organization:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/organization:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__organization:-server=silky.mysql;port=3306;database=silky.organization;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+  silky.permission:
+    image: silkyhero/permission:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/permission:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__permission:-server=silky.mysql;port=3306;database=silky.permission;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+  silky.position:
+    image: silkyhero/position:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/position:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__position:-server=silky.mysql;port=3306;database=silky.position;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+  silky.saas:
+    image: silkyhero/saas:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/saas:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
+      governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
+      registrycenter__type: ${registrycenter__type:-Zookeeper}
+      registrycenter__connectionStrings: ${registrycenter__connectionStrings:-silky.zoo1:2181,silky.zoo2:2181,silky.zoo3:2181;silky.zoo4:2181,silky.zoo5:2181,silky.zoo6:2181}
+      distributedCache__redis__isEnabled: ${distributedCache__redis__isEnabled:-true}
+      distributedCache__redis__configuration: ${distributedCache__redis__configuration:-silky.redis:6379,defaultDatabase=0}
+      connectionStrings__default:  ${connectionStrings__saas:-server=silky.mysql;port=3306;database=silky.saas;uid=root;pwd=qwe!P4ss;}
+      skyWalking__transport__gRPC__servers: ${skyWalking__transport__gRPC__servers:-oap:11800}
+    networks:
+      - silky_service_net
+
+networks:
+  silky_service_net:
+    external:
+      name: silky_service_net
