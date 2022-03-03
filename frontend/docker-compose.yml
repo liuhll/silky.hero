@@ -5,5 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        mode: ${mode:-production}
     ports:
       - 8080:80

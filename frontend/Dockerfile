@@ -3,7 +3,7 @@ LABEL maintainer="1029765111@qq.com"
 
 WORKDIR /app
 COPY . .
-ARG env=production
+ARG mode=production
 
 # RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 # RUN npm config set registry https://registry.yarnpkg.com
@@ -12,7 +12,7 @@ RUN npm config set registry https://mirrors.cloud.tencent.com/npm
 RUN npm cache clean -force
 
 RUN npm install && \
-  npm run build:${env}
+  npm run build:${mode}
 
 FROM nginx:latest
 LABEL maintainer="1029765111@qq.com"

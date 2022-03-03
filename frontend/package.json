@@ -13,6 +13,7 @@
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
     "build:production": "npm run build",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
+    "build:demo": "cross-env vite build --mode demo && esno ./build/script/postBuild.ts",
     "build:no-cache": "yarn clean:cache && npm run build",
     "report": "cross-env REPORT=true npm run build",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
