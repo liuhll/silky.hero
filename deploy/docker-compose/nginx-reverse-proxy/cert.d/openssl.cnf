@@ -8,4 +8,4 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth, serverAuth
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = hero.silky-fk.com
+DNS.1 = www.silkyhero.com
