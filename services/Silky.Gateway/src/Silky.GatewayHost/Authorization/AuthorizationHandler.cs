@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Silky.Core;
 using Silky.Core.Exceptions;
-using Silky.Core.Extensions;
 using Silky.Hero.Common;
 using Silky.Http.Identity.Authorization.Handlers;
 using Silky.Http.Identity.Authorization.Requirements;
