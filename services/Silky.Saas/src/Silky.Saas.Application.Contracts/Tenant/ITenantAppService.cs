@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 using Silky.Saas.Application.Contracts.Tenant.Dtos;
 using Silky.Saas.Domain.Shared;
@@ -33,6 +34,7 @@ public interface ITenantAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
+    [RemoveMatchKeyCachingIntercept("tenantName:*", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
     [Authorize(SaasPermissions.Tenants.Update)]
     Task UpdateAsync(UpdateTenantInput input);
@@ -63,6 +65,7 @@ public interface ITenantAppService
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
+    [RemoveMatchKeyCachingIntercept("tenantName:*", IgnoreMultiTenancy = true)]
     [Authorize(SaasPermissions.Tenants.Delete)]
     Task DeleteAsync([CacheKey(0)] long id);
 
@@ -80,4 +83,13 @@ public interface ITenantAppService
     [GetCachingIntercept("all")]
     [AllowAnonymous]
     Task<ICollection<GetTenantOutput>> GetAllAsync();
+    
+    /// <summary>
+    /// 通过租户标识获取租户信息
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    [ProhibitExtranet]
+    [GetCachingIntercept("tenantName:{0}", IgnoreMultiTenancy = true)]
+    Task<GetTenantOutput> GetByNameAsync([CacheKey(0)] string name);
 }

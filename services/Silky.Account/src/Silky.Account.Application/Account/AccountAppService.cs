@@ -27,7 +27,7 @@ public class AccountAppService : IAccountAppService
 
     public Task<string> LoginAsync(LoginInput input)
     {
-        return SignInManager.PasswordSignInAsync(input.Account, input.Password, input.TenantId, true);
+        return SignInManager.PasswordSignInAsync(input.Account, input.Password, input.TenantName, true);
     }
 
     public async Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync()

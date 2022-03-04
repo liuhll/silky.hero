@@ -7,10 +7,16 @@ public abstract class TenantDtoBase
 {
     
     /// <summary>
+    /// 租户标识
+    /// </summary>
+    [Required(ErrorMessage = "租户标识不允许为空")]
+    public string Name { get; set; }
+    
+    /// <summary>
     /// 租户名称
     /// </summary>
     [Required(ErrorMessage = "租户名称不允许为空")]
-    public string Name { get; set; }
+    public string RealName { get; set; }
 
     /// <summary>
     /// 状态

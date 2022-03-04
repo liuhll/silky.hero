@@ -8,9 +8,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Silky.Core.Exceptions;
+using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.Hero.Common.Enums;
 using Silky.Jwt;
+using Silky.Saas.Application.Contracts.Tenant;
 
 namespace Silky.Identity.Domain;
 
@@ -18,9 +20,11 @@ public class IdentitySignInManager
 {
     private readonly IUserConfirmation<IdentityUser> _confirmation;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ITenantAppService _tenantAppService;
 
     public IdentitySignInManager(
         IdentityUserManager userManager,
+        ITenantAppService tenantAppService,
         IOptions<IdentityOptions> optionsAccessor,
         IUserConfirmation<IdentityUser> confirmation,
         IJwtTokenGenerator jwtTokenGenerator)
@@ -28,6 +32,7 @@ public class IdentitySignInManager
         UserManager = userManager;
         _confirmation = confirmation;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _tenantAppService = tenantAppService;
         Options = optionsAccessor?.Value ?? new IdentityOptions();
         Logger = NullLogger<IdentitySignInManager>.Instance;
     }
@@ -39,9 +44,10 @@ public class IdentitySignInManager
 
     public ILogger<IdentitySignInManager> Logger { get; set; }
 
-    public async Task<string> PasswordSignInAsync(string account, string password, long? tenantId,
+    public async Task<string> PasswordSignInAsync(string account, string password, string tenantName,
         bool lockoutOnFailure)
     {
+        long? tenantId = await CheckAndGetTenantId(tenantName);
         var user = await UserManager.FindByAccountAsync(account, tenantId, true);
         if (user == null)
         {
@@ -72,6 +78,26 @@ public class IdentitySignInManager
 
         var payload = GetUserPayloadAsync(user);
         return _jwtTokenGenerator.Generate(payload);
+    }
+
+    private async Task<long?> CheckAndGetTenantId(string tenantName)
+    {
+        if (!tenantName.IsNullOrEmpty())
+        {
+            var tenant = await _tenantAppService.GetByNameAsync(tenantName);
+            if (tenant == null)
+            {
+                throw new UserFriendlyException($"不存在{tenantName}的租户");
+            }
+            if (tenant.Status == Status.Invalid)
+            {
+                throw new UserFriendlyException("您所在的租户被冻结");
+            }
+
+            return tenant.Id;
+        }
+
+        return null;
     }
 
     private IDictionary<string, object> GetUserPayloadAsync(IdentityUser user)

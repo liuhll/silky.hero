@@ -18,7 +18,7 @@ public class LoginInput
     public string Password { get; set; }
 
     /// <summary>
-    /// 所属租户
+    /// 所属租户标识
     /// </summary>
-    public long? TenantId { get; set; }
+    public string TenantName { get; set; }
 }

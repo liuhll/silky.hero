@@ -48,7 +48,7 @@ public class TenantAppService : ITenantAppService
 
     public Task<bool> CheckAsync(CheckTenantInput input)
     {
-        return _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id,false);
+        return _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id, false);
     }
 
     public async Task<GetTenantOutput> GetAsync(long id)
@@ -96,5 +96,13 @@ public class TenantAppService : ITenantAppService
             .ProjectToType<GetTenantOutput>()
             .ToListAsync();
     }
-    
+
+    public Task<GetTenantOutput> GetByNameAsync(string name)
+    {
+        return _tenantDomainService
+            .TenantRepository
+            .AsQueryable(false)
+            .ProjectToType<GetTenantOutput>()
+            .FirstOrDefaultAsync(p => p.Name == name);
+    }
 }

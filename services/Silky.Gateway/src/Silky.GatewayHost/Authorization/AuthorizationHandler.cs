@@ -9,6 +9,7 @@ using Silky.Core.Exceptions;
 using Silky.Hero.Common;
 using Silky.Http.Identity.Authorization.Handlers;
 using Silky.Http.Identity.Authorization.Requirements;
+using Silky.Http.Identity.Extensions;
 using Silky.Permission.Application.Contracts.Permission;
 using Silky.Rpc.Extensions;
 
@@ -35,6 +36,13 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
                 throw new UserFriendlyException("演示环境不允许修改数据");
             }
 
+            var serviceEntry = httpContext.GetServiceEntry();
+            if (serviceEntry.IsSilkyAppService())
+            {
+                // todo 
+                return true;
+            }
+            
             return await _permissionAppService.CheckPermissionAsync(permissionRequirement.PermissionName);
         }
 
@@ -46,7 +54,7 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
         var serviceEntry = httpContext.GetServiceEntry();
         var roles = serviceEntry
             .AuthorizeData
-            .Where(p => !CollectionExtensions.IsNullOrEmpty((IEnumerable)p.Roles))
+            .Where(p => !p.Roles.IsNullOrEmpty())
             .SelectMany(p => p.Roles?.Split(","))
             .ToList();
         foreach (var role in roles)

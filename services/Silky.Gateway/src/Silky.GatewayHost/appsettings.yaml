@@ -24,6 +24,10 @@ healthChecksUI:
       uri: http://127.0.0.1:6000/silkyrpc/healthz
   evaluationTimeinSeconds: 30
   minimumSecondsBetweenFailureNotifications: 60
+dashboard:
+  tenantNameFiledName: tenantName
+  userNameFiledName: account
+  passwordFiledName: password
 skyWalking:
   serviceName: Silky.GatewayHost
   headerVersions:
