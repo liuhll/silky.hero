@@ -53,7 +53,7 @@
           </template>
           <Tag color="red" style="margin: 3px"> 是 </Tag>
         </Tooltip>
-        <Tag v-if="!text" color="blue" style="margin: 3px"> 否 </Tag>
+        <Span v-if="!text"  style="margin: 3px"> 否 </Span>
       </template>
       <template #toolbar>
         <a-button type="primary" v-auth="'Identity.User.Create'" @click="handleCreate"

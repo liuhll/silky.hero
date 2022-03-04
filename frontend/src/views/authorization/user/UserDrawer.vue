@@ -48,7 +48,7 @@
       const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
         useForm({
-          labelWidth: 100,
+          labelWidth: 130,
           schemas: userSchemas,
           showActionButtonGroup: false,
         });

@@ -43,6 +43,13 @@ export const columns: BasicColumn[] = [
     width: 60,
   },
   {
+    title: '是否被锁定',
+    dataIndex: 'isLockout',
+    width: 60,
+    align: 'left',
+    slots: { customRender: 'isLockout' },
+  },
+  {
     title: '状态',
     dataIndex: 'status',
     align: 'left',
@@ -52,13 +59,6 @@ export const columns: BasicColumn[] = [
       const valText = value === Status.Valid ? '正常' : '冻结';
       return commonTagRender(colorValue, valText);
     },
-  },
-  {
-    title: '是否被锁定',
-    dataIndex: 'isLockout',
-    width: 60,
-    align: 'left',
-    slots: { customRender: 'isLockout' },
   },
   {
     title: '昵称',
@@ -435,7 +435,7 @@ export const userSchemas: FormSchema[] = [
   },
   {
     field: 'lockoutEnabled',
-    label: '登录失败后锁定帐户',
+    label: '登录失败后锁定',
     component: 'RadioButtonGroup',
     componentProps: {
       options: [
