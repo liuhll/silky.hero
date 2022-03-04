@@ -12,6 +12,7 @@ using Silky.Hero.Common.Enums;
 using Silky.Saas.Application.Contracts.Tenant;
 using Silky.Saas.Application.Contracts.Tenant.Dtos;
 using Silky.Saas.Domain;
+using Silky.Saas.Domain.Shared.Tenant;
 using Silky.Transaction.Tcc;
 
 namespace Silky.Saas.Application.Tenant;
@@ -46,9 +47,22 @@ public class TenantAppService : ITenantAppService
         await _tenantDomainService.UpdateAsync(input);
     }
 
-    public Task<bool> CheckAsync(CheckTenantInput input)
+    public async Task<bool> CheckAsync(CheckTenantInput input)
     {
-        return _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id, false);
+        var exsit = false;
+        switch (input.NameType)
+        {
+            case TenantNameType.Name:
+                exsit = await _tenantDomainService.TenantRepository.AnyAsync(p => p.Name == input.Name && p.Id != input.Id, false);
+                break;
+            case TenantNameType.RealName:
+                exsit = await _tenantDomainService.TenantRepository.AnyAsync(p => p.RealName == input.Name && p.Id != input.Id, false);
+                break;
+            default:
+                throw new UserFriendlyException("请指定正确的类型参数");
+        }
+
+        return exsit;
     }
 
     public async Task<GetTenantOutput> GetAsync(long id)
