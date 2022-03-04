@@ -3,7 +3,7 @@
     v-bind="$attrs"
     @register="registerDrawer"
     :title="getTitle"
-    width="40%"
+    width="50%"
     destroyOnClose
   >
     <Description

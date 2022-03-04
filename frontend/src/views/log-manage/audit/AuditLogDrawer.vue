@@ -4,7 +4,7 @@
     @register="registerDrawer"
     title="审计日志详情"
     destroyOnClose
-    width="40%"
+    width="50%"
   >
     <Tabs default-active-key="1">
       <TabPane key="1" tab="总体">
