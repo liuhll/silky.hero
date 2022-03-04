@@ -49,6 +49,8 @@ public static class GetOrganizationOutputExtensions
             };
             organizationOutput.OrganizationRoles.Add(roleOutput);
         }
+
+        organizationOutput.OrganizationRoles = organizationOutput.OrganizationRoles.OrderByDescending(p => p.IsPublic).ToList();
     }
 
     public static async Task SetIsBelong(this GetOrganizationOutput organizationOutput, ISession session)
@@ -94,5 +96,6 @@ public static class GetOrganizationOutputExtensions
             };
             organizationOutput.OrganizationPositions.Add(positionOutput);
         }
+        organizationOutput.OrganizationPositions = organizationOutput.OrganizationPositions.OrderByDescending(p => p.IsPublic).ToList();
     }
 }
