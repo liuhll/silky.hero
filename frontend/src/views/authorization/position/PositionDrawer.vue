@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="40%"
+    width="600px"
     @ok="handleSubmit"
     destroyOnClose
   >
@@ -24,10 +24,10 @@
     setup(_, { emit }) {
       const isUpdate = ref(false);
       const positionId = ref<Nullable<number>>(null);
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增岗位' : '编辑岗位'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
         useForm({
-          labelWidth: 140,
+          labelWidth: 100,
           schemas: positionSchemas,
           showActionButtonGroup: false,
         });

@@ -45,14 +45,10 @@ export const searchFormSchema: FormSchema[] = [
 
 export const editionSchemas = [
   {
-    field: 'divider-editioninfo',
-    component: 'Divider',
-    label: '版本信息',
-  },
-  {
     field: 'name',
     component: 'Input',
     label: '名称',
+    colProps: { span: 12 },
   },
   {
     field: 'price',
@@ -64,6 +60,7 @@ export const editionSchemas = [
       formatter: (value) => `¥ ${value}`.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ','),
       parser: (value) => value.replace(/\\$\\s?|(,*)/g, ''),
     },
+    colProps: { span: 12 },
   },
   {
     field: 'sort',
@@ -72,11 +69,13 @@ export const editionSchemas = [
     componentProps: {
       style: 'width: 100%;',
     },
+    colProps: { span: 12 },
   },
   {
     field: 'remark',
     component: 'InputTextArea',
     label: '备注',
+    colProps: { span: 24 },
   },
 ];
 
@@ -94,9 +93,9 @@ export const editionDetailSchemas: DescItem[] = [
     field: 'status',
     render: (value) => {
       if (value === Status.Valid) {
-        return commonTagRender('blue', '启用');
+        return commonTagRender('green', '正常');
       } else {
-        return commonTagRender('red', '停用');
+        return commonTagRender('red', '冻结');
       }
     },
   },
@@ -149,7 +148,7 @@ const checkEditionRule = async (value: string, id: Nullable<number>) => {
       name: value,
     });
     if (exist) {
-      return Promise.reject(`已经存在${value}的职位`);
+      return Promise.reject(`已经存在${value}的版本`);
     }
   }
   return Promise.resolve();

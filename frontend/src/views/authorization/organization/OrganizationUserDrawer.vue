@@ -5,7 +5,7 @@
     :title="getTitle"
     @ok="handleSubmit"
     showFooter
-    width="50%"
+    width="800px"
     destroyOnClose
   >
     <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="650">

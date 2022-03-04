@@ -16,7 +16,7 @@
         class="fix-auto-fill"
       >
         <SelectOption v-for="(option, index) in tenantOptions" :key="index" :value="option.name">
-          {{ option.realName }}
+          {{ option.realName }}({{ option.name }})
         </SelectOption>
       </Select>
     </FormItem>

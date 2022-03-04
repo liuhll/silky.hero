@@ -11,10 +11,20 @@ import { formatToDate } from '/@/utils/dateUtil';
 import { Rule } from '/@/components/Form';
 import { checkTenant } from '/@/api/tenant';
 
+export enum TenantType {
+  Name = 0,
+  RealName = 1,
+}
+
 export const columns: BasicColumn[] = [
   {
-    title: '名称',
+    title: '标识',
     dataIndex: 'name',
+    width: 120,
+  },
+  {
+    title: '名称',
+    dataIndex: 'realName',
     width: 120,
   },
   {
@@ -24,7 +34,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       const enable = record.status === Status.Valid;
       const color = enable ? 'green' : 'red';
-      const text = enable ? '启用' : '停用';
+      const text = enable ? '正常' : '冻结';
       return h(Tag, { color: color }, () => text);
     },
   },
@@ -49,7 +59,7 @@ export const columns: BasicColumn[] = [
 export const searchFormSchema: FormSchema[] = [
   {
     field: 'name',
-    label: '名称',
+    label: '标识',
     component: 'Input',
     colProps: { span: 6 },
   },
@@ -75,6 +85,11 @@ export const getTenantSchemas = (isUpdate: boolean): FormSchema[] => {
     },
     {
       field: 'name',
+      component: 'Input',
+      label: '标识',
+    },
+    {
+      field: 'realName',
       component: 'Input',
       label: '名称',
     },
@@ -310,9 +325,9 @@ export const tenantDetailSchemas: DescItem[] = [
     field: 'status',
     render: (value) => {
       if (value === Status.Valid) {
-        return commonTagRender('blue', '启用');
+        return commonTagRender('green', '正常');
       } else {
-        return commonTagRender('red', '停用');
+        return commonTagRender('red', '冻结');
       }
     },
   },
@@ -347,14 +362,15 @@ export const tenantDetailSchemas: DescItem[] = [
   },
 ];
 
-const checkTenantRule = async (value: string, id: Nullable<number>) => {
+const checkTenantRule = async (value: string, nameType: TenantType, id: Nullable<number>) => {
   if (value) {
     const exist = await checkTenant({
       id: id,
+      nameType: nameType,
       name: value,
     });
     if (exist) {
-      return Promise.reject(`已经存在${value}的职位`);
+      return Promise.reject(`已经存在${value}的租户`);
     }
   }
   return Promise.resolve();
@@ -364,18 +380,39 @@ export const getNameRules = (id: Nullable<number>): Rule[] => {
   return [
     {
       required: true,
-      message: '租户名称不允许为空',
+      message: '租户标识不允许为空',
     },
     {
       max: 50,
-      message: '租户长度不允许超过50个字符',
+      message: '租户标识长度不允许超过50个字符',
       validateTrigger: ['change', 'blur'],
     },
     {
       type: 'string',
       validateTrigger: ['change', 'blur'],
       validator: (rules, value) => {
-        return checkTenantRule(value, id);
+        return checkTenantRule(value, TenantType.Name, id);
+      },
+    },
+  ];
+};
+
+export const getRealNameRules = (id: Nullable<number>): Rule[] => {
+  return [
+    {
+      required: true,
+      message: '租户名称不允许为空',
+    },
+    {
+      max: 50,
+      message: '租户名称长度不允许超过50个字符',
+      validateTrigger: ['change', 'blur'],
+    },
+    {
+      type: 'string',
+      validateTrigger: ['change', 'blur'],
+      validator: (rules, value) => {
+        return checkTenantRule(value, TenantType.RealName, id);
       },
     },
   ];

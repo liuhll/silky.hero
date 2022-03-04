@@ -171,9 +171,9 @@ export const organizationDetailSchemas: DescItem[] = [
     field: 'status',
     render: (value) => {
       if (value === Status.Valid) {
-        return commonTagRender('blue', '启用');
+        return commonTagRender('green', '正常');
       } else {
-        return commonTagRender('red', '停用');
+        return commonTagRender('red', '冻结');
       }
     },
   },

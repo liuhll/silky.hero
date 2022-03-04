@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="50%"
+    width="800px"
     destroyOnClose
     @ok="handleSubmit"
   >

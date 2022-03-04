@@ -92,7 +92,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       const enable = record.status === Status.Valid;
       const color = enable ? 'green' : 'red';
-      const text = enable ? '有效' : '无效';
+      const text = enable ? '正常' : '冻结';
       return h(Tag, { color: color }, () => text);
     },
   },
@@ -147,6 +147,9 @@ export const menuSchemas: FormSchema[] = [
     label: '排序',
     component: 'InputNumber',
     required: true,
+    componentProps: {
+      style: "width:100%",
+    },
   },
   {
     field: 'icon',
@@ -350,7 +353,7 @@ export const getMenuDetailSchemas = (menuData): DescItem[] => [
       if (value === null) {
         return null;
       }
-      return commonTagRender(value ? 'blue' : 'red', value ? '有效' : '无效');
+      return commonTagRender(value ? 'green' : 'red', value ? '正常' : '冻结');
     },
   },
   {

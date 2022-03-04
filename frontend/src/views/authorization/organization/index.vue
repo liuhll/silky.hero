@@ -1,7 +1,7 @@
 <template>
   <PageWrapper v-loading="loadingRef" loading-tip="加载中...">
     <Row :gutter="[24, 16]">
-      <Col :span="6">
+      <Col :span="8">
         <Card title="组织机构树">
           <template #extra>
             <a-button
@@ -21,7 +21,7 @@
           />
         </Card>
       </Col>
-      <Col :span="18">
+      <Col :span="16">
         <Card title="成员" class="w-4/4 xl:w-5/5">
           <BasicTable
             @register="registerTable"
@@ -86,7 +86,6 @@
   import { defineComponent, ref, unref, onMounted, reactive, nextTick, computed } from 'vue';
   import { Status } from '/@/utils/status';
   import {
-    getOrganizationTree,
     getOrganizationUserPageList,
     getOrganizationById,
     updateOrganization,
@@ -97,8 +96,6 @@
     setAllocationOrganizationRoles,
     setAllocationOrganizationPositions,
   } from '/@/api/organization';
-  import { treeMap } from '/@/utils/helper/treeHelper';
-  import { GetOrgizationTreeModel } from '/@/api/organization/model/organizationModel';
   import {
     getOrganizationRolesOptions,
     getOrganizationPositionsOptions,

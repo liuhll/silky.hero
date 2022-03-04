@@ -38,7 +38,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       const enable = record.status === Status.Valid;
       const color = enable ? 'green' : 'red';
-      const text = enable ? '启用' : '停用';
+      const text = enable ? '正常' : '冻结';
       return h(Tag, { color: color }, () => text);
     },
   },
@@ -340,7 +340,7 @@ export const roleDetailSchemas: DescItem[] = [
     field: 'status',
     render: (value) => {
       if (value === Status.Valid) {
-        return commonTagRender('blue', '正常');
+        return commonTagRender('green', '正常');
       } else {
         return commonTagRender('red', '冻结');
       }

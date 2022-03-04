@@ -48,7 +48,7 @@ export const columns: BasicColumn[] = [
     align: 'left',
     width: 50,
     format: (value: Status) => {
-      const colorValue = value === Status.Valid ? 'blue' : 'red';
+      const colorValue = value === Status.Valid ? 'green' : 'red';
       const valText = value === Status.Valid ? '正常' : '冻结';
       return commonTagRender(colorValue, valText);
     },
@@ -513,7 +513,7 @@ export const userDetailSchemas: DescItem[] = [
     field: 'status',
     render: (value) => {
       if (value === Status.Valid) {
-        return commonTagRender('blue', '正常');
+        return commonTagRender('green', '正常');
       } else {
         return commonTagRender('red', '冻结');
       }

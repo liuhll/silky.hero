@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="30%"
+    width="600px"
     destroyOnClose
     @ok="handleSubmit"
   >
@@ -62,7 +62,7 @@
 
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
         useForm({
-          labelWidth: 120,
+          labelWidth: 100,
           schemas: userRoleSchemas,
           showActionButtonGroup: false,
         });

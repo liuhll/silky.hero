@@ -40,7 +40,7 @@
       });
 
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate }] = useForm({
-        labelWidth: 120,
+        labelWidth: 100,
         schemas: userLockSchemas,
         showActionButtonGroup: false,
       });

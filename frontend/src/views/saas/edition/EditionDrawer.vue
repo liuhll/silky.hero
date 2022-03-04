@@ -29,7 +29,7 @@
       const getTitle = computed(() => (!unref(isUpdate) ? '新增版本' : '编辑版本'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
         useForm({
-          labelWidth: 140,
+          labelWidth: 100,
           schemas: editionSchemas,
           showActionButtonGroup: false,
         });

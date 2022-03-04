@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="40%"
+    width="800px"
     destroyOnClose
     @ok="handleSubmit"
   >
@@ -20,7 +20,13 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { getMobilePhoneRules, getEmailRules, getUserNameRules, userSchemas, getJobNumberRules } from './user.data';
+  import {
+    getMobilePhoneRules,
+    getEmailRules,
+    getUserNameRules,
+    userSchemas,
+    getJobNumberRules,
+  } from './user.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Card } from 'ant-design-vue';
   import UserSubsidiaryTable from './UserSubsidiaryTable.vue';
@@ -42,7 +48,7 @@
       const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
         useForm({
-          labelWidth: 140,
+          labelWidth: 100,
           schemas: userSchemas,
           showActionButtonGroup: false,
         });
