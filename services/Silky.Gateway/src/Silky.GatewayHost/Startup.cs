@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Silky.GatewayHost.AuditLogging;
 using Silky.GatewayHost.Authorization;
+using Silky.Hero.Common;
 using Silky.Http.Core;
 using Silky.Http.MiniProfiler;
 
@@ -44,7 +45,7 @@ namespace Silky.GatewayHost
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment(SilkyHeroConsts.DemoEnvironment))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwaggerDocuments();
