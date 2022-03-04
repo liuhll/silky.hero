@@ -32,7 +32,7 @@
         />
       </template>
       <template #userSubsidiaries="{ text }">
-        <Tag v-for="(userSubsidiary, index) in text" :key="index" color="green" style="margin: 2px">
+        <Tag v-for="(userSubsidiary, index) in text" :key="index" color="blue" style="margin: 2px">
           {{ displayUserSubsidiary(userSubsidiary) }}
         </Tag>
       </template>
@@ -47,10 +47,12 @@
         </Tag>
       </template>
       <template #isLockout="{ text, record }">
-        <Tag v-if="text" color="error" style="margin: 3px">是</Tag>
-        <Tag v-if="text" color="error" style="margin: 3px"
-          >({{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }})</Tag
-        >
+        <Tooltip v-if="text" style="margin: 3px" color="red">
+          <template #title>
+            <span>{{ formatToDate(record.lockoutEnd, 'YYYY-MM-DD HH:mm:ss') }}</span>
+          </template>
+          <Tag color="red" style="margin: 3px"> 是 </Tag>
+        </Tooltip>
         <Tag v-if="!text" color="blue" style="margin: 3px"> 否 </Tag>
       </template>
       <template #toolbar>
@@ -81,7 +83,6 @@
             },
             {
               icon: 'akar-icons:lock-on',
-              color: 'error',
               tooltip: '锁定账号一段时间',
               onClick: handleLock.bind(null, record),
               ifShow: !record.isLockout,
@@ -90,6 +91,7 @@
             {
               icon: 'akar-icons:lock-off',
               tooltip: '解锁',
+              color: 'error',
               popConfirm: {
                 title: '是否解锁该用户?',
                 confirm: handleUnLock.bind(null, record),
@@ -120,7 +122,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, onMounted, unref, nextTick, computed } from 'vue';
-  import { TreeSelect, Tag, Select } from 'ant-design-vue';
+  import { TreeSelect, Tag, Select, Tooltip } from 'ant-design-vue';
   import {
     getUserById,
     getUserPageList,
@@ -163,6 +165,7 @@
       UserRoleDrawer,
       UserDetailDrawer,
       UserLockModal,
+      Tooltip,
     },
     setup() {
       const searchInfo = ref({});

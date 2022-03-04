@@ -56,7 +56,7 @@ export const columns: BasicColumn[] = [
   {
     title: '是否被锁定',
     dataIndex: 'isLockout',
-    width: 120,
+    width: 60,
     align: 'left',
     slots: { customRender: 'isLockout' },
   },
