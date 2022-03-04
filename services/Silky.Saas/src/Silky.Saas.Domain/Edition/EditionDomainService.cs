@@ -19,6 +19,7 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
 {
     public IRepository<Edition> EditionRepository { get; }
     public IRepository<EditionFeature> EditionFeatureRepository { get; }
+    private readonly IRepository<Feature> _featureRepository;
     private readonly IRepository<FeatureCatalog> _featureCatalogRepository;
     private readonly IRepository<Tenant> _tenantRepository;
     private readonly IDistributedCache _cache;
@@ -29,14 +30,17 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
         IRepository<FeatureCatalog> featureCatalogRepository,
         IRepository<EditionFeature> editionFeatureRepository,
         IRepository<Tenant> tenantRepository,
+        IRepository<Feature> featureRepository,
         IDistributedCache cache,
-        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer)
+        IDistributedCacheKeyNormalizer distributedCacheKeyNormalizer
+    )
     {
         EditionRepository = editionRepository;
         EditionFeatureRepository = editionFeatureRepository;
         _tenantRepository = tenantRepository;
         _cache = cache;
         _distributedCacheKeyNormalizer = distributedCacheKeyNormalizer;
+        _featureRepository = featureRepository;
         _featureCatalogRepository = featureCatalogRepository;
         _session = NullSession.Instance;
     }
@@ -130,16 +134,29 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
             await EditionFeatureRepository
                 .AsQueryable(false)
                 .Include(p => p.Feature)
-                .FirstAsync(p =>
+                .FirstOrDefaultAsync(p =>
                     p.EditionId == tenant.EditionId && p.Feature.Code == featureCode);
-
-        var editionFeatureOutput = new GetEditionFeatureOutput()
+        if (editionFeature != null)
         {
-            FeatureId = editionFeature.Feature.Id,
-            Code = editionFeature.Feature.Code,
-            FeatureValue = editionFeature.FeatureValue
+            var editionFeatureOutput = new GetEditionFeatureOutput()
+            {
+                FeatureId = editionFeature.Feature.Id,
+                Code = editionFeature.Feature.Code,
+                FeatureValue = editionFeature.FeatureValue
+            };
+            return editionFeatureOutput;
+        }
+
+        var feature = await _featureRepository
+            .AsQueryable(false)
+            .FirstAsync(p => p.Code == featureCode);
+        var defaultEditionFeatureOutput = new GetEditionFeatureOutput()
+        {
+            FeatureId = feature.Id,
+            Code = feature.Code,
+            FeatureValue = feature.DefaultValue
         };
-        return editionFeatureOutput;
+        return defaultEditionFeatureOutput;
     }
 
     private async Task RemoveEditionFeatureCache(long editionId)
