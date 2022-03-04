@@ -5,6 +5,8 @@ public static class FeatureCode
     public const string AllowMaxUserCount = "AllowMaxUserCount";
 
     public const string EnabledAuditingLog = "EnabledAuditingLog";
+    
+    public const string EnabledSilkyDashboard = "EnabledSilkyDashboard";
 
     public const string EnabledMenuManage = "EnabledMenuManage";
     

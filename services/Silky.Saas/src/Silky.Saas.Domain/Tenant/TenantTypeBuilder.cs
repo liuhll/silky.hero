@@ -19,6 +19,11 @@ public class TenantTypeBuilder : IEntityTypeBuilder<Tenant>
             .HasMaxLength(SaasConsts.MaxNameLength)
             .HasColumnName(nameof(Tenant.Name));
         
+        builder.Property(o => o.RealName)
+            .IsRequired()
+            .HasMaxLength(SaasConsts.MaxRealNameLength)
+            .HasColumnName(nameof(Tenant.RealName));
+        
         builder.Property(o => o.Remark)
             .HasMaxLength(SaasConsts.MaxRemarkLength)
             .HasColumnName(nameof(Tenant.Remark));

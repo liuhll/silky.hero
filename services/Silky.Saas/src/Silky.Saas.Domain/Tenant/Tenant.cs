@@ -11,20 +11,22 @@ public class Tenant : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDeleted
     {
     }
 
-    public Tenant(long id, int editionId, string name, Status status, string remark)
+    public Tenant(long id, int editionId, string name, string realName, Status status, string remark)
     {
         Id = id;
         Name = name;
+        RealName = name;
         Status = status;
         Remark = remark;
         EditionId = editionId;
     }
-
-
+    
     public string Name { get; set; }
 
+    public string RealName { get; set; }
+
     public Status Status { get; set; }
-    
+
     public int Sort { get; set; }
 
     public long EditionId { get; set; }

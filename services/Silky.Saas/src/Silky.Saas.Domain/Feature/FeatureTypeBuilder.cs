@@ -30,6 +30,10 @@ public class FeatureTypeBuilder : IEntityTypeBuilder<Feature>
             .HasMaxLength(SaasConsts.MaxDescriptionLength)
             .HasColumnName(nameof(Feature.Description));
         
+        builder.Property(o => o.DefaultValue)
+            .IsRequired()
+            .HasColumnName(nameof(Feature.DefaultValue));
+        
         builder.Property(o => o.FeatureType)
             .IsRequired()
             .HasColumnName(nameof(Feature.FeatureType));

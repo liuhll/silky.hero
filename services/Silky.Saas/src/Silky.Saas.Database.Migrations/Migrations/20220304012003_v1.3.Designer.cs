@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Silky.Saas.EntityFrameworkCore.DbContexts;
 
@@ -10,9 +11,10 @@ using Silky.Saas.EntityFrameworkCore.DbContexts;
 namespace Silky.Saas.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20220304012003_v1.3")]
+    partial class v13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -339,7 +341,7 @@ namespace Silky.Saas.Database.Migrations.Migrations
                         new
                         {
                             Id = 4L,
-                            Code = "EnabledSilkyDashboard",
+                            Code = "EnabledMenuManage",
                             CreatedTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             DefaultValue = 0,
                             Description = "允许授权用户登录微服务管理端.",

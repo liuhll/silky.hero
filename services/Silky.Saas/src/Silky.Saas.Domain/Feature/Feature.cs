@@ -15,9 +15,12 @@ public class Feature : Entity<long>, ICreatedObject, IUpdatedObject, ISoftDelete
     }
 
     public long FeatureCatalogId { get; set; }
+    
     public string Name { get; set; }
 
     public string Code { get; set; }
+
+    public int DefaultValue { get; set; }
 
     public FeatureType FeatureType { get; set; }
 
