@@ -5,8 +5,12 @@ services:
     image: silkyhero/gateway:${TAG:-latest}
     volumes:
       - ${log_dir:-./logs}/gateway1:/app/logs
+      - ${https_dir:-./https}:/https:ro
     environment:
       DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_Kestrel__Certificates__Password:-4U3YVUud}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/${ASPNETCORE_Kestrel__Certificates__File:-aspnetapp.pfx}
       rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
       governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
       registrycenter__type: ${registrycenter__type:-Zookeeper}
@@ -27,13 +31,18 @@ services:
       - silky_service_net
     ports:
       - 8081:80
+      - 8443:443
 
   silky.gateway2:
     image: silkyhero/gateway:${TAG:-latest}
     volumes:
       - ${log_dir:-./logs}/gateway2:/app/logs
+      - ${https_dir:-./https}:/https:ro
     environment:
       DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_Kestrel__Certificates__Password:-4U3YVUud}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/${ASPNETCORE_Kestrel__Certificates__File:-aspnetapp.pfx}
       rpc__token: ${rpc__token:-ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW}
       governance__timeoutMillSeconds: ${governance__timeoutMillSeconds:-5000}
       registrycenter__type: ${registrycenter__type:-Zookeeper}
@@ -54,6 +63,7 @@ services:
       - silky_service_net
     ports:
       - 8082:80
+      - 8444:443
 
 networks:
   silky_service_net:
