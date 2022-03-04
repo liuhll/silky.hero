@@ -1,7 +1,7 @@
 export interface LoginParams {
   account: string;
   password: string;
-  tenantId: number | undefined;
+  tenantName: string | undefined;
 }
 
 export interface GetCurrentUserinfo {

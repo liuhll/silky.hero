@@ -8,17 +8,17 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
-    <FormItem name="tenantId" class="enter-x">
+    <FormItem name="tenantName" class="enter-x">
       <Select
-        v-model:value="formData.tenantId"
+        v-model:value="formData.tenantName"
         size="large"
         :placeholder="t('sys.login.tenant')"
         class="fix-auto-fill"
       >
-        <SelectOption v-for="(option, index) in tenantOptions" :key="index" :value="option.id">
-          {{option.name}}
+        <SelectOption v-for="(option, index) in tenantOptions" :key="index" :value="option.name">
+          {{ option.realName }}
         </SelectOption>
-     </Select>
+      </Select>
     </FormItem>
     <FormItem name="account" class="enter-x">
       <Input
@@ -158,7 +158,7 @@ import user from 'mock/sys/user';
       const userInfo = await accountStore.login({
         password: data.password,
         account: data.account,
-        tenantId: data.tenantId,
+        tenantName: data.tenantName,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
