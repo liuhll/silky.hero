@@ -1,3 +1,7 @@
+#rpc:
+#  isSSl: true
+#  sslCertificateName: silky.hero.pfx
+#  sslCertificatePassword: 123qweR!
 serilog:
   minimumLevel:
     default: Information
