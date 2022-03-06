@@ -9,5 +9,7 @@ public class GetUserSubsidiaryOutput
     public long OrganizationId { get; set; }
     
     public string OrganizationName { get; set; }
+    
+    public bool IsLeader { get; set; }
 
 }

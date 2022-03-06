@@ -207,4 +207,7 @@ public interface IUserAppService
     [ProhibitExtranet]
     [Transaction]
     Task CreateSuperUserAsync(CreateSuperUserInput superUserInput);
+
+    [ProhibitExtranet]
+    Task<bool> CheckHasLeaderAsync(long organizationId);
 }

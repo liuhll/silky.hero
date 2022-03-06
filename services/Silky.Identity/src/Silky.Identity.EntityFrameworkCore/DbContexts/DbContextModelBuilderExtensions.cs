@@ -41,7 +41,7 @@ public static class DbContextModelBuilderExtensions
 
             b.Property(u => u.Status).HasDefaultValue(Status.Valid)
                 .HasColumnName(nameof(IdentityUser.Status));
-            
+
             b.Property(u => u.LockoutEnabled).HasDefaultValue(false)
                 .HasColumnName(nameof(IdentityUser.LockoutEnabled));
             b.Property(u => u.LockoutEnd)
@@ -122,7 +122,8 @@ public static class DbContextModelBuilderExtensions
             b.Property(r => r.IsStatic).HasColumnName(nameof(IdentityRole.IsStatic));
             b.Property(r => r.IsPublic).HasColumnName(nameof(IdentityRole.IsPublic));
             b.Property(r => r.DataRange).HasColumnName(nameof(IdentityRole.DataRange));
-            b.Property(r => r.Status).IsRequired().HasDefaultValue(Status.Valid).HasColumnName(nameof(IdentityRole.Status));
+            b.Property(r => r.Status).IsRequired().HasDefaultValue(Status.Valid)
+                .HasColumnName(nameof(IdentityRole.Status));
             b.Property(r => r.Remark).HasColumnName(nameof(IdentityRole.Remark));
             b.HasMany(r => r.Claims).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
             b.HasMany(r => r.Menus).WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
@@ -161,6 +162,8 @@ public static class DbContextModelBuilderExtensions
             b.Property(r => r.UserId).IsRequired().HasColumnName(nameof(UserSubsidiary.UserId));
             b.Property(r => r.OrganizationId).HasColumnName(nameof(UserSubsidiary.OrganizationId));
             b.Property(r => r.PositionId).HasColumnName(nameof(UserSubsidiary.PositionId));
+            b.Property(r => r.IsLeader).IsRequired().HasDefaultValue(false)
+                .HasColumnName(nameof(UserSubsidiary.IsLeader));
             b.ConfigureByConvention();
         });
         builder.Entity<IdentityRoleOrganization>(b =>

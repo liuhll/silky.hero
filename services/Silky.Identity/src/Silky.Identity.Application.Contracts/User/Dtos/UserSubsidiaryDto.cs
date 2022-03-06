@@ -11,4 +11,9 @@ public class UserSubsidiaryDto
     /// 岗位id
     /// </summary>
     public long PositionId { get; set; }
+
+    /// <summary>
+    /// 是否是部门负责人
+    /// </summary>
+    public bool IsLeader { get; set; }
 }

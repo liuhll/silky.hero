@@ -252,6 +252,20 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 });
             }
 
+            if (userSubsidiary.IsLeader)
+            {
+                var hasOrganizationLeader = await UserSubsidiaryRepository.AnyAsync(p =>
+                    p.OrganizationId == userSubsidiary.OrganizationId && p.IsLeader);
+                if (hasOrganizationLeader)
+                {
+                    return IdentityResult.Failed(new IdentityError()
+                    {
+                        Code = "HasOrganizationLeader",
+                        Description = "该部门已经存在领导"
+                    });
+                }
+            }
+
             if (!currentUserDataRange.IsAllData &&
                 currentUserDataRange.OrganizationIds.All(p => p != userSubsidiary.OrganizationId))
             {
@@ -263,7 +277,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
                 });
             }
 
-            user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId);
+            user.AddUserSubsidiaries(userSubsidiary.OrganizationId, userSubsidiary.PositionId, userSubsidiary.IsLeader);
         }
 
         return IdentityResult.Success;

@@ -248,7 +248,8 @@ public class UserAppService : IUserAppService
         if (input.UserSubsidiaries != null)
         {
             var userSubsidiaries = input.UserSubsidiaries
-                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, user.TenantId)).ToArray();
+                .Select(us => new UserSubsidiary(user.Id, us.OrganizationId, us.PositionId, us.IsLeader, user.TenantId))
+                .ToArray();
             (await UserManager.SetUserOrganizations(user, userSubsidiaries)).CheckErrors();
         }
     }
@@ -284,7 +285,8 @@ public class UserAppService : IUserAppService
 
             isAddUserFlag = true;
             (await UserManager.AddToUserSubsidiariesAsync(user,
-                new UserSubsidiary(user.Id, organizationId, input.PositionId, user.TenantId))).CheckErrors();
+                    new UserSubsidiary(user.Id, organizationId, input.PositionId, input.IsLeader, user.TenantId)))
+                .CheckErrors();
             await UserManager.UpdateAsync(user);
         }
 
@@ -317,6 +319,11 @@ public class UserAppService : IUserAppService
         await UpdateUserByInput(user, input);
         await UserManager.SetRolesAsync(user, new List<string>() { input.RoleName });
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
+    }
+
+    public Task<bool> CheckHasLeaderAsync(long organizationId)
+    {
+        return UserManager.UserSubsidiaryRepository.AnyAsync(p => p.OrganizationId == organizationId && p.IsLeader);
     }
 
     public async Task CreateConfirmSuperUserAsync(CreateSuperUserInput input)

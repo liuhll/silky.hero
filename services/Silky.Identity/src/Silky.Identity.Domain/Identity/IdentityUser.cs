@@ -233,17 +233,19 @@ public class IdentityUser : FullAuditedEntity, IHasConcurrencyStamp
         Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
     }
 
-    public virtual void AddUserSubsidiaries(long organizationId, long positionId)
+    public virtual void AddUserSubsidiaries(long organizationId, long positionId, bool isLeader)
     {
         if (IsInUserSubsidiaries(organizationId, positionId))
         {
             return;
         }
+        
         UserSubsidiaries.Add(
             new UserSubsidiary(
                 Id,
                 organizationId,
                 positionId,
+                isLeader,
                 TenantId
             )
         );

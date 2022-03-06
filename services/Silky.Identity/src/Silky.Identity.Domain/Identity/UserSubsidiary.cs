@@ -10,15 +10,18 @@ public class UserSubsidiary : AuditedEntity
 
     public long UserId { get; set; }
 
+    public bool IsLeader { get; set; }
+
     public UserSubsidiary()
     {
     }
 
-    public UserSubsidiary(long userId, long organizationId, long positionId, long? tenantId)
+    public UserSubsidiary(long userId, long organizationId, long positionId, bool isLeader, long? tenantId)
     {
         UserId = userId;
         OrganizationId = organizationId;
         PositionId = positionId;
+        IsLeader = isLeader;
         TenantId = tenantId;
     }
 }
