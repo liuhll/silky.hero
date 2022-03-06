@@ -5,7 +5,7 @@
     :title="getTitle"
     @ok="handleSubmit"
     showFooter
-    width="800px"
+    width="900px"
     destroyOnClose
   >
     <BasicTable @register="registerTable" :searchInfo="searchInfo" ref="tableRef" :maxHeight="650">
@@ -22,6 +22,20 @@
           :options="positionOptions"
         />
       </template>
+      <template #isLeader="{ record }">
+        <Tag v-if="isCheckedUser(record.id)" color="green">{{
+          record.isLeader == true ? '是' : '否'
+        }}</Tag>
+        <Select
+          v-if="!isCheckedUser(record.id)"
+          v-model:value="record.isLeader"
+          size="small"
+          style="width: 100px"
+          placeholder="负责人"
+          @change="(val) => handleCheckUserIsLeader(val, record)"
+          :options="isLeaderOptions"
+        />
+      </template>
     </BasicTable>
   </BasicDrawer>
 </template>
@@ -32,11 +46,16 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTable, useTable, TableActionType } from '/@/components/Table';
   import { getOrganizationUserPage } from '/@/api/user';
-  import { getOrganizationUserIds, getOrganizationById } from '/@/api/organization';
+  import {
+    getOrganizationUserIds,
+    getOrganizationById,
+    checkOrganizationHasLeader,
+  } from '/@/api/organization';
   import { GetOrgizationModel } from '/@/api/organization/model/organizationModel';
   import { organizationUserColumns, searchFormSchema } from './organization.data';
   import { getPositionOptions } from '/@/views/authorization/position/position.data';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { getIsLeaderOptions } from '../user/user.data';
 
   type OptionsItem = { label: string; value: string; disabled?: boolean };
 
@@ -48,6 +67,7 @@
       const searchInfo = reactive<Recordable>({});
       const tableRef = ref<Nullable<TableActionType>>(null);
       const positionOptions = ref<OptionsItem[]>([]);
+      const isLeaderOptions = ref<OptionsItem[]>([]);
       const { notification } = useMessage();
       const organizationInfo = ref<GetOrgizationModel>({});
 
@@ -96,6 +116,7 @@
           selectedOrganizationUserIds.value = organizationUserIds;
           setSelectedRowKeys(organizationUserIds);
           positionOptions.value = await getPositionOptions(data.id, false);
+          isLeaderOptions.value = getIsLeaderOptions();
           reload();
         },
       );
@@ -111,7 +132,13 @@
               });
               throw Error(`请先为用户${item.userName}选择职位信息`);
             }
-            return { userId: item.id, positionId: item.positionId };
+            if (item.isLeader == null) {
+              notification.warning({
+                message: `请选择${item.userName}是否是部门负责人`,
+              });
+              throw Error(`请选择${item.userName}是否是部门负责人`);
+            }
+            return { userId: item.id, positionId: item.positionId, isLeader: item.isLeader };
           });
 
           closeDrawer();
@@ -121,14 +148,26 @@
         }
       }
 
+      async function handleCheckUserIsLeader(value: any, record: any) {
+        if (value && (await checkOrganizationHasLeader(unref(organizationInfo).id))) {
+          notification.warning({
+            message: `${unref(organizationInfo).name}已经存在负责人`,
+          });
+          record.isLeader = null;
+          throw Error(`${unref(organizationInfo).name}已经存在负责人`);
+        }
+      }
+
       return {
         registerTable,
         registerDrawer,
         handleSubmit,
         isCheckedUser,
+        handleCheckUserIsLeader,
         searchInfo,
         tableRef,
         positionOptions,
+        isLeaderOptions,
         getTitle,
       };
     },

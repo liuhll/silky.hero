@@ -18,6 +18,7 @@
   import { OptionsItem } from '/@/utils/model';
   import { TreeItem } from '/@/components/Tree';
   const positionOptions = ref<OptionsItem[]>([]);
+  const isLeaderOptions = ref<OptionsItem[]>([]);
   const organizaionTreeList = ref<TreeItem[]>([]);
   import {
     BasicTable,
@@ -27,8 +28,9 @@
     ActionItem,
     EditRecordRow,
   } from '/@/components/Table';
-  import { checkOrganizationDataRange } from '/@/api/organization';
+  import { checkOrganizationDataRange, checkOrganizationHasLeader } from '/@/api/organization';
   import { checkPositionDataRange } from '/@/api/position';
+  import { getIsLeaderOptions } from './user.data';
 
   export default defineComponent({
     components: { BasicTable, TableAction },
@@ -95,6 +97,31 @@
             placeholder: '请选择所属岗位',
           },
         },
+        {
+          title: '部门负责人',
+          dataIndex: 'isLeader',
+          editRow: true,
+          editComponent: 'Select',
+          editRule: async (text, record) => {
+            if (!text) {
+              notification.error({
+                message: '是否是部门负责人',
+              });
+              return Promise.reject('是否是部门负责人');
+            }
+            if (await checkOrganizationHasLeader(Number(record.organizationId))) {
+              notification.error({
+                message: `该部门已经存在负责人`,
+              });
+              return Promise.reject(`该部门已经存在负责人`);
+            }
+            return Promise.resolve('');
+          },
+          editComponentProps: {
+            options: unref(isLeaderOptions),
+            placeholder: '是否是部门负责人',
+          },
+        },
       ];
       const { notification } = useMessage();
       const tableConfig: any = {
@@ -142,6 +169,16 @@
         const tableColumns = getColumns();
         const positionColumn = tableColumns.find((col) => col.dataIndex === 'positionId');
         positionColumn.editComponentProps.options = unref(positionOptions);
+        setProps({
+          columns: tableColumns,
+        });
+      }
+
+      function setIsLeaderOptions() {
+        isLeaderOptions.value = getIsLeaderOptions();
+        const tableColumns = getColumns();
+        const isLeaderColumn = tableColumns.find((col) => col.dataIndex === 'isLeader');
+        isLeaderColumn.editComponentProps.options = unref(isLeaderOptions);
         setProps({
           columns: tableColumns,
         });
@@ -237,6 +274,7 @@
         const addRow: EditRecordRow = {
           organizationId: null,
           positionId: null,
+          isLeader: null,
           editable: true,
           isNew: true,
           key: `${Date.now()}`,
@@ -285,6 +323,7 @@
         setTableData,
         setOrganizaionTreeList,
         setPositionOptions,
+        setIsLeaderOptions,
         handleEditChange,
         isEditable,
       };

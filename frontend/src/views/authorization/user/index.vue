@@ -34,6 +34,7 @@
       <template #userSubsidiaries="{ text }">
         <Tag v-for="(userSubsidiary, index) in text" :key="index" color="blue" style="margin: 2px">
           {{ displayUserSubsidiary(userSubsidiary) }}
+          <span v-if="userSubsidiary.isLeader">*</span>
         </Tag>
       </template>
       <template #roles="{ text }">

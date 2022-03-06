@@ -38,6 +38,10 @@
                 >添加成员</a-button
               >
             </template>
+            <template #userName="{ text, record }">
+              {{ text }}
+              <Tag v-if="record.isLeader" color="blue">负责人</Tag>
+            </template>
             <template #action="{ record }">
               <TableAction
                 :actions="[
@@ -79,7 +83,7 @@
 </template>
 <script lang="ts">
   import { PageWrapper } from '/@/components/Page';
-  import { Card, Row, Col } from 'ant-design-vue';
+  import { Card, Row, Col, Tag } from 'ant-design-vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction, TableActionType } from '/@/components/Table';
   import { BasicTree, TreeActionType, TreeItem, ContextMenuItem } from '/@/components/Tree';
@@ -115,6 +119,7 @@
       Card,
       Row,
       Col,
+      Tag,
       PageWrapper,
       BasicTree,
       BasicTable,

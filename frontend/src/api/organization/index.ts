@@ -115,3 +115,9 @@ export const checkOrganization = (requestParams) => {
     params: requestParams,
   });
 };
+
+export const checkOrganizationHasLeader = (organizationId: number) => {
+  return defHttp.post({
+    url: `/organization/${organizationId}/checkleader`,
+  });
+};

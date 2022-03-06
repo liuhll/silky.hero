@@ -8,6 +8,7 @@ import { DescItem } from '/@/components/Description/index';
 import { commonTagRender } from '/@/utils/tagUtil';
 import { checkAccount } from '/@/api/user';
 import { Rule } from '/@/components/Form';
+import { OptionsItem } from '/@/utils/model';
 
 enum AccountType {
   UserName = 0,
@@ -167,6 +168,19 @@ export const searchFormSchema: FormSchema[] = [
   {
     field: 'isLockout',
     label: '是否锁定',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '是', value: true },
+        { label: '否', value: false },
+      ],
+      style: 'width:100%',
+    },
+    colProps: { span: 6 },
+  },
+  {
+    field: 'isLeader',
+    label: '是否部门负责人',
     component: 'Select',
     componentProps: {
       options: [
@@ -601,3 +615,16 @@ export const userLockSchemas: FormSchema[] = [
     ],
   },
 ];
+
+export const getIsLeaderOptions = (): OptionsItem[] => {
+  return [
+    {
+      label: '是',
+      value: true,
+    },
+    {
+      label: '否',
+      value: false,
+    },
+  ];
+};

@@ -44,6 +44,7 @@
         setTableData: (data: any[]) => void;
         setOrganizaionTreeList: () => void;
         setPositionOptions: (id: Nullable<number>) => void;
+        setIsLeaderOptions: () => void;
       } | null>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
@@ -58,6 +59,7 @@
         resetFields();
         await userSubsidiaryTableRef.value?.setOrganizaionTreeList();
         await userSubsidiaryTableRef.value?.setPositionOptions(null);
+        await userSubsidiaryTableRef.value?.setIsLeaderOptions();
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
           setFieldsValue({
@@ -96,7 +98,11 @@
           }
           const values = await validate();
           const userSubsidiaries = data.map((item) => {
-            return { organizationId: item.organizationId, positionId: item.positionId };
+            return {
+              organizationId: item.organizationId,
+              positionId: item.positionId,
+              isLeader: item.isLeader,
+            };
           });
           values.userSubsidiaries = userSubsidiaries;
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: unref(userId) } });
