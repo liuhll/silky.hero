@@ -8,14 +8,23 @@ namespace Silky.Identity.Domain.Extensions;
 
 public static class GetAddOrganizationUserPageOutputExtensions
 {
-    public static async Task SetPositionInfo(this GetAddOrganizationUserPageOutput organizationUserOutput, long organizationId) 
+    public static async Task SetPositionInfo(this GetAddOrganizationUserPageOutput organizationUserOutput,
+        long organizationId)
     {
         var positionAppService = EngineContext.Current.Resolve<IPositionAppService>();
-        var userOrganizationPosition = organizationUserOutput.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
+        var userOrganizationPosition =
+            organizationUserOutput.UserSubsidiaries.FirstOrDefault(p => p.OrganizationId == organizationId);
         if (userOrganizationPosition != null)
         {
             organizationUserOutput.PositionId = userOrganizationPosition.PositionId;
-            organizationUserOutput.PositionName = (await positionAppService.GetAsync(userOrganizationPosition.PositionId))?.Name;
+            organizationUserOutput.PositionName =
+                (await positionAppService.GetAsync(userOrganizationPosition.PositionId))?.Name;
         }
+    }
+
+    public static void SetIsLeader(this GetAddOrganizationUserPageOutput organizationUserOutput, long organizationId)
+    {
+        organizationUserOutput.IsLeader = organizationUserOutput.UserSubsidiaries
+            .FirstOrDefault(p => p.OrganizationId == organizationId)?.IsLeader;
     }
 }

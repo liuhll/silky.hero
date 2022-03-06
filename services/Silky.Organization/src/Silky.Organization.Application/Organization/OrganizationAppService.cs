@@ -152,13 +152,17 @@ public class OrganizationAppService : IOrganizationAppService
 
     public async Task<long[]> GetOrganizationPositionIdsAsync(long organizationId)
     {
-        return await _organizationPositionRepository
+        var setPositionIds = await _organizationPositionRepository
             .AsQueryable(false)
             .Where(p => p.OrganizationId == organizationId)
             .Select(p => p.PositionId)
             .ToArrayAsync();
+
+        var publicPositionIds = (await _positionAppService.GetPublicPositionListAsync())
+            .Select(p => p.Id);
+        return setPositionIds.Union(publicPositionIds).ToArray();
     }
-    
+
     public async Task<ICollection<GetOrganizationOutput>> GetCurrentOrganizationListAsync()
     {
         var currentUserDataRange = await _session.GetCurrentUserDataRangeAsync();

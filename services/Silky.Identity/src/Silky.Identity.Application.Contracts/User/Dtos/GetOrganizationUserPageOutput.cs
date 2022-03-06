@@ -7,4 +7,8 @@ public class GetOrganizationUserPageOutput : UserDtoBase
     public long PositionId { get; set; }
 
     public string PositionName { get; set; }
+
+    public bool IsLeader { get; set; }
+    
+    
 }

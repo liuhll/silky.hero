@@ -355,6 +355,8 @@ public class IdentityUserManager : UserManager<IdentityUser>
             .Where(!input.RealName.IsNullOrEmpty(), p => p.RealName.Contains(input.RealName))
             .Where(input.Sex.HasValue, p => p.Sex == input.Sex)
             .Where(input.Status.HasValue, p => p.Status == input.Status)
+            .Where(input.IsLeader == true, p => p.UserSubsidiaries.Any(q => q.IsLeader))
+            .Where(input.IsLeader == false, p => p.UserSubsidiaries.All(q => q.IsLeader == false))
             .Where(input.IsLockout == true, p => p.LockoutEnd >= DateTimeOffset.Now)
             .Where(input.IsLockout == false, p => p.LockoutEnd < DateTimeOffset.Now || p.LockoutEnd == null)
             .Where(input.OrganizationIds != null && input.OrganizationIds.Any(),
@@ -386,6 +388,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         foreach (var organizationUser in pageOutput.Items)
         {
             await organizationUser.SetPositionInfo(organizationId);
+            organizationUser.SetIsLeader(organizationId);
         }
 
         return pageOutput;
@@ -409,6 +412,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
         foreach (var userOutput in userOutputList.Items)
         {
             await userOutput.SetPositionInfo(organizationId);
+            userOutput.IsLeader = userOutput.UserSubsidiaries.Single(p => p.OrganizationId == organizationId).IsLeader;
         }
 
         return userOutputList;

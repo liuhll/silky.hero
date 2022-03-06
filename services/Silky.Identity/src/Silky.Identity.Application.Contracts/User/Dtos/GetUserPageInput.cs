@@ -20,6 +20,8 @@ public class GetUserPageInput : PageDtoBase
     
     public bool? IsLockout { get; set; }
 
+    public bool? IsLeader { get; set; }
+
     public Sex? Sex { get; set; }
 
     public string JobNumber { get; set; }
