@@ -159,14 +159,15 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpGet("currentuser/list")]
     Task<ICollection<GetOrganizationOutput>> GetCurrentOrganizationListAsync();
-    
-    /// <summary>
-    ///检查某个部门是否存在领导
-    /// </summary>
-    /// <param name="organizationId"></param>
-    /// <returns></returns>
+
+    ///  <summary>
+    /// 检查某个部门是否存在领导
+    ///  </summary>
+    ///  <param name="organizationId"></param>
+    ///  <param name="userId"></param>
+    ///  <returns></returns>
     [HttpPost("{organizationId:long}/checkleader")]
-    Task<bool> CheckHasLeaderAsync(long organizationId);
+    Task<bool> CheckHasLeaderAsync(long organizationId, [FromQuery]long? userId);
 
     /// <summary>
     /// 判断是否存在组织机构

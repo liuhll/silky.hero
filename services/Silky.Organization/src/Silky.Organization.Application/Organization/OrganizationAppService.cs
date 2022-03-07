@@ -114,9 +114,9 @@ public class OrganizationAppService : IOrganizationAppService
         return organizations;
     }
 
-    public Task<bool> CheckHasLeaderAsync(long organizationId)
+    public Task<bool> CheckHasLeaderAsync(long organizationId,long? userId)
     {
-        return _userAppService.CheckHasLeaderAsync(organizationId);
+        return _userAppService.CheckHasLeaderAsync(organizationId,userId);
     }
 
     public async Task<bool> HasOrganizationAsync(long organizationId)

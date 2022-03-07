@@ -255,7 +255,7 @@ public class IdentityUserManager : UserManager<IdentityUser>
             if (userSubsidiary.IsLeader)
             {
                 var hasOrganizationLeader = await UserSubsidiaryRepository.AnyAsync(p =>
-                    p.OrganizationId == userSubsidiary.OrganizationId && p.IsLeader);
+                    p.OrganizationId == userSubsidiary.OrganizationId && p.IsLeader && p.UserId != userSubsidiary.UserId);
                 if (hasOrganizationLeader)
                 {
                     return IdentityResult.Failed(new IdentityError()

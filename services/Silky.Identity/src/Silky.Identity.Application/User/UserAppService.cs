@@ -321,9 +321,9 @@ public class UserAppService : IUserAppService
         (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
     }
 
-    public Task<bool> CheckHasLeaderAsync(long organizationId)
+    public Task<bool> CheckHasLeaderAsync(long organizationId, long? userId)
     {
-        return UserManager.UserSubsidiaryRepository.AnyAsync(p => p.OrganizationId == organizationId && p.IsLeader);
+        return UserManager.UserSubsidiaryRepository.AnyAsync(p => p.OrganizationId == organizationId && p.IsLeader && p.UserId != userId);
     }
 
     public async Task CreateConfirmSuperUserAsync(CreateSuperUserInput input)
