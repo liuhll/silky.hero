@@ -116,7 +116,12 @@ export const checkOrganization = (requestParams) => {
   });
 };
 
-export const checkOrganizationHasLeader = (organizationId: number) => {
+export const checkOrganizationHasLeader = (organizationId: number, userId?: Nullable<number>) => {
+  if (userId) { 
+    return defHttp.post({
+      url: `/organization/${organizationId}/checkleader?userId=${userId}`,
+    });
+  }
   return defHttp.post({
     url: `/organization/${organizationId}/checkleader`,
   });

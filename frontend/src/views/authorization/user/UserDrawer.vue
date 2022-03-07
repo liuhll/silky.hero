@@ -45,6 +45,7 @@
         setOrganizaionTreeList: () => void;
         setPositionOptions: (id: Nullable<number>) => void;
         setIsLeaderOptions: () => void;
+        setUserId: (userId: Nullable<number>) => void;
       } | null>(null);
       const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'));
       const [registerForm, { setFieldsValue, resetFields, validate, clearValidate, updateSchema }] =
@@ -60,6 +61,7 @@
         await userSubsidiaryTableRef.value?.setOrganizaionTreeList();
         await userSubsidiaryTableRef.value?.setPositionOptions(null);
         await userSubsidiaryTableRef.value?.setIsLeaderOptions();
+        await userSubsidiaryTableRef.value?.setUserId(data.record.id);
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
           setFieldsValue({

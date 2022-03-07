@@ -19,8 +19,6 @@ import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
 import { h } from 'vue';
 import { Rule } from '/@/components/Form';
-import { async } from '../../../components/Form/src/hooks/useAutoFocus';
-import { checkOrganizationHasLeader } from '../../../api/organization/index';
 
 export const userColumns: BasicColumn[] = [
   {
@@ -327,26 +325,6 @@ export const getNameRules = (id: Nullable<number>, parentId: Nullable<number>): 
       validateTrigger: ['change', 'blur'],
       validator: (rules, value) => {
         return checkOrganizationRule(value, id, parentId);
-      },
-    },
-  ];
-};
-
-export const getIsLeaderRules = (id: number): Rule[] => {
-  return [
-    {
-      required: true,
-      message: '请选择是否是部门负责人',
-    },
-
-    {
-      type: 'string',
-      validateTrigger: ['change', 'blur'],
-      validator: async (rules, value) => {
-        if (await checkOrganizationHasLeader(id)) {
-          return Promise.reject('该部门已经存在负责人');
-        }
-        return Promise.resolve('');
       },
     },
   ];

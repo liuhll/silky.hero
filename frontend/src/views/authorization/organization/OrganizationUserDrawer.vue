@@ -149,7 +149,10 @@
       }
 
       async function handleCheckUserIsLeader(value: any, record: any) {
-        if (value && (await checkOrganizationHasLeader(unref(organizationInfo).id))) {
+        if (
+          value &&
+          (await checkOrganizationHasLeader(unref(organizationInfo).id, record.userId))
+        ) {
           notification.warning({
             message: `${unref(organizationInfo).name}已经存在负责人`,
           });

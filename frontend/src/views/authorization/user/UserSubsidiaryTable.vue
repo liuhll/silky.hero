@@ -43,11 +43,13 @@
     },
     setup(props) {
       const isEditable = computed(() => props.editable);
+      const userId = ref<Nullable<number>>(null);
       const columns: BasicColumn[] = [
         {
           title: '所属部门',
           dataIndex: 'organizationId',
           editRow: true,
+          width: 250,
           editRule: async (text, record) => {
             if (!text) {
               notification.error({
@@ -77,6 +79,7 @@
           dataIndex: 'positionId',
           editRow: true,
           editComponent: 'Select',
+          width: 200,
           editRule: async (text, record) => {
             if (!text) {
               notification.error({
@@ -101,15 +104,19 @@
           title: '部门负责人',
           dataIndex: 'isLeader',
           editRow: true,
+          width: 100,
           editComponent: 'Select',
           editRule: async (text, record) => {
-            if (!text) {
+            if (text == null) {
               notification.error({
-                message: '是否是部门负责人',
+                message: '请选择是否是部门负责人',
               });
-              return Promise.reject('是否是部门负责人');
+              return Promise.reject('请选择是否是部门负责人');
             }
-            if (await checkOrganizationHasLeader(Number(record.organizationId))) {
+            if (
+              Boolean(text) === true &&
+              (await checkOrganizationHasLeader(Number(record.organizationId), unref(userId)))
+            ) {
               notification.error({
                 message: `该部门已经存在负责人`,
               });
@@ -182,6 +189,10 @@
         setProps({
           columns: tableColumns,
         });
+      }
+
+      function setUserId(val: Nullable<number>) {
+        userId.value = val;
       }
 
       function clearPositionOptions() {
@@ -324,6 +335,7 @@
         setOrganizaionTreeList,
         setPositionOptions,
         setIsLeaderOptions,
+        setUserId,
         handleEditChange,
         isEditable,
       };
