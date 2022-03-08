@@ -20,8 +20,10 @@ serilog:
         theme: "Serilog.Sinks.SystemConsole.Themes.SystemConsoleTheme::Literate, Serilog.Sinks.Console"
 healthChecksUI:
   healthChecks:
-    - name: silkyrpc
-      uri: http://127.0.0.1:6000/silkyrpc/healthz
+    - name: rpc
+      uri: https://127.0.0.1:6001/silkyrpc/healthz
+    - name: gateway
+      uri: https://127.0.0.1:6001/silkygateway/healthz
   evaluationTimeinSeconds: 30
   minimumSecondsBetweenFailureNotifications: 60
 dashboard:
