@@ -31,16 +31,24 @@ public interface IAccountAppService
     [Authorize]
     Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync();
 
+    /// <summary>
+    /// 获取当前登录用户的菜单权限
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("menus")]
     [GetCachingIntercept("CurrentUserMenus", OnlyCurrentUserData = true)]
     Task<ICollection<GetCurrentUserMenuOutput>> GetCurrentUserMenusAsync();
 
+    /// <summary>
+    /// 获取当前登录用户所有的权限码
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("permissioncodes")]
     [GetCachingIntercept("CurrentUserPermissionCodes", OnlyCurrentUserData = true)]
     Task<string[]> GetCurrentUserPermissionCodesAsync();
-
+    
     [Authorize]
     [GetCachingIntercept("CurrentUserDataRange", OnlyCurrentUserData = true)]
     [ProhibitExtranet]

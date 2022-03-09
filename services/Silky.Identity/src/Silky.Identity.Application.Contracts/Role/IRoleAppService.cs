@@ -43,7 +43,7 @@ public interface IRoleAppService
     Task UpdateAsync(UpdateRoleInput input);
 
     /// <summary>
-    /// 根据id获取角色信息
+    /// 根据id获取角色详情信息
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -52,6 +52,11 @@ public interface IRoleAppService
     [Authorize(IdentityPermissions.Roles.LookDetail)]
     Task<GetRoleDetailOutput> GetDetailAsync([CacheKey(0)] long id);
     
+    /// <summary>
+    /// 根据id获取角色基础信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [GetCachingIntercept("id:{0}")]
     Task<GetRoleOutput> GetAsync([CacheKey(0)] long id);
 

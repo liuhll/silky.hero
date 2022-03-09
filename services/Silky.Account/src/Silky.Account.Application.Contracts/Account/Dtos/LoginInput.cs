@@ -3,6 +3,9 @@ using Silky.Rpc.Auditing;
 
 namespace Silky.Account.Application.Contracts.Account.Dtos;
 
+/// <summary>
+/// 登录参数
+/// </summary>
 public class LoginInput
 {
     /// <summary>

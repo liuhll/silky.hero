@@ -76,6 +76,12 @@ public interface IUserAppService
     /// <returns></returns>
     Task<PagedList<GetUserPageOutput>> GetPageAsync(GetUserPageInput input);
 
+    /// <summary>
+    /// 获取指定组织机构可增加的用户
+    /// </summary>
+    /// <param name="organizationId"></param>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [HttpGet("{organizationId:long}/organizationuser/page")]
     [Authorize(OrganizationPermissions.Organizations.AddUsers)]
     Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);

@@ -88,6 +88,12 @@ public interface IPositionAppService
     [HttpPost("check")]
     Task<bool> CheckAsync(CheckPositionInput input);
     
+    /// <summary>
+    /// 检查是否有为某个组织机构分配指定职位的数据权限
+    /// </summary>
+    /// <param name="organizationId"></param>
+    /// <param name="positionId"></param>
+    /// <returns></returns>
     [HttpPost("check/datarange/{organizationId:long}/{positionId:long}")]
     Task<bool> CheckHasDataRangeAsync(long organizationId, long positionId);
 
@@ -100,6 +106,12 @@ public interface IPositionAppService
     [GetCachingIntercept("HasPosition:{0}")]
     Task<bool> HasPositionAsync([CacheKey(0)] long positionId);
 
+    /// <summary>
+    /// 获取职位列表接口
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
     [HttpGet("list")]
     Task<ICollection<GetPositionOutput>> GetListAsync([FromQuery] string name, [FromQuery] Status? status);
 

@@ -10,6 +10,9 @@ using Silky.Saas.Domain.Shared;
 
 namespace Silky.Saas.Application.Contracts.Edition;
 
+/// <summary>
+/// 版本信息服务
+/// </summary>
 [ServiceRoute]
 [Authorize]
 public interface IEditionAppService
