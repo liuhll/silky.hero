@@ -21,9 +21,9 @@ serilog:
 healthChecksUI:
   healthChecks:
     - name: rpc
-      uri: https://127.0.0.1:6001/silkyrpc/healthz
+      uri: http://127.0.0.1:6000/silkyrpc/healthz
     - name: gateway
-      uri: https://127.0.0.1:6001/silkygateway/healthz
+      uri: http://127.0.0.1:6000/silkygateway/healthz
   evaluationTimeinSeconds: 30
   minimumSecondsBetweenFailureNotifications: 60
 dashboard:
