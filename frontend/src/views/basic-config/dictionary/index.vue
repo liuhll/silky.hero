@@ -10,16 +10,16 @@
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看字典详情',
+              icon: 'ant-design:profile-outlined',
+              tooltip: '字典项',
               onClick: handleView.bind(null, record),
-              auth: 'Identity.Dictionary.LookDetail',
+              auth: 'BasicData.Dictionary.Items',
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑字典资料',
               onClick: handleEdit.bind(null, record),
-              auth: 'Identity.Dictionary.Update',
+              auth: 'BasicData.Dictionary.Type.Update',
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -29,7 +29,7 @@
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
               },
-              auth: 'Identity.Dictionary.Delete',
+              auth: 'BasicData.Dictionary.Type.Delete',
             },
           ]"
         />
@@ -73,8 +73,6 @@
       BasicTable,
       TableAction,
       DictionaryDrawer,
-      DictionaryMenuDrawer,
-      DictionaryDataDrawer,
       DictionaryDetailDrawer,
     },
     setup() {
@@ -99,9 +97,9 @@
       };
       if (
         hasPermission([
-          'BasicData.Dictionary.LookDetail',
-          'BasicData.Dictionary.Update',
-          'BasicData.Dictionary.Delete',
+          'BasicData.Dictionary.Type.LookDetail',
+          'BasicData.Dictionary.Type.Update',
+          'BasicData.Dictionary.Type.Delete',
         ])
       ) {
         tableConfig.actionColumn = {

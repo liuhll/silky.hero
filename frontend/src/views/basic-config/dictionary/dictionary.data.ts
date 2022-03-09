@@ -2,7 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { statusOptions } from '/@/utils/status';
 import { Status } from '/@/utils/status';
-import { getDictionaryList, checkDictionary } from '/@/api/dictionary';
+import { checkDictionary } from '/@/api/dictionary';
 import { omit } from 'lodash-es';
 import { OptionsItem } from '/@/utils/model';
 import { Tag } from 'ant-design-vue';
@@ -20,20 +20,22 @@ export enum DictionaryNameType {
 
 export const columns: BasicColumn[] = [
   {
-    title: '标识',
+    title: '字典名称',
     dataIndex: 'name',
-    width: 120,
+    width: 100,
+    align: 'left',
   },
   {
-    title: '名称',
-    dataIndex: 'realName',
+    title: '唯一编码',
+    dataIndex: 'code',
     width: 120,
-    slots: { customRender: 'realName' },
+    align: 'left',
   },
   {
     title: '状态',
     dataIndex: 'status',
     width: 80,
+    align: 'left',
     customRender: ({ record }) => {
       const enable = record.status === Status.Valid;
       const color = enable ? 'green' : 'red';
@@ -45,11 +47,13 @@ export const columns: BasicColumn[] = [
     title: '排序',
     dataIndex: 'sort',
     width: 50,
+    align: 'left',
   },
   {
     title: '备注',
     dataIndex: 'remark',
     width: 120,
+    align: 'left',
   },
 ];
 
