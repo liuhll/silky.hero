@@ -64,7 +64,7 @@ namespace Silky.GatewayHost
             app.UseSilkyWebSocketsProxy();
             app.UseSilkyWrapperResponse();
             app.UseSilkyIdentity();
-            app.UseSilkyHttpServer();
+            app.UseSilkyWebServer();
             app.UseAuditing();
             app.UseEndpoints(endpoints =>
             {
