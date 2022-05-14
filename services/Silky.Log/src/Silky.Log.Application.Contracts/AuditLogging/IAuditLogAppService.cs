@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Silky.Log.Application.Contracts.AuditLogging.Dtos;
 using Silky.Log.Domain.Shared;
 using Silky.Rpc.Auditing;
-using Silky.Rpc.CachingInterceptor;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Security;
 

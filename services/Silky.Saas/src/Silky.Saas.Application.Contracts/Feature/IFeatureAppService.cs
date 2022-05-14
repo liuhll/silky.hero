@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Silky.Rpc.CachingInterceptor;
 using Silky.Rpc.Routing;
+using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
 using Silky.Saas.Application.Contracts.Feature.Dtos;
 

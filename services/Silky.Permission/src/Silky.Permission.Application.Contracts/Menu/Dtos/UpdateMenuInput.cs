@@ -1,4 +1,4 @@
-﻿using Silky.Rpc.CachingInterceptor;
+﻿using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Permission.Application.Contracts.Menu.Dtos;
 

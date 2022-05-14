@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Silky.Permission.Domain.Shared.Permission;
-using Silky.Rpc.CachingInterceptor;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Permission.Application.Contracts.Permission.Dtos;
 

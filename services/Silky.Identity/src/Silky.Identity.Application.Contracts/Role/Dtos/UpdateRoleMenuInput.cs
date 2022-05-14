@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Silky.Rpc.CachingInterceptor;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
 

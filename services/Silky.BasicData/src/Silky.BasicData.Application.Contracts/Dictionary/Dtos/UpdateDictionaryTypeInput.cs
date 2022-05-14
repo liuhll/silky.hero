@@ -1,5 +1,6 @@
 ﻿using Silky.BasicData.Domain.Shared.Dictionary.Dtos;
 using Silky.Rpc.CachingInterceptor;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.BasicData.Application.Contracts.Dictionary.Dtos;
 

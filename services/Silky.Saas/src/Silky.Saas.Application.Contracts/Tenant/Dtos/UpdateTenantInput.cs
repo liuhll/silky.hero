@@ -1,4 +1,4 @@
-﻿using Silky.Rpc.CachingInterceptor;
+﻿using Silky.Rpc.Runtime.Server;
 
 namespace Silky.Saas.Application.Contracts.Tenant.Dtos;
 
