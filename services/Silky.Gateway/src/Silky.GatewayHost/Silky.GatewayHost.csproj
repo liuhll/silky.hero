@@ -13,8 +13,8 @@
         <PackageReference Include="Silky.Http.Auditing" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Http.CorsAccessor" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.HealthChecks.Rpc" Version="$(SilkyVersion)" />
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.7" />
+        <PackageReference Include="Silky.MassTransit" Version="$(SilkyVersion)" />
     </ItemGroup>
     
     <ItemGroup>
@@ -33,15 +33,8 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Silky.Account\src\Silky.Account.Application.Contracts\Silky.Account.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.BasicData\src\Silky.BasicData.Application.Contracts\Silky.BasicData.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Log\src\Silky.Log.Application.Contracts\Silky.Log.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Permission\src\Silky.Permission.Application.Contracts\Silky.Permission.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\Silky.Saas\src\Silky.Saas.Application.Contracts\Silky.Saas.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
     </ItemGroup>
-
+    
 
 </Project>

@@ -9,19 +9,25 @@ using Silky.Core.Exceptions;
 using Silky.Hero.Common;
 using Silky.Http.Identity.Authorization.Handlers;
 using Silky.Http.Identity.Authorization.Requirements;
-using Silky.Http.Identity.Extensions;
-using Silky.Permission.Application.Contracts.Permission;
 using Silky.Rpc.Extensions;
+using Silky.Rpc.Runtime.Client;
+using Silky.Rpc.Runtime.Server;
 
 namespace Silky.GatewayHost.Authorization;
 
 public class AuthorizationHandler : SilkyAuthorizationHandlerBase
 {
-    private readonly IPermissionAppService _permissionAppService;
+    private readonly IInvokeTemplate _invokeTemplate;
 
-    public AuthorizationHandler(IPermissionAppService permissionAppService)
+    private const string CheckPermissionServiceEntryId =
+        "Silky.Permission.Application.Contracts.Permission.IPermissionAppService.CheckPermissionAsync.permissionName_Get";
+
+    private const string CheckRoleServiceEntryId =
+        "Silky.Permission.Application.Contracts.Permission.IPermissionAppService.CheckRoleAsync.roleName_Get";
+
+    public AuthorizationHandler(IInvokeTemplate invokeTemplate)
     {
-        _permissionAppService = permissionAppService;
+        _invokeTemplate = invokeTemplate;
     }
 
     protected override async Task<bool> PolicyPipelineAsync(AuthorizationHandlerContext context,
@@ -36,14 +42,15 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
                 throw new UserFriendlyException("演示环境不允许修改数据");
             }
 
-            var serviceEntry = httpContext.GetServiceEntry();
-            if (serviceEntry.IsSilkyAppService())
+            var serviceEntryDescriptor = httpContext.GetServiceEntryDescriptor();
+            if (serviceEntryDescriptor.GetMetadata<bool>("IsSilkyAppService"))
             {
                 // todo 
                 return true;
             }
-            
-            return await _permissionAppService.CheckPermissionAsync(permissionRequirement.PermissionName);
+
+            return await _invokeTemplate.InvokeForObjectByServiceEntryId<bool>(CheckPermissionServiceEntryId,
+                permissionRequirement.PermissionName);
         }
 
         return true;
@@ -51,15 +58,15 @@ public class AuthorizationHandler : SilkyAuthorizationHandlerBase
 
     protected override async Task<bool> PipelineAsync(AuthorizationHandlerContext context, HttpContext httpContext)
     {
-        var serviceEntry = httpContext.GetServiceEntry();
-        var roles = serviceEntry
+        var serviceEntryDescriptor = httpContext.GetServiceEntryDescriptor();
+        var roles = serviceEntryDescriptor
             .AuthorizeData
             .Where(p => !p.Roles.IsNullOrEmpty())
             .SelectMany(p => p.Roles?.Split(","))
             .ToList();
         foreach (var role in roles)
         {
-            if (!await _permissionAppService.CheckRoleAsync(role))
+            if (!await _invokeTemplate.InvokeForObjectByServiceEntryId<bool>(CheckRoleServiceEntryId, role))
             {
                 return false;
             }

@@ -9,9 +9,7 @@ namespace Silky.GatewayHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec();
+            services.AddSilkySkyApm();
           
             
             services.AddMassTransit(x =>

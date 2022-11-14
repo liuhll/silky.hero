@@ -8,9 +8,7 @@ namespace Silky.BasicDataHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec();
+            services.AddSilkySkyApm();
             
             services.AddDatabaseAccessor(
                 options => { options.AddDbPool<DefaultContext>(); },

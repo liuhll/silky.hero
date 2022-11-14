@@ -10,11 +10,8 @@ namespace Silky.IdentityHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec()
-                .AddJwt()
-                .AddObjectMapper();
+            services.AddSilkySkyApm()
+                .AddJwt();
 
             services.AddHeroIdentity(options =>
             {

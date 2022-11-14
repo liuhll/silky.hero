@@ -6,8 +6,7 @@
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.7" />
         <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>

@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using MassTransit.RabbitMqTransport;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Silky.Core.Extensions;
@@ -12,10 +11,8 @@ namespace Silky.LogHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec();
-
+            services.AddSilkySkyApm();
+            
             services.AddMassTransit(x =>
             {
                 x.UsingRabbitMq((context, configurator) =>

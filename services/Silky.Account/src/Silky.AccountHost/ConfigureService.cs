@@ -9,9 +9,7 @@ namespace Silky.AccountHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec()
+            services.AddSilkySkyApm()
                 .AddJwt();
             
             services.AddHeroIdentity(options =>

@@ -25,7 +25,7 @@ public class HeroAuditingStore : IAuditingStore
     {
         try
         {
-            await _publishEndpoint.Publish(auditLogInfo);
+            await _publishEndpoint.PublishForSilky(auditLogInfo);
         }
         catch (Exception e)
         {

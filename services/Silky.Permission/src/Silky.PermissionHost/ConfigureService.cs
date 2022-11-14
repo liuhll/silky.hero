@@ -8,10 +8,7 @@ namespace Silky.PermissionHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddMessagePackCodec()
-                .AddObjectMapper();
+            services.AddSilkySkyApm();
             
             services.AddDatabaseAccessor(
                 options => { options.AddDbPool<DefaultContext>(); },

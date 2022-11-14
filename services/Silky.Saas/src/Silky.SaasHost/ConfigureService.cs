@@ -8,10 +8,7 @@ namespace Silky.SaasHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkyCaching()
-                .AddSilkySkyApm()
-                .AddObjectMapper()
-                .AddMessagePackCodec();
+            services.AddSilkySkyApm();
             
             services.AddDatabaseAccessor(
                 options => { options.AddDbPool<DefaultContext>(); },
