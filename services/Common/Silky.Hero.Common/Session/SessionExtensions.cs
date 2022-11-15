@@ -8,7 +8,8 @@ namespace Silky.Hero.Common.Session;
 
 public static class SessionExtensions
 {
-    public static Task<CurrentUserDataRange> GetCurrentUserDataRangeAsync(this ISession session)
+    private const string getCurrentUserDataRangeServiceEntryId = "Silky.Account.Application.Contracts.Account.IAccountAppService.GetCurrentUserDataRangeAsync_Get";
+    public static async Task<CurrentUserDataRange> GetCurrentUserDataRangeAsync(this ISession session)
     {
         Check.NotNull(session, nameof(session));
         if (!session.IsLogin())
@@ -17,19 +18,12 @@ public static class SessionExtensions
         }
 
         var invokeTemplate = EngineContext.Current.Resolve<IInvokeTemplate>();
-        return invokeTemplate.GetForObjectAsync<CurrentUserDataRange>("api/account/currentuserinfo");
+        var  result = await invokeTemplate.InvokeForObjectByServiceEntryId<CurrentUserDataRange>(getCurrentUserDataRangeServiceEntryId);
+        return result;
     }
 
     public static CurrentUserDataRange GetCurrentUserDataRange(this ISession session)
     {
-        Check.NotNull(session, nameof(session));
-        if (!session.IsLogin())
-        {
-            throw new BusinessException("您还没有登陆系统");
-        }
-
-        var invokeTemplate = EngineContext.Current.Resolve<IInvokeTemplate>();
-        return AsyncHelper.RunSync(() =>
-            invokeTemplate.GetForObjectAsync<CurrentUserDataRange>("api/account/currentuserinfo"));
+        return AsyncHelper.RunSync(() => session.GetCurrentUserDataRangeAsync());
     }
 }
