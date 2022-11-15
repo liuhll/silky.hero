@@ -7,9 +7,9 @@
         <PackageReference Include="Silky.ObjectMapper.Mapster" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.EntityFrameworkCore.Extras" Version="$(SilkyVersion)" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\..\..\Common\Silky.Hero.Common\Silky.Hero.Common.csproj" />
         <ProjectReference Include="..\Silky.BasicData.Application.Contracts\Silky.BasicData.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.BasicData.Domain.Shared\Silky.BasicData.Domain.Shared.csproj" />

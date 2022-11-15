@@ -55,9 +55,9 @@ namespace Silky.GatewayHost
             }
 
             app.UseDashboard();
-            app.UseSilkyRpcHealthCheck()
-                .UseSilkyGatewayHealthCheck()
-                .UseHealthChecksPrometheusExporter("/metrics");
+            // app.UseSilkyRpcHealthCheck()
+            //     .UseSilkyGatewayHealthCheck()
+            //     .UseHealthChecksPrometheusExporter("/metrics");
             app.UseRouting();
             app.UseCorsAccessor();
             app.UseResponseCaching();
@@ -67,7 +67,7 @@ namespace Silky.GatewayHost
             app.UseAuditing();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecksUI();
+                // endpoints.MapHealthChecksUI();
                 endpoints.MapSilkyRpcServices();
             });
         }

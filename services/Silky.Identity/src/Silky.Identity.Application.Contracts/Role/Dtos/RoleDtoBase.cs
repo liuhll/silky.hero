@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Silky.Hero.Common;
 using Silky.Hero.Common.Enums;
-using Silky.Identity.Domain.Shared;
 
 namespace Silky.Identity.Application.Contracts.Role.Dtos;
 

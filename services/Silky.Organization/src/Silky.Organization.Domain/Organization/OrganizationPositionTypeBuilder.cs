@@ -2,7 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Entities.Configures;
-using Silky.Hero.Common.EntityFrameworkCore.Modeling;
+using Silky.EntityFrameworkCore.Extras.Modeling;
 
 namespace Silky.Organization.Domain;
 

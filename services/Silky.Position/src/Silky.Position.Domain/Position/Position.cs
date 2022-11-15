@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Silky.EntityFrameworkCore.Extras.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Enums;
 

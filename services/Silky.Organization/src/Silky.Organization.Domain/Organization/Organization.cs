@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Silky.Core;
-using Silky.Core.Extensions.Collections.Generic;
+using Silky.EntityFrameworkCore.Extras.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Enums;
 

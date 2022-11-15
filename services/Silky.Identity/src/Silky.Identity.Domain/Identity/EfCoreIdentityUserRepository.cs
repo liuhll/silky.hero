@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
+using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.Hero.Common.Enums;
-using Silky.Hero.Common.Session;
 
 namespace Silky.Identity.Domain;
 

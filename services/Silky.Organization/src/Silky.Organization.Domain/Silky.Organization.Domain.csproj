@@ -7,11 +7,11 @@
         <PackageReference Include="Silky.ObjectMapper.Mapster" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.EntityFrameworkCore.Extras" Version="$(SilkyVersion)" />
         <PackageReference Include="Zack.EFCore.Batch.MySQL.Pomelo_NET6" Version="6.0.3" />
         <PackageReference Include="EFCore.BulkExtensions" Version="6.1.4" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\..\..\Silky.Identity\src\Silky.Identity.Application.Contracts\Silky.Identity.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
         <ProjectReference Include="..\Silky.Organization.Domain.Shared\Silky.Organization.Domain.Shared.csproj" />

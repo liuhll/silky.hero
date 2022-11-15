@@ -7,8 +7,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\Silky.Account\src\Silky.Account.Application.Contracts\Silky.Account.Application.Contracts.csproj" />
+        <PackageReference Include="Silky.Rpc" Version="$(SilkyVersion)" />
     </ItemGroup>
 </Project>

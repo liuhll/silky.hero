@@ -8,7 +8,6 @@ using Silky.Core.Extensions;
 using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Extensions;
 using Silky.Hero.Common.Enums;
-using Silky.Hero.Common.Session;
 using Silky.Organization.Application.Contracts.Organization;
 using Silky.Position.Application.Contracts.Position;
 using Silky.Position.Application.Contracts.Position.Dtos;

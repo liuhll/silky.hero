@@ -1,14 +1,14 @@
-using Silky.Account.Application.Contracts.Account;
-using Silky.Account.Application.Contracts.Account.Dtos;
-using Silky.Core;
+﻿using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.Core.Runtime.Session;
+using Silky.Core.Threading;
+using Silky.Rpc.Runtime.Client;
 
 namespace Silky.Hero.Common.Session;
 
 public static class SessionExtensions
 {
-    public static Task<GetCurrentUserDataRange> GetCurrentUserDataRangeAsync(this ISession session)
+    public static Task<CurrentUserDataRange> GetCurrentUserDataRangeAsync(this ISession session)
     {
         Check.NotNull(session, nameof(session));
         if (!session.IsLogin())
@@ -16,11 +16,11 @@ public static class SessionExtensions
             throw new BusinessException("您还没有登陆系统");
         }
 
-        var accountAppService = EngineContext.Current.Resolve<IAccountAppService>();
-        return accountAppService.GetCurrentUserDataRangeAsync();
+        var invokeTemplate = EngineContext.Current.Resolve<IInvokeTemplate>();
+        return invokeTemplate.GetForObjectAsync<CurrentUserDataRange>("api/account/currentuserinfo");
     }
-    
-    public static GetCurrentUserDataRange GetCurrentUserDataRange(this ISession session)
+
+    public static CurrentUserDataRange GetCurrentUserDataRange(this ISession session)
     {
         Check.NotNull(session, nameof(session));
         if (!session.IsLogin())
@@ -28,7 +28,8 @@ public static class SessionExtensions
             throw new BusinessException("您还没有登陆系统");
         }
 
-        var accountAppService = EngineContext.Current.Resolve<IAccountAppService>();
-        return accountAppService.GetCurrentUserDataRangeAsync().GetAwaiter().GetResult();
+        var invokeTemplate = EngineContext.Current.Resolve<IInvokeTemplate>();
+        return AsyncHelper.RunSync(() =>
+            invokeTemplate.GetForObjectAsync<CurrentUserDataRange>("api/account/currentuserinfo"));
     }
 }

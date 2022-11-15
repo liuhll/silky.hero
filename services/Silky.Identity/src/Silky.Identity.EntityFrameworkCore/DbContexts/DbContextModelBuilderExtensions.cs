@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Silky.Core;
-using Silky.Hero.Common.EntityFrameworkCore.Modeling;
+using Silky.EntityFrameworkCore.Extras.Modeling;
 using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain;
 

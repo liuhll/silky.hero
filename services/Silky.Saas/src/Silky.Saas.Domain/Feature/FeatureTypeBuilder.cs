@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Entities.Configures;
-using Silky.Hero.Common.EntityFrameworkCore.Modeling;
+using Silky.EntityFrameworkCore.Extras.Modeling;
 using Silky.Hero.Common.Extensions;
 using Silky.Saas.Domain.Shared;
 

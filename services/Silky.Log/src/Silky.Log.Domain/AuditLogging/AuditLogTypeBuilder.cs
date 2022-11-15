@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Silky.EntityFrameworkCore.Entities.Configures;
-using Silky.Hero.Common.EntityFrameworkCore.Modeling;
+using Silky.EntityFrameworkCore.Extras.Modeling;
 using Silky.Log.Domain.Shared.AuditLogging;
 
 namespace Silky.Log.Domain.AuditLogging;

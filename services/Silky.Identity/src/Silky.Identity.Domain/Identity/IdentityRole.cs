@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Silky.Core;
 using Silky.Core.Exceptions;
 using Silky.Core.Extensions.Collections.Generic;
+using Silky.EntityFrameworkCore.Extras.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Silky.EntityFrameworkCore.Entities;
+using Silky.EntityFrameworkCore.Extras.Entities;
 using Silky.Hero.Common.EntityFrameworkCore.Entities;
 using Silky.Saas.Domain.Shared.Feature;
 

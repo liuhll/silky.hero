@@ -1,4 +1,4 @@
-namespace Silky.Identity.Domain.Shared;
+﻿namespace Silky.Hero.Common;
 
 public class RegularExpressionConsts
 {
@@ -15,5 +15,4 @@ public class RegularExpressionConsts
     public const string JobNumber = "^\\w+$";
 
     public const string Http = "^https?:\\/\\/";
-       
 }

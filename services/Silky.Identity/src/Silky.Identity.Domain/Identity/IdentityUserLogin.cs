@@ -1,8 +1,7 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core;
-using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.EntityFrameworkCore.Extras.Entities;
 
 namespace Silky.Identity.Domain;
 

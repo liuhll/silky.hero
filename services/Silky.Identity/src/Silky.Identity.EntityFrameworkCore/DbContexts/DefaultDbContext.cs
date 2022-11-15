@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Silky.EntityFrameworkCore.Contexts.Attributes;
-using Silky.Hero.Common.EntityFrameworkCore.Contexts;
+using Silky.EntityFrameworkCore.Extras.Contexts;
 using Silky.Identity.Domain;
 
 namespace Silky.Identity.EntityFrameworkCore.DbContexts
 {
     [AppDbContext(HeroIdentityDbProperties.ConnectionStringName, DbProvider.MySql)]
-    public class DefaultDbContext : HeroDbContext<DefaultDbContext>
+    public class DefaultDbContext : SilkyDbContext<DefaultDbContext>
     {
         public DefaultDbContext(DbContextOptions<DefaultDbContext> options) : base(options)
         {

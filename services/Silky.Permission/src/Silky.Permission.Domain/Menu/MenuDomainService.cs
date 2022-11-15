@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Caching;
 using Silky.Core;
 using Silky.Core.DependencyInjection;

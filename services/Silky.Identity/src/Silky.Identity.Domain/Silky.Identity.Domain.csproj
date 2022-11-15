@@ -8,12 +8,13 @@
         <PackageReference Include="Silky.ObjectMapper.Mapster" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />
+        <PackageReference Include="Silky.EntityFrameworkCore.Extras" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Jwt" Version="$(SilkyVersion)" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="$(MicrosoftPackageVersion)" />
         <PackageReference Include="Zack.EFCore.Batch.MySQL.Pomelo_NET6" Version="6.0.3" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Common\Silky.Hero.Common.EntityFrameworkCore\Silky.Hero.Common.EntityFrameworkCore.csproj" />
+        <ProjectReference Include="..\..\..\Silky.Account\src\Silky.Account.Application.Contracts\Silky.Account.Application.Contracts.csproj" />
         <ProjectReference Include="..\..\..\Silky.Organization\src\Silky.Organization.Application.Contracts\Silky.Organization.Application.Contracts.csproj" />
         <ProjectReference Include="..\..\..\Silky.Permission\src\Silky.Permission.Application.Contracts\Silky.Permission.Application.Contracts.csproj" />
         <ProjectReference Include="..\..\..\Silky.Position\src\Silky.Position.Application.Contracts\Silky.Position.Application.Contracts.csproj" />

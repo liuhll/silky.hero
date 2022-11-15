@@ -1,4 +1,4 @@
-using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.EntityFrameworkCore.Extras.Entities;
 
 namespace Silky.Organization.Domain;
 

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Silky.Identity.Domain.Shared;
+using Silky.Hero.Common;
 using Silky.Rpc.Auditing;
 
 namespace Silky.Saas.Application.Contracts.Tenant.Dtos;

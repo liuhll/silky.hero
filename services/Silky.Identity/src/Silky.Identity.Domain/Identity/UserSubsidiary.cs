@@ -1,8 +1,8 @@
-﻿using Silky.Hero.Common.EntityFrameworkCore.Entities;
+﻿using Silky.EntityFrameworkCore.Extras.Entities;
 
 namespace Silky.Identity.Domain;
 
-public class UserSubsidiary : AuditedEntity
+public class UserSubsidiary : AuditedEntity, IHasOrganization<long>
 {
     public long OrganizationId { get; set; }
 

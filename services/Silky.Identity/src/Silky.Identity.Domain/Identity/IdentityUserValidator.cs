@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Silky.Core.Extensions;
-using Silky.Identity.Domain.Shared;
+using Silky.Hero.Common;
 
 namespace Silky.Identity.Domain;
 

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using JetBrains.Annotations;
 using Silky.Core;
-using Silky.Hero.Common.EntityFrameworkCore.Entities;
+using Silky.EntityFrameworkCore.Extras.Entities;
 
 namespace Silky.Identity.Domain;
 
