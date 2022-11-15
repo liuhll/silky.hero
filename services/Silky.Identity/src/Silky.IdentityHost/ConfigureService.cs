@@ -11,6 +11,7 @@ namespace Silky.IdentityHost
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSilkySkyApm()
+                .AddObjectMapper()
                 .AddJwt();
 
             services.AddHeroIdentity(options =>

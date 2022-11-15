@@ -11,7 +11,8 @@ namespace Silky.LogHost
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSilkySkyApm();
+            services.AddSilkySkyApm()
+                .AddObjectMapper();
             
             services.AddMassTransit(x =>
             {
