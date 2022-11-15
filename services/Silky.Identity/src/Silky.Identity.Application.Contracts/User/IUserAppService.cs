@@ -27,7 +27,7 @@ public interface IUserAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Users.Create)]
     Task CreateAsync(CreateUserInput input);
-    
+
     /// <summary>
     /// 判断是否存在某个账号
     /// </summary>
@@ -41,9 +41,9 @@ public interface IUserAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput), "roles:userId:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>), "roleIds:userId:{id}")]
     [Authorize(IdentityPermissions.Users.Update)]
     Task UpdateAsync(UpdateUserInput input);
 
@@ -53,11 +53,11 @@ public interface IUserAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput), "roles:userId:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>), "roleIds:userId:{id}")]
     [Authorize(IdentityPermissions.Users.Delete)]
-    Task DeleteAsync([CacheKey(0)] long id);
+    Task DeleteAsync(long id);
 
     /// <summary>
     /// 根据id获取用户信息
@@ -65,9 +65,9 @@ public interface IUserAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
+    [GetCachingIntercept("id:{id}")]
     [Authorize(IdentityPermissions.Users.LookDetail)]
-    Task<GetUserOutput> GetAsync([CacheKey(0)] long id);
+    Task<GetUserOutput> GetAsync(long id);
 
     /// <summary>
     /// 分页查询用户信息
@@ -84,10 +84,12 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpGet("{organizationId:long}/organizationuser/page")]
     [Authorize(OrganizationPermissions.Organizations.AddUsers)]
-    Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId, GetAddOrganizationUserPageInput input);
+    Task<PagedList<GetAddOrganizationUserPageOutput>> GetAddOrganizationUserPageAsync(long organizationId,
+        GetAddOrganizationUserPageInput input);
 
     [ProhibitExtranet]
-    Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId, GetOrganizationUserPageInput input);
+    Task<PagedList<GetOrganizationUserPageOutput>> GetOrganizationUserPageAsync(long organizationId,
+        GetOrganizationUserPageInput input);
 
     /// <summary>
     /// 更新用户声明
@@ -107,10 +109,10 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
-    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetUserRoleOutput),"roles:userId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<long>),"roleIds:userId:{0}")]
-    Task SetRolesAsync([CacheKey(0)]long userId, ICollection<string> roleNames);
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{userId}")]
+    [RemoveCachingIntercept(typeof(GetUserRoleOutput), "roles:userId:{userId}")]
+    [RemoveCachingIntercept(typeof(ICollection<long>), "roleIds:userId:{userId}")]
+    Task SetRolesAsync(long userId, ICollection<string> roleNames);
 
     /// <summary>
     /// 通过用户Id获取角色名称
@@ -119,9 +121,9 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpGet("{userId:long}/roles")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
-    [GetCachingIntercept("roles:userId:{0}")]
-    Task<GetUserRoleOutput> GetRolesAsync([CacheKey(0)]long userId);
-    
+    [GetCachingIntercept("roles:userId:{userId}")]
+    Task<GetUserRoleOutput> GetRolesAsync(long userId);
+
     /// <summary>
     /// 根据id锁定用户账号
     /// </summary>
@@ -130,9 +132,9 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/lock/{lockoutSeconds:int}")]
     [Authorize(IdentityPermissions.Users.Lock)]
-    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    Task LockAsync([CacheKey(0)]long userId, int lockoutSeconds);
-    
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{userId}")]
+    Task LockAsync(long userId, int lockoutSeconds);
+
     /// <summary>
     /// 根据Id解锁用户账号
     /// </summary>
@@ -140,9 +142,9 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpPut("{userId:long}/unlock")]
     [Authorize(IdentityPermissions.Users.UnLock)]
-    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{0}")]
-    Task UnLockAsync([CacheKey(0)]long userId);
-    
+    [RemoveCachingIntercept(typeof(GetUserOutput), "id:{userId}")]
+    Task UnLockAsync(long userId);
+
     /// <summary>
     /// 修改用户密码
     /// </summary>
@@ -152,7 +154,7 @@ public interface IUserAppService
     [HttpPut("{userId:long}/password")]
     [Authorize(IdentityPermissions.Users.ChangePassword)]
     Task ChangePasswordAsync(long userId, ChangePasswordInput input);
-    
+
     /// <summary>
     /// 获取该用户可用于分配的角色列表
     /// </summary>
@@ -162,8 +164,9 @@ public interface IUserAppService
     /// <returns></returns>
     [HttpGet("{userId:long}/role/list")]
     [Authorize(IdentityPermissions.Users.SetRoles)]
-    Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, [FromQuery] string realName, [FromQuery] string name);
-    
+    Task<ICollection<GetRoleOutput>> GetUserRoleListAsync(long userId, [FromQuery] string realName,
+        [FromQuery] string name);
+
     /// <summary>
     /// 获取指定组织机构的用户
     /// </summary>
@@ -194,8 +197,8 @@ public interface IUserAppService
     /// <param name="userId"></param>
     /// <returns></returns>
     [ProhibitExtranet]
-    [GetCachingIntercept("roleIds:userId:{0}")]
-    Task<ICollection<long>> GetRoleIdsAsync([CacheKey(0)]long userId);
+    [GetCachingIntercept("roleIds:userId:{userId}")]
+    Task<ICollection<long>> GetRoleIdsAsync(long userId);
 
     [ProhibitExtranet]
     Task<ICollection<long>> GetUserIdsAsync(long organizationId);
@@ -209,7 +212,7 @@ public interface IUserAppService
     [ProhibitExtranet]
     [Transaction]
     Task RemoveOrganizationLinkedDataAsync(long[] organizationIds);
-    
+
     [ProhibitExtranet]
     [Transaction]
     Task CreateSuperUserAsync(CreateSuperUserInput superUserInput);

@@ -8,7 +8,6 @@ public class UpdateRoleMenuInput
     /// <summary>
     /// 角色Id
     /// </summary>
-    [CacheKey(0)]
     public long Id { get; set; }
 
     /// <summary>

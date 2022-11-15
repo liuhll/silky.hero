@@ -33,7 +33,7 @@ public interface IAuditLogAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
+    [GetCachingIntercept("id:{id}")]
     [Authorize(LogPermissions.AuditLogging.LookDetail)]
-    Task<GetAuditLogOutput> GetAsync([CacheKey(0)] long id);
+    Task<GetAuditLogOutput> GetAsync(long id);
 }

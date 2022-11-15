@@ -11,10 +11,10 @@ namespace Silky.Permission.Application.Contracts.Permission;
 public interface IPermissionAppService
 {
     [ProhibitExtranet]
-    [GetCachingIntercept("permissionName:{0}", OnlyCurrentUserData = true)]
-    Task<bool> CheckPermissionAsync([CacheKey(0)]string permissionName);
+    [GetCachingIntercept("permissionName:{permissionName}", OnlyCurrentUserData = true)]
+    Task<bool> CheckPermissionAsync(string permissionName);
 
     [ProhibitExtranet]
-    [GetCachingIntercept("roleName:{0}", OnlyCurrentUserData = true)]
-    Task<bool> CheckRoleAsync([CacheKey(0)]string roleName);
+    [GetCachingIntercept("roleName:{roleName}", OnlyCurrentUserData = true)]
+    Task<bool> CheckRoleAsync(string roleName);
 }

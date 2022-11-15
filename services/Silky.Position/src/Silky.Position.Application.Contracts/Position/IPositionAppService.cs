@@ -34,8 +34,8 @@ public interface IPositionAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
+    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{Id}")]
+    [RemoveCachingIntercept(typeof(bool), "HasPosition:{Id}")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "allocationOrganizationPositionList")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getPublicPositionList")]
     [Authorize(PositionPermissions.Positions.Update)]
@@ -47,9 +47,9 @@ public interface IPositionAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
+    [GetCachingIntercept("id:{id}")]
     [Authorize(PositionPermissions.Positions.LookDetail)]
-    Task<GetPositionOutput> GetAsync([CacheKey(0)] long id);
+    Task<GetPositionOutput> GetAsync(long id);
 
     /// <summary>
     /// 通过Id删除职位信息
@@ -57,12 +57,12 @@ public interface IPositionAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(bool), "HasPosition:{0}")]
+    [RemoveCachingIntercept(typeof(GetPositionOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(bool), "HasPosition:{id}")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "allocationOrganizationPositionList")]
     [RemoveCachingIntercept(typeof(ICollection<GetPositionOutput>), "getPublicPositionList")]
     [Authorize(PositionPermissions.Positions.Delete)]
-    Task DeleteAsync([CacheKey(0)] long id);
+    Task DeleteAsync(long id);
 
     /// <summary>
     /// 分页查询职位信息
@@ -78,7 +78,7 @@ public interface IPositionAppService
     /// <param name="isAll"></param>
     /// <returns></returns>
     [HttpGet("{organizationId:long}/list")]
-    Task<ICollection<GetAllocationOrganizationPositionOutput>> GetPositionListAsync(long organizationId,bool? isAll);
+    Task<ICollection<GetAllocationOrganizationPositionOutput>> GetPositionListAsync(long organizationId, bool? isAll);
 
     /// <summary>
     /// 判断是否存在某个职位
@@ -87,7 +87,7 @@ public interface IPositionAppService
     /// <returns></returns>
     [HttpPost("check")]
     Task<bool> CheckAsync(CheckPositionInput input);
-    
+
     /// <summary>
     /// 检查是否有为某个组织机构分配指定职位的数据权限
     /// </summary>
@@ -103,8 +103,8 @@ public interface IPositionAppService
     /// <param name="positionId">职位Id</param>
     /// <returns></returns>
     [ProhibitExtranet]
-    [GetCachingIntercept("HasPosition:{0}")]
-    Task<bool> HasPositionAsync([CacheKey(0)] long positionId);
+    [GetCachingIntercept("HasPosition:{positionId}")]
+    Task<bool> HasPositionAsync(long positionId);
 
     /// <summary>
     /// 获取职位列表接口

@@ -21,17 +21,17 @@ public interface IClaimTypeAppService
     /// </summary>
     /// <param name="input">声明dto对象</param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>), "all")]
     [Authorize(IdentityPermissions.ClaimTypes.Create)]
     Task CreateAsync(CreateClaimTypeInput input);
-    
+
     /// <summary>
     /// 更新声明类型
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
+    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>), "all")]
     [Authorize(IdentityPermissions.ClaimTypes.Update)]
     Task UpdateAsync(UpdateClaimTypeInput input);
 
@@ -41,8 +41,8 @@ public interface IClaimTypeAppService
     /// <param name="id">声明类型Id</param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}")]
-    Task<GetClaimTypeOutput> GetAsync([CacheKey(0)] long id);
+    [GetCachingIntercept("id:{id}")]
+    Task<GetClaimTypeOutput> GetAsync(long id);
 
     /// <summary>
     /// 通过Id删除声明类型
@@ -50,10 +50,10 @@ public interface IClaimTypeAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>),"all")]
+    [RemoveCachingIntercept(typeof(GetClaimTypeOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetClaimTypeOutput>), "all")]
     [Authorize(IdentityPermissions.ClaimTypes.Delete)]
-    Task DeleteAsync([CacheKey(0)] long id);
+    Task DeleteAsync(long id);
 
     /// <summary>
     /// 分页查询声明类型

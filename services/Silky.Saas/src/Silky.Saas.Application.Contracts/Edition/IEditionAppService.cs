@@ -32,7 +32,7 @@ public interface IEditionAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(SaasPermissions.Editions.Update)]
-    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{Id}",IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task UpdateAsync(UpdateEditionInput input);
 
@@ -43,7 +43,7 @@ public interface IEditionAppService
     /// <returns></returns>
     [Authorize(SaasPermissions.Editions.Delete)]
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{id}",IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
     Task DeleteAsync(long id);
     
@@ -70,9 +70,9 @@ public interface IEditionAppService
     /// <returns></returns>
     [HttpPut("{id:long}/features")]
     [Authorize(SaasPermissions.Editions.SetFeatures)]
-    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{0}",IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(GetEditionEditOutput),"id:{id}",IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetEditionOutput>),"list",IgnoreMultiTenancy = true)]
-    Task SetFeaturesAsync([CacheKey(0)]long id, ICollection<EditionFeatureDto> inputs);
+    Task SetFeaturesAsync(long id, ICollection<EditionFeatureDto> inputs);
 
     /// <summary>
     /// 通过Id获取版本信息
@@ -80,8 +80,8 @@ public interface IEditionAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}", IgnoreMultiTenancy = true)]
-    Task<GetEditionEditOutput> GetAsync([CacheKey(0)] long id);
+    [GetCachingIntercept("id:{id}", IgnoreMultiTenancy = true)]
+    Task<GetEditionEditOutput> GetAsync(long id);
 
     /// <summary>
     /// 获取版本列表
@@ -96,11 +96,11 @@ public interface IEditionAppService
     /// </summary>
     /// <param name="featureCode"></param>
     /// <returns></returns>
-    [GetCachingIntercept("featureCode:{0}")]
+    [GetCachingIntercept("featureCode:{featureCode}")]
     [ProhibitExtranet]
-    Task<GetEditionFeatureOutput> GetEditionFeatureAsync([CacheKey(0)]string featureCode);
+    Task<GetEditionFeatureOutput> GetEditionFeatureAsync(string featureCode);
     
-    [GetCachingIntercept("featureCode:{0}:tenantId:{1}")]
+    [GetCachingIntercept("featureCode:{featureCode}:tenantId:{tenantId}")]
     [ProhibitExtranet]
-    Task<GetEditionFeatureOutput> GetTenantEditionFeatureAsync([CacheKey(0)]string featureCode,[CacheKey(1)]long tenantId);
+    Task<GetEditionFeatureOutput> GetTenantEditionFeatureAsync(string featureCode,long tenantId);
 }

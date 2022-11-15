@@ -33,7 +33,7 @@ public interface ITenantAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{Id}", IgnoreMultiTenancy = true)]
     [RemoveMatchKeyCachingIntercept("tenantName:*", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
     [Authorize(SaasPermissions.Tenants.Update)]
@@ -53,9 +53,9 @@ public interface ITenantAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    [GetCachingIntercept("id:{0}", IgnoreMultiTenancy = true)]
+    [GetCachingIntercept("id:{id}", IgnoreMultiTenancy = true)]
     [Authorize(SaasPermissions.Tenants.LookDetail)]
-    Task<GetTenantOutput> GetAsync([CacheKey(0)] long id);
+    Task<GetTenantOutput> GetAsync(long id);
 
     /// <summary>
     /// 通过id删除租户信息
@@ -63,11 +63,11 @@ public interface ITenantAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{0}", IgnoreMultiTenancy = true)]
+    [RemoveCachingIntercept(typeof(GetTenantOutput), "id:{id}", IgnoreMultiTenancy = true)]
     [RemoveCachingIntercept(typeof(ICollection<GetTenantOutput>), "all", IgnoreMultiTenancy = true)]
     [RemoveMatchKeyCachingIntercept("tenantName:*", IgnoreMultiTenancy = true)]
     [Authorize(SaasPermissions.Tenants.Delete)]
-    Task DeleteAsync([CacheKey(0)] long id);
+    Task DeleteAsync(long id);
 
     /// <summary>
     /// 分页查询租户信息
@@ -90,6 +90,6 @@ public interface ITenantAppService
     /// <param name="name"></param>
     /// <returns></returns>
     [ProhibitExtranet]
-    [GetCachingIntercept("tenantName:{0}", IgnoreMultiTenancy = true)]
-    Task<GetTenantOutput> GetByNameAsync([CacheKey(0)] string name);
+    [GetCachingIntercept("tenantName:{name}", IgnoreMultiTenancy = true)]
+    Task<GetTenantOutput> GetByNameAsync(string name);
 }

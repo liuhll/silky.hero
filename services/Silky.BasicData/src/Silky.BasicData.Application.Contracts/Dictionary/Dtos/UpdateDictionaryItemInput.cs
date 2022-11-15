@@ -9,6 +9,5 @@ public class UpdateDictionaryItemInput : DictionaryItemDtoBase
     /// <summary>
     /// 主键Id
     /// </summary>
-    [CacheKey(0)]
     public long Id { get; set; }
 }

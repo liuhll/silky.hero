@@ -25,20 +25,20 @@ public interface IRoleAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.Create)]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "getPublicRoleList")]
     Task CreateAsync(CreateRoleInput input);
-    
+
     /// <summary>
     /// 更新角色
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<string>), "permissions:roleId:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "getPublicRoleList")]
     [Authorize(IdentityPermissions.Roles.Update)]
     Task UpdateAsync(UpdateRoleInput input);
 
@@ -48,17 +48,17 @@ public interface IRoleAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id:long}/detail")]
-    [GetCachingIntercept("id:detail:{0}")]
+    [GetCachingIntercept("id:detail:{id}")]
     [Authorize(IdentityPermissions.Roles.LookDetail)]
-    Task<GetRoleDetailOutput> GetDetailAsync([CacheKey(0)] long id);
-    
+    Task<GetRoleDetailOutput> GetDetailAsync(long id);
+
     /// <summary>
     /// 根据id获取角色基础信息
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [GetCachingIntercept("id:{0}")]
-    Task<GetRoleOutput> GetAsync([CacheKey(0)] long id);
+    [GetCachingIntercept("id:{id}")]
+    Task<GetRoleOutput> GetAsync(long id);
 
     /// <summary>
     /// 根据Id删除角色信息
@@ -66,13 +66,13 @@ public interface IRoleAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:long}")]
-    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"allocationOrganizationRoleList")]
-    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>),"getPublicRoleList")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<string>), "permissions:roleId:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "allocationOrganizationRoleList")]
+    [RemoveCachingIntercept(typeof(ICollection<GetRoleOutput>), "getPublicRoleList")]
     [Authorize(IdentityPermissions.Roles.Delete)]
-    Task DeleteAsync([CacheKey(0)] long id);
+    Task DeleteAsync(long id);
 
     /// <summary>
     /// 检查角色是否存在
@@ -89,12 +89,12 @@ public interface IRoleAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.SetMenus)]
     [HttpPut("menus")]
-    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
-    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
+    [RemoveCachingIntercept(typeof(ICollection<string>), "permissions:roleId:{id}")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{id}")]
     [Governance(TimeoutMillSeconds = 10000)]
     Task SetMenusAsync(UpdateRoleMenuInput input);
-    
+
     /// <summary>
     /// 通过id获取角色菜单
     /// </summary>
@@ -111,11 +111,11 @@ public interface IRoleAppService
     /// <returns></returns>
     [Authorize(IdentityPermissions.Roles.SetDataRange)]
     [HttpPut("datarange")]
-    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{0}")]
-    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{0}")]
-    [RemoveCachingIntercept(typeof(ICollection<string>),"permissions:roleId:{0}")]
+    [RemoveCachingIntercept(typeof(GetRoleOutput), "id:{id}")]
+    [RemoveCachingIntercept(typeof(GetRoleDetailOutput), "id:detail:{id}")]
+    [RemoveCachingIntercept(typeof(ICollection<string>), "permissions:roleId:{id}")]
     Task SetDataRangeAsync(UpdateRoleDataRangeInput input);
-    
+
     /// <summary>
     /// 通过Id获取数据权限范围
     /// </summary>
@@ -125,7 +125,8 @@ public interface IRoleAppService
     [HttpGet("datarange/{id:long}")]
     Task<GetRoleDataRangeOutput> GetDataRangeAsync(long id);
 
-    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery]string realName, [FromQuery] string name,[FromQuery] Status? status);
+    Task<ICollection<GetRoleOutput>> GetListAsync([FromQuery] string realName, [FromQuery] string name,
+        [FromQuery] Status? status);
 
     /// <summary>
     /// 分页查询角色信息
@@ -135,8 +136,8 @@ public interface IRoleAppService
     Task<PagedList<GetRolePageOutput>> GetPageAsync(GetRolePageInput input);
 
     [ProhibitExtranet]
-    [GetCachingIntercept("permissions:roleId:{0}")]
-    Task<ICollection<string>> GetPermissionsAsync([CacheKey(0)]long roleId);
+    [GetCachingIntercept("permissions:roleId:{roleId}")]
+    Task<ICollection<string>> GetPermissionsAsync(long roleId);
 
     [ProhibitExtranet]
     Task<bool> CheckHasMenusAsync(long[] menuIds);
@@ -149,8 +150,7 @@ public interface IRoleAppService
     [ProhibitExtranet]
     Task<ICollection<GetRoleOutput>> GetAllocationOrganizationRoleListAsync();
 
-    [GetCachingIntercept("getPublicRoleList")] 
+    [GetCachingIntercept("getPublicRoleList")]
     [ProhibitExtranet]
     Task<ICollection<GetRoleOutput>> GetPublicRoleListAsync();
-    
 }

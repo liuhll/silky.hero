@@ -30,7 +30,7 @@ public interface IDictionaryAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
+    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{Id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Types.Update)]
     Task UpdateTypeAsync(UpdateDictionaryTypeInput input);
 
@@ -40,9 +40,9 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("type/{id:long}")]
-    [GetCachingIntercept("type:id:{0}")]
+    [GetCachingIntercept("type:id:{id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Types.LookDetail)]
-    Task<GetDictionaryTypeOutput> GetTypeAsync([CacheKey(0)]long id);
+    Task<GetDictionaryTypeOutput> GetTypeAsync(long id);
 
     /// <summary>
     /// 通过Id删除字典类型
@@ -50,9 +50,9 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("type/{id:long}")]
-    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{0}")]
+    [RemoveCachingIntercept(typeof(GetDictionaryTypeOutput),"type:id:{id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Types.Delete)]
-    Task DeleteTypeAsync([CacheKey(0)]long id);
+    Task DeleteTypeAsync(long id);
 
     /// <summary>
     /// 分页获取字典类型
@@ -76,7 +76,7 @@ public interface IDictionaryAppService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
+    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Items.Update)]
     Task UpdateItemAsync(UpdateDictionaryItemInput input);
 
@@ -86,9 +86,9 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("item/{id:long}")]
-    [GetCachingIntercept("item:id:{0}")]
+    [GetCachingIntercept("item:id:{id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Items.LookDetail)]
-    Task<GetDictionaryItemOutput> GetItemAsync([CacheKey(0)]long id);
+    Task<GetDictionaryItemOutput> GetItemAsync(long id);
 
     /// <summary>
     /// 根据Id删除字典项
@@ -96,9 +96,9 @@ public interface IDictionaryAppService
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("item/{id:long}")]
-    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{0}")]
+    [RemoveCachingIntercept(typeof(GetDictionaryItemOutput),"item:id:{id}")]
     [Authorize(BasicDataPermissions.Dictionaries.Items.Delete)]
-    Task DeleteItemAsync([CacheKey(0)]long id);
+    Task DeleteItemAsync(long id);
 
     /// <summary>
     /// 分页获取字典项接口
@@ -115,8 +115,8 @@ public interface IDictionaryAppService
     /// <param name="dictionaryId"></param>
     /// <returns></returns>
     [HttpGet("{dictionaryId:long}/items")]
-    [GetCachingIntercept("items:id:{0}")]
-    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync([CacheKey(0)]long dictionaryId);
+    [GetCachingIntercept("items:dictionaryId:{dictionaryId}")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByIdAsync(long dictionaryId);
     
     /// <summary>
     /// 根据Code获取所有字典项
@@ -124,6 +124,6 @@ public interface IDictionaryAppService
     /// <param name="code"></param>
     /// <returns></returns>
     [HttpGet("{code}/items")]
-    [GetCachingIntercept("items:code:{0}")]
-    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync([CacheKey(0)]string code);
+    [GetCachingIntercept("items:code:{code}")]
+    Task<ICollection<GetDictionaryItemOutput>> GetAllItemsByCodeAsync(string code);
 }
