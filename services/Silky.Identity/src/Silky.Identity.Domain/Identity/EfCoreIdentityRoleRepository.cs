@@ -18,10 +18,10 @@ public class EfCoreIdentityRoleRepository : EFCoreRepository<IdentityRole>, IIde
         {
             return Entities
                 .Include(p => p.Claims)
-                .FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName);
+                .FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName, cancellationToken: cancellationToken);
         }
 
-        return FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName);
+        return FirstOrDefaultAsync(p => p.NormalizedName == normalizedRoleName, cancellationToken: cancellationToken);
     }
 
     public async Task EnsureCollectionLoadedAsync<TProperty>(IdentityRole role,

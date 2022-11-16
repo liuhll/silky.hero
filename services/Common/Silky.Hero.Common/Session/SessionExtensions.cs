@@ -24,6 +24,6 @@ public static class SessionExtensions
 
     public static CurrentUserDataRange GetCurrentUserDataRange(this ISession session)
     {
-        return AsyncHelper.RunSync(() => session.GetCurrentUserDataRangeAsync());
+        return AsyncHelper.RunSync(session.GetCurrentUserDataRangeAsync);
     }
 }

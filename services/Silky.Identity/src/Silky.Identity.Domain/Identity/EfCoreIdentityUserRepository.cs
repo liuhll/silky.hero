@@ -27,10 +27,10 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName);
+                .FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName, cancellationToken: cancellationToken);
         }
 
-        return FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName);
+        return FirstOrDefaultAsync(p => p.NormalizedUserName == normalizedUserName, cancellationToken: cancellationToken);
     }
 
     public async Task<List<string>> GetRoleNamesAsync(long id, CancellationToken cancellationToken = default)
@@ -93,10 +93,10 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail);
+                .FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail, cancellationToken: cancellationToken);
         }
 
-        return FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail);
+        return FirstOrDefaultAsync(p => p.NormalizedEmail == normalizedEmail, cancellationToken: cancellationToken);
     }
 
     public Task<List<IdentityUser>> GetListByClaimAsync(Claim claim, bool includeDetails = false,
@@ -132,10 +132,10 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
+                .FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber, cancellationToken: cancellationToken);
         }
 
-        return FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber);
+        return FirstOrDefaultAsync(p => p.MobilePhone == phoneNumber, cancellationToken: cancellationToken);
     }
 
     public Task<IdentityUser> FindByAccountAsync(string account, long? tenantId, bool includeDetails,
@@ -148,11 +148,11 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
             return Entities
                 .Include(p => p.Claims)
                 .FirstOrDefaultAsync(p =>
-                    p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account);
+                    p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account, cancellationToken: cancellationToken);
         }
 
         return FirstOrDefaultAsync(p =>
-            p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account);
+            p.NormalizedUserName == account || p.MobilePhone == account || p.NormalizedEmail == account, cancellationToken: cancellationToken);
     }
 
     public Task<IdentityUser> FindByJobNumberAsync(string jobNumber, bool includeDetails, CancellationToken cancellationToken)
@@ -165,10 +165,10 @@ public class EfCoreIdentityUserRepository : EFCoreRepository<IdentityUser>, IIde
                 .Include(p => p.Roles)
                 .Include(p => p.Tokens)
                 .Include(p => p.UserSubsidiaries)
-                .FirstOrDefaultAsync(p => p.JobNumber == jobNumber);
+                .FirstOrDefaultAsync(p => p.JobNumber == jobNumber, cancellationToken: cancellationToken);
         }
 
-        return FirstOrDefaultAsync(p => p.JobNumber == jobNumber);
+        return FirstOrDefaultAsync(p => p.JobNumber == jobNumber, cancellationToken: cancellationToken);
     }
 
     public Task<List<IdentityUser>> GetListByNormalizedRoleNameAsync(string normalizedRoleName,
