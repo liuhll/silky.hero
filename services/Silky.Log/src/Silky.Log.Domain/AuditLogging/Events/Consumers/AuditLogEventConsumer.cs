@@ -7,7 +7,6 @@ using Silky.Core.Runtime.Session;
 using Silky.EntityFrameworkCore.Repositories;
 using Silky.MassTransit.Consumer;
 using Silky.Rpc.Auditing;
-using Silky.Rpc.Security;
 using Silky.Saas.Application.Contracts.Edition;
 using Silky.Saas.Domain.Shared.Feature;
 
@@ -17,7 +16,6 @@ public class AuditLogEventConsumer : SilkyConsumer<AuditLogInfo>
 {
     private readonly IRepository<AuditLog> _auditLogRepository;
     private readonly IEditionAppService _editionAppService;
-    private static object locker = new();
 
     public AuditLogEventConsumer()
     {
@@ -39,10 +37,9 @@ public class AuditLogEventConsumer : SilkyConsumer<AuditLogInfo>
                 return;
             }
         }
-        lock (locker)
-        {
-            var auditLog = context.Message.Adapt<AuditLog>();
-            _auditLogRepository.InsertNow(auditLog);
-        }
+
+        var message = context.Message;
+        var auditLog = message.Adapt<AuditLog>();
+        await _auditLogRepository.InsertNowAsync(auditLog);
     }
 }
