@@ -1,12 +1,13 @@
 Param(
   [parameter(Mandatory=$false)][string]$registry,
   [parameter(Mandatory=$false)][string]$dockerOrg,
+  [parameter(Mandatory=$false)][bool]$clean=$false,
   [parameter(Mandatory=$false)][bool]$publish=$true,
   [parameter(Mandatory=$false)][string]$dockerUser,
   [parameter(Mandatory=$false)][string]$dockerPwd,
   [parameter(Mandatory=$false)][string]$imageTag,
   [parameter(Mandatory=$false)][bool]$buildImages=$true,
-  [parameter(Mandatory=$false)][bool]$pushImages=$true
+  [parameter(Mandatory=$false)][bool]$pushImages=$false
 )
 
 # Paths
@@ -27,6 +28,11 @@ function exitShell() {
 
 if (-not $imageTag) {
   $imageTag = 'latest'
+}
+
+if($clean) {
+  & dotnet clean Silky.Hero.sln
+  & dotnet nuget locals all --clear
 }
 
 if($publish) {
@@ -54,7 +60,7 @@ if (-not [string]::IsNullOrEmpty($dockerUser)) {
 
 if ($pushImages) {
   Write-Host "Start pushing the image to the mirror repository ..." -ForegroundColor Yellow
-  $images = & docker images | grep silky
+  $images = & docker images | grep hero
   foreach($image in $images) {
     $imageName = ($image -Split " ")[0] 
     $imageFqdn = if ($useDockerHub) { "${imageName}" } elseif ($dockerOrg) { "$registry/$dockerOrg/${imageName}" } else { "$registry/${imageName}" }
