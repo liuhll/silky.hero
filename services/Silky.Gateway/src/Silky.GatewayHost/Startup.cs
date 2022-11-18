@@ -51,7 +51,7 @@ namespace Silky.GatewayHost
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwaggerDocuments();
-                app.UseMiniProfiler();
+                // app.UseMiniProfiler();
             }
 
             app.UseDashboard();
