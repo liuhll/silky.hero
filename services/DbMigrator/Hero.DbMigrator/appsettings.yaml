@@ -1,0 +1,19 @@
+plugInSource:
+  modulePlugIn:
+    types:
+      - Silky.BasicData.EntityFrameworkCore.BasicDataEfCoreModule,Silky.BasicData.EntityFrameworkCore
+      - Silky.Identity.EntityFrameworkCore.IdentityEfCoreModule,Silky.Identity.EntityFrameworkCore
+      - Silky.Log.EntityFrameworkCore.LogEfCoreModule,Silky.Log.EntityFrameworkCore
+      - Silky.Organization.EntityFrameworkCore.OrganizationEfCoreModule,Silky.Organization.EntityFrameworkCore
+      - Silky.Permission.EntityFrameworkCore.PermissionEfCoreModule,Silky.Permission.EntityFrameworkCore
+      - Silky.Position.EntityFrameworkCore.PositionEfCoreModule,Silky.Position.EntityFrameworkCore
+      - Silky.Saas.EntityFrameworkCore.SaasEfCoreModule,Silky.Saas.EntityFrameworkCore
+    
+connectionStrings:
+  basicData: server=127.0.0.1;port=3306;database=Silky.BasicData;uid=root;pwd=qwe!P4ss;
+  identity: server=127.0.0.1;port=3306;database=Silky.Identity;uid=root;pwd=qwe!P4ss;
+  log: server=127.0.0.1;port=3306;database=Silky.Log;uid=root;pwd=qwe!P4ss;
+  organization: server=127.0.0.1;port=3306;database=Silky.Organization;uid=root;pwd=qwe!P4ss;
+  permission: server=127.0.0.1;port=3306;database=Silky.Permission;uid=root;pwd=qwe!P4ss;
+  position: server=127.0.0.1;port=3306;database=Silky.Position;uid=root;pwd=qwe!P4ss;
+  saas: server=127.0.0.1;port=3306;database=Silky.Saas;uid=root;pwd=qwe!P4ss;      

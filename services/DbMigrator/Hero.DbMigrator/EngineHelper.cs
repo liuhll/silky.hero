@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -12,20 +13,20 @@ namespace Hero.DbMigrator;
 
 internal static class EngineHelper
 {
-    internal static IEngine CreateEngine()
+    internal static IEngine CreateEngine(Action<SilkyApplicationCreationOptions> actionOption = null)
     {
         var services = new ServiceCollection();
-        var configuration = CreateConfigurationBuilder().Build();
+        var options = new SilkyApplicationCreationOptions();
+        actionOption?.Invoke(options);
         var hostEnvironment = CreateHostEnvironment();
+        var configuration = CreateConfigurationBuilder(hostEnvironment, options);
         services.AddSingleton(configuration);
         services.AddSingleton(hostEnvironment);
 
-        var engine = services.AddSilkyServices<DbMigratorModule>(configuration, hostEnvironment,
-            new SilkyApplicationCreationOptions());
+        var engine =
+            services.AddSilkyServices<DbMigratorModule>(configuration, hostEnvironment, options);
         var containerBuilder = new ContainerBuilder();
-
         containerBuilder.Populate(services);
-
         engine.RegisterDependencies(containerBuilder);
         engine.RegisterModules(containerBuilder);
         var container = containerBuilder.Build();
@@ -33,10 +34,11 @@ internal static class EngineHelper
         return engine;
     }
 
-    private static IConfigurationBuilder CreateConfigurationBuilder()
+    private static IConfigurationRoot CreateConfigurationBuilder(IHostEnvironment hostEnvironment,
+        SilkyApplicationCreationOptions options)
     {
-        return new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory());
+        return ConfigurationHelper.BuildConfiguration(new ConfigurationBuilder(), hostEnvironment,
+            options?.Configuration);
     }
 
     private static IHostEnvironment CreateHostEnvironment()

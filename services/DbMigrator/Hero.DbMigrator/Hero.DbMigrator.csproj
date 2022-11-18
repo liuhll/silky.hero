@@ -9,4 +9,25 @@
         <PackageReference Include="Silky.Core" Version="$(SilkyVersion)" />
         <PackageReference Include="Moq" Version="4.16.0" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Silky.BasicData\src\Silky.BasicData.Database.Migrations\Silky.BasicData.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.BasicData\src\Silky.BasicData.EntityFrameworkCore\Silky.BasicData.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Identity\src\Silky.Identity.Database.Migrations\Silky.Identity.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Identity\src\Silky.Identity.EntityFrameworkCore\Silky.Identity.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Log\src\Silky.Log.Database.Migrations\Silky.Log.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Log\src\Silky.Log.EntityFrameworkCore\Silky.Log.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Organization\src\Silky.Organization.Database.Migrations\Silky.Organization.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Organization\src\Silky.Organization.EntityFrameworkCore\Silky.Organization.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Permission\src\Silky.Permission.Database.Migrations\Silky.Permission.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Permission\src\Silky.Permission.EntityFrameworkCore\Silky.Permission.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Position\src\Silky.Position.Database.Migrations\Silky.Position.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Position\src\Silky.Position.EntityFrameworkCore\Silky.Position.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\Silky.Saas\src\Silky.Saas.Database.Migrations\Silky.Saas.Database.Migrations.csproj" />
+      <ProjectReference Include="..\..\Silky.Saas\src\Silky.Saas.EntityFrameworkCore\Silky.Saas.EntityFrameworkCore.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="appsettings.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

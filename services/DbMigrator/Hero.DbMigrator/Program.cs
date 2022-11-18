@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Silky.Core.Modularity;
 
@@ -14,5 +15,6 @@ public class Program
         await moduleManager.PreInitializeModules();
         await moduleManager.InitializeModules();
         await moduleManager.PostInitializeModules();
+        Console.ReadKey();
     }
 }
