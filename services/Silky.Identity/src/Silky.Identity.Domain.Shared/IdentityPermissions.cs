@@ -16,6 +16,8 @@ public class IdentityPermissions
         public const string UnLock = Default + ".UnLock";
         public const string ChangePassword = Default + ".ChangePassword";
         public const string SetRoles = Default + ".SetRoles";
+        public const string Search = Default + ".Search";
+    
     }
 
     public static class Roles
@@ -27,6 +29,7 @@ public class IdentityPermissions
         public const string LookDetail = Default + ".LookDetail";
         public const string SetMenus = Default + ".SetMenus";
         public const string SetDataRange = Default + ".SetDataRange";
+        public const string Search = Default + ".Search";
     }
 
     public static class ClaimTypes

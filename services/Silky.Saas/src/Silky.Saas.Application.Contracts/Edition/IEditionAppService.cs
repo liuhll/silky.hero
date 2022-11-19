@@ -81,6 +81,7 @@ public interface IEditionAppService
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [GetCachingIntercept("id:{id}", IgnoreMultiTenancy = true)]
+    [Authorize(SaasPermissions.Editions.LookDetail)]
     Task<GetEditionEditOutput> GetAsync(long id);
 
     /// <summary>

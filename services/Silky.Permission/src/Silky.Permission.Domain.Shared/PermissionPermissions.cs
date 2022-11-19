@@ -11,5 +11,6 @@ public class PermissionPermissions
         public const string Update = Default + ".Update";
         public const string Delete = Default + ".Delete";
         public const string LookDetail = Default + ".LookDetail";
+        public const string Search = Default + ".Search";
     }
 }

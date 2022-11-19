@@ -11,5 +11,7 @@ public class PositionPermissions
         public const string Update = GroupName + ".Update";
         public const string Delete = GroupName + ".Delete";
         public const string LookDetail = GroupName + ".LookDetail";
+
+        public const string Search = GroupName + ".Search";
     }
 }

@@ -24,7 +24,6 @@ public interface IAuditLogAppService
     /// </summary>
     /// <param name="input">查询输入参数</param>
     /// <returns></returns>
-   // [Authorize(LogPermissions.AuditLogging.Search)]
     Task<PagedList<GetAuditLogPageOutput>> GetPageAsync(GetAuditLogPageInput input);
 
     /// <summary>
