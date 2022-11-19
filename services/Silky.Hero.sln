@@ -131,6 +131,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.PermissionHost", "Sil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silky.Permission.EntityFrameworkCore", "Silky.Permission\src\Silky.Permission.EntityFrameworkCore\Silky.Permission.EntityFrameworkCore.csproj", "{DC5E1A4C-4DE2-4BB9-BFDA-6B6F7D5421E0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbMigrator", "DbMigrator", "{1DD6999D-B8B1-42CB-81D6-DF23234633F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hero.DbMigrator", "DbMigrator\Hero.DbMigrator\Hero.DbMigrator.csproj", "{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -353,6 +357,10 @@ Global
 		{DC5E1A4C-4DE2-4BB9-BFDA-6B6F7D5421E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC5E1A4C-4DE2-4BB9-BFDA-6B6F7D5421E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC5E1A4C-4DE2-4BB9-BFDA-6B6F7D5421E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -412,6 +420,7 @@ Global
 		{12883811-C1BD-41AB-800A-2CF25F4C3F5D} = {3F0C7571-2325-491F-9CD1-28F89CFD1CD9}
 		{080F31E5-F8F1-4676-AC42-35C43877D90F} = {3F0C7571-2325-491F-9CD1-28F89CFD1CD9}
 		{DC5E1A4C-4DE2-4BB9-BFDA-6B6F7D5421E0} = {3F0C7571-2325-491F-9CD1-28F89CFD1CD9}
+		{DDB4B58F-B6D8-43C5-9CDD-ED791D59C16E} = {1DD6999D-B8B1-42CB-81D6-DF23234633F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {330D8F6F-958F-4241-86FD-BD376EBC6B31}
