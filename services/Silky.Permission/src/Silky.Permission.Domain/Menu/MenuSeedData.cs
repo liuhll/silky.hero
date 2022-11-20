@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Silky.BasicData.Domain.Shared;
 using Silky.EntityFrameworkCore.Entities.Configures;
+using Silky.Hero.Common.Enums;
 using Silky.Identity.Domain.Shared;
 using Silky.Log.Domain.Shared;
 using Silky.Organization.Domain.Shared;
@@ -30,6 +31,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ExternalLink = false,
             Display = true,
             Sort = 1000,
+            Status = Status.Valid,
         });
         CreateUserMenu(initList);
 
@@ -70,6 +72,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Icon = "ion:tv-outline",
             Type = MenuType.Catalog,
             Sort = 0,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -81,6 +84,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Display = true,
             Type = MenuType.Menu,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -92,6 +96,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Display = true,
             Type = MenuType.Menu,
             Sort = 995,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -103,6 +108,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Display = true,
             Type = MenuType.Menu,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -114,6 +120,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Display = true,
             Type = MenuType.Menu,
             Sort = 993,
+            Status = Status.Valid,
         });
     }
 
@@ -127,9 +134,11 @@ public class MenuSeedData : IEntitySeedData<Menu>
             RoutePath = "/basic-config",
             Component = "LAYOUT",
             ExternalLink = false,
+            Display = true,
             Icon = "icon-park-outline:setting-config",
             Type = MenuType.Catalog,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -141,6 +150,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ExternalLink = false,
             Type = MenuType.Menu,
             Sort = 1000,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -150,6 +160,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Items.Default,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -159,6 +170,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Types.Create,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -168,6 +180,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Types.Update,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -177,6 +190,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Types.Delete,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
         
         initList.Add(new Menu()
@@ -187,6 +201,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Items.Create,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -196,6 +211,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Items.Update,
             Type = MenuType.Button,
             Sort = 993,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -205,6 +221,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = BasicDataPermissions.Dictionaries.Items.Delete,
             Type = MenuType.Button,
             Sort = 992,
+            Status = Status.Valid,
         });
     }
 
@@ -215,13 +232,16 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Id = 2400,
             Name = "Saas",
             ParentId = null,
-            RoutePath = "/about",
+            RoutePath = "/saas",
             Component = "LAYOUT",
             ExternalLink = false,
+            Display = true,
             Icon = "ant-design:team-outlined",
             Type = MenuType.Catalog,
             Sort = 997,
+            Status = Status.Valid,
         });
+        
         initList.Add(new Menu()
         {
             Id = 2401,
@@ -230,8 +250,10 @@ public class MenuSeedData : IEntitySeedData<Menu>
             RoutePath = "/saas/tenant",
             Component = "/saas/tenant/index",
             ExternalLink = false,
+            Display = true,
             Type = MenuType.Menu,
             Sort = 997,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -241,6 +263,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.Create,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -250,6 +273,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.Create,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -259,6 +283,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.Update,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -268,6 +293,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.Delete,
             Type = MenuType.Button,
             Sort = 993,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -277,6 +303,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.Search,
             Type = MenuType.Button,
             Sort = 992,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -286,6 +313,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Tenants.LookDetail,
             Type = MenuType.Button,
             Sort = 991,
+            Status = Status.Valid,
         });
         
         initList.Add(new Menu()
@@ -296,8 +324,10 @@ public class MenuSeedData : IEntitySeedData<Menu>
             RoutePath = "/saas/edition",
             Component = "/saas/edition/index",
             ExternalLink = false,
+            Display = true,
             Type = MenuType.Menu,
             Sort = 990,
+            Status = Status.Valid,
         });
         
         initList.Add(new Menu()
@@ -308,6 +338,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.Create,
             Type = MenuType.Button,
             Sort = 989,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -317,6 +348,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.Update,
             Type = MenuType.Button,
             Sort = 988,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -326,6 +358,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.Delete,
             Type = MenuType.Button,
             Sort = 987,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -335,6 +368,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.SetFeatures,
             Type = MenuType.Button,
             Sort = 986,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -344,6 +378,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.Search,
             Type = MenuType.Button,
             Sort = 985,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -353,6 +388,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = SaasPermissions.Editions.LookDetail,
             Type = MenuType.Button,
             Sort = 984,
+            Status = Status.Valid,
         });
      
     }
@@ -371,17 +407,20 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Icon = "simple-icons:about-dot-me",
             Type = MenuType.Catalog,
             Sort = -1000,
+            Status = Status.Valid,
+            HideChildrenInMenu = true,
         });
         initList.Add(new Menu()
         {
             Id = 2301,
             Name = "关于详情",
             ParentId = 2300,
-            RoutePath = "/about",
-            Component = "/about/index",
+            RoutePath = "/about/index",
+            Component = "/sys/about/index",
             ExternalLink = false,
             Type = MenuType.Menu,
             Sort = 997,
+            Status = Status.Valid,
         });
     }
 
@@ -398,6 +437,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Icon = "ant-design:audit-outlined",
             Type = MenuType.Catalog,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -409,6 +449,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             ExternalLink = false,
             Type = MenuType.Menu,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -418,6 +459,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = LogPermissions.AuditLogging.Search,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -427,6 +469,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = LogPermissions.AuditLogging.LookDetail,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
     }
 
@@ -444,6 +487,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Catalog,
             Sort = 1001,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -457,6 +501,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             KeepAlive = true,
             Sort = 1000,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -470,6 +515,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             KeepAlive = true,
             Sort = 999,
             Display = true,
+            Status = Status.Valid,
         });
     }
 
@@ -486,6 +532,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Menu,
             Sort = 1000,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -495,6 +542,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.Create,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -504,6 +552,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.Update,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -513,6 +562,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.Delete,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -522,15 +572,17 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.SetMenus,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
             Id = 1106,
             Name = "授权数据",
             ParentId = 1100,
-            PermissionCode = IdentityPermissions.Roles.SetMenus,
+            PermissionCode = IdentityPermissions.Roles.SetDataRange,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -540,6 +592,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.Search,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -549,6 +602,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Roles.LookDetail,
             Type = MenuType.Button,
             Sort = 993,
+            Status = Status.Valid,
         });
     }
 
@@ -565,6 +619,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Type = MenuType.Menu,
             Sort = 1000,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -574,6 +629,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.Create,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -583,6 +639,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.Update,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -592,6 +649,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.Delete,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -601,6 +659,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.Search,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -610,6 +669,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PermissionPermissions.Menus.LookDetail,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
     }
 
@@ -626,6 +686,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Component = "/authorization/position/index",
             ExternalLink = false,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -635,6 +696,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.Create,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -644,6 +706,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.Update,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -653,6 +716,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.Delete,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -663,6 +727,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.Search,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -672,6 +737,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = PositionPermissions.Positions.LookDetail,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
     }
 
@@ -688,6 +754,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             Component = "/authorization/organization/index",
             ExternalLink = false,
             Display = true,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -697,6 +764,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.Create,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -706,6 +774,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.Update,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -715,6 +784,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.Delete,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -724,6 +794,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.AddUsers,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -742,6 +813,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.AllocationRole,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -751,6 +823,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.AllocationPosition,
             Type = MenuType.Button,
             Sort = 993,
+            Status = Status.Valid,
         });
         
         initList.Add(new Menu()
@@ -761,6 +834,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = OrganizationPermissions.Organizations.LookDetail,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
     }
 
@@ -778,6 +852,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             KeepAlive = true,
             Display = true,
             Sort = 999,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -788,6 +863,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Create,
             Type = MenuType.Button,
             Sort = 1000,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -798,6 +874,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Update,
             Type = MenuType.Button,
             Sort = 999,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -808,6 +885,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Delete,
             Type = MenuType.Button,
             Sort = 998,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -818,6 +896,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Lock,
             Type = MenuType.Button,
             Sort = 997,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -828,6 +907,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.UnLock,
             Type = MenuType.Button,
             Sort = 996,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -838,6 +918,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.UpdateClaimTypes,
             Type = MenuType.Button,
             Sort = 995,
+            Status = Status.Valid,
         });
 
         initList.Add(new Menu()
@@ -848,6 +929,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.SetRoles,
             Type = MenuType.Button,
             Sort = 994,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -857,6 +939,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.Search,
             Type = MenuType.Button,
             Sort = 993,
+            Status = Status.Valid,
         });
         initList.Add(new Menu()
         {
@@ -866,6 +949,7 @@ public class MenuSeedData : IEntitySeedData<Menu>
             PermissionCode = IdentityPermissions.Users.LookDetail,
             Type = MenuType.Button,
             Sort = 992,
+            Status = Status.Valid,
         });
     }
 }

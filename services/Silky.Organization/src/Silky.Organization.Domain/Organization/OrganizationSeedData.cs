@@ -22,7 +22,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
         initData.Add(new Organization()
         {
             Id = 2,
-            Name = "Silky.Hero开发部",
+            Name = "开发部",
             Status = Status.Valid,
             ParentId = 1,
             Remark = "负责产品开发",
@@ -32,7 +32,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
         initData.Add(new Organization()
         {
             Id = 3,
-            Name = "Silky.Hero后端开发部",
+            Name = "后端开发部",
             Status = Status.Valid,
             ParentId = 2,
             Remark = "负责服务段接口开发",
@@ -42,7 +42,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
         initData.Add(new Organization()
         {
             Id = 4,
-            Name = "Silky.Hero前端开发部",
+            Name = "前端开发部",
             Status = Status.Valid,
             Remark = "负责前端UI、交互开发",
             ParentId = 2,
@@ -52,7 +52,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
         initData.Add(new Organization()
         {
             Id = 5,
-            Name = "Silky.Hero测试部",
+            Name = "测试部",
             Status = Status.Valid,
             Remark = "负责产品测试",
             ParentId = 1,
@@ -62,7 +62,7 @@ public class OrganizationSeedData : IEntitySeedData<Organization>
         initData.Add(new Organization()
         {
             Id = 6,
-            Name = "Silky.Hero产品部",
+            Name = "产品部",
             Status = Status.Valid,
             Remark = "负责产品规划、设计",
             ParentId = 1,

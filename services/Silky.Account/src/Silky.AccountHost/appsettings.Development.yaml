@@ -14,6 +14,6 @@ distributedCache:
     isEnabled: true
     configuration: 127.0.0.1:6379,defaultDatabase=0
 connectionStrings:
-  default: server=www.silky-fk.com;port=13306;database=Silky.Identity;uid=root;pwd=qwe!P4ss;
+  default: server=127.0.0.1;port=3306;database=Silky.Identity;uid=root;pwd=qwe!P4ss;
 jwtSettings:
   secret: jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW

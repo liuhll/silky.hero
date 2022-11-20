@@ -24,6 +24,7 @@ public class EditionFeature : Entity<long>, ICreatedObject, IUpdatedObject
     public int FeatureValue { get; set; }
 
     public long? CreatedBy { get; set; }
+    
     public long? UpdatedBy { get; set; }
     
     public Edition Edition { get; set; }
