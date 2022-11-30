@@ -1,0 +1,10 @@
+<Project>
+  <ItemGroup>
+    <None Include="..\..\..\Shared\Configs\appsettings.yaml" Link="appsettings.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\Shared\Configs\appsettings.yaml.bak" Link="appsettings.yaml.bak">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

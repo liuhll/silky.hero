@@ -1,26 +1,9 @@
-rpc:
-  token: ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW
-#appSettings:
-#  services:
-#    - appServiceInterfaceDirectory: /Users/hongliangliu/Desktop/open_source/silky.hero/services
-#      appServiceInterfacePattern: Application.Contracts
-  
-governance:
-  timeoutMillSeconds: 0
-registrycenter:
-  connectionStrings: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183;127.0.0.1:2184,127.0.0.1:2185,127.0.0.1:2186
-  type: Zookeeper
-  scheme: Digest
-  auth: "silky:pass4W0rd"  
-distributedCache:
-  redis:
-    isEnabled: true
-    configuration: 127.0.0.1:6379,defaultDatabase=0
-rabbitMq:
-  host: 127.0.0.1
-  port: 5672
-  userName: rabbitmq
-  password: rabbitmq
-  virtualHost: /
-gateway:
-  jwtSecret: jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW
+nacosConfig:
+  listeners:
+    - optional: false
+      dataId: silky.hero.nacos.gateway
+      group: DEV_GROUP
+      appName: gateway
+    - optional: false
+      dataId: silky.hero.nacos.common
+      group: DEV_GROUP

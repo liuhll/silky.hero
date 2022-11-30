@@ -1,0 +1,26 @@
+rpc:
+  token: ypjdYOzNd4FwENJiEARMLWwK0v7QUHPW
+healthChecksUI:
+  healthChecks:
+    - name: rpc
+      uri: http://127.0.0.1:5000/silkyrpc/healthz
+    - name: gateway
+      uri: http://127.0.0.1:5000/silkygateway/healthz
+  evaluationTimeinSeconds: 30
+  minimumSecondsBetweenFailureNotifications: 60
+dashboard:
+  tenantNameFiledName: tenantName
+  userNameFiledName: account
+  passwordFiledName: password
+governance:
+  timeoutMillSeconds: 0
+rabbitMq:
+  host: 127.0.0.1
+  port: 5672
+  userName: rabbitmq
+  password: rabbitmq
+  virtualHost: /
+gateway:
+  jwtSecret: jv1PZkwjLVCEygM7faLLvEhDGWmFqRUW
+skyWalking:
+  serviceName: Silky.GatewayHost

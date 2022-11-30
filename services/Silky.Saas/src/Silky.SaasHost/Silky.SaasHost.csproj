@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\..\common.props" />
-    <Import Project="..\..\..\pfx.props" />
+     <Import Project="..\..\..\pfx.props" />
+     <Import Project="..\..\..\configs.props" />
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="nacos-sdk-csharp.Extensions.Configuration" Version="$(NacosVersion)" />
+        <PackageReference Include="nacos-sdk-csharp.YamlParser" Version="$(NacosVersion)" />
         <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
@@ -18,9 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="appsettings.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="appsettings.Development.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -29,6 +29,9 @@
         </None>
         <None Update="appsettings.ContainerDev.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.Development.yaml.bak">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
