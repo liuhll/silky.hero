@@ -1,0 +1,183 @@
+version: '3.7'
+
+services:
+  silky.account:
+    image: silkyhero/account:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/account:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.account}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-account}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.basicdata:
+    image: silkyhero/basicdata:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/basicdata:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.basicdata}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-basicdata}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.identity:
+    image: silkyhero/identity:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/identity:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.identity}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-identity}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.log:
+    image: silkyhero/log:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/log:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.log}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-log}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.organization:
+    image: silkyhero/organization:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/organization:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.organization}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-organization}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.permission:
+    image: silkyhero/permission:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/permission:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.permission}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-permission}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.position:
+    image: silkyhero/position:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/position:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.position}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-position}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+  silky.saas:
+    image: silkyhero/saas:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/saas:/app/logs
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.saas}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-saas}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+
+networks:
+  silky_service_net:
+    external:
+      name: silky_service_net

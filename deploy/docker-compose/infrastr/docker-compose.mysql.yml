@@ -10,7 +10,6 @@ services:
       MYSQL_PASSWORD: "qwe!P4ss"
     volumes:
       - ./.mysql/data:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d
 
     ports:
       - "3306:3306"

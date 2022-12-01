@@ -8,12 +8,6 @@ services:
       - silky_service_net
     command: "agent -retry-join consul -client 0.0.0.0"
 
-  consul-agent-2:
-    <<: *consul-agent
-
-  consul-agent-3:
-    <<: *consul-agent
-
   consul-server-1: &consul-server
     <<: *consul-agent
     command: "agent -server -retry-join consul -client 0.0.0.0"

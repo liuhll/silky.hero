@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  silky.gateway1:
+    image: silkyhero/gateway:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/gateway1:/app/logs
+      - ${https_dir:-./https}:/https:ro
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_Kestrel__Certificates__Password:-4U3YVUud}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/${ASPNETCORE_Kestrel__Certificates__File:-aspnetapp.pfx}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.gateway}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-gateway}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+    ports:
+      - 8081:80
+      - 8443:443
+
+  silky.gateway2:
+    image: silkyhero/gateway:${TAG:-latest}
+    volumes:
+      - ${log_dir:-./logs}/gateway2:/app/logs
+      - ${https_dir:-./https}:/https:ro
+    environment:
+      DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_Kestrel__Certificates__Password:-4U3YVUud}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/${ASPNETCORE_Kestrel__Certificates__File:-aspnetapp.pfx}
+      nacosConfig__namespace: ${nacosConfig__namespace:-silky_hero_config}
+      nacosConfig__userName: ${nacosConfig__userName:-nacos}
+      nacosConfig__password: ${nacosConfig__password:-nacos}      
+      nacosConfig__serverAddresses__0: ${nacosConfig__serverAddresses__0:-http://nacos1:8848/}
+      nacosConfig__serverAddresses__1: ${nacosConfig__serverAddresses__1:-http://nacos2:8849/}
+      nacosConfig__serverAddresses__2: ${nacosConfig__serverAddresses__2:-http://nacos3:8850/}
+      nacosConfig__listeners__0__optional:  ${nacosConfig__listeners__0__optional:-false}
+      nacosConfig__listeners__0__dataId:  ${nacosConfig__listeners__0__dataId:-silky.hero.nacos.gateway}
+      nacosConfig__listeners__0__group:  ${nacosConfig__listeners__0__group:-DEV_GROUP}
+      nacosConfig__listeners__0__appName:  ${nacosConfig__listeners__0__appName:-gateway}
+      nacosConfig__listeners__1__optional:  ${nacosConfig__listeners__1__optional:-false}
+      nacosConfig__listeners__1__dataId:  ${nacosConfig__listeners__1__dataId:-silky.hero.nacos.common.nacos}
+      nacosConfig__listeners__1__group:  ${nacosConfig__listeners__1__group:-DEV_GROUP}
+    networks:
+      - silky_service_net
+    ports:
+      - 8082:80
+      - 8444:443
+
+networks:
+  silky_service_net:
+    external:
+      name: silky_service_net
