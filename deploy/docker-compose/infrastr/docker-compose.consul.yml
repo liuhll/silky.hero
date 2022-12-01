@@ -2,11 +2,17 @@ version: '3.7'
 
 services:
   consul-agent-1: &consul-agent
-    image: consul:latest
+    image: hashicorp/consul:1.10.0
     restart: always
     networks:
       - silky_service_net
     command: "agent -retry-join consul -client 0.0.0.0"
+
+  consul-agent-2:
+    <<: *consul-agent
+
+  consul-agent-3:
+    <<: *consul-agent
 
   consul-server-1: &consul-server
     <<: *consul-agent
