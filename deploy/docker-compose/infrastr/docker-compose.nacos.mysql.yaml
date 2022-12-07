@@ -3,6 +3,7 @@ services:
   mysql:
     container_name: mysql
     image: nacos/nacos-mysql:5.7
+    restart: always
     env_file:
       - ./mysql.env
     ports:
