@@ -5,5 +5,5 @@ nacosConfig:
       group: DEV_GROUP
       appName: permission
     - optional: false
-      dataId: silky.hero.nacos.common
+      dataId: silky.hero.nacos.common.nacos
       group: DEV_GROUP

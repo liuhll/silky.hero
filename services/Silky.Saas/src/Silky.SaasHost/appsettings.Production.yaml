@@ -5,5 +5,5 @@ nacosConfig:
       group: PRO_GROUP
       appName: saas
     - optional: false
-      dataId:  silky.hero.nacos.common.zookeeper
+      dataId:  silky.hero.nacos.common.nacos
       group: PRO_GROUP

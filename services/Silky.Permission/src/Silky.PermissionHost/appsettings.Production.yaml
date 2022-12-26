@@ -5,5 +5,5 @@ nacosConfig:
       group: PRO_GROUP
       appName: permission
     - optional: false
-      dataId:  silky.hero.nacos.common.zookeeper
+      dataId:  silky.hero.nacos.common.nacos.zookeeper
       group: PRO_GROUP
