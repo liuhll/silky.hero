@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\..\netversion.props" />
-    <Import Project="..\..\..\common.props" />
-     <Import Project="..\..\..\pfx.props" />
-<Import Project="..\..\..\configs.props" />
+    <Import Project="..\..\..\netversion.props"/>
+    <Import Project="..\..\..\common.props"/>
+    <Import Project="..\..\..\pfx.props"/>
+    <Import Project="..\..\..\configs.props"/>
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-      <TargetFramework>$(DotNetVersion)</TargetFramework>
+        <TargetFramework>$(DotNetVersion)</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="nacos-sdk-csharp.Extensions.Configuration" Version="$(NacosVersion)" />
-        <PackageReference Include="nacos-sdk-csharp.YamlParser" Version="$(NacosVersion)" />
-        <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)" />
+        <PackageReference Include="nacos-sdk-csharp.Extensions.Configuration" Version="$(NacosVersion)"/>
+        <PackageReference Include="nacos-sdk-csharp.YamlParser" Version="$(NacosVersion)"/>
+        <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1" Condition="'$(TargetFramework)' == 'net7.0'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,7 +19,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-		        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.12" Condition="'$(TargetFramework)' == 'net6.0'">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.12" Condition="'$(TargetFramework)' == 'net6.0'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -43,13 +43,13 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="appsettings.Development.yaml.bak">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Silky.BasicData.Application\Silky.BasicData.Application.csproj" />
-        <ProjectReference Include="..\Silky.BasicData.Database.Migrations\Silky.BasicData.Database.Migrations.csproj" />
+        <ProjectReference Include="..\Silky.BasicData.Application\Silky.BasicData.Application.csproj"/>
+        <ProjectReference Include="..\Silky.BasicData.Database.Migrations\Silky.BasicData.Database.Migrations.csproj"/>
     </ItemGroup>
 
 </Project>
