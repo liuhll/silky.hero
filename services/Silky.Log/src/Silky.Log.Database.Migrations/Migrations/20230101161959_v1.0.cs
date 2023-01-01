@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Silky.Log.Database.Migrations.Migrations
 {
+    /// <inheritdoc />
     public partial class v10 : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -39,6 +41,8 @@ namespace Silky.Log.Database.Migrations.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HttpStatusCode = table.Column<int>(type: "int", nullable: true),
                     ExceptionMessage = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RequestParameters = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -92,6 +96,7 @@ namespace Silky.Log.Database.Migrations.Migrations
                 column: "AuditLogId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

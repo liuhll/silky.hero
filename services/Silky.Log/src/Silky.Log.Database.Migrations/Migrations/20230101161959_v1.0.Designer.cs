@@ -11,14 +11,15 @@ using Silky.Log.EntityFrameworkCore.DbContexts;
 namespace Silky.Log.Database.Migrations.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20211221021238_v1.0")]
+    [Migration("20230101161959_v1.0")]
     partial class v10
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Silky.Log.Domain.AuditLogging.AuditLog", b =>
@@ -69,6 +70,11 @@ namespace Silky.Log.Database.Migrations.Migrations
                     b.Property<int?>("HttpStatusCode")
                         .HasColumnType("int")
                         .HasColumnName("HttpStatusCode");
+
+                    b.Property<string>("RequestParameters")
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)")
+                        .HasColumnName("RequestParameters");
 
                     b.Property<long?>("TenantId")
                         .HasColumnType("bigint")

@@ -18,13 +18,15 @@ public class AuditLogEventConsumer : SilkyConsumer<AuditLogInfo>
 {
     private readonly IRepository<AuditLog> _auditLogRepository;
     private readonly IEditionAppService _editionAppService;
+    private static SemaphoreSlim _syncSemaphore = new SemaphoreSlim(1, 1);
+
 
     public AuditLogEventConsumer()
     {
         _auditLogRepository = EngineContext.Current.Resolve<IRepository<AuditLog>>();
         _editionAppService = EngineContext.Current.Resolve<IEditionAppService>();
     }
-
+    
 
     protected override async Task ConsumeWork(ConsumeContext<AuditLogInfo> context)
     {
@@ -42,6 +44,10 @@ public class AuditLogEventConsumer : SilkyConsumer<AuditLogInfo>
 
         var message = context.Message;
         var auditLog = message.Adapt<AuditLog>();
-        await _auditLogRepository.InsertNowAsync(auditLog);
+        using (await _syncSemaphore.LockAsync())
+        {
+            await _auditLogRepository.InsertNowAsync(auditLog);
+        }
+
     }
 }

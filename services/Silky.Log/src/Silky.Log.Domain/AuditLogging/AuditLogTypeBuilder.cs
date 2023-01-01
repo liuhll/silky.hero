@@ -76,7 +76,7 @@ public class AuditLogTypeBuilder : IEntityTypeBuilder<AuditLog>
 
         builder.HasMany(p => p.Actions)
             .WithOne(p => p.AuditLog)
-            // .HasForeignKey(f => f.AuditLogId)
+            .HasForeignKey(f => f.AuditLogId)
            ;
     }
 }
