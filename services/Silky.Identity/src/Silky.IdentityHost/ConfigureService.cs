@@ -24,10 +24,10 @@ namespace Silky.IdentityHost
             services.AddDatabaseAccessor(
                 options =>
                 {
-#if NET6
-                     options.AddDbPool<DefaultDbContext>(default, opts => { opts.UseBatchEF_MySQLPomelo(); });
-#elif NET7_0
+#if NET7_0
                     options.AddDbPool<DefaultDbContext>();
+#else
+                    options.AddDbPool<DefaultDbContext>(default, opts => { opts.UseBatchEF_MySQLPomelo(); });
 #endif
                 },
                 "Silky.Identity.Database.Migrations");

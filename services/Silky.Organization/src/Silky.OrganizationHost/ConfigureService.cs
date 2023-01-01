@@ -13,10 +13,13 @@ namespace Silky.OrganizationHost
                 .AddObjectMapper();
             
             services.AddDatabaseAccessor(
-                options => { options.AddDbPool<DefaultDbContext>(providerName: default, optionBuilder: opt =>
-                {
-                    opt.UseBatchEF_MySQLPomelo();
-                }); },
+                options => {
+#if NET7_0
+                    options.AddDbPool<DefaultDbContext>();
+#else
+                    options.AddDbPool<DefaultDbContext>(default, opts => { opts.UseBatchEF_MySQLPomelo(); });
+#endif
+                },
                 "Silky.Organization.Database.Migrations");
         }
     }

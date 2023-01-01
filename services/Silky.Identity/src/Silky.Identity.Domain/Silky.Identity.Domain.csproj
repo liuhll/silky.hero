@@ -12,7 +12,8 @@
         <PackageReference Include="Silky.EntityFrameworkCore.Extras" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Jwt" Version="$(SilkyVersion)" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="$(MicrosoftPackageVersion)" />
-        <PackageReference Include="Zack.EFCore.Batch.MySQL.Pomelo_NET6" Version="6.0.3" />
+        <PackageReference Include="Zack.EFCore.Batch.MySQL.Pomelo_NET6" Version="6.0.3" Condition="'$(TargetFramework)' == 'net6.0'" />
+<!--        <PackageReference Include="Zack.EFCore.Batch.MySQL.Pomelo_NET7" Version="7.1.3" Condition="'$(TargetFramework)' == 'net7.0'" />-->
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Silky.Account\src\Silky.Account.Application.Contracts\Silky.Account.Application.Contracts.csproj" />
