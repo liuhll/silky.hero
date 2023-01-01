@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\netversion.props" />
     <Import Project="..\..\..\common.props" />
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+      <TargetFramework>$(DotNetVersion)</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="EFCore.BulkExtensions" Version="6.1.4" />
+        <PackageReference Include="EFCore.BulkExtensions" Version="6.6.4" />
         <PackageReference Include="Silky.ObjectMapper.Mapster" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.Caching" Version="$(SilkyVersion)" />
         <PackageReference Include="Silky.EntityFrameworkCore" Version="$(SilkyVersion)" />

@@ -29,7 +29,6 @@ namespace Silky.LogHost
                     configurator.ReceiveEndpoint("auditlog-events-listener",
                         e => { e.Consumer<AuditLogEventConsumer>(); });
                 });
-                services.AddMassTransitHostedService();
             });
 
             services.AddDatabaseAccessor(

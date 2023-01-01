@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <DotNetVersion>net7.0</DotNetVersion>
+  </PropertyGroup>
+</Project>       

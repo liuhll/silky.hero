@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\netversion.props" />
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+  <TargetFramework>$(DotNetVersion)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
