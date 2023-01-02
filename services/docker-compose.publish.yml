@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Silky.Account/src/Silky.AccountHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Account/src/Silky.AccountHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Account/src/Silky.AccountHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.basicdata:
     image: silkyhero/basicdata:${TAG:-latest}
@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: Silky.BasicData/src/Silky.BasicDataHost/Dockerfile.publish
       args:
-        publish_dir: Silky.BasicData/src/Silky.BasicDataHost/bin/Release/net6.0/publish
+        publish_dir: Silky.BasicData/src/Silky.BasicDataHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.identity:
     image: silkyhero/identity:${TAG:-latest}
@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Silky.Identity/src/Silky.IdentityHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Identity/src/Silky.IdentityHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Identity/src/Silky.IdentityHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.log:
     image: silkyhero/log:${TAG:-latest}
@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: Silky.Log/src/Silky.LogHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Log/src/Silky.LogHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Log/src/Silky.LogHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.organization:
     image: silkyhero/organization:${TAG:-latest}
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: Silky.Organization/src/Silky.OrganizationHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Organization/src/Silky.OrganizationHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Organization/src/Silky.OrganizationHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.permission:
     image: silkyhero/permission:${TAG:-latest}
@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: Silky.Permission/src/Silky.PermissionHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Permission/src/Silky.PermissionHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Permission/src/Silky.PermissionHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.position:
     image: silkyhero/position:${TAG:-latest}
@@ -54,7 +54,7 @@ services:
       context: .
       dockerfile: Silky.Position/src/Silky.PositionHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Position/src/Silky.PositionHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Position/src/Silky.PositionHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.saas:
     image: silkyhero/saas:${TAG:-latest}
@@ -62,7 +62,7 @@ services:
       context: .
       dockerfile: Silky.Saas/src/Silky.SaasHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Saas/src/Silky.SaasHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Saas/src/Silky.SaasHost/bin/Release/${NET_VERSION:-net7.0}/publish
 
   silky.gateway:
     image: silkyhero/gateway:${TAG:-latest}
@@ -70,4 +70,4 @@ services:
       context: .
       dockerfile: Silky.Gateway/src/Silky.GatewayHost/Dockerfile.publish
       args:
-        publish_dir: Silky.Gateway/src/Silky.GatewayHost/bin/Release/net6.0/publish
+        publish_dir: Silky.Gateway/src/Silky.GatewayHost/bin/Release/${NET_VERSION:-net7.0}/publish

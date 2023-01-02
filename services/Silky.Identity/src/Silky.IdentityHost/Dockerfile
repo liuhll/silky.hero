@@ -1,9 +1,11 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+ARG NET_IMAGE_BASE=7.0-bullseye-slim
+ARG NET_IMAGE_BUILD=7.0
+FROM mcr.microsoft.com/dotnet/aspnet:${NET_IMAGE_BASE} AS base
 WORKDIR /app
 ENV TZ=Asia/Shanghai 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone 
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:${NET_IMAGE_BUILD} AS build
 WORKDIR /src
 COPY common.props .
 COPY pfx.props .
