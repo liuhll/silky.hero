@@ -41,11 +41,11 @@ public class AuditLogEventConsumer : SilkyConsumer<AuditLogInfo>
                 return;
             }
         }
-
-        var message = context.Message;
-        var auditLog = message.Adapt<AuditLog>();
+        
         using (await _syncSemaphore.LockAsync())
         {
+            var message = context.Message;
+            var auditLog = message.Adapt<AuditLog>();
             await _auditLogRepository.InsertNowAsync(auditLog);
         }
 
