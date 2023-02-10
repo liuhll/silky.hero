@@ -11,7 +11,6 @@ using Silky.Http.Identity.Authorization.Requirements;
 using Silky.Rpc.Extensions;
 using Silky.Rpc.Runtime.Client;
 
-
 namespace Silky.GatewayHost.Authorization;
 
 public class AuthorizationHandler : SilkyAuthorizationHandlerBase
