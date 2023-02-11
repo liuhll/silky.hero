@@ -6,14 +6,14 @@
         <TargetFramework>$(DotNetVersion)</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="6.0.2"/>
-        <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5"/>
-        <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.5"/>
+        <PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="7.0.0-rc2.4"/>
+        <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.0-rc2.7"/>
+        <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="7.0.0-rc2.7"/>
         <PackageReference Include="Silky.Agent.Host" Version="$(SilkyVersion)"/>
         <PackageReference Include="Silky.Http.Auditing" Version="$(SilkyVersion)"/>
         <PackageReference Include="Silky.Http.CorsAccessor" Version="$(SilkyVersion)"/>
         <PackageReference Include="Silky.HealthChecks.Rpc" Version="$(SilkyVersion)"/>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.7"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.*"/>
         <PackageReference Include="Silky.MassTransit" Version="$(SilkyVersion)"/>
         <PackageReference Include="nacos-sdk-csharp.Extensions.Configuration" Version="$(NacosVersion)"/>
         <PackageReference Include="nacos-sdk-csharp.YamlParser" Version="$(NacosVersion)"/>
