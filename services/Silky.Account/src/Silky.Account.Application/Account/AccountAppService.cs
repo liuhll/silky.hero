@@ -4,8 +4,10 @@ using Mapster;
 using Silky.Account.Application.Contracts.Account;
 using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Core.Extensions;
+using Silky.Core.Runtime.Rpc;
 using Silky.Core.Runtime.Session;
 using Silky.Identity.Domain;
+using Silky.Rpc.Configuration;
 
 namespace Silky.Account.Application.Account;
 
@@ -28,6 +30,24 @@ public class AccountAppService : IAccountAppService
     public Task<string> LoginAsync(LoginInput input)
     {
         return SignInManager.PasswordSignInAsync(input.Account, input.Password, input.TenantName, true);
+    }
+
+    public async Task<int> CheckUrl()
+    {
+        if (!_session.IsLogin())
+        {
+            return 401;
+        }
+
+        return 200;
+    }
+
+    public async Task<int> SubmitUrl(SpecificationWithTenantAuth authInfo)
+    {
+        var loginInput = authInfo.Adapt<LoginInput>();
+        var token = await LoginAsync(loginInput);
+        RpcContext.Context.SigninToSwagger(token);
+        return 200;
     }
 
     public async Task<GetCurrentUserInfoOutput> GetCurrentUserInfoAsync()

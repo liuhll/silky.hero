@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Mapster;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Identity.Application.Contracts.Role.Dtos;
 using Silky.Identity.Domain.Identity;
+using Silky.Rpc.Configuration;
 
 namespace Silky.Identity.Domain;
 
@@ -20,5 +22,8 @@ public class Mapper : IRegister
         config.ForType<FrontendMenu, GetRoleMenuTreeOutput>()
             .Map(dest => dest.MenuId, src => src.Id)
             .Map(dest => dest.Title, src => src.Meta["Title"]);
+
+        config.ForType<SpecificationWithTenantAuth, LoginInput>()
+            .Map(dest => dest.Account, src => src.UserName);
     }
 }

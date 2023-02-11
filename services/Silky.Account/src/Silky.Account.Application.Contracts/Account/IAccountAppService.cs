@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Silky.Account.Application.Contracts.Account.Dtos;
+using Silky.Rpc.Configuration;
 using Silky.Rpc.Routing;
 using Silky.Rpc.Runtime.Server;
 using Silky.Rpc.Security;
@@ -21,6 +22,12 @@ public interface IAccountAppService
     /// <returns></returns>
     [AllowAnonymous]
     Task<string> LoginAsync(LoginInput input);
+    
+    [HttpPost, UnWrapperResult,AllowAnonymous]
+    Task<int> CheckUrl();
+
+    [HttpPost, UnWrapperResult,AllowAnonymous]
+    Task<int> SubmitUrl([FromForm]SpecificationWithTenantAuth authInfo);
 
     /// <summary>
     /// 获取当前登录用户信息
