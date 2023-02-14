@@ -177,4 +177,22 @@ docker-compose -f docker-compose.yaml up --scale silky.permission=2 --scale silk
 
 ## 演示图
 
-
+<table>
+    <tr>
+        <td><img src="./docs/images/用户管理.png"/></td>
+        <td><img src="./docs/images/角色管理.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./docs/images/菜单管理.png"/></td>
+        <td><img src="./docs/images/机构管理.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./docs/images/岗位管理.png"/></td>
+        <td><img src="./docs/images/审计日志.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./docs/images/租户管理.png"/></td>
+        <td><img src="./docs/images/审计日志.png"/></td>
+    </tr>
+ 
+</table>
