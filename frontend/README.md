@@ -1,4 +1,4 @@
-<h1>Silky.Hero快速开发框架前端项目</h1>
+<h1>Silky.Hero后台管理系统前端</h1>
 </div>
 
 ## License

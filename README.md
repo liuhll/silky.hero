@@ -57,7 +57,7 @@ docker-compose -f docker-compose.nacos.cluster-hostname.yaml up -d # 等待 mysq
 
 ```
 
-2. 等nacos服务启动成功后,通过浏览器打开https://127.0.0.1:8848/nacos，通过账号/密码:nacos/nacos登陆管理端,然后创建`silky`和`silky_hero_config`名称空间,然后通过**配置管理/配置管理/导入配置**功能将位于`services/Shared/Configs/silky.hero.dev.zip`的配置包导入到nacos系统中;
+2. 等nacos服务启动成功后,通过浏览器打开 *https://127.0.0.1:8848/nacos* ，通过账号/密码:nacos/nacos登陆管理端,然后创建`silky`和`silky_hero_config`名称空间,然后通过**配置管理/配置管理/导入配置**功能将位于`services/Shared/Configs/silky.hero.dev.zip`的配置包导入到nacos系统中;
 
 3. 通过如下命令启动redis服务
 
@@ -83,13 +83,14 @@ docker-compose -f docker-compose.mysql.yaml up -d
 
 ```
 
-5. 通过IDE *Visual Studio* 或是 *Rider* 打开解决方案`Services/Silky.Hero.sln`后进行开发调试;应用启动后,系统将自动创建数据库和新增种子数据。
+5. 通过IDE *Visual Studio* 或是 *Rider(推荐)* 打开解决方案`Services/Silky.Hero.sln`后进行开发调试;应用启动后,系统将自动创建数据库和新增种子数据。
 
 > Notes
+>
 >  silky还支持使用Zookeeper或是Consul作为服务注册中心,使用Apllo作为服务配置中心,您可以查看[官方文档](https://docs.silky-fk.com/)或是[教学视频](https://space.bilibili.com/354560671/channel/seriesdetail?sid=2797330)来学习如何使用和配置。
 
 
-## 打包部署
+## docker镜像打包
 
 进入`build`目录后,可以通过`build-push-images.ps1`脚本实现对各个为服务应用的源码构建和docker镜像打包,通过`Services`指定需要构建的微服务应用;
 
@@ -112,10 +113,67 @@ docker-compose -f docker-compose.mysql.yaml up -d
 |  dockerUser  | 仓库用户名 | | 推送时生效 |
 |  dockerPwd  | 仓库密码 | | 推送时生效 |
 
+## 部署
+
+在silky.hero集群部署之前,我们需要先将微服务集群依赖的基础服务如: Nacos、Redis、RabbitMq、MySQL等服务部署好,您可以参考上文[开发环境](#开发环境)搭建中如何通过docker-compose将上述所说的基础服务快速部署好。
+
+在silky.hero集群部署之前,您需要对源码进行docker镜像打包,或是已经将docker镜像推送到docker镜像仓库中。
 
 ### docker-compose部署
 
+在基础服务搭建好后,进入目录`deploy/docker-compose/services.nacos`:
+
+1. 环境变量的调整: 您可以通过 .env文件修改指定的配置参数,如: nacos的服务地址或是应用服务集群指定配置的名称空间等参数,如下所示:
+
+```shell
+TAG=latest # 指定docker镜像版本
+nacosConfig__namespace=silky_hero_nocas_dev # 指定服务配置的名称空间
+nacosConfig__listeners__1__dataId=silky.hero.nacos.common.nacos # 指定服务配置监听的服务配置中心类型
+nacosConfig__userName=nacos # nacos用户名，缺省值为nacos
+nacosConfig__password=nacos # nacos密码，缺省值为nacos
+nacosConfig__namingUseRpc=true # 服务注册是否使用gRPC协议和服务端对接,缺省值为true
+nacosConfig__configUseRpc=true # 配置读取是否使用gRPC协议和服务端对接，缺省值为true
+nacosConfig__serverAddresses__0=http://127.0.0.1:8848/ # nacos服务地址
+nacosConfig__serverAddresses__1=http://127.0.0.1:8849/
+nacosConfig__serverAddresses__2=http://127.0.0.1:8850/
+# ...其他配置参数可以参考nacos文档
+```
+
+在部署的时候可以根据实际环境调整环境变量参数以及要导入的配置参数的包(*silky.hero.demo.zip*/*silky.hero.dev.zip*),开发者可以根据实际情况对配置的压缩包内的配置文件的参数进行调整,然后将配置导入到相应的名称空间。
+
+> Notes
+>
+> `nacosConfig__listeners__1__dataId`配置项可以指定: `silky.hero.nacos.common.consul`或是`silky.hero.nacos.common.zookeeper`,当然您需要根据您指定的配置项来搭建相应的服务注册中心集群来配置使用.
+
+2. 网关部署
+
+网关承担了集群流量的入口,需要对宿主机映射http端口,使用docker-compose部署的时候无法通过命令行对网关进行扩缩容,但是可以通过调整`docker-compose.gateway.yaml`来实现对网关的扩缩容,每个网关的实例可以映射到宿主机不同的端口,然后通过nginx的反向代理实现对网关的负载均衡。
+
+```shell
+
+docker-compose -f docker-compose.gateway.yaml up -d
+
+```
+
+4. 业务服务的部署
+
+```shell
+
+docker-compose -f docker-compose.yaml up -d # 启动所有的服务,每个业务服务的实例为1
+
+# 服务的扩缩容
+
+docker-compose -f docker-compose.yaml up --scale silky.permission=2 --scale silky.identity=3 --scale silky.organization=2 --scale silky.log=2 --scale silky.account=2 -d #对指定部署的服务指定要部署的实例数量
+
+```
+
 ### k8s部署
+
+即将更新
+
+## 前端
+
+您可以通过前端项目的[READNE.md](./frontend/README.md)来了解前端项目。
 
 ## 演示图
 
