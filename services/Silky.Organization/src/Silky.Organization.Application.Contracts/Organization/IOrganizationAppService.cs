@@ -27,7 +27,7 @@ public interface IOrganizationAppService
     /// <remarks>如果Id为null，则表示新增</remarks>
     /// <param name="input"></param>
     /// <returns></returns>
-    [RemoveMatchKeyCachingIntercept("*:OrganizationTree:userId:*")]
+    [RemoveMatchKeyCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"*:OrganizationTree:userId:*")]
     [Authorize(OrganizationPermissions.Organizations.Create)]
     Task CreateAsync(CreateOrganizationInput input);
 
@@ -53,7 +53,7 @@ public interface IOrganizationAppService
     /// <param name="input"></param>
     /// <returns></returns>
     [RemoveMatchKeyCachingIntercept(typeof(GetOrganizationOutput), "id:{Id}:*")]
-    [RemoveMatchKeyCachingIntercept("*:OrganizationTree:userId:*")]
+    [RemoveMatchKeyCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"OrganizationTree:userId:*")]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{Id}")]
     [RemoveCachingIntercept(typeof(ICollection<long>), "GetSelfAndChildrenOrganizationIds:{Id}")]
     [Authorize(OrganizationPermissions.Organizations.Update)]
@@ -66,7 +66,7 @@ public interface IOrganizationAppService
     /// <returns></returns>
     [HttpDelete("{id:long}")]
     [RemoveCachingIntercept(typeof(GetOrganizationOutput), "id:{id}:*")]
-    [RemoveMatchKeyCachingIntercept("*:OrganizationTree:userId:*")]
+    [RemoveMatchKeyCachingIntercept(typeof(ICollection<GetOrganizationTreeOutput>),"*:OrganizationTree:userId:*")]
     [RemoveCachingIntercept(typeof(bool), "HasOrganization:{id}")]
     [RemoveCachingIntercept(typeof(ICollection<long>), "GetSelfAndChildrenOrganizationIds:{id}")]
     [Authorize(OrganizationPermissions.Organizations.Delete)]
