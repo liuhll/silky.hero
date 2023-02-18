@@ -94,89 +94,99 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed, onMounted } from 'vue';
+  import { reactive, ref, unref, computed, onMounted } from 'vue'
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider, Select, SelectOption } from 'ant-design-vue';
+  import {
+    Checkbox,
+    Form,
+    Input,
+    Row,
+    Col,
+    Button,
+    Divider,
+    Select,
+    SelectOption,
+  } from 'ant-design-vue'
   import {
     GithubFilled,
     WechatFilled,
     AlipayCircleFilled,
     GoogleCircleFilled,
     TwitterCircleFilled,
-  } from '@ant-design/icons-vue';
-  import LoginFormTitle from './LoginFormTitle.vue';
+  } from '@ant-design/icons-vue'
+  import LoginFormTitle from './LoginFormTitle.vue'
 
-  import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n'
+  import { useMessage } from '/@/hooks/web/useMessage'
 
-  import { useAccountStore } from '../../../store/modules/account';
-  import { useTenantStore } from "/@/store/modules/tenant";
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
-  import { useDesign } from '/@/hooks/web/useDesign';
-import user from 'mock/sys/user';
+  import { useAccountStore } from '../../../store/modules/account'
+  import { useTenantStore } from '/@/store/modules/tenant'
+  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
+  import { useDesign } from '/@/hooks/web/useDesign'
+
   //import { onKeyStroke } from '@vueuse/core';
 
-  const ACol = Col;
-  const ARow = Row;
-  const FormItem = Form.Item;
-  const InputPassword = Input.Password;
-  const { t } = useI18n();
-  const { notification, createErrorModal } = useMessage();
-  const { prefixCls } = useDesign('login');
-  const accountStore = useAccountStore();
-  const tenantStore = useTenantStore();
+  const ACol = Col
+  const ARow = Row
+  const FormItem = Form.Item
+  const InputPassword = Input.Password
+  const { t } = useI18n()
+  const { notification, createErrorModal } = useMessage()
+  const { prefixCls } = useDesign('login')
+  const accountStore = useAccountStore()
+  const tenantStore = useTenantStore()
 
-  const { setLoginState, getLoginState } = useLoginState();
-  const { getFormRules } = useFormRules();
+  const { setLoginState, getLoginState } = useLoginState()
+  const { getFormRules } = useFormRules()
 
-  const formRef = ref();
-  const loading = ref(false);
-  const rememberMe = ref(false);
-  let tenantOptions = ref([]);
+  const formRef = ref()
+  const loading = ref(false)
+  const rememberMe = ref(false)
+  let tenantOptions = ref([])
 
   const formData = reactive({
     account: 'admin',
     password: '123qweR!',
-    tenantId: 1
-  });
+    tenantId: 1,
+  })
 
-  const { validForm } = useFormValid(formRef);
+  const { validForm } = useFormValid(formRef)
 
-  onMounted(async ()=>{
-    tenantOptions.value = await tenantStore.getAllTenants();
-  });
+  onMounted(async () => {
+    tenantOptions.value = await tenantStore.getAllTenants()
+  })
 
   //onKeyStroke('Enter', handleLogin);
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
+  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 
   async function handleLogin() {
-    const data = await validForm();
-    if (!data) return;
+    const data = await validForm()
+    if (!data) return
     try {
-      loading.value = true;
+      loading.value = true
       const userInfo = await accountStore.login({
         password: data.password,
         account: data.account,
         tenantName: data.tenantName,
         mode: 'none', //不要默认的错误提示
-      });
+      })
       if (userInfo) {
-        const name = userInfo.realName ?? userInfo.userName;
+        const name = userInfo.realName ?? userInfo.userName
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
           description: `${t('sys.login.loginSuccessDesc')} : ${name}`,
           duration: 3,
-        });
+        })
       }
     } catch (error) {
       createErrorModal({
         title: t('sys.api.errorTip'),
         content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
         getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
-      });
+      })
     } finally {
-      loading.value = false;
+      loading.value = false
     }
   }
 </script>
