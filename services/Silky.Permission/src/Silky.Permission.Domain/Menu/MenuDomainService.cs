@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Caching;
 using Silky.Core;
 using Silky.Core.DependencyInjection;
@@ -260,8 +261,8 @@ public class MenuDomainService : IMenuDomainService, IScopedDependency
     /// <param name="permissionCodes"></param>
     private async Task RemoveMenuCacheAsync(params string[] permissionCodes)
     {
-        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserMenus:*");
-        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserPermissionCodes:*");
+        await _distributedCache.RemoveMatchKeyAsync(typeof(ICollection<GetCurrentUserMenuOutput>),"CurrentUserMenus:*");
+        await _distributedCache.RemoveMatchKeyAsync(typeof(string[]),"CurrentUserPermissionCodes:*");
 
         foreach (var permissionCode in permissionCodes)
         {

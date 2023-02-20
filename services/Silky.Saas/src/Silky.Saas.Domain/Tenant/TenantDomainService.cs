@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Caching;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
@@ -114,8 +115,8 @@ public class TenantDomainService : ITenantDomainService, IScopedDependency
 
     private async Task RemoveCacheAsync(long tenantId)
     {
-        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserMenus:*");
-        await _distributedCache.RemoveMatchKeyAsync("*CurrentUserPermissionCodes:*");
+        await _distributedCache.RemoveMatchKeyAsync(typeof(ICollection<GetCurrentUserMenuOutput>),"CurrentUserMenus:*");
+        await _distributedCache.RemoveMatchKeyAsync(typeof(string[]),"CurrentUserPermissionCodes:*");
         await _distributedCache.RemoveMatchKeyAsync(typeof(GetEditionFeatureOutput),
             _distributedCacheKeyNormalizer.NormalizeTenantKey("featureCode:*",
                 typeof(GetEditionFeatureOutput).FullName,

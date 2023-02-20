@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Silky.Account.Application.Contracts.Account.Dtos;
 using Silky.Caching;
 using Silky.Core.DependencyInjection;
 using Silky.Core.Exceptions;
@@ -161,8 +162,8 @@ public class EditionDomainService : IScopedDependency, IEditionDomainService
 
     private async Task RemoveEditionFeatureCache(long editionId)
     {
-        await _cache.RemoveMatchKeyAsync("*CurrentUserMenus:*");
-        await _cache.RemoveMatchKeyAsync("*CurrentUserPermissionCodes:*");
+        await _cache.RemoveMatchKeyAsync(typeof(ICollection<GetCurrentUserMenuOutput>),"CurrentUserMenus:*");
+        await _cache.RemoveMatchKeyAsync(typeof(string[]),"CurrentUserPermissionCodes:*");
         var editionTenants =
             await _tenantRepository.AsQueryable(false).Where(p => p.EditionId == editionId).ToArrayAsync();
         foreach (var tenant in editionTenants)
