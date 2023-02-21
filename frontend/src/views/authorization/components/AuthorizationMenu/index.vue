@@ -138,7 +138,6 @@
       function setMenuItems(treeItems: TreeItem[], menuIds: Nullable<Number[]>) {
         const data = createMenuItems(treeItems, menuIds)
         menuItems.value = data
-        debugger
         setCheckAllStateStatus()
       }
 
