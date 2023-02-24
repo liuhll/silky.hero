@@ -1,0 +1,5 @@
+<Project>
+ <ItemGroup>
+    <Compile Include="..\..\..\Shared\CSharpScripts\Program.cs" Link="Program.cs" />
+  </ItemGroup>
+</Project>       
