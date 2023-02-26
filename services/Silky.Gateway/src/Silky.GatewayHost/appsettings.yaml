@@ -1,10 +1,10 @@
 nacosConfig:
   namespace: silky_hero_config
-  namingUseRpc: true
-  configUseRpc: true
+  namingUseRpc: false
+  configUseRpc: false
   serverAddresses:
-    - http://127.0.0.1:8848/
-    - http://127.0.0.1:8849/
-    - http://127.0.0.1:8850/
+    - http://192.168.31.115:8848/
+    - http://192.168.31.115:8849/
+    - http://192.168.31.115:8850/
   userName: nacos
   password: nacos

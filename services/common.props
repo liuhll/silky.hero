@@ -2,7 +2,7 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <SilkyVersion>3.6.6-bate3</SilkyVersion>
+    <SilkyVersion>3.6.6-bate4</SilkyVersion>
     <NacosVersion>1.3.*</NacosVersion>
   </PropertyGroup>
 </Project>       
